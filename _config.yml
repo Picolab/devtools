@@ -5,7 +5,7 @@
 name: "KRL"
 description: "KRL devtools"
 
-url: "http://kre.github.io/devtools/"
+#url: "http://kre.github.io/devtools/"
 
 paginate: 10
 
