@@ -1,12 +1,19 @@
 (function($)
 {
      var router=new $.mobile.Router( [
-       {"#fue": {handler: "foo",
+       {"#page-one": {handler: "PageOneHandler",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+        {"#page-two": {handler: "PageTwoHandler",
           events: "s", // do when we show the page
           argsre: true
         } }]
         ,
-        { foo: function(type, match, ui, page) {
-
+        { PageOneHandler: function(type, match, ui, page) {
+               console.log("page One Handler");
+        }},
+        { PageTwoHandler: function(type, match, ui, page) {
+               console.log("page Two Handler");
         }}
-})(jQuery);
+});
