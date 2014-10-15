@@ -9,3 +9,4 @@
         { foo: function(type, match, ui, page) {
 
         }}
+})(jQuery);
