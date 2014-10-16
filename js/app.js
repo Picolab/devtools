@@ -1,19 +1,21 @@
 (function($)
 {
-     var router=new $.mobile.Router( [
-       {"#page-one": {handler: "PageOneHandler",
+    var router=new $.mobile.Router( [
+       	{"#page-one": {handler: "pageOneHandler",
           events: "s", // do when we show the page
           argsre: true
         } },
-        {"#page-two": {handler: "PageTwoHandler",
+        {"#page-two": {handler: "pageTwoHandler",
           events: "s", // do when we show the page
           argsre: true
-        } }]
-        ,
-        { PageOneHandler: function(type, match, ui, page) {
-               console.log("page One Handler");
-        }},
-        { PageTwoHandler: function(type, match, ui, page) {
-               console.log("page Two Handler");
-        }}
+        } }
+	],
+	{ 
+        pageOneHandler: function(type, match, ui, page) {
+        	console.log("page One Handler");
+        },
+        pageTwoHandler: function(type, match, ui, page) {
+            console.log("page Two Handler");
+        }
+    });
 });
