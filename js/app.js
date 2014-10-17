@@ -18,4 +18,4 @@
             console.log("page Two Handler");
         }
     });
-});
+})(jQuery);
