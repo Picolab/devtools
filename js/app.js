@@ -1,21 +1,21 @@
 (function($)
 {
     var router=new $.mobile.Router( [
-       	{"#page-one": {handler: "pageOneHandler",
+       	{"#login": {handler: "login",
           events: "s", // do when we show the page
           argsre: true
         } },
-        {"#page-two": {handler: "pageTwoHandler",
+        {"#Create-Account": {handler: "CreateAccount",
           events: "s", // do when we show the page
           argsre: true
         } }
 	],
 	{ 
-        pageOneHandler: function(type, match, ui, page) {
-        	console.log("page One Handler");
+        login: function(type, match, ui, page) {
+        	console.log("login Handler");
         },
-        pageTwoHandler: function(type, match, ui, page) {
-            console.log("page Two Handler");
+        CreateAccount: function(type, match, ui, page) {
+            console.log("Create-Account Handler");
         }
     });
 
