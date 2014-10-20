@@ -21,12 +21,13 @@
 
 
     function onMobileInit() {
-    console.log("mobile init");
-    $.mobile.autoInitialize = false;
+    	console.log("mobile init");
+    	$.mobile.autoInitialize = false;
     }
 
     function onPageLoad() {// Document.Ready
-    console.log("document ready");
+    	console.log("document ready");
+    }
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
