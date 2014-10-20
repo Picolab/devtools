@@ -1,11 +1,11 @@
 (function($)
 {
     var router=new $.mobile.Router( [
-       	{"#login": {handler: "login",
+       	{"login": {handler: "login",
           events: "s", // do when we show the page
           argsre: true
         } },
-        {"#Create-Account": {handler: "CreateAccount",
+        {"Create-Account": {handler: "CreateAccount",
           events: "s", // do when we show the page
           argsre: true
         } }
