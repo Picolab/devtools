@@ -27,7 +27,6 @@
 
     function onPageLoad() {// Document.Ready
     console.log("document ready");
-    //CloudOS.retrieveSession();
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
