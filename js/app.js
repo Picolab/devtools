@@ -18,4 +18,20 @@
             console.log("page Two Handler");
         }
     });
+
+
+    function onMobileInit() {
+    console.log("mobile init");
+    $.mobile.autoInitialize = false;
+    }
+
+    function onPageLoad() {// Document.Ready
+    console.log("document ready");
+    //CloudOS.retrieveSession();
+
+    /////////////////////////////////////////////////////////////////////
+    // this is the actual code that runs and sets everything off
+    // pull the session out of the cookie.
+    $(document).bind("mobileinit", onMobileInit);
+    $(document).ready(onPageLoad);
 })(jQuery);
