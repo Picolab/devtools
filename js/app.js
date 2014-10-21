@@ -1,19 +1,37 @@
 (function($)
 {
-    var router=new $.mobile.Router( [
-       	{"login": {handler: "login",
+    var router = new $.mobile.Router( [
+       	{"#login": {handler: "login",
           events: "s", // do when we show the page
           argsre: true
         } },
-        {"register": {handler: "register",
+        {"#register": {handler: "register",
           events: "s", // do when we show the page
           argsre: true
         } },
-            {"forgot-password": {handler: "forgotPassword",
+            {"#forgot-password": {handler: "forgotPassword",
           events: "s", // do when we show the page
           argsre: true
         } },
-            {"home": {handler: "home",
+            {"#home": {handler: "home",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+
+
+            {"#listing": {handler: "listing",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+            {"#registering-ruleset": {handler: "registeringRuleset",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+            {"#confirming-deletion": {handler: "confirmingDeletion",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+            {"#updating-url": {handler: "updatingUrl",
           events: "s", // do when we show the page
           argsre: true
         } }
@@ -30,6 +48,20 @@
         },
         register: function(type, match, ui, page) {
             console.log("Create-Account Handler");
+        },
+
+
+        listing: function(type, match, ui, page) {
+            console.log("listing Handler");
+        },
+        registeringRuleset: function(type, match, ui, page) {
+            console.log("registering Ruleset Handler");
+        },
+        confirmingDeletion: function(type, match, ui, page) {
+            console.log("confirming Deletion Handler");
+        },
+        updatingUrl: function(type, match, ui, page) {
+            console.log("updating Url Handler");
         }
     });
 
