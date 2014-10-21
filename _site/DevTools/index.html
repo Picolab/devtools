@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
   <head> 
-  <title>My Page</title> 
+  <title>KRL-DevTools</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1"> 
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
@@ -10,22 +10,107 @@
 </head> 
 <body> 
 
-<div data-role="page">
+<div data-role="page" id="login">
+	<div data-role="header">
+		<h1>Welcome To KRL DevTools</h1>
+	</div>
 
-  <div data-role="header">
-    <h1>KRL DevTools</h1>
-  </div><!-- /header -->
+	<div data-role="main" class="ui-content">
 
-  <div data-role="content"> 
-    
-    <ul data-role="listview" data-inset="true" data-filter="false">
-  <li><a href="#login">Login</a></li>
+		<div data-role="collapsible">
+			<h3>Login!</h3>
+			<div class="user_login">
+				<form>
+					<label>Email / Username</label> <input type="text"><br>
+					<label>Password</label> <input type="password"><br>
 
-  <li><a href="#Create-Account">Create Account</a></li>
+					<div class="checkbox">
+						<input id="remember" type="checkbox"> <label for=
+						"remember">Remember me on this computer</label>
+					</div>
+				</div>
+			</form>
+			
+			<a class="forgot_password" href="#forgot-password">Forgot password?</a>
+		</div>  
 
-</ul> </div><!-- /content -->
+		<div data-role="collapsible">
+			<h3>Create User!</h3>
+			<div class="user_register">
+				<form>
+					<label>Full Name</label> <input type="text"><br>
+					<label>Email Address</label> <input type="email"><br>
+					<label>Password</label> <input type="password"><br>
+					
+					<div class="checkbox">
+						<input id="send_updates" type="checkbox"> <label for=
+						"send_updates">Send me occasional email updates</label>
+					</div>
+					
+					<div class="action_btns">
+						<div class="one_half last">
+							<a class="btn btn_red" href="#register">Register</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
+	<div data-role="footer">
+		<h1>Event driven cloud computing </h1>
+		<a href="#home" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Continue To Home</a>
+	</div>
+</div> 
 
-</div><!-- /page -->
+<div data-role="page" id="forgot-password">
+	<div data-role="header">
+		<h1>forgot your password?</h1>
+	</div>
+
+	<div data-role="main" class="ui-content">
+		<p>This event is not associated with any "rule" yet.</p>
+		<a href="#login">Go to login</a>
+	</div>
+
+	<div data-role="footer">
+		<h1>hal 9000's neural network</h1>
+	</div>
+</div> 
+
+<div data-role="page" id="register">
+	<div data-role="header">
+		<h1>Become a KRL Developer!</h1>
+	</div>
+
+	<div data-role="main" class="ui-content">
+		<p>This event is not associated with any "rule" yet.</p>
+		<a href="#login">Go to login</a>
+	</div>
+
+	<div data-role="footer">
+		<h1>connect the analog world to the web!</h1>
+	</div>
+</div> 
+
+<div data-role="page" id="home">
+	<div data-role="header">
+		<a href="#home" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Home</a>
+		<h1>Welcome To KRL Development Homepage</h1>
+		<a href="#tools" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">Tools</a>
+	</div>
+
+	<div data-role="main" class="ui-content">
+		<p>Welcome to your KRL Development home, this is where you want to be.</p>
+		<div data-role="footer">
+			<a href="#login" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Logout</a>
+			<h1>Develop with indent!</h1>
+		</div>
+	</div>
+</div>
+
+
+
+
 
 </body>
 </html>

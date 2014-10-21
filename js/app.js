@@ -5,7 +5,15 @@
           events: "s", // do when we show the page
           argsre: true
         } },
-        {"Create-Account": {handler: "CreateAccount",
+        {"register": {handler: "register",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+            {"forgot-password": {handler: "forgotPassword",
+          events: "s", // do when we show the page
+          argsre: true
+        } },
+            {"home": {handler: "home",
           events: "s", // do when we show the page
           argsre: true
         } }
@@ -14,7 +22,13 @@
         login: function(type, match, ui, page) {
         	console.log("login Handler");
         },
-        CreateAccount: function(type, match, ui, page) {
+        forgotPassword: function(type, match, ui, page) {
+            console.log("forgotPassword Handler");
+        },
+        home: function(type, match, ui, page) {
+            console.log("home Handler");
+        },
+        register: function(type, match, ui, page) {
             console.log("Create-Account Handler");
         }
     });
