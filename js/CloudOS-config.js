@@ -1,6 +1,6 @@
 
-CloudOS.appKey = "682607CE-FB1F-11E3-ACCF-7766410AC9C1";
-CloudOS.anonECI = "E653287E-7B36-11E4-B577-DF8DD61CF0AC";
+CloudOS.appKey = "6E461F82-7A80-11E4-9E1F-8CA1E70EDEE7";
+CloudOS.anonECI = "85255500-0b65-0130-243c-00163ebcdddd";
 CloudOS.callbackURL = "http://kre.github.io/devtools/code.html";
 CloudOS.host = "cs.kobj.net";
 CloudOS.login_server = "kibdev.kobj.net";
