@@ -1,22 +1,23 @@
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button style="padding-top:10px" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!--<a class="navbar-brand-fuse" href="/"><img src="img/fuseicon_40.png"/> JoinFuse</a>-->
-    </div>
-    <div style="padding-top:0px" class="navbar-collapse collapse navbar-right">
-    <ul class="nav navbar-nav">
-{% if page.type != 'homepage' %}
-      <!-- <li><a href="/">Home</a></li> -->
-{% endif %}
-      <!--<li><a href="/#about">About</a></li>-->
-      <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </div><!--/.navbar-collapse -->
-  </div>
-</div>
+<div data-role="panel" id="mypanel">
+        <!-- panel content goes here -->
+        <ul id="menu">
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3
+    <ul>
+      <li>Item 3-1</li>
+      <li>Item 3-2</li>
+      <li>Item 3-3</li>
+      <li>Item 3-4</li>
+      <li>Item 3-5</li>
+    </ul>
+  </li>
+  <li>Item 4</li>
+  <li>Item 5</li>
+</ul>
+ 
+<script>
+$( "#menu" ).menu();
+</script>
+    </div><!-- /panel -->
