@@ -2,13 +2,3 @@
 # This file contains configuration flags to customize the site.
 # Varables can be set by default with this configure file.
 
-name: "KRL"
-description: "KRL devtools"
-
-url: "http://kre.github.io/devtools/"
-
-paginate: 10
-
-markdown: rdiscount
-permalink: pretty
-# pygments: true
