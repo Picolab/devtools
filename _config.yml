@@ -2,3 +2,6 @@
 # This file contains configuration flags to customize the site.
 # Varables can be set by default with this configure file.
 
+name: "KRL"
+description: "KRL devtools"
+
