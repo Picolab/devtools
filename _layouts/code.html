@@ -77,28 +77,7 @@
       if (!oauth_payload.OAUTH_ECI) {
        alert("Authentication failed. We apologize for this inconvenience. Please try again.");
      } else {
-      $('#dialog-please wait').dialog('open');
-      Fuse.init(function() {
-       console.log("Using version: ", Fuse.fuse_version);
-       console.log("Using fleet channel: ", Fuse.fleet_eci);
-       var channel = Fuse.fleet_eci;
-        // do we need to bootstrap?
-        if (typeof channel === "undefined" || channel == "" || channel == null) {
-          $.mobile.loading("show", {
-           text: "Please wait while we create your account...",
-           textVisible: true
-         });         
-          Fuse.initAccount({ state: state }, function(kns_directives)
-          {
-            console.log("Received directives from bootstrap.execute: ", kns_directives);
-            $.mobile.loading("hide");
-            window.location = "index.html";
-          });
-        } else {
-          console.log("No need to bootstrap");
-          window.location = "index.html";
-        }
-      });
+      // display authorization 
     }
   },
   function(json){
