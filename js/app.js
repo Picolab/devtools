@@ -120,7 +120,7 @@ function plant_authorize_button()
     var authd = CloudOS.authenticatedSession();
     if(authd) {
       console.log("Authorized");
-      document.location.hash = "#page-manage-fuse";
+      document.location.hash = "#page-manage-developing";
     } else {  
       console.log("Asking for authorization");
       document.location.hash = "#page-authorize";
