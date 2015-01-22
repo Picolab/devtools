@@ -7,18 +7,6 @@
        } },
 
 
-       {"#login": {handler: "login",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#register": {handler: "register",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#forgot-password": {handler: "forgotPassword",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
         {"#home": {handler: "home",
           events: "s", // do when we show the page
           argsre: true
@@ -47,17 +35,9 @@
             console.log("manage fuse: authorize page");
             $.mobile.loading("hide");
           }, 
-          login: function(type, match, ui, page) {
-            console.log("login Handler");
-          },
-          forgotPassword: function(type, match, ui, page) {
-            console.log("forgotPassword Handler");
-          },
+          
           home: function(type, match, ui, page) {
             console.log("home Handler");
-          },
-          register: function(type, match, ui, page) {
-            console.log("Create-Account Handler");
           },
 
 
@@ -86,6 +66,7 @@
 function plant_authorize_button()
 {
         //Oauth through kynetx
+        console.log("plant authorize button");
         var OAuth_kynetx_URL = CloudOS.getOAuthURL();
         $('#authorize-link').attr('href', OAuth_kynetx_URL);
         var OAuth_kynetx_newuser_URL = CloudOS.getOAuthNewAccountURL();
