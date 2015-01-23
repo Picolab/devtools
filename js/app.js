@@ -12,6 +12,10 @@
           argsre: true
         } },
 
+        {"#page-manage-developing": {handler: "pageManageDev",
+            events: "c", // just do when we create the page
+            argsre: true
+           } },
 
         {"#listing": {handler: "listing",
           events: "s", // do when we show the page
@@ -35,7 +39,11 @@
             console.log("manage fuse: authorize page");
             $.mobile.loading("hide");
           }, 
-          
+          pageManageDev: function(type, match, ui, page) {
+             console.log("manage Developing: main page");
+            {force:true} // force update when we paint the page
+           );
+          },
           home: function(type, match, ui, page) {
             console.log("home Handler");
           },
