@@ -78,30 +78,8 @@
          alert("Authentication failed. We apologize for this inconvenience. Please try again.");
        } else {
       // display authorization 
-
-      $('#dialog-please wait').dialog('open');
-      Fuse.init(function() {
-        console.log("Using version: ", Fuse.fuse_version);
-        console.log("Using fleet channel: ", Fuse.fleet_eci);
-        var channel = Fuse.fleet_eci;
-        // do we need to bootstrap?
-        if (typeof channel === "undefined" || channel == "" || channel == null) {
-          $.mobile.loading("show", {
-           text: "Please wait while we create your account...",
-           textVisible: true
-         });         
-          //Fuse.initAccount({ state: state }, function(kns_directives)
-          {
-            console.log("Received directives from bootstrap.execute: ", kns_directives);
-            $.mobile.loading("hide");
-            window.location = "app.html";
-          });
-        } else {
-          console.log("No need to bootstrap");
-          window.location = "app.html";
-        }
-      });
-    }
+              consol.log("display Authorization")
+          }
   }
 },
 function(json){
