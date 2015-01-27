@@ -11,7 +11,14 @@
         },
 
 	get_rid : function(name) {
-	    return ;
+        
+        var rids = {
+        "rulesets": {"prod": "b506537x0",
+            "dev": "b506537x0"
+            },
+        }
+
+	    return this.defaults.production ? rids[name].prod : rids[name].dev;
 	},
 
 })(jQuery);
