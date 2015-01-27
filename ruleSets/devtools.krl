@@ -6,12 +6,14 @@ ruleset StockChecker {
 		>>
 		author "Krl-DevTools Developer"
 		logging on
+
+    use module a169x625 CloudOS
 	}
 
 	global {
 		
 	}
-	  rule showRulesets {
+	rule showRulesets {
     select when web cloudAppAction action re/listRulesets/
     pre {
       rulesets = rsm:list_rulesets(meta:eci()).sort();

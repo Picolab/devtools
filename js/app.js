@@ -43,6 +43,10 @@
 
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
+
+            //get the ruleset here using CloudOS??
+            
+
           },
           registeringRuleset: function(type, match, ui, page) {
             console.log("registering Ruleset Handler");
