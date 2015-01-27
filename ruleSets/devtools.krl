@@ -13,8 +13,12 @@ ruleset devtools {
 
 	global {
 		
+    showRulesets = function(){
+      rulesets = rsm:list_rulesets(meta:eci()).sort();
+    }
+
 	}
-	rule showRulesets {
+	/*rule showRulesets {
     select when web cloudAppAction action re/listRulesets/
     pre {
       rulesets = rsm:list_rulesets(meta:eci()).sort();
@@ -107,7 +111,7 @@ ruleset devtools {
       CloudRain:createLoadPanel("Edit Rulesets", [], html);
       CloudRain:skyWatchSubmit("#formUpdateRuleset", "");
     }
-  }
+  }*/
  
   rule updateRuleset {
     select when web submit "#formUpdateRuleset"
