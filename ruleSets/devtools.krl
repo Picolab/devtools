@@ -7,7 +7,7 @@ ruleset StockChecker {
 		author "Krl-DevTools Developer"
 		logging on
 
-    use module a169x625 CloudOS
+    use module a169x625 alias CloudOS
 	}
 
 	global {
