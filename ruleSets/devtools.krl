@@ -1,4 +1,5 @@
-ruleset StockChecker {
+//b506537x0.prod
+ruleset devtools {
 	meta {
 		name "DevTools"
 		description <<
