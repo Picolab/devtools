@@ -9,6 +9,8 @@ ruleset devtools {
 		logging on
 
     use module a169x625 alias CloudOS
+    sharing on 
+    provides showRulesets
 	}
 
 	global {
