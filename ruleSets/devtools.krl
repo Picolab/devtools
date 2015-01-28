@@ -1,4 +1,5 @@
 //b506537x0.prod
+//b506607x14
 ruleset devtools {
 	meta {
 		name "DevTools"
@@ -9,7 +10,7 @@ ruleset devtools {
 		logging on
 
     use module a169x625 alias CloudOS
-    sharing on 
+    sharing on
     provides showRulesets
 	}
 
