@@ -34,16 +34,13 @@
         //need to figure out the .fleet_eci call first
         cb = cb || function(){};
         options = options || {};
+        var rid = "rulesets";
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the rulesets");
         return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
-            if(json.eci != null)  {
-            Devtools.fleet_eci = json.eci; 
-            Devtools.log("Retrieved rulesets", json);
-            cb(json.eci);
-            } else {
-            console.log("Seeing null rulesets eci, not storing...");
-            cb(null);
-            }
-        });
+            Devtools.log("Displaying rulesets", json);
+            cb(json);
+        }, {"eci":eci});
     }
 
 })(jQuery);
