@@ -7,10 +7,13 @@ ruleset devtools {
 		ruleset for DevTools website.
 		>>
 		author "Krl-DevTools Developer"
+    sharing on
+    
 		logging on
 
     use module a169x625 alias CloudOS
-    sharing on
+
+    
     provides showRulesets
 	}
 
