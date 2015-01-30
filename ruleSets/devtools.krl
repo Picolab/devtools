@@ -18,6 +18,13 @@ ruleset devtools {
 		
     showRulesets = function(){
       rulesets = rsm:list_rulesets(meta:eci()).sort();
+
+      rulesetGallery = rulesets.map(function(rid){
+        ridInfo = (rid) => rsm:get_ruleset(rid) | {};
+ 
+        appURL = ridInfo{"uri"};
+      }
+
     }
 
 	}
@@ -116,7 +123,7 @@ ruleset devtools {
     }
   }*/
  
-  rule updateRuleset {
+  /*rule updateRuleset {
     select when web submit "#formUpdateRuleset"
     pre {
       rulesetID = event:attr("rulesetID");
@@ -191,5 +198,5 @@ ruleset devtools {
     //fired {
       //TODO: Need to delete the ruleset.
     //}
-  }
+  }*/
 }

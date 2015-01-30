@@ -1,5 +1,5 @@
 (function($) {
-     window['Fuse'] = {
+     window['Devtools'] = {
 
         // development settings.
         VERSION: 0.1,
@@ -13,12 +13,37 @@
 	get_rid : function(name) {
         
         var rids = {
-        "rulesets": {"prod": "b506537x0",
-            "dev": "b506537x0"
+        "rulesets": {"prod": "b506607x14", 
+            "dev": "b506607x14"
             },
         }
 
 	    return this.defaults.production ? rids[name].prod : rids[name].dev;
 	},
+
+    log: function()
+    {
+        if (this.defaults.logging && console && console.log) {
+            [].unshift.call(arguments, "Devtools:"); // arguments is Array-like, it's not an Array 
+            console.log.apply(console, arguments);
+        }
+    },
+
+    getRulesets: function(cb, options)
+    {
+        //need to figure out the .fleet_eci call first
+        cb = cb || function(){};
+        options = options || {};
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
+            if(json.eci != null)  {
+            Devtools.fleet_eci = json.eci; 
+            Devtools.log("Retrieved rulesets", json);
+            cb(json.eci);
+            } else {
+            console.log("Seeing null rulesets eci, not storing...");
+            cb(null);
+            }
+        });
+    }
 
 })(jQuery);
