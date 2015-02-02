@@ -26,9 +26,11 @@ ruleset devtools {
         ridInfo = (rid) => rsm:get_ruleset(rid) | {};
  
         appURL = ridInfo{"uri"};
-      })
+        appURL
+      });
 
-    }
+      rulesetGallery
+    };
 
 	}
 	/*rule showRulesets {
