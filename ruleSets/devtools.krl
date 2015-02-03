@@ -7,7 +7,9 @@ ruleset devtools {
 		ruleset for DevTools website.
 		>>
 		author "KRL-DevTools Developer"
-    
+
+		use module b16x24 alias system_credentials
+
 
 		logging on
 
