@@ -30,7 +30,7 @@ ruleset devtools {
  
         appURL = ridInfo{"uri"};
 	
-        rid + ":" + appURL
+        ridInfo
       });
 
       rulesetGallery
