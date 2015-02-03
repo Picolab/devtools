@@ -27,7 +27,7 @@ ruleset devtools {
         ridInfo = (rid) => rsm:get_ruleset(rid) | {};
  
         appURL = ridInfo{"uri"};
-        rsm:get_ruleset(rid)
+        rid + ":" + rsm:get_ruleset(rid)
       });
 
       rulesetGallery
