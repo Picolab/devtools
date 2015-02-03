@@ -23,11 +23,11 @@ ruleset devtools {
       rulesets = rsm:list_rulesets(meta:eci()).sort();
 
       rulesetGallery = rulesets.map(function(rid){
-        
+
         ridInfo = (rid) => rsm:get_ruleset(rid) | {};
  
         appURL = ridInfo{"uri"};
-        appURL
+        rid
       });
 
       rulesetGallery
