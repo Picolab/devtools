@@ -24,9 +24,10 @@ ruleset devtools {
 
       rulesetGallery = rulesets.map(function(rid){
 
-        ridInfo = (rid) => rsm:get_ruleset(rid) | {};
+        ridInfo = rsm:get_ruleset(rid).defaultsTo({});
  
         appURL = ridInfo{"uri"};
+	
         rid + ":" + rsm:get_ruleset(rid)
       });
 
