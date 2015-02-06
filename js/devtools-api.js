@@ -99,7 +99,7 @@
             }
         });
         } else {
-        Fuse.log("Using cached value of fleet channel ", Devtools.rid_eci);
+        Devtools.log("Using cached value of fleet channel ", Devtools.rid_eci);
         cb(Devtools.rid_eci);
         return Devtools.rid_eci;
         }
