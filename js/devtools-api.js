@@ -2,11 +2,11 @@
      window['Devtools'] = {
 
         // development settings.
-        VERSION: 0.1,
+        //VERSION: 0.1,
 
         defaults: {
             logging: false,  // false to turn off logging
-	    production: false,
+            production: false,
         },
 
 
