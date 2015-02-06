@@ -83,6 +83,9 @@
          alert("Authentication failed. We apologize for this inconvenience. Please try again.");
        } else {
       // display authorization 
+              Devtools.init(function() {
+                console.log("using Devtools!");
+              });
               console.log("display Authorization")
               window.location = "index.html";
           }
