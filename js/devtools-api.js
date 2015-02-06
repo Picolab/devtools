@@ -24,6 +24,23 @@
     rid_eci: null,
     rid_list: [],
 
+    init: function(cb)
+    {
+        cb = cb || function(){};
+        Devtools.log("Initializing...");
+        $.when(
+            Devtools.getProfile(CloudOS.defaultECI),
+            Devtools.ridChannel()
+        ).done(function(profile, eci){
+        Devtools.log("Stored fleet channel", eci[0]);
+        Devtools.log("Retrieved user profile", profile[0]);
+        cb(profile[0], eci[0]);
+        Devtools.log("Done initializing...");
+        }).fail(function(res){
+        Devtools.log("Initialization failed...", res);
+        });
+    },
+
     log: function()
     {
         if (this.defaults.logging && console && console.log) {
@@ -32,12 +49,28 @@
         }
     },
 
-    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
+    getProfile: function(channel, cb, options)
     {
-        //need to figure out the .fleet_eci call first
         cb = cb || function(){};
         options = options || {};
-        var rid = "rulesets";
+            Devtools.log("Retrieving profile for user");
+
+        return CloudOS.skyCloud("a169x676", "get_all_me", {}, function(res) { //fix this up
+            CloudOS.clean(res);
+            if(typeof cb !== "undefined"){
+                cb(res);
+            }
+        },
+        {"eci": channel});
+    },
+
+
+    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
+    {
+        
+        cb = cb || function(){};
+        options = options || {};
+        //var rid = "rulesets";
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Showing the rulesets");
         return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {

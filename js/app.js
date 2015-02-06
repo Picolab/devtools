@@ -45,6 +45,8 @@
             console.log("listing Handler");
 
             //get the ruleset here using CloudOS??
+            //var rulesets_list = Devtools.getRulesets();
+            console.log(Devtools.getRulesets());
             
 
           },
