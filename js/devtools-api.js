@@ -24,22 +24,6 @@
     rid_eci: null,
     rid_list: [],
 
-    init: function(cb)
-    {
-        cb = cb || function(){};
-        Devtools.log("Initializing...");
-        $.when(
-            Devtools.getProfile(CloudOS.defaultECI),
-            Devtools.ridChannel()
-        ).done(function(profile, eci){
-        Devtools.log("Stored fleet channel", eci[0]);
-        Devtools.log("Retrieved user profile", profile[0]);
-        cb(profile[0], eci[0]);
-        Devtools.log("Done initializing...");
-        }).fail(function(res){
-        Devtools.log("Initialization failed...", res);
-        });
-    },
 
     log: function()
     {
