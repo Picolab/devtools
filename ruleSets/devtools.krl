@@ -15,13 +15,13 @@ ruleset devtools {
 
 		use module a169x625 alias CloudOS
 
-		provides getRuleset
+		provides showRulesets
 		sharing on
 	}
 
 	global {
 		
-		getRuleset = function(){
+		showRulesets = function(){
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
 			rulesetGallery = rulesets.map(function(rid){
@@ -63,6 +63,7 @@ ruleset devtools {
 			//}
 	}
 
+	
 	rule updateRuleset {
 		select when web submit "#formUpdateRuleset"
 		pre {
