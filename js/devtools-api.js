@@ -39,7 +39,7 @@
         options = options || {};
             Devtools.log("Retrieving profile for user");
 
-        return CloudOS.skyCloud("a169x676", "get_all_me", {}, function(res) { //fix this up
+        return CloudOS.skyCloud("a169x676", "get_all_me", {}, function(res) { //fix this up. what rule is this calling?
             CloudOS.clean(res);
             if(typeof cb !== "undefined"){
                 cb(res);
