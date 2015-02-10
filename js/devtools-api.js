@@ -60,7 +60,7 @@
             Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
-    }
+    },
 
 
 
