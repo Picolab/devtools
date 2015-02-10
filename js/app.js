@@ -78,7 +78,7 @@ function plant_authorize_button()
         var OAuth_kynetx_newuser_URL = CloudOS.getOAuthNewAccountURL();
         $('#create-link').attr('href', OAuth_kynetx_newuser_URL);
 
-      };
+      }
 
       function onMobileInit() {
        console.log("mobile init");
