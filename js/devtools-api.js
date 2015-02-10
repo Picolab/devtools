@@ -13,8 +13,8 @@
 	get_rid : function(name) {
         
         var rid = {
-        "rulesets": {"prod": "b506607x14", 
-            "dev": "b506607x14"
+            "rulesets": {"prod": "b506607x14", 
+                          "dev": "b506607x14"
             },
         }
 
@@ -25,8 +25,7 @@
     rid_list: [],
 
 
-    log: function()
-    {
+    log: function() {
         if (this.defaults.logging && console && console.log) {
             [].unshift.call(arguments, "Devtools:"); // arguments is Array-like, it's not an Array 
             console.log.apply(console, arguments);
@@ -88,5 +87,7 @@
         return Devtools.rid_eci;
         }
     }
+
+    };
 
 })(jQuery);

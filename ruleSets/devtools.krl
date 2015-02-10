@@ -1,5 +1,5 @@
-//b506537x0.prod
 //b506607x14
+//Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b506607x14.prod;b506607x14.dev
 ruleset devtools {
 	meta {
 		name "DevTools"
