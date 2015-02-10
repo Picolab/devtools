@@ -1,5 +1,6 @@
 (function($) {
-     window['Devtools'] = {
+     window['Devtools'] = { //window represents the browser window
+        //by putting it in window, it's essentially greating a global variable
 
         // development settings.
         //VERSION: 0.1,
@@ -12,7 +13,7 @@
 
 	get_rid : function(name) {
         
-        var rid = {
+        var rids = {
             "rulesets": {"prod": "b506607x14", 
                           "dev": "b506607x14"
             },
