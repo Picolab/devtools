@@ -50,8 +50,18 @@
            // var ruleset_obj = JSON.parse(json_text);
 
            // console.log(ruleset_obj);
-              $("#List-Rulesets").html("<p id='demo'>test</p>");
-              $('#List-Rulesets').listview('refresh');
+
+var text = '{"employees":[' +
+'{"firstName":"John","lastName":"Doe" },' +
+'{"firstName":"Anna","lastName":"Smith" },' +
+'{"firstName":"Peter","lastName":"Jones" }]}';
+
+obj = JSON.parse(text);
+document.getElementById("List-Rulesets").innerHTML =
+obj.employees[1].firstName + " " + obj.employees[1].lastName;
+
+         //   $("#List-Rulesets").html("<p id='demo'>test</p>");
+          //  $('#List-Rulesets').listview('refresh');
           
             
            // $("#List-Rulesets").html(
