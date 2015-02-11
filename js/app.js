@@ -46,10 +46,10 @@
 
             //get the ruleset here using CloudOS??
             //var rulesets_list = Devtools.getRulesets();
-            var json_text = Devtools.getRulesets();
-            var ruleset_obj = JSON.parse(json_text);
+           // var json_text = Devtools.getRulesets();
+           // var ruleset_obj = JSON.parse(json_text);
 
-            console.log(ruleset_obj);
+           // console.log(ruleset_obj);
             $(function(){
               $("#List-Rulesets").html("<p id='demo'>test</p>");
               $('#List-Rulesets').listview('refresh');
