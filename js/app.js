@@ -50,10 +50,9 @@
            // var ruleset_obj = JSON.parse(json_text);
 
            // console.log(ruleset_obj);
-            $(function(){
               $("#List-Rulesets").html("<p id='demo'>test</p>");
               $('#List-Rulesets').listview('refresh');
-            });
+          
             
            // $("#List-Rulesets").html(
              // obj.name + "<br>" +
