@@ -51,8 +51,7 @@
 
            // console.log(ruleset_obj);
 
-          obj = JSON.parse(Devtools.getRulesets());
-          document.getElementById("List-Rulesets").innerHTML = JSON.stringify(obj, undefined, 2);
+          document.getElementById("List-Rulesets").innerHTML = JSON.stringify(Devtools.getRulesets(), undefined, 2);
 
          //   $("#List-Rulesets").html("<p id='demo'>test</p>");
           //  $('#List-Rulesets').listview('refresh');
