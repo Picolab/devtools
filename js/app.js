@@ -52,7 +52,7 @@
            // console.log(ruleset_obj);
           
               $("#List-Rulesets").html("<p id='demo'>test</p>");
-             // $('#List-Rulesets').listview('refresh');
+              $('#List-Rulesets').listview('refresh');
             
            // $("#List-Rulesets").html(
              // obj.name + "<br>" +
