@@ -55,7 +55,7 @@
          // document.getElementById("List-Rulesets").innerHTML = obj;
 
             $("#List-Rulesets").html("<p id='demo'>"+obj+"</p>");
-          //  $('#List-Rulesets').listview('refresh');
+            $('#List-Rulesets').listview('refresh');
           
             
            // $("#List-Rulesets").html(
