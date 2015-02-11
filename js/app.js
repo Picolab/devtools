@@ -46,7 +46,15 @@
 
             //get the ruleset here using CloudOS??
             //var rulesets_list = Devtools.getRulesets();
-            console.log(Devtools.getRulesets());
+            var json_text = Devtools.getRulesets();
+            var ruleset_obj = JSON.parse(json_text);
+
+            console.log(ruleset_obj);
+            $("#List-Rulesets").html("<p id='demo'></p>")
+           // $("#List-Rulesets").html(
+             // obj.name + "<br>" +
+             // obj.street + "<br>" +
+              //obj.phone;);
             
 
           },
