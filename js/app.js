@@ -51,14 +51,8 @@
 
            // console.log(ruleset_obj);
 
-var text = '{"employees":[' +
-'{"firstName":"John","lastName":"Doe" },' +
-'{"firstName":"Anna","lastName":"Smith" },' +
-'{"firstName":"Peter","lastName":"Jones" }]}';
-
-obj = JSON.parse(text);
-document.getElementById("List-Rulesets").innerHTML =
-obj.employees[1].firstName + " " + obj.employees[1].lastName;
+          obj = JSON.parse(Devtools.getRulesets());
+          document.getElementById("List-Rulesets").innerHTML = JSON.stringify(obj, undefined, 2);
 
          //   $("#List-Rulesets").html("<p id='demo'>test</p>");
           //  $('#List-Rulesets').listview('refresh');
