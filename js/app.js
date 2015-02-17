@@ -57,6 +57,26 @@
 
             $("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
             $('#List-Rulesets').listview('refresh');
+
+            if(len > 0){
+                for(var i=0;i<len;i++){
+                    txt += "<tr><td>"+obj[i].rid+"</td><td>"+obj[i].uri+"</td></tr>";
+                      
+                  }
+                if(txt != ""){
+                        $("#ruleset-list").append(txt);
+                  }
+            }
+
+
+            var frm = "#ruleset-form";
+            $(frm)[0].reset();
+            var owner_eci = CloudOS.defaultECI; //from pageUpdateProfile
+
+            var rulesetJSON = Devtools.showRulesets()
+
+              $("#RID", frm).val(ruleset_obj.rid);
+              $("#source-URL", frm).val(ruleset_obj.uri);
           
             
            // $("#List-Rulesets").html(
