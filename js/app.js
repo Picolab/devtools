@@ -58,6 +58,7 @@
             $("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
             $('#List-Rulesets').listview('refresh');
 
+            console.log(obj.rid);
             var len = obj.length
             var txt = "";
             if(len > 0){
