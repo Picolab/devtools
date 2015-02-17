@@ -55,10 +55,11 @@
           var ruleset_obj = JSON.parse(obj);
          // document.getElementById("List-Rulesets").innerHTML = obj;
 
-            $("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
-            $('#List-Rulesets').listview('refresh');
+            //$("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
+            //$('#List-Rulesets').listview('refresh');
 
             console.log(obj.rid);
+            console.log(ruleset_obj.rid);
             var len = obj.length
             var txt = "";
             if(len > 0){
@@ -72,14 +73,14 @@
             }
 
 
-            var frm = "#ruleset-form";
+            /*var frm = "#ruleset-form";
             $(frm)[0].reset();
             var owner_eci = CloudOS.defaultECI; //from pageUpdateProfile
 
             var rulesetJSON = Devtools.showRulesets()
 
               $("#RID", frm).val(ruleset_obj.rid);
-              $("#source-URL", frm).val(ruleset_obj.uri);
+              $("#source-URL", frm).val(ruleset_obj.uri);*/
           
             
            // $("#List-Rulesets").html(
