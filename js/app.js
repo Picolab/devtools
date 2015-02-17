@@ -58,6 +58,8 @@
             $("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
             $('#List-Rulesets').listview('refresh');
 
+            var len = obj.length
+            var txt = "";
             if(len > 0){
                 for(var i=0;i<len;i++){
                     txt += "<tr><td>"+obj[i].rid+"</td><td>"+obj[i].uri+"</td></tr>";
