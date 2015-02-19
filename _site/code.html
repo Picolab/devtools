@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get Code and Redirect">
+  <meta name="author" content="BYU Dev Team">
+  <link rel="shortcut icon" href="img/favicon.png">
+
+  <title>Get Code and Redirect</title>
+
+  <!-- Css -->
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+
+  <style>
+    .header-image {
+      margin-top: 4px;
+      text-align: center;
+    }
+    .alert {
+      color: red
+    }
+    @media (min-width:800px) {
+      .ui-content {
+        width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    .center-wrapper{
+      text-align: center;
+    }			  
+    .center-wrapper * {
+      margin: 0 auto;
+    }
+  </style>
+  <!-- Themes -->
+  <link rel="stylesheet" href="https://s3.amazonaws.com/Fuse_assets/themes/Fuse.css" />
+  <link rel="stylesheet" href="https://s3.amazonaws.com/Fuse_assets/themes/jquery.mobile.icons.min.css" />
+
+
+</head>
+
+<body>
+
+
+  <div data-role="page" id="dialog-please wait">
+   <div data-role="header"> 
+     <div class="header-image">
+        <img class="fuse-logo" src="https://s3.amazonaws.com/Fuse_assets/img/fuse_logo-40.png">
+     </div>
+   </div><!-- /header -->
+
+   <div data-role="content" role="main">
+
+   </div><!-- /content -->
+
+   <div data-role="footer" data-position="fixed">
+      <h4>KRL for Developers</h4>
+   </div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+  <!-- Javascript -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+  <script src="js/handlebars-v1.3.0.js"></script>
+  <script src="https://s3.amazonaws.com/CloudOS_assets/js/CloudOS-1.0.0.js"></script>
+  <script src="js/CloudOS-config.js"></script>
+  <!--  <script src="https://rawgit.com/kynetx/Fuse-API/master/js/fuse-api.js"></script> -->
+  <!-- <script src="https://s3.amazonaws.com/Fuse_assets/js/fuse-api-1.0.0.js"></script>
+  <script src="js/fuse-api-config.js"></script> -->
+
+  <!--getting access for devtools-api-->
+  <script src="https://raw.githubusercontent.com/kre/devtools/gh-pages/js/devtools-api.js"></script>
+ <!-- <script src="js/devtools-api-config.js"></script> -->
+
+
+
+  <script>
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };
+
+    var state = getParameterByName("state");
+
+    $("document").ready(function() {
+
+      CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
+      {
+        if (!oauth_payload.OAUTH_ECI) {
+         alert("Authentication failed. We apologize for this inconvenience. Please try again.");
+       } else {
+      // display authorization 
+              console.log("display Authorization")
+              window.location = "index.html";
+          }
+},
+function(json){
+ console.log("something went wrong with the OAuth authorization " + json);
+ alert("Something went wrong with your authorization. Please try again. ");
+   // not ideal, but...
+   window.location = "https://" + CloudOS.login_server + "/login";
+ }
+ );
+})
+</script>
+
+</body>
+</html>

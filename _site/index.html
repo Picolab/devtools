@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"> 
+  <head> 
+    <title>KRL-DevTools</title> 
+      <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css">
+
+</head> 
+<body> 
+
+    <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="js/jquery.mobile.router.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="https://s3.amazonaws.com/CloudOS_assets/js/CloudOS-1.0.0.js"></script>
+    <script src="js/CloudOS-config.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/devtools-api.js"></script>
+    <script src="js/devtools-api-config.js"></script>
+
+    <!--  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>-->
+
+  <div data-role="page" id="home">
+
+	
+<div data-role="panel" id="mypanel">
+        <!-- panel content goes here -->
+        <ul id="menu">
+  <!--<li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3
+    <ul>
+      <li>Item 3-1</li>
+      <li>Item 3-2</li>
+      <li>Item 3-3</li>
+      <li>Item 3-4</li>
+      <li>Item 3-5</li>
+    </ul>
+  </li>
+  <li>Item 4</li>
+  <li>Item 5</li>
+</ul>-->
+ 
+<script>
+$( "#menu" ).menu();
+</script>
+    </div><!-- /panel -->
+
+	<div data-role="header">
+		<a href="#home" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Home</a>
+		<h1>Welcome To KRL Development Homepage</h1>
+		<a href="#tools" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">Tools</a>
+	</div>
+	
+	<style>
+	.devtools-btn {
+		margin-right: .625em;
+		padding: .7em 1em;
+		color: white;
+		background-color: black;
+		font-weight: 200;
+		text-decoration: none;
+	}
+	</style>
+
+	<div data-role="main" class="ui-content">
+		<p>Welcome to your KRL Development home, this is where you want to be.</p>
+		<a href="#listing" class="ui-btn ui-btn-inline devtools-btn">Listing Ruleset</a>
+		<a href="#registering-ruleset" class="ui-btn ui-btn-inline devtools-btn">Registering Ruleset</a>
+		<a href="#confirming-deletion" class="ui-btn ui-btn-inline devtools-btn">Confirming Deletion</a>
+		<a href="#updating-url" class="ui-btn ui-btn-inline devtools-btn">Updating Url </a>
+	</div>
+
+	<div data-role="footer">
+		<a href="#login" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Logout</a>
+		<h1>Develop with intent!</h1>
+	</div>
+</div>
+
+<!-- ---------- authorize ---------- -->
+<div data-role="page" id="page-authorize" data-title="Authorize Fuse" data-close-btn="none">
+
+ <div data-role="header" style="text-align:center;">
+   <div class="header-image">
+    <img class="fuse-logo" src="https://s3.amazonaws.com/Fuse_assets/img/fuse_logo-40.png">
+  </div>
+
+  <div data-role="collapsible" id="help-menu" data-mini="true" class="rightMenu" data-collapsed-icon="info" data-expanded-icon="info">
+   <h3>Fuse Help</h3>
+   <ul data-role="listview" >
+    <li data-icon="false"><a href="/app_help.html" target="_blank">Get Started</a></li>
+    <li data-icon="false"><a href="/faq.html#using" target="_blank">FAQ</a></li>
+  </ul>
+</div>
+
+
+</div><!-- /header -->
+
+<div data-role="content" >
+  <ul data-role="listview" data-inset="true">
+    <li data-role="list-divider" >
+      <h2 style="text-align:center; font-size: 150%">Welcome to our KRL Developers!</h2>
+    </li>
+    <li  style="background:white; font-size: 150%">
+      <p class="wrap">We're all here to learn KRL and become better developers of this awesome language.</p>
+
+      <p class="wrap">KRL Developer data is stored in a personal cloud from Kynetx that is designed to protect the privacy of your data and put it under your control. You can use the "Authorize" button to link to an existing Kynetx account or use the "Create" button to create a new account.</p>
+
+
+      <p class="wrap"><b>Note:</b> please don't sign in with a SquareTag account. Rather, we recommend you create a new account.</p>
+
+      <p class="wrap"><strong>Read "Getting Started" under Help</strong></p>
+
+    </li>
+
+  </ul>
+
+
+  <a id="authorize-link" href="#" data-transition="slide" class="ui-btn ui-corner-all ui-btn-b ui-shadow ui-btn-inline">Authorize with Kynetx</a>
+
+  <a id="create-link" href="#" data-transition="slide" class="ui-btn ui-corner-all ui-btn-a ui-shadow ui-btn-inline">Create Kynetx Account</a>
+
+</div><!-- /content -->
+
+<div data-role="footer" data-position="fixed">
+  <h4>Fuse by Kynetx</h4>
+</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<div data-role="page" id="listing">
+	<div data-role="header">
+		
+	</div>
+
+	<div data-role="main" class="ui-content">
+ 
+          <div data-role="main" class="ui-content">
+            <!--<form id="ruleset-form">-->
+              <table data-role="table" id="ruleset-list" data-inset="true"> 
+                
+                <thead>      
+                  <tr>
+                    <th>
+                      RID
+                    </th>
+                    <th>
+                      Source URL
+                    </th>
+                    <th>
+                      Editing
+                    </th>
+                  </tr>
+                </thead>
+
+              </table>
+
+
+                <!--<tbody>
+                  <tr>
+                    <td>
+                      <input type="text" id="RID" placeholder="RID" value="">
+                    </td>
+                    <td>
+                      <input type="text" id="source-URL" placeholder="source-URL" value="">
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+
+
+              <a class="save" href="#" data-icon="check" data-role="button" data-inline="true" data-theme="b">Save</a>
+              <a class="cancel" href="#page-manage-fuse" data-icon="delete" data-role="button" data-inline="true">Cancel</a>
+            </form>-->
+
+
+
+          </div>
+
+	</div>
+	<div data-role="footer">
+			
+	</div>
+</div>
+<div data-role="page" id="registering-ruleset">
+	<div data-role="header">
+		
+	</div>
+
+	<div data-role="main" class="ui-content">
+	
+	</div>
+	<div data-role="footer">
+			
+	</div>
+</div>
+<div data-role="page" id="confirming-deletion">
+	<div data-role="header">
+		
+	</div>
+
+	<div data-role="main" class="ui-content">
+	
+	</div>
+	<div data-role="footer">
+			
+	</div>
+</div>
+<div data-role="page" id="updating-url">
+	<div data-role="header">
+		
+	</div>
+
+	<div data-role="main" class="ui-content">
+	
+	</div>
+	<div data-role="footer">
+			
+	</div>
+</div>
+
+
+
+
+
+
+</body>
+</html>
+
+    
