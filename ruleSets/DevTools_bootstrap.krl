@@ -25,12 +25,12 @@ ruleset DevTools_bootstrap {
                    "b506607x14.prod" //DevTools
             ],
 	    "unwanted": [ 
-                   "a169x664.prod",	// CloudUIService 
-                   "a169x667.prod",	// myThings
-                   "a41x178.prod",	// SquareTag
-                   "a169x669.prod",	// appStore
+          //         "a169x664.prod",	// CloudUIService 
+          //         "a169x667.prod",	// myThings
+          //         "a41x178.prod",	// SquareTag
+          //         "a169x669.prod",	// appStore
     //               "a169x727.prod",	// CloudAPI
-                   "b177052x7.prod"
+          //         "b177052x7.prod"
             ]
         };
     }
