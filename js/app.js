@@ -51,7 +51,7 @@
               var txt = "";
               if(len > 0){
                 for(var i=0;i<len;i++){
-                    txt += "<tr><td>"+obj[i].rid+"</td><td>"+obj[i].uri+"</td><td><a href=\"#\" data-role=\"button\" data-icon=\"arrow-r\"></a></td></tr>";
+                    txt += "<tr><td>"+obj[i].rid+"</td><td>"+obj[i].uri+"</td><td><a href=\""+obj[i].uri+"\" data-role=\"button\" data-icon=\"arrow-r\"></a></td></tr>";
                       
                   }
                 if(txt !== ""){ // should this be != vs !== ?????
