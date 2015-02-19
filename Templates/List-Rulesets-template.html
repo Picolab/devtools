@@ -1,0 +1,17 @@
+{% raw %} <!-- turn off jekyl (in github pages) -->
+
+<div id="List-Rulesets-template" style="display:none;">
+  <li class="ui-field-contain">
+      <a data-transition="slide" href="#page-update-vehicle?id={{id}}"> 
+       <p class="ui-li-aside"><img style="vertical-align: middle" class="ui-li-icon" src="{{status_icon}}">  {{last_running}}</p>
+       <h3><b>{{name}}</b></h3>
+       {{#if running}}
+       <p>{{running}} {{speed}}<br/>
+          {{fuel}}
+       </p>
+       {{/if}}
+      </a>
+  </li>
+</div>
+
+{% endraw %}
