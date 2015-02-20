@@ -43,7 +43,7 @@
 
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
-
+          //  $('ruleset-list').html(snippets.List_Rulesets_template());
             
           Devtools.getRulesets(function(obj){ //the callback/function is where we need to have all of our code
               console.log(obj);
@@ -54,11 +54,13 @@
                     txt += "<tr><td>"+obj[i].rid+"</td><td>"+obj[i].uri+"</td><td><a href=\""+obj[i].uri+"\" data-role=\"button\" data-icon=\"arrow-r\">button</a></td></tr>";
                       
                   }
-                if(txt !== ""){ // should this be != vs !== ?????
-                        $("#ruleset-list").append(txt);
+                if(txt !== ""){
+                        $("#ruleset-list").html(txt);
+                        $("#ruleset-list").listview('refresh');
                   }
                 else{
-                    $("#ruleset-list").append("<tr><td> NONE </td><td> NONE </td>");
+                    $("#ruleset-list").html("<tr><td> NONE </td><td> NONE </td>");
+                    $("#ruleset-list").listview('refresh');
                 }
               } 
             });
@@ -101,9 +103,14 @@
         defaultArgsRe: true
 
       });
+      // Handlebar templates compiled at load time to create functions
+      // templates are included to index.html from Templates directory.
+      window['snippets'] = {
+        List_Rulesets_template: Handlebars.compile($("#List-Rulesets-template").html() || ""),
+      };
 
-function plant_authorize_button()
-{
+      function plant_authorize_button()
+      {
         //Oauth through kynetx
         console.log("plant authorize button");
         var OAuth_kynetx_URL = CloudOS.getOAuthURL();
@@ -121,13 +128,11 @@ function plant_authorize_button()
     function onPageLoad() {// Document.Ready
     	console.log("document ready");
       CloudOS.retrieveSession();
+      // only put static stuff here...
+      plant_authorize_button();
 
-
-  // only put static stuff here...
-  plant_authorize_button();
-
-  $('.logout').off("tap").on("tap", function(event)
-  {
+    $('.logout').off("tap").on("tap", function(event)
+       {
             CloudOS.removeSession(true); // true for hard reset (log out of login server too)
             $.mobile.changePage('#page-authorize', {
               transition: 'slide'
@@ -152,7 +157,7 @@ function plant_authorize_button()
     $.mobile.loading("hide");
   }
 
-}
+  }
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
