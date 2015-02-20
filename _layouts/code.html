@@ -82,9 +82,22 @@
         if (!oauth_payload.OAUTH_ECI) {
          alert("Authentication failed. We apologize for this inconvenience. Please try again.");
        } else {
-      // display authorization 
-              console.log("display Authorization")
-              window.location = "index.html";
+        if ( ) {//if not bootstraped 
+          $.mobile.loading("show", {
+               text: "Please wait while we create your account...",
+               textVisible: true
+          });         
+       //   devtools.initAccount({ state: state }, function(kns_directives) // Devtools object?? vs devtools
+          {
+            console.log("Received directives from bootstrap.execute: ", kns_directives);
+            $.mobile.loading("hide");
+            window.location = "app.html";
+          });
+        } else {
+            console.log("No need to bootstrap");
+            // display authorization 
+            console.log("Authorized")
+            window.location = "index.html";
           }
 },
 function(json){

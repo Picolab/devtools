@@ -64,7 +64,26 @@
         }, {"eci":eci});
     },
 
+// ---------- account ----------
+    // this is called in _layouts/code.html when the account is created
+    initAccount: function(attrs, cb, options)
+        {
+        cb = cb || function(){};
+        options = options || {};
+        attrs = attrs || {};
+            Devtools.log("Initializing account for user with attributes ", attrs);
 
+            return CloudOS.raiseEvent("Devtools", "bootstrap", attrs, {}, function(response)
+            {
+        // note that because the channel is create asynchronously, processing callback does
+        // NOT mean the channel exists. 
+                Devtools.log("account initialized");
+        if(response.length < 1) {
+            throw "Account initialization failed";
+        }
+        cb(response);
+            });
+        },
 
 //---------the functions for updating rulesets
 
