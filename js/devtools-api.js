@@ -69,7 +69,8 @@
 //---------the functions for updating rulesets
 
 
-    ridSummary: function(cb, options) {
+    ridSummary: function(cb, options) //vehicleSummary
+    {
             cb = cb || function(){};
             options = options || {};
             //if(isEmpty(Devtools.vehicle_summary)) {
@@ -86,7 +87,8 @@
             }, options);
         },
 
-    ridChannels: function(cb, options){
+    ridChannels: function(cb, options) //vehicleChannels
+    {
             cb = cb || function(){};
             options = options || {};
                 Devtools.log("Retrieving vehicles"); 
@@ -101,7 +103,8 @@
             }, options);
         },
 
-    updateRIDSummary: function(id, profile) {
+    updateRIDSummary: function(id, profile) //updateVehicleSummary
+    {
             Devtools.rid_summary = Devtools.rid_summary || {};
             Devtools.rid_summary[id] = Devtools.rid_summary[id] || {};
             $.each(profile, function(k,v){
