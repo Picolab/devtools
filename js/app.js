@@ -191,7 +191,6 @@
     $.mobile.loading("hide");
   }
 
-  }
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
