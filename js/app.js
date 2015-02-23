@@ -147,8 +147,7 @@
       CloudOS.retrieveSession();
       // only put static stuff here...
       plant_authorize_button();
-      console.log("authorize button has been planted")
-    };
+      console.log("authorize button has been planted");
 
     $('.logout').off("tap").on("tap", function(event)
        {
@@ -160,21 +159,6 @@
 
           });
 
-    function paint_item(id, vehicle) {
-
-          /*if (typeof vehicle === "undefined") {
-        return;
-          }*/
-
-
-        $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
-            snippets.list_rulesets_template(
-              {"rid": vehicle.profileName,
-               "uri": id,
-               "description": status,
-              }));
-    };
-     
 
 
   try {
@@ -193,6 +177,7 @@
     $.mobile.loading("hide");
   }
 
+    };
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
@@ -200,3 +185,20 @@
     $(document).bind("mobileinit", onMobileInit);
     $(document).ready(onPageLoad);
   })(jQuery);
+
+
+    function paint_item(id, vehicle) {
+
+          /*if (typeof vehicle === "undefined") {
+        return;
+          }*/
+
+
+        $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
+            snippets.list_rulesets_template(
+              {"rid": vehicle.profileName,
+               "uri": id,
+               "description": status,
+              }));
+    };
+     
