@@ -74,7 +74,7 @@
 
               console.log("attempting rough listview");
 
-              var keys = json.sort(sortBy("rid"));
+              var keys = rids_json.sort(sortBy("rid"));
               $.each(keys, paint_item);
 
               $('#manage-list').listview('refresh');
@@ -134,7 +134,6 @@
         $('#authorize-link').attr('href', OAuth_kynetx_URL);
         var OAuth_kynetx_newuser_URL = CloudOS.getOAuthNewAccountURL();
         $('#create-link').attr('href', OAuth_kynetx_newuser_URL);
-
       }
 
       function onMobileInit() {
@@ -144,38 +143,35 @@
 
     function onPageLoad() {// Document.Ready
     	console.log("document ready");
-      CloudOS.retrieveSession();
-      // only put static stuff here...
-      plant_authorize_button();
-      console.log("authorize button has been planted");
+	CloudOS.retrieveSession();
+	// only put static stuff here...
+	plant_authorize_button();
 
-    $('.logout').off("tap").on("tap", function(event)
-       {
-            CloudOS.removeSession(true); // true for hard reset (log out of login server too)
-            $.mobile.changePage('#page-authorize', {
-              transition: 'slide'
-            }); // this will go to the authorization page.
+	$('.logout').off("tap").on("tap", function(event)
+	   {
+	       CloudOS.removeSession(true); // true for hard reset (log out of login server too)
+	       $.mobile.changePage('#page-authorize', {
+		   transition: 'slide'
+	       }); // this will go to the authorization page.
+	   });
 
+	console.log("Choose page to show");
 
-          });
+	try {
+	    var authd = CloudOS.authenticatedSession();
+	    if(authd) {
+		console.log("Authorized");
+		document.location.hash = "#home";
+	    } else {  
+		console.log("Asking for authorization");
+		document.location.hash = "#page-authorize";
+	    }
+	} catch (exception) {
 
-
-
-  try {
-    var authd = CloudOS.authenticatedSession();
-    if(authd) {
-      console.log("Authorized");
-      document.location.hash = "#home";
-    } else {  
-      console.log("Asking for authorization");
-      document.location.hash = "#page-authorize";
-    }
-  } catch (exception) {
-
-  } finally {
-    $.mobile.initializePage();
-    $.mobile.loading("hide");
-  }
+	} finally {
+	    $.mobile.initializePage();
+	    $.mobile.loading("hide");
+	}
 
     };
 
@@ -198,7 +194,7 @@
             snippets.list_rulesets_template(
               {"rid": vehicle.profileName,
                "uri": id,
-               "description": status,
+               "description": status
               }));
     };
      
