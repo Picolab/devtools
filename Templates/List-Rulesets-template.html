@@ -1,15 +1,13 @@
 {% raw %} <!-- turn off jekyl (in github pages) -->
 
-<div id="List-Rulesets-template" style="display:none;">
+<div id="list-rulesets-template" style="display:none;">
   <li class="ui-field-contain">
-      <a data-transition="slide" href="#page-update-vehicle?id={{id}}"> 
+      <a data-transition="slide" href="#page-update-vehicle?id={{id}}"> <!--change page-update-vehicle-->
        <p class="ui-li-aside"><img style="vertical-align: middle" class="ui-li-icon" src="{{status_icon}}">  {{last_running}}</p>
-       <h3><b>{{name}}</b></h3>
-       {{#if running}}
-       <p>{{running}} {{speed}}<br/>
-          {{fuel}}
+       <h3><b>{{rid}}</b></h3> <!--pulls these {{}} values from paint_item in app.js-->
+       <p>{{uri}}<br/>
+          {{description}}
        </p>
-       {{/if}}
       </a>
   </li>
 </div>
