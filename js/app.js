@@ -147,6 +147,7 @@
       CloudOS.retrieveSession();
       // only put static stuff here...
       plant_authorize_button();
+      console.log("authorize button has been planted")
     };
 
     $('.logout').off("tap").on("tap", function(event)
