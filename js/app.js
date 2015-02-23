@@ -147,6 +147,7 @@
       CloudOS.retrieveSession();
       // only put static stuff here...
       plant_authorize_button();
+    };
 
     $('.logout').off("tap").on("tap", function(event)
        {
@@ -171,8 +172,8 @@
                "uri": id,
                "description": status,
               }));
-          } 
-      }
+    };
+     
 
 
   try {
