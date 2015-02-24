@@ -206,8 +206,8 @@
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
-              {"rid": rids.rid,
-               "uri": rids.uri,
+              {"rid": rids["rid"],
+               "uri": rids["uri"],
                "description": status
               }));
     };
