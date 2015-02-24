@@ -81,8 +81,8 @@
                  });
               });
 
-              var keys = rids_json.sort(sortBy("rid"));
-              console.log("keys: " + keys);
+              var keys = rids_json.sort(sortBy("rid_index"));
+              console.log("keys: " + keys["Object"]);
               $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
@@ -207,7 +207,7 @@
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
               {"rid": rids.rid,
-               "uri": id,
+               "uri": rids.uri,
                "description": status
               }));
     };
