@@ -77,7 +77,7 @@
 
              $.each(rids_json, function(key, value){
                $.each(value["Object"], function(key, value){
-                  console.log(key, value);
+                  console.log(key+':'+ value);
                  });
               });
 
