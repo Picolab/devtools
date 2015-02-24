@@ -75,8 +75,12 @@
 
               console.log("attempting rough listview");
 
-              var keys = rids_json;//.sort(sortBy("rid"));
-              console.log("keys: " + keys[0]);
+             $.each(rids_json[0], function(key, value){
+                console.log(key, value);
+              });
+
+              var keys = rids_json.sort(sortBy("rid"));
+              console.log("keys: " + keys);
               $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
@@ -191,7 +195,7 @@
             return 0;
               };
           };
-    function paint_item(id, rids) {
+    function paint_item(id, rids) {//(key,value)
 
           /*if (typeof vehicle === "undefined") {
         return;
