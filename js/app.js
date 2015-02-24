@@ -76,7 +76,9 @@
               console.log("attempting rough listview");
 
              $.each(rids_json, function(key, value){
-                console.log(key["Object"], value["Object"]);
+               $.each(value, function(key, value){
+                  console.log(key, value);
+                 });
               });
 
               var keys = rids_json.sort(sortBy("rid"));
