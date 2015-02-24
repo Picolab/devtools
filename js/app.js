@@ -75,7 +75,8 @@
 
               console.log("attempting rough listview");
 
-              var keys = rids_json;//.sort(sortBy("rid"));
+              var keys = rids_json.sort(sortBy("rid"));
+              console.log(keys);
               $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
@@ -199,7 +200,7 @@
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
-              {"rid": rids.profileName,
+              {"rid": rids.rid,
                "uri": id,
                "description": status
               }));
