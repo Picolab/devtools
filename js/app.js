@@ -204,6 +204,8 @@
         return;
           }*/
           var status = "no status"; // place holder for description
+         console.log("in paint_item");
+         console.log(id, rids);
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
