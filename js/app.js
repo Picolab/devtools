@@ -84,7 +84,7 @@
               var keys = rids_json.sort(sortBy("rid_index"));
               console.log("keys: " + keys);
               $.each(rids_json, paint_item);
-              $.each(keys, paint_item);
+            //  $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
               
