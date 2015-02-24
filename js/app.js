@@ -75,12 +75,6 @@
 
               console.log("attempting rough listview");
 
-             $.each(rids_json, function(key, value){
-               $.each(value, function(key, value){
-                  console.log(key, value);
-                 });
-              });
-
               var keys = rids_json.sort(sortBy("rid_index"));
               console.log("keys: " + keys);
               $.each(rids_json, paint_item);
@@ -210,8 +204,8 @@
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
-              {"rid": rids.rid,
-               "uri": rids.uri,
+              {"rid": rids["rid"],
+               "uri": rids["uri"],
                "description": status
               }));
     };
