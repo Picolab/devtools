@@ -76,7 +76,7 @@
               console.log("attempting rough listview");
 
               var keys = rids_json;//.sort(sortBy("rid"));
-              console.log("keys: " + keys);
+              console.log("keys: " + keys[0]);
               $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
