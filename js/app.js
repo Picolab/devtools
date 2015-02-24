@@ -75,7 +75,7 @@
 
               console.log("attempting rough listview");
 
-              var keys = rids_json.sort(sortBy("rid"));
+              var keys = rids_json;//.sort(sortBy("rid"));
               console.log("keys: " + keys);
               $.each(keys, paint_item);
 
