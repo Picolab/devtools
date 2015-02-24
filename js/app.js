@@ -82,7 +82,8 @@
               });
 
               var keys = rids_json.sort(sortBy("rid_index"));
-              console.log("keys: " + keys["Object"]);
+              console.log("keys: " + keys);
+              $.each(rids_json, paint_item);
               $.each(keys, paint_item);
 
               console.log("refreshing manage-list listview.")
@@ -206,8 +207,8 @@
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
-              {"rid": rids["rid"],
-               "uri": rids["uri"],
+              {"rid": rids.rid,
+               "uri": rids.uri,
                "description": status
               }));
     };
