@@ -75,7 +75,7 @@
 
               console.log("attempting rough listview");
 
-             $.each(rids_json[0], function(key, value){
+             $.each(rids_json[0]["Object"], function(key, value){
                 console.log(key, value);
               });
 
