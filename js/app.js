@@ -47,13 +47,10 @@
 
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
-              //  $('ruleset-list').html(snippets.List_Rulesets_template());
+
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
               console.log(rids_json);
-
-             // var keys = rids_json.sort(sortBy("rid"));
-             // $.each(keys, format_rids_paint);// paint will call $('#ruleset-list').apend......
 
               //this is for a table
               /*
@@ -78,24 +75,17 @@
 
               console.log("attempting rough listview");
 
-              var keys = rids_json; // .sort(sortBy("rid"));
+              var keys = rids_json.sort(sortBy("rid"));
               $.each(keys, paint_item);
 
+              console.log("refreshing manage-list listview.")
+              
               $('#manage-list').listview('refresh');
                 });
 
 
-
-          //var obj_json = '[{"rid":"b506607x0.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/HelloWorld.krl"},{"rid_index":0,"last_modified":1418237853,"rid":"b506607x0.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/HelloWorld.krl","prefix":"b506607"},{"rid":"b506607x1.dev","uri":"w.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/RuleExercise1.krl"},{"rid_index":1,"last_modified":1418234018,"rid":"b506607x1.prod","uri":"w.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/RuleExercise1.krl","prefix":"b506607"},{"last_modified":1422397298,"rid":"b506607x10.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/StockChecker.krl"},{"rid_index":10,"last_modified":1423525230,"rid":"b506607x10.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/StockChecker.krl","prefix":"b506607"},{"rid":"b506607x11.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/StockChecker.krl"},{"rid_index":11,"last_modified":1418237853,"rid":"b506607x11.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/StockChecker.krl","prefix":"b506607"},{"last_modified":1418234156,"rid":"b506607x12.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/smsBlog.krl"},{"rid_index":12,"rid":"b506607x12.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/smsBlog.krl","prefix":"b506607"},{"last_modified":1418238023,"rid":"b506607x13.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/smsBlogData.krl"},{"rid_index":13,"rid":"b506607x13.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/smsBlogData.krl","prefix":"b506607"},{"last_modified":1423689382,"rid":"b506607x14.dev","uri":"https://raw.githubusercontent.com/kre/devtools/gh-pages/ruleSets/devtools.krl"},{"rid_index":14,"last_modified":1423525738,"rid":"b506607x14.prod","uri":"https://raw.githubusercontent.com/kre/devtools/gh-pages/ruleSets/devtools.krl","prefix":"b506607"},{"last_modified":1412788749,"rid":"b506607x2.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/RuleExercise1.krl"},{"rid_index":2,"last_modified":1418234018,"rid":"b506607x2.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/RuleExercise1.krl","prefix":"b506607"},{"rid":"b506607x3.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/chapter7Ruleset.krl"},{"rid_index":3,"last_modified":1418237852,"rid":"b506607x3.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/chapter7Ruleset.krl","prefix":"b506607"},{"rid":"b506607x4.dev","uri":"https://raw.github.com/bobsmeuncle/Practice-with-KRL/master/ch7book_example.krl"},{"rid_index":4,"last_modified":1418234018,"rid":"b506607x4.prod","uri":"https://raw.github.com/bobsmeuncle/Practice-with-KRL/master/ch7book_example.krl","prefix":"b506607"},{"rid":"b506607x5.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/ch8RottenTomatoes"},{"rid_index":5,"last_modified":1418234018,"rid":"b506607x5.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/ch8RottenTomatoes","prefix":"b506607"},{"last_modified":1421862706,"rid":"b506607x6.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/chapter9.krl"},{"rid_index":6,"last_modified":1421736146,"rid":"b506607x6.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/chapter9.krl","prefix":"b506607"},{"rid":"b506607x7.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/setA.krl"},{"rid_index":7,"last_modified":1418237852,"rid":"b506607x7.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/setA.krl","prefix":"b506607"},{"rid":"b506607x8.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/steB.krl"},{"rid_index":8,"last_modified":1418237852,"rid":"b506607x8.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/steB.krl","prefix":"b506607"},{"last_modified":1421862706,"rid":"b506607x9.dev","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/pythonCode/buttonpresssed.krl"},{"rid_index":9,"last_modified":1421862708,"rid":"b506607x9.prod","uri":"https://raw.githubusercontent.com/bobsmeuncle/Practice-with-KRL/master/pythonCode/buttonpresssed.krl","prefix":"b506607"}]';
-          // var rids_json = JSON.parse(obj_json);
           // document.getElementById("List-Rulesets").innerHTML = obj;
 
-            //$("#List-Rulesets").html("<p id='demo'>"+ruleset_obj+"</p>");
-            //$('#List-Rulesets').listview('refresh');
-
-            //console.log(rids_json.rid);
-            //console.log(ruleset_obj.rid);
-            
 
             /*var frm = "#ruleset-form";
             $(frm)[0].reset();
@@ -190,17 +180,26 @@
     $(document).ready(onPageLoad);
   })(jQuery);
 
-
-    function paint_item(id, vehicle) {
+    function sortBy(prop){
+              return function(a,b){
+            if( a[prop] < b[prop]){
+                return 1;
+            }else if( a[prop] > b[prop] ){
+                return -1;
+            }
+            return 0;
+              };
+          };
+    function paint_item(id, rids) {
 
           /*if (typeof vehicle === "undefined") {
         return;
           }*/
-
+          var status = "no status"; // place holder for description
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
-              {"rid": vehicle.profileName,
+              {"rid": rids.profileName,
                "uri": id,
                "description": status
               }));
