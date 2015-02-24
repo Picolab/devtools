@@ -28,6 +28,10 @@
         {"#updating-url": {handler: "updatingUrl",
           events: "s", // do when we show the page
           argsre: true
+        } },
+        {"#page-picologging": {handler: "picologging",
+          events: "s", // do when we show the page
+          argsre: true
         } }
         ],
         {
@@ -110,7 +114,11 @@
           },
           updatingUrl: function(type, match, ui, page) {
             console.log("updating Url Handler");
-          }
+          },
+          picologging: function(type, match, ui, page) {
+            console.log("pico logging page");
+            $.mobile.loading("hide");
+          } 
         },
       { 
         defaultHandler: function(type, ui, page) {
