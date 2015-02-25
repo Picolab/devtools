@@ -1,30 +1,30 @@
 (function($)
 {
   var router = new $.mobile.Router( [
-      {"#page-authorize": {handler: "pageAuthorize",
+    {"#page-authorize": {handler: "pageAuthorize",
          events: "s", // do when we show the page
          argsre: true
-			  } },
+       } },
 
 
-      {"#home": {handler: "home",
+       {"#home": {handler: "home",
 		 events: "s", // do when we show the page
 		 argsre: true
 		} },
 
 
-      {"#listing": {handler: "listing",
+    {"#listing": {handler: "listing",
 		    events: "s", // do when we show the page
 		    argsre: true
-		   } },
-      {"#registering-ruleset": {handler: "registeringRuleset",
+     } },
+     {"#registering-ruleset": {handler: "registeringRuleset",
 				events: "s", // do when we show the page
 				argsre: true
-			       } },
+      } },
       {"#confirming-deletion": {handler: "confirmingDeletion",
 				events: "s", // do when we show the page
 				argsre: true
-			       } },
+      } },
       {"#updating-url": {handler: "updatingUrl",
 			 events: "s", // do when we show the page
 			 argsre: true
@@ -32,8 +32,8 @@
       {"#page-picologging": {handler: "picologging",
 			     events: "s", // do when we show the page
 			     argsre: true
-			    } }
-  ],
+        } }
+        ],
         {
           pageAuthorize: function(type, match, ui, page) {
             console.log("manage fuse: authorize page");
@@ -51,7 +51,7 @@
 
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-              console.log(rids_json);
+                console.log(rids_json);
 
               //this is for a table
               /*
@@ -81,10 +81,10 @@
               $.each(rids_json, paint_item);
             //  $.each(keys, paint_item);
 
-              console.log("refreshing manage-list listview.")
-              
-              $('#manage-list').listview('refresh');
-                });
+            console.log("refreshing manage-list listview.")
+
+            $('#manage-list').listview('refresh');
+          });
 
 
           // document.getElementById("List-Rulesets").innerHTML = obj;
@@ -96,51 +96,51 @@
 
               $("#RID", frm).val(ruleset_obj.rid);
               $("#source-URL", frm).val(ruleset_obj.uri);*/
-            
 
-          },
-          registeringRuleset: function(type, match, ui, page) {
-            console.log("registering Ruleset Handler");
-          },
-          confirmingDeletion: function(type, match, ui, page) {
-            console.log("confirming Deletion Handler");
-          },
-          updatingUrl: function(type, match, ui, page) {
-            console.log("updating Url Handler");
-          },
-          picologging: function(type, match, ui, page) {
-            console.log("pico logging page");
-            $.mobile.loading("hide");
-	    Pico.logging.status(CloudOS.defaultECI, function(json){
-		console.log("Logging status: ", json);
-		if(json) {
-		    $("#logstatus").val("on").slider("refresh");
-		    $("#loglist" ).empty();
-		    Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-			$.each(logdata, function(i, logobj) {
-			    var eid_re = RegExp("\\s+" + logobj.eid);
-			    logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
-			    $("#loglist" ).append( 
- 				snippets.logitem_template(logobj)
-			    ).collapsibleset().collapsibleset( "refresh" );
-			    $("#loglist").listview("refresh")
-			});
-		    });
-		    
-		} else {
-		    $("#logstatus").val("off").slider("refresh");
-		}
-	    });
-          } 
-        },
-      { 
-        defaultHandler: function(type, ui, page) {
-          console.log("Default handler called due to unknown route (" + type + ", " + ui + ", " + page + ")");
-        },
-        defaultHandlerEvents: "s",
-        defaultArgsRe: true
 
-      });
+            },
+            registeringRuleset: function(type, match, ui, page) {
+              console.log("registering Ruleset Handler");
+            },
+            confirmingDeletion: function(type, match, ui, page) {
+              console.log("confirming Deletion Handler");
+            },
+            updatingUrl: function(type, match, ui, page) {
+              console.log("updating Url Handler");
+            },
+            picologging: function(type, match, ui, page) {
+              console.log("pico logging page");
+              $.mobile.loading("hide");
+              Pico.logging.status(CloudOS.defaultECI, function(json){
+                console.log("Logging status: ", json);
+                if(json) {
+                  $("#logstatus").val("on").slider("refresh");
+                  $("#loglist" ).empty();
+                  Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+                   $.each(logdata, function(i, logobj) {
+                     var eid_re = RegExp("\\s+" + logobj.eid);
+                     logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
+                     $("#loglist" ).append( 
+                       snippets.logitem_template(logobj)
+                       ).collapsibleset().collapsibleset( "refresh" );
+                     $("#loglist").listview("refresh")
+                   });
+                 });
+
+                } else {
+                  $("#logstatus").val("off").slider("refresh");
+                }
+              });
+            } 
+          },
+          { 
+            defaultHandler: function(type, ui, page) {
+              console.log("Default handler called due to unknown route (" + type + ", " + ui + ", " + page + ")");
+            },
+            defaultHandlerEvents: "s",
+            defaultArgsRe: true
+
+          });
       // Handlebar templates compiled at load time to create functions
       // templates are included to index.html from Templates directory.
       window['snippets'] = {
@@ -165,37 +165,37 @@
 
     function onPageLoad() {// Document.Ready
     	console.log("document ready");
-	CloudOS.retrieveSession();
+     CloudOS.retrieveSession();
 	// only put static stuff here...
 	plant_authorize_button();
 
 	$('.logout').off("tap").on("tap", function(event)
-	   {
+  {
 	       CloudOS.removeSession(true); // true for hard reset (log out of login server too)
 	       $.mobile.changePage('#page-authorize', {
-		   transition: 'slide'
+         transition: 'slide'
 	       }); // this will go to the authorization page.
-	   });
+       });
 
 	console.log("Choose page to show");
 
 	try {
-	    var authd = CloudOS.authenticatedSession();
-	    if(authd) {
-		console.log("Authorized");
-		document.location.hash = "#home";
-	    } else {  
-		console.log("Asking for authorization");
-		document.location.hash = "#page-authorize";
-	    }
-	} catch (exception) {
+   var authd = CloudOS.authenticatedSession();
+   if(authd) {
+    console.log("Authorized");
+    document.location.hash = "#home";
+  } else {  
+    console.log("Asking for authorization");
+    document.location.hash = "#page-authorize";
+  }
+} catch (exception) {
 
-	} finally {
-	    $.mobile.initializePage();
-	    $.mobile.loading("hide");
-	}
+} finally {
+ $.mobile.initializePage();
+ $.mobile.loading("hide");
+}
 
-    };
+};
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
@@ -204,31 +204,31 @@
     $(document).ready(onPageLoad);
   })(jQuery);
 
-    function sortBy(prop){
-              return function(a,b){
-            if( a[prop] < b[prop]){
-                return 1;
-            }else if( a[prop] > b[prop] ){
-                return -1;
-            }
-            return 0;
-              };
-          };
+  function sortBy(prop){
+    return function(a,b){
+      if( a[prop] < b[prop]){
+        return 1;
+      }else if( a[prop] > b[prop] ){
+        return -1;
+      }
+      return 0;
+    };
+  };
     function paint_item(id, rids) {//(key,value)
 
           /*if (typeof vehicle === "undefined") {
         return;
-          }*/
+      }*/
           var status = "no status"; // place holder for description
-         console.log("in paint_item");
-         console.log(id, rids);
-         console.log("rid: "+ rids["rid"]);
+          console.log("in paint_item");
+          console.log(id, rids);
+          console.log("rid: "+ rids.rid);
 
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
-            snippets.list_rulesets_template(
-              {"rid": rids["rid"],
-               "uri": rids["uri"],
-               "description": status
-              }));
-    };
-     
+          snippets.list_rulesets_template(
+            {"rid": rids["rid"],
+            "uri": rids["uri"],
+            "description": status
+          }));
+      };
+
