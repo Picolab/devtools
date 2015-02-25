@@ -228,7 +228,6 @@
           snippets.list_rulesets_template(
             {"rid": rids["rid"],
             "uri": rids["uri"],
-            "description": status
           }));
       }
 
