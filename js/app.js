@@ -81,7 +81,7 @@
               $.each(rids_json, paint_item);
             //  $.each(keys, paint_item);
 
-            console.log("refreshing manage-list listview.")
+            console.log("refreshing manage-list listview.");
 
             $('#manage-list').listview('refresh');
           });
@@ -123,7 +123,7 @@
                      $("#loglist" ).append( 
                        snippets.logitem_template(logobj)
                        ).collapsibleset().collapsibleset( "refresh" );
-                     $("#loglist").listview("refresh")
+                     $("#loglist").listview("refresh");
                    });
                  });
 
@@ -195,7 +195,7 @@
  $.mobile.loading("hide");
 }
 
-};
+}
 
     /////////////////////////////////////////////////////////////////////
     // this is the actual code that runs and sets everything off
@@ -213,7 +213,7 @@
       }
       return 0;
     };
-  };
+  }
     function paint_item(id, rids) {//(key,value)
 
           /*if (typeof vehicle === "undefined") {
@@ -230,5 +230,5 @@
             "uri": rids["uri"],
             "description": status
           }));
-      };
+      }
 
