@@ -48,7 +48,7 @@
 
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
-              
+
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
               console.log(rids_json);
@@ -76,7 +76,7 @@
 
               console.log("attempting rough listview");
 
-              var keys = rids_json;  //.sort(sortBy("rid_index")); apparently sortBy is not defined yet
+              var keys = rids_json.sort(sortBy("rid_index"));
               console.log("keys: " + keys);
               $.each(rids_json, paint_item);
             //  $.each(keys, paint_item);
@@ -227,8 +227,8 @@
         $("#manage-list li:nth-child(1)" ).after( //was #manage-fleet prior
             snippets.list_rulesets_template(
               {"rid": rids["rid"],
-               "uri": rids["uri"]
-               //"description": status
+               "uri": rids["uri"],
+               "description": status
               }));
     };
      
