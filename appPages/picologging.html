@@ -1,0 +1,33 @@
+<div data-role="page" id="page-picologging" data-title="Pico Logs">
+
+   <div data-role="header">
+   <h2>Logging</h2>
+   </div><!-- /header -->
+
+   <div data-role="content">
+       <ul id="error-msg" data-role="listview" data-inset="true" class="alert alert-error" style="display:none"></ul>
+
+     <ul data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Pico Logs</li>
+       <li>
+         <div data-role="fieldcontain">
+           <label for="logstatus">Logging:</label>
+           <select name="logstatus" id="logstatus" data-theme="a" data-role="slider">
+	      <option value="off">Off</option>
+	      <option value="on">On</option>
+           </select>
+         </div>
+       
+      </ul>
+
+      <div data-role="collapsible-set" data-content-theme="a" data-iconpos="right">
+        <ul data-role="listview" data-inset="true"  id="loglist">    
+        </ul>
+      </div>
+
+   </div><!-- /content -->
+
+   <div data-role="footer" data-position="fixed">
+      <h4>KRE Devtools</h5>
+   </div><!-- /footer -->
+</div><!-- /page -->
