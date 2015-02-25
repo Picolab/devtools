@@ -2,17 +2,91 @@
 <html lang="en"> 
   <head> 
     <title>{{ page.title}}</title> 
-      <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css"> -->
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css">
+<!-- https://github.com/commadelimited/jQuery-Mobile-Bootstrap-Theme -->
+<!-- If we keep this, move into repo -->
+<link rel="stylesheet" href="http://andymatthews.net/code/jQuery-Mobile-Bootstrap-Theme/themes/Bootstrap.css">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+<link rel="stylesheet" href="http://andymatthews.net/code/jQuery-Mobile-Bootstrap-Theme/themes/jquery.mobile.icons.min.css" />
+
+    <style>
+      .header-image {
+        margin-top: 4px;
+        text-align: center;
+      }
+
+      .rightMenu {
+         position: absolute;
+         top:-5%;   
+         right:2%;
+         width: 100px !important;
+         z-index: 1;
+      }
+
+      .rightMenu .ui-collapsible-content .ui-listview {
+          margin: -11px -22px -12px -16px !important
+      }
+
+      .alert {
+        color: red
+      }
+      @media (min-width:800px) {
+        .ui-content {
+          width: 800px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+      .center-wrapper{
+        text-align: center;
+      }			  
+      .center-wrapper * {
+        margin: 0 auto;
+      }
+
+      .wrap {
+         white-space: normal !important;
+      }
+
+
+
+      <!-- ui-listview .ui-li-icon { -->
+      <!--  max-height: 35px; -->
+      <!--  max-width: 35px; -->
+      <!--  top: 50%; -->
+      <!--  margin-top: -15px; -->
+
+
+	.devtools-btn {
+		margin-right: .625em;
+		padding: .7em 1em;
+		color: white;
+		background-color: black;
+		font-weight: 200;
+		text-decoration: none;
+	}
+
+     }
+
+   </style>
+    <!-- Themes -->
+    <link rel="stylesheet" href="https://s3.amazonaws.com/Fuse_assets/themes/jquery.mobile.icons.min.css" />
+
 
 </head> 
 <body> 
 
+  {{ content }}
+
+
+
     <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="js/jquery.mobile.router.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> -->
+    <script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="js/jquery.mobile.router.js"></script> <!-- load before jquery mobile -->
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script src="js/handlebars-v1.3.0.js"></script>
     <script src="https://s3.amazonaws.com/CloudOS_assets/js/CloudOS-1.0.0.js"></script>
     <script src="js/CloudOS-config.js"></script>
@@ -21,10 +95,8 @@
     <script src="js/devtools-api.js"></script>
     <script src="js/devtools-api-config.js"></script>
 
-    <!--  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>-->
+    <script type="text/javascript" src="https://rawgit.com/Picolab/picologging/master/js/picologging-api.js"></script>
 
-  {{ content }}
 
 
 </body>

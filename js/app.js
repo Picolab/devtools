@@ -1,39 +1,39 @@
 (function($)
 {
   var router = new $.mobile.Router( [
-   {"#page-authorize": {handler: "pageAuthorize",
+      {"#page-authorize": {handler: "pageAuthorize",
          events: "s", // do when we show the page
          argsre: true
-       } },
+			  } },
 
 
-        {"#home": {handler: "home",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
+      {"#home": {handler: "home",
+		 events: "s", // do when we show the page
+		 argsre: true
+		} },
 
 
-        {"#listing": {handler: "listing",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#registering-ruleset": {handler: "registeringRuleset",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#confirming-deletion": {handler: "confirmingDeletion",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#updating-url": {handler: "updatingUrl",
-          events: "s", // do when we show the page
-          argsre: true
-        } },
-        {"#page-picologging": {handler: "picologging",
-          events: "s", // do when we show the page
-          argsre: true
-        } }
-        ],
+      {"#listing": {handler: "listing",
+		    events: "s", // do when we show the page
+		    argsre: true
+		   } },
+      {"#registering-ruleset": {handler: "registeringRuleset",
+				events: "s", // do when we show the page
+				argsre: true
+			       } },
+      {"#confirming-deletion": {handler: "confirmingDeletion",
+				events: "s", // do when we show the page
+				argsre: true
+			       } },
+      {"#updating-url": {handler: "updatingUrl",
+			 events: "s", // do when we show the page
+			 argsre: true
+			} },
+      {"#page-picologging": {handler: "picologging",
+			     events: "s", // do when we show the page
+			     argsre: true
+			    } }
+  ],
         {
           pageAuthorize: function(type, match, ui, page) {
             console.log("manage fuse: authorize page");
@@ -42,6 +42,7 @@
           
           home: function(type, match, ui, page) {
             console.log("home Handler");
+            $.mobile.loading("hide");
           },
 
 
@@ -118,6 +119,26 @@
           picologging: function(type, match, ui, page) {
             console.log("pico logging page");
             $.mobile.loading("hide");
+	    Pico.logging.status(CloudOS.defaultECI, function(json){
+		console.log("Logging status: ", json);
+		if(json) {
+		    $("#logstatus").val("on").slider("refresh");
+		    $("#loglist" ).empty();
+		    Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+			$.each(logdata, function(i, logobj) {
+			    var eid_re = RegExp("\\s+" + logobj.eid);
+			    logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
+			    $("#loglist" ).append( 
+ 				snippets.logitem_template(logobj)
+			    ).collapsibleset().collapsibleset( "refresh" );
+			    $("#loglist").listview("refresh")
+			});
+		    });
+		    
+		} else {
+		    $("#logstatus").val("off").slider("refresh");
+		}
+	    });
           } 
         },
       { 
@@ -132,6 +153,7 @@
       // templates are included to index.html from Templates directory.
       window['snippets'] = {
         list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
+        logitem_template: Handlebars.compile($("#logitem-template").html() || "")
       };
 
       function plant_authorize_button()
