@@ -39,14 +39,10 @@ ruleset DevTools_bootstrap {
     rule bootstrap_guard {
       select when DevTools bootstrap// <-------------------------------------------------------NEED TO UPDATE EVENT NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       pre {
-        namespace = "fuse-meta"; // this is defined in fuse_common.krl, but we haven't got it yet.
-       
-    //    eci = CloudOS:subscriptionList(namespace,"Fleet").head().pick("$.eventChannel") ------------------------------ IF USER DOES NOT HAVE RULE INSTALLED 
-	  // || pds:get_item(namespace,"fleet_channel");
-	// how can we tell if we have been bootstraped already?--------------------------------------------------
-	
+        installed_rids = CloudOS:listRulest(meta:eci);
+	      bootstrapped = // check if installed_rids includes b506607x14.prod"
       }
-      if (! eci.isnull() ) then
+      if (! bootstrapped ) then
       {
         send_directive("found_eci_for_fleet") 
 	         with eci = eci
@@ -55,7 +51,7 @@ ruleset DevTools_bootstrap {
         log ">>>> pico needs a bootstrap >>>> ";
 	      raise explicit event bootstrap_needed;
       } else {
-        log ">>>> pico already bootstraped, saw : " + eci;
+        log ">>>> pico already bootstraped, saw : " + installed_rids;
       }
     }
 
