@@ -80,12 +80,22 @@
           },
 
           registeringRuleset: function(type, match, ui, page) {
+            //example
+//http://www.jquery4u.com?city=Gold Coast
+//console.log($.urlParam('city'));  
+//output: Gold%20Coast
+//console.log(decodeURIComponent($.urlParam('city'))); 
+//output: Gold Coast
+            var rid = $.urlParam('rid');
+
             console.log("registering Ruleset Handler");
           },
           confirmingDeletion: function(type, match, ui, page) {
             console.log("confirming Deletion Handler");
           },
           updatingUrl: function(type, match, ui, page) {
+            var rid = $.urlParam('rid');
+
             console.log("updating Url Handler");
           },
           picologging: function(type, match, ui, page) {
@@ -221,7 +231,13 @@
   })(jQuery);
 
   function sortBy(prop){
+
     return function(a,b){
+
+    //if a and b match regex /\w+\d+xd+\.\w+/
+    // split on .
+      // split on x
+        //compare 
       if( a[prop] < b[prop]){
         return 1;
       }else if( a[prop] > b[prop] ){
