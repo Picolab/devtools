@@ -204,6 +204,13 @@
 	       }); // this will go to the authorization page.
 	   });
 
+	Handlebars.registerHelper('ifHeader', function(v1, options) {
+	    if(v1.match(/-----\*\*\*----/)) {
+		return options.fn(this);
+	    }
+	    return options.inverse(this);
+	});
+
 	console.log("Choose page to show");
 
 	try {
