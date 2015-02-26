@@ -240,7 +240,7 @@
         //  console.log(id, rids);
           console.log("rid: "+ rids.rid);
 
-        $('#manage-list').after( //was #manage-fleet prior
+        $('#manage-list').append( //was #manage-fleet prior
           snippets.list_rulesets_template(
             {"rid": rids["rid"],
             "uri": rids["uri"]}
