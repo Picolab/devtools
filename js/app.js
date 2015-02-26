@@ -49,6 +49,7 @@
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
 
+            $("#manage-list" ).empty();
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
           //      console.log(rids_json);
