@@ -14,7 +14,7 @@
 
 
     {"#listing": {handler: "listing",
-		    events: "c", // do when we create the page
+		    events: "s", // do when we create the page
 		    argsre: true
      } },
      {"#registering-ruleset": {handler: "registeringRuleset",
