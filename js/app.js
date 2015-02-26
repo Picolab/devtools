@@ -98,41 +98,8 @@
               $("#source-URL", frm).val(ruleset_obj.uri);*/
 
 
-            },
-            registeringRuleset: function(type, match, ui, page) {
-              console.log("registering Ruleset Handler");
-            },
-            confirmingDeletion: function(type, match, ui, page) {
-              console.log("confirming Deletion Handler");
-            },
-            updatingUrl: function(type, match, ui, page) {
-              console.log("updating Url Handler");
-            },
-            picologging: function(type, match, ui, page) {
-              console.log("pico logging page");
-              $.mobile.loading("hide");
-              Pico.logging.status(CloudOS.defaultECI, function(json){
-                console.log("Logging status: ", json);
-                if(json) {
-                  $("#logstatus").val("on").slider("refresh");
-                  $("#loglist" ).empty();
-                  Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-                   $.each(logdata, function(i, logobj) {
-                     var eid_re = RegExp("\\s+" + logobj.eid);
-                     logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
-                     $("#loglist" ).append( 
-                       snippets.logitem_template(logobj)
-                       ).collapsibleset().collapsibleset( "refresh" );
-                     $("#loglist").listview("refresh");
-                   });
-                 });
-
-                } else {
-                  $("#logstatus").val("off").slider("refresh");
-                }
-              });
-            } 
           },
+
           registeringRuleset: function(type, match, ui, page) {
             console.log("registering Ruleset Handler");
           },
@@ -240,7 +207,7 @@
 	       }); // this will go to the authorization page.
        });
 
-	Handlebars.registerHelper('ifHeader', function(v1, options) {
+	Handlebars.registerHelper('ifDivider', function(v1, options) {
 	    if(v1.match(/-----\*\*\*----/)) {
 		return options.fn(this);
 	    }

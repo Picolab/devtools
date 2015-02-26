@@ -13,11 +13,11 @@
    <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b">
    <h2>{{timestamp}} ({{eid}})</h2>
         {{#each log_items}}
-	 {{#ifHeader this }}
-	   <b>{{this}}</b>
+	 {{#ifDivider this }}
+	   <span style="color:blue">{{this}}</span> 
          {{else}}
 	   {{this}}
-         {{/ifHeader}}
+         {{/ifDivider}}
          <br/>
         {{/each}}
    </div>
