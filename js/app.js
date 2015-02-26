@@ -106,7 +106,7 @@
 				$("#loglist" ).append( 
  				    snippets.logitem_template(logobj)
 				).collapsibleset().collapsibleset( "refresh" );
-				$("#loglist").listview("refresh")
+				$("#loglist").listview("refresh");
 			    });
 			});
 			
@@ -114,7 +114,7 @@
 			$("#logstatus").val("off").slider("refresh");
 		    }
 		});
-            };
+            }
 
 	    populate_logpage();
 	    
