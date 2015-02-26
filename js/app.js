@@ -30,7 +30,7 @@
 			 argsre: true
 			} },
       {"#page-picologging": {handler: "picologging",
-			     events: "s", // do when we show the page
+			     events: "bs", // do when we show the page
 			     argsre: true
 			    } }
   ],
@@ -111,26 +111,53 @@
           picologging: function(type, match, ui, page) {
             console.log("pico logging page");
             $.mobile.loading("hide");
-	    Pico.logging.status(CloudOS.defaultECI, function(json){
-		console.log("Logging status: ", json);
-		if(json) {
-		    $("#logstatus").val("on").slider("refresh");
-		    $("#loglist" ).empty();
-		    Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-			$.each(logdata, function(i, logobj) {
-			    var eid_re = RegExp("\\s+" + logobj.eid);
-			    logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
-			    $("#loglist" ).append( 
- 				snippets.logitem_template(logobj)
-			    ).collapsibleset().collapsibleset( "refresh" );
-			    $("#loglist").listview("refresh")
+
+	    function populate_logpage() {
+		Pico.logging.status(CloudOS.defaultECI, function(json){
+		    console.log("Logging status: ", json);
+		    if(json) {
+			$("#logstatus").val("on").slider("refresh");
+			$("#loglist" ).empty();
+			Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+			    console.log("Retrieved logs");
+			    $.each(logdata, function(i, logobj) {
+				var eid_re = RegExp("\\s+" + logobj.eid);
+				logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); });
+				$("#loglist" ).append( 
+ 				    snippets.logitem_template(logobj)
+				).collapsibleset().collapsibleset( "refresh" );
+				$("#loglist").listview("refresh")
+			    });
 			});
-		    });
-		    
+			
+		    } else {
+			$("#logstatus").val("off").slider("refresh");
+		    }
+		});
+            };
+
+	    populate_logpage();
+	    
+	    // triggers 
+            $("#logstatus").unbind("change").change(function(){
+		var newstatus = $("#logstatus").val();
+		if(newstatus === "on") {
+		    Pico.logging.reset(CloudOS.defaultECI, {});
+		    populate_logpage();
 		} else {
-		    $("#logstatus").val("off").slider("refresh");
+		    Pico.logging.inactive(CloudOS.defaultECI, {});
+		    $("#loglist" ).empty();
 		}
 	    });
+	    $( "#logrefresh" ).unbind("click").click(function(event, ui) {
+		$("#loglist" ).empty();
+		populate_logpage();
+	    });
+	    $( "#logclear" ).unbind("click").click(function(event, ui) {
+		$("#loglist" ).empty();
+		Pico.logging.flush(CloudOS.defaultECI, {});
+	    });
+
           } 
         },
       { 
