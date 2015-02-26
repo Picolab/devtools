@@ -51,33 +51,11 @@
 
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-                console.log(rids_json);
-
-              //this is for a table
-              /*
-              var len = rids_json.length;
-              var txt = "";
-              if(len > 0){
-                for(var i=0;i<len;i++){
-                    txt += "<tr><td>"+rids_json[i].rid+"</td><td>"+rids_json[i].uri+"</td><td><a href=\""+rids_json[i].uri+"\" data-role=\"button\" data-icon=\"arrow-r\">button</a></td></tr>";
-                      
-                  }
-                if(txt !== ""){
-                        $("#ruleset-list").html(txt);
-                        $("#ruleset-list").listview('refresh');
-                  }
-                else{
-                    $("#ruleset-list").html("<tr><td> NONE </td><td> NONE </td>");
-                    $("#ruleset-list").listview('refresh');
-                }
-              } */
-
-              //trying for a list
-
+          //      console.log(rids_json);
               console.log("attempting rough listview");
 
-              var keys = rids_json.sort(sortBy("rid_index"));
-              console.log("keys: " + keys);
+          //    var keys = rids_json.sort(sortBy("rid_index"));
+          //    console.log("keys: " + keys);
               $.each(rids_json, paint_item);
             //  $.each(keys, paint_item);
 
