@@ -92,14 +92,15 @@
             var frm = "#formRegisterNewRuleset";
            // $(frm)[0].reset();
             // clear_error_msg(frm);
-            $('.save', frm).off('tap').on('tap',function(event){
-              var results= $(frm).serializeArray();
-              console.log("Form results for ", frm, ": ", results);
+            $('.save', frm).off('tap').on('tap');//,
+
+            //  function(event){
+            //  var results= $(frm).serializeArray();
+            //  console.log("Form results for ", frm, ": ", results);
               //should check url to be valid
 
 
-            });
-            var rid = $.urlParam('rid');
+           // });
           },
           confirmingDeletion: function(type, match, ui, page) {
             console.log("confirming Deletion Handler");
