@@ -89,10 +89,10 @@
             
 
             console.log("registering Ruleset Handler");
-            var frm = "#formRegisterNewRuleset";
+        //    var frm = "#formRegisterNewRuleset";
            // $(frm)[0].reset();
             // clear_error_msg(frm);
-            $('.save', frm).off('tap').on('tap');//,
+        //    $('.save', frm).off('tap').on('tap');//,
 
             //  function(event){
             //  var results= $(frm).serializeArray();
