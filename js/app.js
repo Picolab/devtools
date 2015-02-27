@@ -86,9 +86,20 @@
 //output: Gold%20Coast
 //console.log(decodeURIComponent($.urlParam('city'))); 
 //output: Gold Coast
-            var rid = $.urlParam('rid');
+            
 
             console.log("registering Ruleset Handler");
+            var frm = "#formRegisterNewRuleset";
+            $(frm)[0].reset();
+            // clear_error_msg(frm);
+            $('.save', frm).off('tap').on('tap',function(event){
+              var results= $(frm).serializeArray();
+              console.log("Form results for ", frm, ": ", results);
+              //should check url to be valid
+
+
+            });
+            var rid = $.urlParam('rid');
           },
           confirmingDeletion: function(type, match, ui, page) {
             console.log("confirming Deletion Handler");
@@ -229,7 +240,9 @@
     $(document).bind("mobileinit", onMobileInit);
     $(document).ready(onPageLoad);
   })(jQuery);
-
+  function clear_error_msg(frm) {// we dont have #error-msg ---------------
+       $("#error-msg", frm).html("").hide();
+    }
   function sortBy(prop){
 
     return function(a,b){
