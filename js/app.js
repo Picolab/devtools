@@ -33,8 +33,8 @@
 			     events: "bs", // do when we show the page
 			     argsre: true
         } },
-      {"#page-install-rulesets": {handler: "install_rulesets",
-			     events: "bs", // do when we show the page
+      {"#page-installed-rulesets": {handler: "install_rulesets",
+			     events: "s", // do when we show the page
 			     argsre: true
         } }
         ],
@@ -165,12 +165,19 @@
 		Pico.logging.flush(CloudOS.defaultECI, {});
 	    });
 
-          } 
+          },
+            install_rulesets: function(type, match, ui, page) {
+		console.log("ruleset installation page");
+		$.mobile.loading("hide");
+		var ruleset = {name: "b16x16.prod"};
+
+		$("#installed_rulesets" ).append( 
+ 		    snippets.installed_ruleset_template(ruleset)
+		).collapsibleset().collapsibleset( "refresh" );
+		$("#installed_rulesets").listview("refresh");
+		
+            }
         },
-        install_rulesets: function(type, match, ui, page) {
-            console.log("ruleset installation page");
-            $.mobile.loading("hide");
-        }
       { 
         defaultHandler: function(type, ui, page) {
           console.log("Default handler called due to unknown route (" + type + ", " + ui + ", " + page + ")");
@@ -184,7 +191,8 @@
       // templates are included to index.html from Templates directory.
       window['snippets'] = {
         list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
-        logitem_template: Handlebars.compile($("#logitem-template").html() || "")
+        logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
+        installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || "")
       };
 
       function plant_authorize_button()
@@ -209,7 +217,7 @@
 	plant_authorize_button();
 
 	$('.logout').off("tap").on("tap", function(event)
-  {
+				   {
 	       CloudOS.removeSession(true); // true for hard reset (log out of login server too)
 	       $.mobile.changePage('#page-authorize', {
          transition: 'slide'

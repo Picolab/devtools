@@ -15,7 +15,7 @@ ruleset devtools {
 
 		use module a169x625 alias CloudOS
 
-		provides showRulesets
+		provides showRulesets, showInstalledRulesets
 		sharing on
 	}
 
@@ -35,6 +35,11 @@ ruleset devtools {
 
 			rulesetGallery
 		};
+
+		showInstalledRulesets = function() {
+		  rulesets = pci:list_ruleset(meta:eci());
+		  rulesets{"rids"}
+		}; 
 		
 	}
 
