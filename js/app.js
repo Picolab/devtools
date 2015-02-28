@@ -33,6 +33,10 @@
 			     events: "bs", // do when we show the page
 			     argsre: true
         } }
+      {"#page-install-rulesets": {handler: "install_rulesets",
+			     events: "bs", // do when we show the page
+			     argsre: true
+        } }
         ],
         {
           pageAuthorize: function(type, match, ui, page) {
@@ -162,6 +166,10 @@
 
           } 
         },
+        install_rulesets: function(type, match, ui, page) {
+            console.log("ruleset installation page");
+            $.mobile.loading("hide");
+        }
       { 
         defaultHandler: function(type, ui, page) {
           console.log("Default handler called due to unknown route (" + type + ", " + ui + ", " + page + ")");
