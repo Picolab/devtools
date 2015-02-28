@@ -39,8 +39,10 @@ ruleset devtools {
 		showInstalledRulesets = function() {
 		  rulesets = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
 		  rids_string = rulesets{"rids"}.join(";");
-		  describe_url = "https://#{meta:host()}/descibe/#{$rids_string}";
-		  rids_string.length() > 0 => http:get(describe_url) | {}
+		  describe_url = "https://#{meta:host()}/ruleset/descibe/#{$rids_string}";
+		  resp = http:get(describe_url);
+		  resp{"status_code"} eq "200" => resp{"content"}.decode()
+		                                | resp
 		}; 
 		
 	}
