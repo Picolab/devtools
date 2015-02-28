@@ -37,7 +37,7 @@ ruleset devtools {
 		};
 
 		showInstalledRulesets = function() {
-		  rulesets = pci:list_ruleset(meta:eci());
+		  rulesets = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
 		  rulesets{"rids"}
 		}; 
 		
