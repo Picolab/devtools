@@ -32,7 +32,7 @@
       {"#page-picologging": {handler: "picologging",
 			     events: "bs", // do when we show the page
 			     argsre: true
-        } }
+        } },
       {"#page-install-rulesets": {handler: "install_rulesets",
 			     events: "bs", // do when we show the page
 			     argsre: true
