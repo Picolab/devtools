@@ -53,35 +53,14 @@
           listing: function(type, match, ui, page) {
             console.log("listing Handler");
 
+            $("#manage-list" ).empty();
             
               Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-                console.log(rids_json);
-
-              //this is for a table
-              /*
-              var len = rids_json.length;
-              var txt = "";
-              if(len > 0){
-                for(var i=0;i<len;i++){
-                    txt += "<tr><td>"+rids_json[i].rid+"</td><td>"+rids_json[i].uri+"</td><td><a href=\""+rids_json[i].uri+"\" data-role=\"button\" data-icon=\"arrow-r\">button</a></td></tr>";
-                      
-                  }
-                if(txt !== ""){
-                        $("#ruleset-list").html(txt);
-                        $("#ruleset-list").listview('refresh');
-                  }
-                else{
-                    $("#ruleset-list").html("<tr><td> NONE </td><td> NONE </td>");
-                    $("#ruleset-list").listview('refresh');
-                }
-              } */
-
-              //trying for a list
-
+          //      console.log(rids_json);
               console.log("attempting rough listview");
 
-              var keys = rids_json.sort(sortBy("rid_index"));
-              console.log("keys: " + keys);
+          //    var keys = rids_json.sort(sortBy("rid_index"));
+          //    console.log("keys: " + keys);
               $.each(rids_json, paint_item);
             //  $.each(keys, paint_item);
 
@@ -105,12 +84,34 @@
           },
 
           registeringRuleset: function(type, match, ui, page) {
+            //example
+//http://www.jquery4u.com?city=Gold Coast
+//console.log($.urlParam('city'));  
+//output: Gold%20Coast
+//console.log(decodeURIComponent($.urlParam('city'))); 
+//output: Gold Coast
+            
+
             console.log("registering Ruleset Handler");
+        //    var frm = "#formRegisterNewRuleset";
+           // $(frm)[0].reset();
+            // clear_error_msg(frm);
+        //    $('.save', frm).off('tap').on('tap');//,
+
+            //  function(event){
+            //  var results= $(frm).serializeArray();
+            //  console.log("Form results for ", frm, ": ", results);
+              //should check url to be valid
+
+
+           // });
           },
           confirmingDeletion: function(type, match, ui, page) {
             console.log("confirming Deletion Handler");
           },
           updatingUrl: function(type, match, ui, page) {
+            var rid = $.urlParam('rid');
+
             console.log("updating Url Handler");
           },
           picologging: function(type, match, ui, page) {
@@ -132,7 +133,7 @@
 				$("#loglist" ).append( 
  				    snippets.logitem_template(logobj)
 				).collapsibleset().collapsibleset( "refresh" );
-				$("#loglist").listview("refresh")
+				$("#loglist").listview("refresh");
 			    });
 			});
 			
@@ -140,7 +141,7 @@
 			$("#logstatus").val("off").slider("refresh");
 		    }
 		});
-            };
+            }
 
 	    populate_logpage();
 	    
@@ -248,9 +249,17 @@
     $(document).bind("mobileinit", onMobileInit);
     $(document).ready(onPageLoad);
   })(jQuery);
-
+  function clear_error_msg(frm) {// we dont have #error-msg ---------------
+       $("#error-msg", frm).html("").hide();
+    }
   function sortBy(prop){
+
     return function(a,b){
+
+    //if a and b match regex /\w+\d+xd+\.\w+/
+    // split on .
+      // split on x
+        //compare 
       if( a[prop] < b[prop]){
         return 1;
       }else if( a[prop] > b[prop] ){
@@ -269,7 +278,7 @@
         //  console.log(id, rids);
           console.log("rid: "+ rids.rid);
 
-        $('#manage-list').after( //was #manage-fleet prior
+        $('#manage-list').append( //was #manage-fleet prior
           snippets.list_rulesets_template(
             {"rid": rids["rid"],
             "uri": rids["uri"]}

@@ -1,12 +1,32 @@
 <div data-role="page" id="registering-ruleset">
 	<div data-role="header">
-		
+		<h2>Create Ruleset</h2>
 	</div>
 
 	<div data-role="main" class="ui-content">
-	
+	<div id="registering-ruleset-dev">
+        <p>
+          Here you can register a new ruleset. In order to
+          successfully register it, the source code must be
+          accessible by HTTP access. 
+        </p>
+        <form id="formRegisterNewRuleset" class="form-horizontal form-mycloud">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="appURL">Source URL</label>
+              <div class="controls">
+                <textarea class="input-xlarge" name="appURL" title="The location your KRL source resides" placeholder="The location your KRL source resides" required=""></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+            	<a class="save" href="#" data-icon="check" data-role="button" data-inline="true" data-theme="b">Register Ruleset</a>
+              <!--<button type="submit" class="btn btn-primary">Register Ruleset</button>-->
+            </div>
+          </fieldset>
+        </form>
+      </div>
 	</div>
 	<div data-role="footer">
-			
+		<h4>KRE Devtools</h5>
 	</div>
 </div>
