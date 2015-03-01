@@ -346,7 +346,7 @@
       }
       return 0;
     };
-  }
+  };
     function paint_item(id, rids) {//(key,value)
 
           /*if (typeof vehicle === "undefined") {
@@ -363,7 +363,18 @@
             "uri": rids["uri"]}
             )
           );
-      }
+    };
+
+    var sortByName = function (a, b) {
+	if (a.name > b.name) {
+	    return 1;
+	}
+	if (a.name < b.name) {
+	    return -1;
+	}
+	// a must be equal to b
+	return 0;
+    };
 
     // process an array of objects from a form to be a proper object
     var process_form_results = function(raw_results)
