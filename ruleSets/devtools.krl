@@ -42,7 +42,7 @@ ruleset devtools {
 		  describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
 		  resp = http:get(describe_url);
 		  resp{"status_code"} eq "200" => resp{"content"}.decode()
-		                                | resp
+		                                | resp.klog(">> error retrieving description for rid list >> ")
 		}; 
 		
 	}

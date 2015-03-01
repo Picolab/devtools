@@ -182,6 +182,18 @@
         }
     },
 
+    installedRulesets: function(cb, options) //fleetChannel
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the rulesets");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+            Devtools.log("Displaying installed rulesets", json);
+            cb(json);
+        }, {"eci":eci});
+    }
+
 
 }; //closes the "window" inside the function DON'T DELETE
 
