@@ -37,6 +37,10 @@
 			     events: "bs", // do when we show the page
 			     argsre: true
 				   } },
+      {"#install-ruleset": {handler: "install_rulesets",
+			     events: "bs", // do when we show the page
+			     argsre: true
+				   } },
       {"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
 				     events: "bs", // do when we show the page
 				     argsre: true
@@ -177,7 +181,7 @@
 		
 		function populate_installed_rulesets() {
 		    $("#installed-rulesets" ).empty();
-		    Devtools.installedRulesets(function(ruleset_list){
+		    Devtools.showInstalledRulesets(function(ruleset_list){
 			console.log("Retrieved installed rulesets");
 			$.each(ruleset_list, function(k, ruleset) {
 			    ruleset["rid"] = k;
@@ -194,7 +198,32 @@
 		
         },
 	uninstall_ruleset: function(type, match, ui, page) {
-	    console.log("remove ruleset page");
+	    console.log("Showing uninstall ruleset page");
+	    $.mobile.loading("hide");
+	    var rid = router.getParams(match[1])["rid"];
+	    console.log("RID to uninstall: ", rid);
+	    $("#remove-ruleset" ).empty();
+	    $("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
+	    $("#remove-ruleset").listview().listview("refresh");
+    	    $('#remove-ruleset-button').off('tap').on('tap', function(event)
+            {
+		$.mobile.loading("show", {
+                    text: "Uninstalling ruleset...",
+                    textVisible: true
+		});
+   	        console.log("Uninstalling RID ", rid);
+		if(typeof rid !== "undefined") {
+		    Devtools.uninstallRulesets(rid, function(directives) {
+ 			console.log("uninstalled ", rid, directives);
+			$.mobile.changePage("#page-installed-rulesets", {
+			    transition: 'slide'
+			});
+		    });	
+		}
+            });
+	},
+	install_ruleset: function(type, match, ui, page) {
+	    console.log("Showing install ruleset page");
 	    $.mobile.loading("hide");
 	    var rid = router.getParams(match[1])["rid"];
 	    console.log("RID to uninstall: ", rid);

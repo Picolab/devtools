@@ -95,7 +95,7 @@ ruleset devtools {
 	  select when devtools install_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-	    result = CloudOS:rulesetAddChild().klog(">> result of installing #{rids}", meta:eci());
+	    result = CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ");
           }
 	  if(result{"status"}) then {
  	    send_directive("installed #{rids}");
@@ -111,7 +111,7 @@ ruleset devtools {
 	  select when devtools uninstall_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-	    result = CloudOS:rulesetRemoveChild().klog(">> result of uninstalling #{rids}", meta:eci());
+	    result = CloudOS:rulesetRemoveChild(rids, meta:eci()).klog(">> result of uninstalling #{rids} >> ");
           }
 	  if(result{"status"}) then {
  	    send_directive("uninstalled #{rids}");
