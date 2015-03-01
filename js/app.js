@@ -33,10 +33,15 @@
 			     events: "bs", // do when we show the page
 			     argsre: true
         } },
-      {"#page-installed-rulesets": {handler: "install_rulesets",
-			     events: "s", // do when we show the page
+      {"#page-installed-rulesets": {handler: "installed_rulesets",
+			     events: "bs", // do when we show the page
 			     argsre: true
-        } }
+				   } },
+      {"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
+				     events: "bs", // do when we show the page
+				     argsre: true
+	  
+                                    }}
         ],
         {
           pageAuthorize: function(type, match, ui, page) {
@@ -166,20 +171,20 @@
 	    });
 
           },
-            install_rulesets: function(type, match, ui, page) {
+          installed_rulesets: function(type, match, ui, page) {
 		console.log("ruleset installation page");
 		$.mobile.loading("hide");
 		
 		function populate_installed_rulesets() {
-		    $("#installed_rulesets" ).empty();
+		    $("#installed-rulesets" ).empty();
 		    Devtools.installedRulesets(function(ruleset_list){
 			console.log("Retrieved installed rulesets");
 			$.each(ruleset_list, function(k, ruleset) {
 			    ruleset["rid"] = k;
-			    $("#installed_rulesets" ).append(
+			    $("#installed-rulesets" ).append(
  				snippets.installed_ruleset_template(ruleset)
 			    ).collapsibleset().collapsibleset( "refresh" );
-			    $("#installed_rulesets").listview("refresh");
+			    $("#installed-rulesets").listview("refresh");
 			});
 		    });
 		};
@@ -187,11 +192,39 @@
 		populate_installed_rulesets();
 
 		
-            }
         },
+	uninstall_ruleset: function(type, match, ui, page) {
+	    console.log("remove ruleset page");
+	    $.mobile.loading("hide");
+	    var rid = router.getParams(match[1])["rid"];
+	    console.log("RID to uninstall: ", rid);
+	    $("#remove-ruleset" ).empty();
+	    $("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
+	    $("#remove-ruleset").listview().listview("refresh");
+    	    $('#remove-ruleset-button').off('tap').on('tap', function(event)
+            {
+		$.mobile.loading("show", {
+                    text: "Uninstalling ruleset...",
+                    textVisible: true
+		});
+   	        console.log("Uninstalling RID ", rid);
+		if(typeof rid !== "undefined") {
+		    // Fuse.deleteVehicle(pid, function(directives) {
+		    // 	    // deletion is simple, so the return indicates completion; thus invalidation works
+		    // 	    Fuse.invalidateVehicleSummary();
+		    // 	    console.log("Deleted ", pid, directives);
+		    // 	    $.mobile.loading("hide");
+			    $.mobile.changePage("#page-installed-rulesets", {
+				transition: 'slide'
+			    });
+			// });	
+		}
+            });
+	}
+      },
       { 
         defaultHandler: function(type, ui, page) {
-          console.log("Default handler called due to unknown route (" + type + ", " + ui + ", " + page + ")");
+          console.log("Default handler called due to unknown route:", type, ui, page );
         },
         defaultHandlerEvents: "s",
         defaultArgsRe: true
@@ -201,9 +234,10 @@
       // Handlebar templates compiled at load time to create functions
       // templates are included to index.html from Templates directory.
       window['snippets'] = {
-        list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
-        logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
-        installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || "")
+          list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
+          logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
+          installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
+	  confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || "")
       };
 
       function plant_authorize_button()

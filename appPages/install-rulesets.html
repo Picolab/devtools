@@ -7,12 +7,15 @@
    <div data-role="content">
        <ul id="error-msg" data-role="listview" data-inset="true" class="alert alert-error" style="display:none"></ul>
 
-     <ul data-role="listview" data-inset="true"> 
+     <ul id="installed-rulesets-control" data-role="listview" data-inset="true"> 
        <li data-role="list-divider" >Installed Rulesets</li>
+       <li>
+         <a id="install-ruleset-button" href="#install-ruleset" class="ui-btn ui-icon-edit ui-btn-icon-right">New Ruleset</a>
+       </li>
      </ul>
 
      <div data-role="collapsible-set" data-content-theme="a" data-iconpos="right">
-        <ul data-role="listview" data-inset="true"  id="installed_rulesets">    
+        <ul data-role="listview" data-inset="true"  id="installed-rulesets">    
         </ul>
      </div>
 
@@ -22,3 +25,45 @@
       <h4>KRE Devtools</h5>
    </div><!-- /footer -->
 </div><!-- /page -->
+
+<div data-role="page" id="install-ruleset" data-title="Install Ruleset">
+	<div data-role="header">
+	   <h2>Install Ruleset</h2>
+	</div>
+
+	<div data-role="main" class="ui-content">
+	  <ul id="install-ruleset" data-role="listview" data-inset="true"> 
+       	    <li data-role="list-divider" >Install Ruleset</li>
+	    <li>
+	      <form id="install-ruleset-form">
+	        <div data-role="fieldcontain">
+   	          <label for="rid">Ruleset ID:</label>
+		  <input type="text" name="rid" id="rid" value="" placeholder="b495674x14.prod" />
+		</div>
+	      </form>
+	      <div>
+                <a id="install-ruleset-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Install</a>
+                <a href="#page-installed-rulesets" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+	      </div>
+	    </li>
+     	  </ul>
+	</div>
+	<div data-role="footer">
+	   <h4>KRE Devtools</h5>
+	</div>
+</div>
+
+<div data-role="page" id="confirm-uninstall-ruleset" data-title="Uninstall Ruleset">
+	<div data-role="header">
+	   <h2>Uninstall Ruleset</h2>
+	</div>
+
+	<div data-role="main" class="ui-content">
+	  <ul id="remove-ruleset" data-role="listview" data-inset="true"> 
+       	    
+     	  </ul>
+	</div>
+	<div data-role="footer">
+	   <h4>KRE Devtools</h5>
+	</div>
+</div>

@@ -89,4 +89,37 @@ ruleset devtools {
 			with rulsetID = rulesetID if(updatedSuccessfully);
 		}
 	}
+
+	// ---------- ruleset installation ----------
+	rule installRuleset {
+	  select when devtools install_ruleset
+	  pre {
+	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+	    result = CloudOS:rulesetAddChild().klog(">> result of installing #{rids}", meta:eci());
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("installed #{rids}");
+          }
+	  fired {
+	    log(">> successfully installed rids #{rids} >>");
+          } else {
+	    log(">> could not install rids #{rids} >>");
+          }
+        }
+
+        rule uninstallRuleset {
+	  select when devtools uninstall_ruleset
+	  pre {
+	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+	    result = CloudOS:rulesetRemoveChild().klog(">> result of uninstalling #{rids}", meta:eci());
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("uninstalled #{rids}");
+          }
+	  fired {
+	    log(">> successfully uninstalled rids #{rids} >>");
+          } else {
+	    log(">> could not uninstall rids #{rids} >>");
+          }
+        }
 }

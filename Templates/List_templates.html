@@ -24,12 +24,26 @@
 </div>
 
 <div id="installed-ruleset-template" style="display:none;">
-   <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b">
+   <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="a">
      <h2>{{name}} ({{rid}})</h2>
-     <p>Author: {{author}}
-     <p>{{description}}</p>
-     <p>Last cached: {{ruleset_cached}}</p>
+     <div>
+       <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-ruleset?rid={{rid}}" class="ui-btn ui-icon-delete ui-btn-icon-notext"></a></p>
+       <p>Author: {{author}}
+       <p>{{description}}</p>
+       <p>Last cached: {{ruleset_cached}}</p>
+     </div>
    </div>
+</div>
+
+<div id="confirm-ruleset-remove-template" style="display:none;">
+  <li data-role="list-divider" >Uninstall Ruleset</li>
+  <li>
+  <p>Uninstall ruleset {{rid}}?</p>
+  <p>
+    <a id="remove-ruleset-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Delete</a>
+    <a href="#page-installed-rulesets" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+  </p>
+  </li>
 </div>
 
 
