@@ -198,10 +198,10 @@
     {
         cb = cb || function(){};
         options = options || {};
-	json = {rids: ridlist}; 
+	var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing rulesets");
-        return CloudOS.raiseEvent("devtools", "install_rulesets", json, function(json) {
+        return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
             Devtools.log("Directive from installing rulesets", json);
             cb(json);
         }, {"eci":eci});
@@ -211,10 +211,10 @@
     {
         cb = cb || function(){};
         options = options || {};
-	json = {rids: ridlist}; 
+	var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Uninstalling rulesets");
-        return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, function(json) {
+        return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
             Devtools.log("Directive from uninstalling rulesets", json);
             cb(json);
         }, {"eci":eci});

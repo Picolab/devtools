@@ -1,8 +1,6 @@
 <div data-role="page" id="page-picologging" data-title="Pico Logs">
 
-   <div data-role="header">
-   <h2>Logging</h2>
-   </div><!-- /header -->
+  {% include header.html title="Pico Logging" %}
 
    <div data-role="content">
        <ul id="error-msg" data-role="listview" data-inset="true" class="alert alert-error" style="display:none"></ul>
@@ -29,7 +27,6 @@
 
    </div><!-- /content -->
 
-   <div data-role="footer" data-position="fixed">
-      <h4>KRE Devtools</h5>
-   </div><!-- /footer -->
+   {% include footer.html %}
+
 </div><!-- /page -->

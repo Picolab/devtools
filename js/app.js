@@ -37,7 +37,7 @@
 			     events: "bs", // do when we show the page
 			     argsre: true
 				   } },
-      {"#install-ruleset": {handler: "install_rulesets",
+      {"#install-ruleset": {handler: "install_ruleset",
 			     events: "bs", // do when we show the page
 			     argsre: true
 				   } },
@@ -225,28 +225,25 @@
 	install_ruleset: function(type, match, ui, page) {
 	    console.log("Showing install ruleset page");
 	    $.mobile.loading("hide");
-	    var rid = router.getParams(match[1])["rid"];
-	    console.log("RID to uninstall: ", rid);
-	    $("#remove-ruleset" ).empty();
-	    $("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
-	    $("#remove-ruleset").listview().listview("refresh");
-    	    $('#remove-ruleset-button').off('tap').on('tap', function(event)
+	    var frm = "#form-install-ruleset";
+	    $(frm)[0].reset(); // clear the fields in the form
+    	    $('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
             {
 		$.mobile.loading("show", {
-                    text: "Uninstalling ruleset...",
+                    text: "Installing ruleset...",
                     textVisible: true
 		});
-   	        console.log("Uninstalling RID ", rid);
+                var install_form_data = process_form(frm);
+                console.log(">>>>>>>>> RIDs to install", install_form_data);
+		var rid = install_form_data.rid;
+
 		if(typeof rid !== "undefined") {
-		    // Fuse.deleteVehicle(pid, function(directives) {
-		    // 	    // deletion is simple, so the return indicates completion; thus invalidation works
-		    // 	    Fuse.invalidateVehicleSummary();
-		    // 	    console.log("Deleted ", pid, directives);
-		    // 	    $.mobile.loading("hide");
-			    $.mobile.changePage("#page-installed-rulesets", {
-				transition: 'slide'
-			    });
-			// });	
+		    Devtools.installRulesets(rid, function(directives) {
+ 			console.log("installed ", rid, directives);
+			$.mobile.changePage("#page-installed-rulesets", {
+			    transition: 'slide'
+			});
+		    });	
 		}
             });
 	}
@@ -367,4 +364,29 @@
             )
           );
       }
+
+    // process an array of objects from a form to be a proper object
+    var process_form_results = function(raw_results)
+    {
+	var results = {};
+	$.each(raw_results, function(i, v)
+	       {
+		   var nym = v.name,
+ 	               val = v.value;
+		   if (results[nym] && results[nym] instanceof Array) {
+		       results[nym].push(val);
+		   } else if (results[nym]) {
+		       results[nym] = [results[nym], val];
+		   } else {
+		       results[nym] = val;
+		   }
+	       });
+	return results;
+    };
+
+    var process_form = function(frm)
+    {
+	var results = process_form_results($(frm).serializeArray());
+	return results;
+    };
 
