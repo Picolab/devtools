@@ -91,8 +91,8 @@ ruleset devtools {
 	}
 
 	// ---------- ruleset installation ----------
-	rule installRuleset {
-	  select when devtools install_ruleset
+	rule installRulesets {
+	  select when devtools install_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
 	    result = CloudOS:rulesetAddChild().klog(">> result of installing #{rids}", meta:eci());
@@ -107,8 +107,8 @@ ruleset devtools {
           }
         }
 
-        rule uninstallRuleset {
-	  select when devtools uninstall_ruleset
+        rule uninstallRulesets {
+	  select when devtools uninstall_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
 	    result = CloudOS:rulesetRemoveChild().klog(">> result of uninstalling #{rids}", meta:eci());
