@@ -169,12 +169,23 @@
             install_rulesets: function(type, match, ui, page) {
 		console.log("ruleset installation page");
 		$.mobile.loading("hide");
-		var ruleset = {name: "b16x16.prod"};
+		
+		function populate_installed_rulesets() {
+		    $("#installed_rulesets" ).empty();
+		    Devtools.installedRulesets(function(ruleset_list){
+			console.log("Retrieved installed rulesets");
+			$.each(ruleset_list, function(k, ruleset) {
+			    ruleset["rid"] = k;
+			    $("#installed_rulesets" ).append(
+ 				snippets.installed_ruleset_template(ruleset)
+			    ).collapsibleset().collapsibleset( "refresh" );
+			    $("#installed_rulesets").listview("refresh");
+			});
+		    });
+		};
 
-		$("#installed_rulesets" ).append( 
- 		    snippets.installed_ruleset_template(ruleset)
-		).collapsibleset().collapsibleset( "refresh" );
-		$("#installed_rulesets").listview("refresh");
+		populate_installed_rulesets();
+
 		
             }
         },

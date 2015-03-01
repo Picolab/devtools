@@ -182,7 +182,7 @@
         }
     },
 
-    installedRulesets: function(cb, options) //fleetChannel
+    installedRulesets: function(cb, options) // PJW
     {
         cb = cb || function(){};
         options = options || {};
