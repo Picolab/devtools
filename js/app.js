@@ -91,9 +91,10 @@
             var registering_form_data = process_form(frm);
             console.log(">>>>>>>>> RID to register", registering_form_data);
             var appURL = registering_form_data.appURL;
-            console.log("appURL", appURL);
 
             if(typeof appURL !== "undefined") {
+            console.log("appURL !== undefined ", appURL);
+
               Devtools.RegisterRulesets(appURL, function(directives) {
                 console.log("registered ", appURL, directives);
                 $.mobile.changePage("#listing", {
