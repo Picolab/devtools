@@ -86,7 +86,7 @@
             var appURL = registering_form_data.appURL;
 
             if(typeof appURL !== "undefined") {
-              Devtools.RegisterRulesets(appURL, function(directives) {
+              Devtools.RegisterRuleset(appURL, function(directives) {
                 console.log("registered ", appURL, directives);
                 $.mobile.changePage("#listing", {
                  transition: 'slide'
