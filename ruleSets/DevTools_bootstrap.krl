@@ -6,7 +6,6 @@ ruleset DevTools_bootstrap {
         >>
 
         use module a169x625 alias CloudOS
-        use module a169x676 alias pds
 
     }
 
