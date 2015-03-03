@@ -87,6 +87,19 @@
 
 //---------the functions for updating rulesets
 
+    updateUrl: function(rid, cb, options) //basing this off of updateCarvoyantVehicle
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {rids: ridlist}; //not sure what this does
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Updating the URL");
+        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
+            Devtools.log("Directive from updating URL", json);
+            cb(json);
+        }, {"eci":eci});
+    }
+
 
     ridSummary: function(cb, options) //vehicleSummary
     {
@@ -159,6 +172,7 @@
                }
         },
 
+
     picoChannel: function(cb, options) //fleetChannel
     {
         cb = cb || function(){};
@@ -198,7 +212,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-	var json = {rids: ridlist}; 
+	    var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing rulesets");
         return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
@@ -211,7 +225,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-	var json = {rids: ridlist}; 
+	    var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Uninstalling rulesets");
         return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
