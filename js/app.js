@@ -71,13 +71,6 @@
         },
 
         registeringRuleset: function(type, match, ui, page) {
-          //example
-          //http://www.jquery4u.com?city=Gold Coast
-          //console.log($.urlParam('city'));  
-          //output: Gold%20Coast
-          //console.log(decodeURIComponent($.urlParam('city'))); 
-          //output: Gold Coast
-          
 
           console.log("registering Ruleset Handler");
           var frm = "#formRegisterNewRuleset";
