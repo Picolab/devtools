@@ -61,7 +61,7 @@
 
   <!--getting access for devtools-api-->
   <script src="https://raw.githubusercontent.com/kre/devtools/gh-pages/js/devtools-api.js"></script>
- <!-- <script src="js/devtools-api-config.js"></script> -->
+  <!-- <script src="js/devtools-api-config.js"></script> -->
 
 
 
@@ -82,33 +82,28 @@
         if (!oauth_payload.OAUTH_ECI) {
          alert("Authentication failed. We apologize for this inconvenience. Please try again.");
        } else {
-        if (false ) {//if not bootstraped --------------------------------------------------- need to be finish
-          $.mobile.loading("show", {
-           text: "Please wait while we create your account...",
-           textVisible: true
-         });         
+
+        $.mobile.loading("show", {
+         text: "Please wait while we create your account...",
+         textVisible: true
+       });         
          Devtools.initAccount({ state: state }, function(kns_directives) // Devtools object?? vs devtools
-       {
-        console.log("Received directives from bootstrap.execute: ", kns_directives);
-        $.mobile.loading("hide");
-        window.location = "index.html";
-      });
-    } else {
-      console.log("No need to bootstrap");
-            // display authorization 
-            console.log("Authorized")
-            window.location = "index.html";
-          }
-        }
-        },
-function(json){
- console.log("something went wrong with the OAuth authorization " + json);
- alert("Something went wrong with your authorization. Please try again. ");
+         {
+          console.log("Received directives from bootstrap.execute: ", kns_directives);
+          $.mobile.loading("hide");
+          window.location = "index.html";
+        });
+
+       }
+     },
+     function(json){
+       console.log("something went wrong with the OAuth authorization " + json);
+       alert("Something went wrong with your authorization. Please try again. ");
    // not ideal, but...
    window.location = "https://" + CloudOS.login_server + "/login";
  }
  );
-})
+    })
 </script>
 
 </body>
