@@ -76,7 +76,7 @@ ruleset devtools {
 	}
 
 	rule updateUrl {
-		select when web devtools update_url//submit "#form-update-url" //or on raised event of updateURL in api?
+		select when devtools update_url//subm form-update-url
 		pre {
 			rid = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
 			newURL = event:attr("url"); //should pull from the form on update url template
@@ -84,7 +84,6 @@ ruleset devtools {
 		{
 			rsm:update(rid) setting(updatedSuccessfully)
 			with uri = newURL;
-			CloudRain:setHash('/refresh');
 		}
 		fired {
 			raise system event rulesetUpdated
