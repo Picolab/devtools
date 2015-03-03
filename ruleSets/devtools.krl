@@ -15,6 +15,7 @@ ruleset devtools {
 
 		use module a169x625 alias CloudOS
 
+
 		provides showRulesets, showInstalledRulesets
 		sharing on
 	}
@@ -123,18 +124,17 @@ ruleset devtools {
 	    log(">> could not uninstall rids #{rids} >>");
           }
         }
-        
+
     rule registerRuleset {
-		select when devtools registering_rulesets
+		select when devtools register_ruleset
 		pre {
-			appURL = event:attr("appURL");
+			rulesetURL= event:attr("rulesetURL");
 		}
 		{
-			rsm:register(appURL) setting (rid);
-			CloudRain:setHash('/app/#{meta:rid()}/listRulesets');
+			rsm:register(rulesetURL) setting (rid);
 		}
 		fired {
-			raise system event rulesetCreated
+			raise system event rulesetRegistered
 			with rulsetID = rid{"rid"} if(rid);
 		}
 	}

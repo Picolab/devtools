@@ -87,11 +87,11 @@
 
 //---------the functions for updating rulesets
 
-    updateUrl: function(rid, cb, options) //basing this off of updateCarvoyantVehicle
+    updateUrl: function(rid, url, cb, options) //basing this off of updateCarvoyantVehicle
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: ridlist}; //not sure what this does
+        var json = {rids: rid}; //not sure what this does
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating the URL");
         return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
@@ -138,20 +138,20 @@
             cb(json);
         }, {"eci":eci});
     },
-    RegisterRulesets: function(cb,options)
+    RegisterRuleset: function(url,cb,options)
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {rids: ridlist}; 
+    var json = {rulesetURL: url}; // json for attribute thats passed to the ruleset as eventattribute 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Registering rulesets");
-        return CloudOS.raiseEvent("devtools", "registering_rulesets", json, {}, function(json) {
-            Devtools.log("Directive from registering rulesets", json);
+        return CloudOS.raiseEvent("devtools", "register_ruleset", json, {}, function(json) {
+            Devtools.log("Directive from register ruleset", json);
             cb(json);
         }, {"eci":eci});
     }
 	 
-
+//
 }; //closes the "window" inside the function DON'T DELETE
 
 //----------------------------------
