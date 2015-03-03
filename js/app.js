@@ -90,11 +90,12 @@
             });
             var registering_form_data = process_form(frm);
             console.log(">>>>>>>>> RID to register", registering_form_data);
-            var rid = registering_form_data.rid;
+            var appURL = registering_form_data.appURL;
+            console.log("appURL", appURL);
 
-            if(typeof rid !== "undefined") {
-              Devtools.RegisterRulesets(rid, function(directives) {
-                console.log("registered ", rid, directives);
+            if(typeof appURL !== "undefined") {
+              Devtools.RegisterRulesets(appURL, function(directives) {
+                console.log("registered ", appURL, directives);
                 $.mobile.changePage("#listing", {
                  transition: 'slide'
                });
