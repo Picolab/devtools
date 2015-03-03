@@ -374,7 +374,7 @@
 
   function paint_item(id, rids) {
     var status = "no status"; // place holder for description
-    console.log("rid: "+ rids.rid);
+    //console.log("rid: "+ rids.rid);
 
     $('#manage-list').append( 
       snippets.list_rulesets_template(
