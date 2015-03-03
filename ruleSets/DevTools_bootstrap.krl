@@ -32,7 +32,7 @@ ruleset DevTools_bootstrap {
       select when devtools bootstrap
       pre {
         installed_rids = CloudOS:listRulest(meta:eci);
-	      bootstrapped = installed_rids.filter(function(k,v){k eq "b16x29.prod"}).length();// check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
+	      bootstrapped = installed_rids.filter(function(k,v){k eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
       }
       if (! bootstrapped > 0 ) then
       {
