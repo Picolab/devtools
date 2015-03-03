@@ -11,7 +11,7 @@ ruleset DevTools_bootstrap {
 
     global {
 
-        apps = {
+        rulesets = {
             "core": [
                    "a169x625.prod",  // CloudOS Service
                    "a169x676.prod",  // PDS
@@ -29,7 +29,7 @@ ruleset DevTools_bootstrap {
     }
 
     rule bootstrap_guard {
-      select when DevTools bootstrap// <-------------------------------------------------------NEED TO UPDATE EVENT NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      select when devtools bootstrap
       pre {
         installed_rids = CloudOS:listRulest(meta:eci);
 	      bootstrapped = // check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
@@ -50,14 +50,14 @@ ruleset DevTools_bootstrap {
     rule strap_some_boots {
         select when explicit bootstrap_needed
         pre {
-	  remove_rulesets = CloudOS:rulesetRemoveChild(apps{"unwanted"}, meta:eci());
+	  remove_rulesets = CloudOS:rulesetRemoveChild(rulesets{"unwanted"}, meta:eci());
 
-          installed = CloudOS:rulesetAddChild(apps{"core"}, meta:eci());
-	  account_profile = CloudOS:accountProfile();
-          profile = {
-            "myProfileName": account_profile{"firstname"} + " " + account_profile{"lastname"},
-            "myProfileEmail": account_profile{"email"}
-          };
+          installed = CloudOS:rulesetAddChild(rulesets{"core"}, meta:eci());
+//	  account_profile = CloudOS:accountProfile();
+  //        profile = {
+    //        "myProfileName": account_profile{"firstname"} + " " + account_profile{"lastname"},
+       //     "myProfileEmail": account_profile{"email"}
+      //    };
         }
 
         if (installed) then {
