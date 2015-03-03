@@ -87,18 +87,6 @@
 
 //---------the functions for updating rulesets
 
-    updateUrl: function(rid, cb, options) //basing this off of updateCarvoyantVehicle
-    {
-        cb = cb || function(){};
-        options = options || {};
-        var json = {rids: ridlist}; //not sure what this does
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Updating the URL");
-        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
-            Devtools.log("Directive from updating URL", json);
-            cb(json);
-        }, {"eci":eci});
-    }
 
     ridSummary: function(cb, options) //vehicleSummary
     {
