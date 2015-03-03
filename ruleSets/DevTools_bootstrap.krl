@@ -34,9 +34,9 @@ ruleset DevTools_bootstrap {
         installed_rids = CloudOS:listRulest(meta:eci);
 	      bootstrapped = installed_rids.filter(function(k,v){k eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
       }
-      if (! bootstrapped > 0 ) then
+      if (bootstrapped > 0 ) then
       {
-        send_directive("found_eci_for_fleet") 
+        send_directive("found_eci_for_developer") 
 	         with eci = eci
       }
       fired {
@@ -50,7 +50,7 @@ ruleset DevTools_bootstrap {
     rule strap_some_boots {
         select when explicit bootstrap_needed
         pre {
-	  remove_rulesets = CloudOS:rulesetRemoveChild(rulesets{"unwanted"}, meta:eci());
+	       //remove_rulesets = CloudOS:rulesetRemoveChild(rulesets{"unwanted"}, meta:eci());
 
           installed = CloudOS:rulesetAddChild(rulesets{"core"}, meta:eci());
 //	  account_profile = CloudOS:accountProfile();
