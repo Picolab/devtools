@@ -70,8 +70,8 @@
       name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
       var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
       results = regex.exec(location.search);
-      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    };
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
     var state = getParameterByName("state");
 
@@ -81,7 +81,7 @@
       {
         if (oauth_payload.OAUTH_ECI) {
           console.log("No need to bootstrap");
-          console.log("Authorized")            // display authorization 
+          console.log("Authorized");            // display authorization 
           window.location = "index.html";
        } else {
             //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
@@ -100,6 +100,7 @@
       }
       );
     });
+
 </script>
 
 </body>
