@@ -61,8 +61,8 @@ ruleset DevTools_bootstrap {
         }
 
         if (installed) then {
-            send_directive("New DevTools user bootstrapped") with
-	      profile = profile;
+            send_directive("New DevTools user bootstrapped") //with
+	     // profile = profile;
         }
 
         fired {
