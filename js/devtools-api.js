@@ -100,8 +100,99 @@
         }, {"eci":eci});
     }
 
-    
-//----------installing/uninstalling rulesets
+    ridSummary: function(cb, options) //vehicleSummary
+    {
+            cb = cb || function(){};
+            options = options || {};
+            //if(isEmpty(Devtools.vehicle_summary)) {
+            //options.force = true;
+            //}
+            return Devtools.ask_fleet("ridSummary", {}, Devtools.rid_summary, function(json) {
+            if(typeof json.error === "undefined") {
+                Devtools.rid_summary = json;
+                Devtools.log("Retrieve vehicle summary", json);
+                cb(json);
+            } else {
+                console.log("Bad vehicle summary fetch ", json);
+            }
+            }, options);
+        },
+
+    ridChannels: function(cb, options) //vehicleChannels
+    {
+            cb = cb || function(){};
+            options = options || {};
+                Devtools.log("Retrieving vehicles"); 
+            return Devtools.ask_fleet("ridChannels", {}, Devtools.rid_list, function(json) {
+            if(typeof json.error === "undefined") {
+                Devtools.rid_list = json;       //retrieved vehicles
+                Devtools.log("Retrieved vehicles", json);
+                cb(json);
+            } else {
+                console.log("Bad vehicle channel fetch: ", json);
+            }
+            }, options);
+        },
+
+    updateRIDSummary: function(id, profile) //updateVehicleSummary
+    {
+            Devtools.rid_summary = Devtools.rid_summary || {};
+            Devtools.rid_summary[id] = Devtools.rid_summary[id] || {};
+            $.each(profile, function(k,v){
+            k = (k === "myProfileName") ? "profileName"
+                      : (k === "myProfilePhoto") ? "profilePhoto"
+                      : k;  
+            console.log("Storing in vehicle summary ", k, v);
+            Devtools.rid_summary[id][k] = v;
+            });
+        },
+
+    ask_fleet: function(funcName, args, cache, cb, options) {  //replace fleet with pico?
+            cb = cb || function(){};
+            options = options || {};
+            var rid = options.rid || "fleet";
+
+            if (isEmpty(cache)
+              || options.force
+               ) {
+                       Devtools.log("Calling " + funcName);
+               Devtools.picoChannel(function(fc) {
+                   Devtools.log("Using fleet channel ", fc);
+                   if(fc !== "none") {
+                   return CloudOS.skyCloud(Devtools.get_rid(rid), funcName, args, cb, {"eci": fc});
+                   } else {
+                   Devtools.log("fleet_eci is undefined, you must get the fleet channel first");
+                   return null;
+                   }
+               });
+               } else {
+               cb(cache);
+               return cache;
+               }
+        },
+
+    picoChannel: function(cb, options) //fleetChannel
+    {
+        cb = cb || function(){};
+        options = options || {};
+        if (typeof Devtools.rid_eci === "undefined" || Devtools.rid_eci == "" || Devtools.rid_eci == null || options.force) {
+                Devtools.log("Retrieving fleet channel");
+        return CloudOS.skyCloud(Devtools.get_rid("owner"), "picoChannel", {}, function(json) {
+            if(json.eci != null)  {
+            Devtools.rid_eci = json.eci;
+            Devtools.log("Retrieved fleet channel", json);
+            cb(json.eci);
+            } else {
+            console.log("Seeing null fleet eci, not storing...");
+            cb(null);
+            }
+        });
+        } else {
+        Devtools.log("Using cached value of fleet channel ", Devtools.rid_eci);
+        cb(Devtools.rid_eci);
+        return Devtools.rid_eci;
+        }
+    },
 
     showInstalledRulesets: function(cb, options) // PJW
     {
@@ -119,7 +210,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-	    var json = {rids: ridlist}; 
+	var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing rulesets");
         return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
@@ -132,7 +223,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-	    var json = {rids: ridlist}; 
+	var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Uninstalling rulesets");
         return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
