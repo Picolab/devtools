@@ -123,8 +123,8 @@
                 console.log("installed ", rid, directives);
                 $.mobile.changePage("#page-installed-rulesets", {
                   transition: 'slide' //all of this found in install_rulesets */
-                Devtools.updateURL(rid, url, function(){
-                  console.log("updating the function is running");
+                Devtools.updateURL(rid, url, function(directives){
+                  console.log("updating the function is running", rid, directives);
                   $.mobile.changePage("#listing", {
                     transition: 'slide'
                    });
