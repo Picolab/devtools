@@ -140,7 +140,15 @@
     },
     RegisterRulesets: function(cb,options)
     {
-        
+        cb = cb || function(){};
+        options = options || {};
+    var json = {rids: ridlist}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Registering rulesets");
+        return CloudOS.raiseEvent("devtools", "registering_rulesets", json, {}, function(json) {
+            Devtools.log("Directive from registering rulesets", json);
+            cb(json);
+        }, {"eci":eci});
     }
 	 
 

@@ -44,20 +44,7 @@ ruleset devtools {
 		
 	}
 
-	rule createRulesetSubmit {
-		select when web submit "#formRegisterNewRuleset"
-		pre {
-			appURL = event:attr("appURL");
-		}
-		{
-			rsm:register(appURL) setting (rid);
-			CloudRain:setHash('/app/#{meta:rid()}/listRulesets');
-		}
-		fired {
-			raise system event rulesetCreated
-			with rulsetID = rid{"rid"} if(rid);
-		}
-	}
+	
 
 	rule deleteRulesets {
 		select when web cloudAppAction action re/deleteRulesets/
@@ -136,4 +123,19 @@ ruleset devtools {
 	    log(">> could not uninstall rids #{rids} >>");
           }
         }
+        
+    rule registerRuleset {
+		select when devtools registering_rulesets
+		pre {
+			appURL = event:attr("appURL");
+		}
+		{
+			rsm:register(appURL) setting (rid);
+			CloudRain:setHash('/app/#{meta:rid()}/listRulesets');
+		}
+		fired {
+			raise system event rulesetCreated
+			with rulsetID = rid{"rid"} if(rid);
+		}
+	}
 }
