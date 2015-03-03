@@ -101,14 +101,7 @@
               }); 
             }
           });
-         }
-            //  function(event){
-            //  var results= $(frm).serializeArray();
-            //  console.log("Form results for ", frm, ": ", results);
-              //should check url to be valid
-
-
-           // });
+         
         },
 
         confirmingDeletion: function(type, match, ui, page) {
