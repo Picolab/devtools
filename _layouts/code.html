@@ -87,7 +87,7 @@
          text: "Please wait while we create your account...",
          textVisible: true
        });         
-         Devtools.initAccount({}, function(kns_directives) // Devtools object?? vs devtools
+         Devtools.initAccount({ state: state }, function(kns_directives) // Devtools object?? vs devtools
          {
           console.log("Received directives from bootstrap.execute: ", kns_directives);
           $.mobile.loading("hide");
