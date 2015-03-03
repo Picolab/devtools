@@ -73,7 +73,7 @@
         attrs = attrs || {};
             Devtools.log("Initializing account for user with attributes ", attrs);
 
-            return CloudOS.raiseEvent("Devtools", "bootstrap", attrs, {}, function(response)
+            return CloudOS.raiseEvent("devtools", "bootstrap", attrs, {}, function(response)
             {
         // note that because the channel is create asynchronously, processing callback does
         // NOT mean the channel exists. 
