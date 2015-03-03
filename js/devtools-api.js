@@ -91,7 +91,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: rid}; //not sure what this does
+        var json = {rids: rid,url: url}; //not sure what this does
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating the URL");
         return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
