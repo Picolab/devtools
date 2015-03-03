@@ -58,34 +58,15 @@
 
         listing: function(type, match, ui, page) {
           console.log("listing Handler");
-
           $("#manage-list" ).empty();
           
           Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-            // console.log(rids_json);
             console.log("attempting rough listview");
-
             //    var keys = rids_json.sort(sortBy("rid_index"));
-            //    console.log("keys: " + keys);
             $.each(rids_json, paint_item);
-            //  $.each(keys, paint_item);
-
             console.log("refreshing manage-list listview.");
-
             $('#manage-list').listview('refresh');
           });
-
-
-          // document.getElementById("List-Rulesets").innerHTML = obj;
-
-
-          /*var frm = "#ruleset-form";
-          $(frm)[0].reset();
-          var owner_eci = CloudOS.defaultECI; //from pageUpdateProfile
-
-            $("#RID", frm).val(ruleset_obj.rid);
-            $("#source-URL", frm).val(ruleset_obj.uri);*/
-
 
         },
 
@@ -356,17 +337,10 @@
   };
 
   function paint_item(id, rids) {
-    //(key,value)
-
-        /*if (typeof vehicle === "undefined") {
-      return;
-      }*/
     var status = "no status"; // place holder for description
-       // console.log("in paint_item");
-      //  console.log(id, rids);
     console.log("rid: "+ rids.rid);
 
-    $('#manage-list').append( //was #manage-fleet prior
+    $('#manage-list').append( 
       snippets.list_rulesets_template(
         {"rid": rids["rid"],
         "uri": rids["uri"]}
