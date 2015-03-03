@@ -110,7 +110,7 @@
 
         updatingUrl: function(type, match, ui, page) {
           console.log("updating Url Handler");
-          var rid = $.urlParam('rid'); //not sure if this will still work
+          var rid = router.getParams(match[1])["rid"]; //not sure if this will still work
           console.log("RID to update URL of: ", rid);
           var frm = "#form-update-url";
 
