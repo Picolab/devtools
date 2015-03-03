@@ -13,7 +13,6 @@ ruleset DevTools_bootstrap {
 
         apps = {
             "core": [
-                   "b16x29.prod",     // logging
                    "a169x625.prod",  // CloudOS Service
                    "a169x676.prod",  // PDS
                    "a16x161.prod",   // Notification service
@@ -23,15 +22,9 @@ ruleset DevTools_bootstrap {
                    "a16x129.dev",    // SendGrid module
                   // "b506607x15.prod", // DevTools
                    "b506607x14.prod" //DevTools
+                   "b16x29.prod",     // logging
             ],
-	    "unwanted": [ 
-          //         "a169x664.prod",	// CloudUIService 
-          //         "a169x667.prod",	// myThings
-          //         "a41x178.prod",	// SquareTag
-          //         "a169x669.prod",	// appStore
-    //               "a169x727.prod",	// CloudAPI
-          //         "b177052x7.prod"
-            ]
+	    "unwanted": []
         };
     }
 
@@ -39,7 +32,7 @@ ruleset DevTools_bootstrap {
       select when DevTools bootstrap// <-------------------------------------------------------NEED TO UPDATE EVENT NAME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       pre {
         installed_rids = CloudOS:listRulest(meta:eci);
-	      bootstrapped = // check if installed_rids includes b506607x14.prod"
+	      bootstrapped = // check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
       }
       if (! bootstrapped ) then
       {
