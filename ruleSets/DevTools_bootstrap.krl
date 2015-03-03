@@ -21,8 +21,8 @@ ruleset DevTools_bootstrap {
                    "a41x174.prod",   // Amazon S3 module
                    "a16x129.dev",    // SendGrid module
                   // "b506607x15.prod", // DevTools
-                   "b506607x14.prod" //DevTools
-                   "b16x29.prod",     // logging
+                   "b506607x14.prod", //DevTools
+                   "b16x29.prod"     // logging
             ],
 	    "unwanted": []
         };
