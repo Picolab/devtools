@@ -99,9 +99,42 @@
         },
 
         updatingUrl: function(type, match, ui, page) {
-          var rid = $.urlParam('rid');
-
           console.log("updating Url Handler");
+          var rid = $.urlParam('rid'); //not sure if this will still work
+          console.log("RID to update URL of: ", rid);
+          var frm = "#form-update-url";
+
+          $(frm)[0].reset(); // clear the fields in the form
+          $('#update-url-confirm-button').off('tap').on('tap', function(event)
+          {
+            $.mobile.loading("show", {
+              text: "Updating URL...",
+              textVisible: true
+            });
+            var update_form_data = process_form(frm);
+            console.log(">>>>>>>>> RIDs to install", update_form_data);
+            var url = update_form_data.url;
+
+            if(typeof url !== "undefined") {
+              /*Devtools.installRulesets(rid, function(directives) {
+                console.log("installed ", rid, directives);
+                $.mobile.changePage("#page-installed-rulesets", {
+                  transition: 'slide' //all of this found in install_rulesets */
+                Devtools.updateURL(rid, url, function(){
+                  console.log("updating the function is running");
+                  $.mobile.changePage("#listing", {
+                    transition: 'slide'
+                   });
+                });
+
+
+            }
+            
+          });
+
+
+
+
         },
 
         picologging: function(type, match, ui, page) {
