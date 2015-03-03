@@ -80,11 +80,28 @@
           
 
           console.log("registering Ruleset Handler");
-          //    var frm = "#formRegisterNewRuleset";
-           // $(frm)[0].reset();
-            // clear_error_msg(frm);
-          //    $('.save', frm).off('tap').on('tap');//,
+          var frm = "#formRegisterNewRuleset";
+            $(frm)[0].reset(); // clear the fields in the form
+          $('#regester-ruleset-confirm-button').off('tap').on('tap', function(event)
+           {
+            $.mobile.loading("show", {
+              text: "registering ruleset...",
+              textVisible: true
+            });
+            var registering_form_data = process_form(frm);
+            console.log(">>>>>>>>> RID to register", registering_form_data);
+            var rid = registering_form_data.rid;
 
+            if(typeof rid !== "undefined") {
+              Devtools.RegisterRulesets(rid, function(directives) {
+                console.log("registered ", rid, directives);
+                $.mobile.changePage("#listing", {
+                 transition: 'slide'
+               });
+              }); 
+            }
+          });
+         }
             //  function(event){
             //  var results= $(frm).serializeArray();
             //  console.log("Form results for ", frm, ": ", results);

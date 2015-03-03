@@ -137,8 +137,11 @@
             Devtools.log("Directive from uninstalling rulesets", json);
             cb(json);
         }, {"eci":eci});
+    },
+    RegisterRulesets: function(cb,options)
+    {
+        
     }
-
 	 
 
 }; //closes the "window" inside the function DON'T DELETE
