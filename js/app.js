@@ -8,9 +8,9 @@
 
 
        {"#home": {handler: "home",
-    		 events: "s", // do when we show the page
-    		 argsre: true
-    		} },
+		 events: "s", // do when we show the page
+		 argsre: true
+		} },
 
 
     {"#listing": {handler: "listing",
@@ -64,14 +64,31 @@
 
             $("#manage-list" ).empty();
             
-            Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-
+              Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
+          //      console.log(rids_json);
               console.log("attempting rough listview");
-              $.each(rids_json, paint_item);
-              console.log("refreshing manage-list listview.");
-              $('#manage-list').listview('refresh');
 
-            });
+          //    var keys = rids_json.sort(sortBy("rid_index"));
+          //    console.log("keys: " + keys);
+              $.each(rids_json, paint_item);
+            //  $.each(keys, paint_item);
+
+            console.log("refreshing manage-list listview.");
+
+            $('#manage-list').listview('refresh');
+          });
+
+
+          // document.getElementById("List-Rulesets").innerHTML = obj;
+
+
+            /*var frm = "#ruleset-form";
+            $(frm)[0].reset();
+            var owner_eci = CloudOS.defaultECI; //from pageUpdateProfile
+
+              $("#RID", frm).val(ruleset_obj.rid);
+              $("#source-URL", frm).val(ruleset_obj.uri);*/
+
 
           },
 
@@ -102,186 +119,152 @@
             console.log("confirming Deletion Handler");
           },
           updatingUrl: function(type, match, ui, page) {
+            var rid = $.urlParam('rid');
+
             console.log("updating Url Handler");
-            var rid = $.urlParam('rid'); //not sure if this will still work
-            console.log("RID to update URL of: ", rid);
-            var frm = "#form-update-url";
-
-            $(frm)[0].reset(); // clear the fields in the form
-            $('#update-url-confirm-button').off('tap').on('tap', function(event)
-            {
-              $.mobile.loading("show", {
-                text: "Updating URL...",
-                textVisible: true
-              });
-              var update_form_data = process_form(frm);
-              console.log(">>>>>>>>> RIDs to install", update_form_data);
-              var url = update_form_data.url;
-
-              if(typeof url !== "undefined") {
-                /*Devtools.installRulesets(rid, function(directives) {
-                  console.log("installed ", rid, directives);
-                  $.mobile.changePage("#page-installed-rulesets", {
-                    transition: 'slide' //all of this found in install_rulesets */
-                  Devtools.updateURL(rid, url, function(){
-                    console.log("updating the function is running");
-                    $.mobile.changePage("#listing", {
-                      transition: 'slide'
-                     });
-                  });
-
-
-              }
-              
-            });
-
           },
-
           picologging: function(type, match, ui, page) {
             console.log("pico logging page");
             $.mobile.loading("hide");
 
-            	    function populate_logpage() {
-            		Pico.logging.status(CloudOS.defaultECI, function(json){
-            		    console.log("Logging status: ", json);
-            		    if(json) {
-            			$("#logstatus").val("on").slider("refresh");
-            			$("#loglist" ).empty();
-            			Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-            			    console.log("Retrieved logs");
-            			    $.each(logdata, function(i, logobj) {
-            				var eid_re = RegExp("\\s+" + logobj.eid);
-            				logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
-            });
-            				$("#loglist" ).append( 
-             				    snippets.logitem_template(logobj)
-            				).collapsibleset().collapsibleset( "refresh" );
-            				$("#loglist").listview("refresh");
-            			    });
-            			});
-            			
-            		    } else {
-            			$("#logstatus").val("off").slider("refresh");
-            		    }
-            		});
-                        }
+	    function populate_logpage() {
+		Pico.logging.status(CloudOS.defaultECI, function(json){
+		    console.log("Logging status: ", json);
+		    if(json) {
+			$("#logstatus").val("on").slider("refresh");
+			$("#loglist" ).empty();
+			Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+			    console.log("Retrieved logs");
+			    $.each(logdata, function(i, logobj) {
+				var eid_re = RegExp("\\s+" + logobj.eid);
+				logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
+});
+				$("#loglist" ).append( 
+ 				    snippets.logitem_template(logobj)
+				).collapsibleset().collapsibleset( "refresh" );
+				$("#loglist").listview("refresh");
+			    });
+			});
+			
+		    } else {
+			$("#logstatus").val("off").slider("refresh");
+		    }
+		});
+            }
 
-            	    populate_logpage();
-            	    
-            	    // triggers 
-                        $("#logstatus").unbind("change").change(function(){
-            		var newstatus = $("#logstatus").val();
-            		if(newstatus === "on") {
-            		    Pico.logging.reset(CloudOS.defaultECI, {});
-            		    populate_logpage();
-            		} else {
-            		    Pico.logging.inactive(CloudOS.defaultECI, {});
-            		    $("#loglist" ).empty();
-            		}
-            	    });
-            	    $( "#logrefresh" ).unbind("click").click(function(event, ui) {
-            		$("#loglist" ).empty();
-            		populate_logpage();
-            	    });
-            	    $( "#logclear" ).unbind("click").click(function(event, ui) {
-            		$("#loglist" ).empty();
-            		Pico.logging.flush(CloudOS.defaultECI, {});
-            	    });
+	    populate_logpage();
+	    
+	    // triggers 
+            $("#logstatus").unbind("change").change(function(){
+		var newstatus = $("#logstatus").val();
+		if(newstatus === "on") {
+		    Pico.logging.reset(CloudOS.defaultECI, {});
+		    populate_logpage();
+		} else {
+		    Pico.logging.inactive(CloudOS.defaultECI, {});
+		    $("#loglist" ).empty();
+		}
+	    });
+	    $( "#logrefresh" ).unbind("click").click(function(event, ui) {
+		$("#loglist" ).empty();
+		populate_logpage();
+	    });
+	    $( "#logclear" ).unbind("click").click(function(event, ui) {
+		$("#loglist" ).empty();
+		Pico.logging.flush(CloudOS.defaultECI, {});
+	    });
 
           },
           installed_rulesets: function(type, match, ui, page) {
-          		console.log("ruleset installation page");
-          		$.mobile.loading("hide");
-          		
-          		function populate_installed_rulesets() {
-          		    $("#installed-rulesets" ).empty();
-          		    Devtools.showInstalledRulesets(function(ruleset_list){
-          			console.log("Retrieved installed rulesets");
-          			$.each(ruleset_list, function(k, ruleset) {
-          			    ruleset["rid"] = k;
-          			    ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-          			    $("#installed-rulesets" ).append(
-           				snippets.installed_ruleset_template(ruleset)
-          			    ).collapsibleset().collapsibleset( "refresh" );
-          			    $("#installed-rulesets").listview("refresh");
-          			});
-          		    });
-          		};
+		console.log("ruleset installation page");
+		$.mobile.loading("hide");
+		
+		function populate_installed_rulesets() {
+		    $("#installed-rulesets" ).empty();
+		    Devtools.showInstalledRulesets(function(ruleset_list){
+			console.log("Retrieved installed rulesets");
+			$.each(ruleset_list, function(k, ruleset) {
+			    ruleset["rid"] = k;
+			    ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
+			    $("#installed-rulesets" ).append(
+ 				snippets.installed_ruleset_template(ruleset)
+			    ).collapsibleset().collapsibleset( "refresh" );
+			    $("#installed-rulesets").listview("refresh");
+			});
+		    });
+		};
 
-          		populate_installed_rulesets();
+		populate_installed_rulesets();
 
-          		
-                },
-        	uninstall_ruleset: function(type, match, ui, page) {
-        	    console.log("Showing uninstall ruleset page");
-        	    $.mobile.loading("hide");
-        	    var rid = router.getParams(match[1])["rid"];
-        	    console.log("RID to uninstall: ", rid);
-        	    $("#remove-ruleset" ).empty();
-        	    $("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
-        	    $("#remove-ruleset").listview().listview("refresh");
-            	    $('#remove-ruleset-button').off('tap').on('tap', function(event)
-                    {
-          		$.mobile.loading("show", {
-                              text: "Uninstalling ruleset...",
-                              textVisible: true
-          		});
-             	        console.log("Uninstalling RID ", rid);
-          		if(typeof rid !== "undefined") {
-          		    Devtools.uninstallRulesets(rid, function(directives) {
-           			console.log("uninstalled ", rid, directives);
-          			$.mobile.changePage("#page-installed-rulesets", {
-          			    transition: 'slide'
-          			});
-          		    });	
-          		}
-                      });
-        	},
-        	install_ruleset: function(type, match, ui, page) {
-        	    console.log("Showing install ruleset page");
-        	    $.mobile.loading("hide");
-        	    var frm = "#form-install-ruleset";
-        	    $(frm)[0].reset(); // clear the fields in the form
-            	    $('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
-                    {
-              		$.mobile.loading("show", {
-                                  text: "Installing ruleset...",
-                                  textVisible: true
-              		});
-                              var install_form_data = process_form(frm);
-                              console.log(">>>>>>>>> RIDs to install", install_form_data);
-              		var rid = install_form_data.rid;
+		
+        },
+	uninstall_ruleset: function(type, match, ui, page) {
+	    console.log("Showing uninstall ruleset page");
+	    $.mobile.loading("hide");
+	    var rid = router.getParams(match[1])["rid"];
+	    console.log("RID to uninstall: ", rid);
+	    $("#remove-ruleset" ).empty();
+	    $("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
+	    $("#remove-ruleset").listview().listview("refresh");
+    	    $('#remove-ruleset-button').off('tap').on('tap', function(event)
+            {
+		$.mobile.loading("show", {
+                    text: "Uninstalling ruleset...",
+                    textVisible: true
+		});
+   	        console.log("Uninstalling RID ", rid);
+		if(typeof rid !== "undefined") {
+		    Devtools.uninstallRulesets(rid, function(directives) {
+ 			console.log("uninstalled ", rid, directives);
+			$.mobile.changePage("#page-installed-rulesets", {
+			    transition: 'slide'
+			});
+		    });	
+		}
+            });
+	},
+	install_ruleset: function(type, match, ui, page) {
+	    console.log("Showing install ruleset page");
+	    $.mobile.loading("hide");
+	    var frm = "#form-install-ruleset";
+	    $(frm)[0].reset(); // clear the fields in the form
+    	    $('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
+            {
+		$.mobile.loading("show", {
+                    text: "Installing ruleset...",
+                    textVisible: true
+		});
+                var install_form_data = process_form(frm);
+                console.log(">>>>>>>>> RIDs to install", install_form_data);
+		var rid = install_form_data.rid;
 
-              		if(typeof rid !== "undefined") {
-              		    Devtools.installRulesets(rid, function(directives) {
-               			console.log("installed ", rid, directives);
-              			$.mobile.changePage("#page-installed-rulesets", {
-              			    transition: 'slide'
-              			});
-              		    });	
-              		}
-                          });
-              	}
-             },
+		if(typeof rid !== "undefined") {
+		    Devtools.installRulesets(rid, function(directives) {
+ 			console.log("installed ", rid, directives);
+			$.mobile.changePage("#page-installed-rulesets", {
+			    transition: 'slide'
+			});
+		    });	
+		}
+            });
+	}
+      },
+      { 
+        defaultHandler: function(type, ui, page) {
+          console.log("Default handler called due to unknown route:", type, ui, page );
+        },
+        defaultHandlerEvents: "s",
+        defaultArgsRe: true
 
-            { 
-          defaultHandler: function(type, ui, page) {
-              console.log("Default handler called due to unknown route:", type, ui, page );
-            },
+      });
 
-            defaultHandlerEvents: "s",
-            defaultArgsRe: true
-
-          });
-
-  // Handlebar templates compiled at load time to create functions
-  // templates are included to index.html from Templates directory.
-  window['snippets'] = {
-      list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
-      update_url_template: Handlebars.compile($("#update-url-template").html() || ""),
-      logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
-      installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
-	    confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || "")
+      // Handlebar templates compiled at load time to create functions
+      // templates are included to index.html from Templates directory.
+      window['snippets'] = {
+          list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
+          logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
+          installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
+	  confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || "")
       };
 
       function plant_authorize_button()
@@ -300,43 +283,43 @@
      }
 
     function onPageLoad() {// Document.Ready
-          	console.log("document ready");
-           CloudOS.retrieveSession();
-          	// only put static stuff here...
-          	plant_authorize_button();
+    	console.log("document ready");
+     CloudOS.retrieveSession();
+	// only put static stuff here...
+	plant_authorize_button();
 
-          	$('.logout').off("tap").on("tap", function(event)
-          				   {
-          	       CloudOS.removeSession(true); // true for hard reset (log out of login server too)
-          	       $.mobile.changePage('#page-authorize', {
-                   transition: 'slide'
-          	       }); // this will go to the authorization page.
-                 });
+	$('.logout').off("tap").on("tap", function(event)
+				   {
+	       CloudOS.removeSession(true); // true for hard reset (log out of login server too)
+	       $.mobile.changePage('#page-authorize', {
+         transition: 'slide'
+	       }); // this will go to the authorization page.
+       });
 
-          	Handlebars.registerHelper('ifDivider', function(v1, options) {
-          	    if(v1.match(/-----\*\*\*----/)) {
-          		return options.fn(this);
-          	    }
-          	    return options.inverse(this);
-          	});
+	Handlebars.registerHelper('ifDivider', function(v1, options) {
+	    if(v1.match(/-----\*\*\*----/)) {
+		return options.fn(this);
+	    }
+	    return options.inverse(this);
+	});
 
-          	console.log("Choose page to show");
+	console.log("Choose page to show");
 
-          	try {
-             var authd = CloudOS.authenticatedSession();
-             if(authd) {
-              console.log("Authorized");
-              document.location.hash = "#home";
-            } else {  
-              console.log("Asking for authorization");
-              document.location.hash = "#page-authorize";
-            }
-            } catch (exception) {
+	try {
+   var authd = CloudOS.authenticatedSession();
+   if(authd) {
+    console.log("Authorized");
+    document.location.hash = "#home";
+  } else {  
+    console.log("Asking for authorization");
+    document.location.hash = "#page-authorize";
+  }
+} catch (exception) {
 
-            } finally {
-             $.mobile.initializePage();
-             $.mobile.loading("hide");
-            }
+} finally {
+ $.mobile.initializePage();
+ $.mobile.loading("hide");
+}
 
 }
 
@@ -365,51 +348,57 @@
       return 0;
     };
   };
-
     function paint_item(id, rids) {//(key,value)
-      console.log("rid: "+ rids.rid);
 
-      $('#manage-list').append( //was #manage-fleet prior
-        snippets.list_rulesets_template(
-          {"rid": rids["rid"],
-          "uri": rids["uri"]}
-          )
-        );
+          /*if (typeof vehicle === "undefined") {
+        return;
+      }*/
+          var status = "no status"; // place holder for description
+         // console.log("in paint_item");
+        //  console.log(id, rids);
+          console.log("rid: "+ rids.rid);
+
+        $('#manage-list').append( //was #manage-fleet prior
+          snippets.list_rulesets_template(
+            {"rid": rids["rid"],
+            "uri": rids["uri"]}
+            )
+          );
     };
 
     var sortByName = function (a, b) {
-    	if (a.name > b.name) {
-    	    return 1;
-    	}
-    	if (a.name < b.name) {
-    	    return -1;
-    	}
-    	// a must be equal to b
-    	return 0;
+	if (a.name > b.name) {
+	    return 1;
+	}
+	if (a.name < b.name) {
+	    return -1;
+	}
+	// a must be equal to b
+	return 0;
     };
 
     // process an array of objects from a form to be a proper object
     var process_form_results = function(raw_results)
     {
-      	var results = {};
-      	$.each(raw_results, function(i, v)
-      	       {
-      		   var nym = v.name,
-       	               val = v.value;
-      		   if (results[nym] && results[nym] instanceof Array) {
-      		       results[nym].push(val);
-      		   } else if (results[nym]) {
-      		       results[nym] = [results[nym], val];
-      		   } else {
-      		       results[nym] = val;
-      		   }
-      	       });
-      	return results;
-          };
+	var results = {};
+	$.each(raw_results, function(i, v)
+	       {
+		   var nym = v.name,
+ 	               val = v.value;
+		   if (results[nym] && results[nym] instanceof Array) {
+		       results[nym].push(val);
+		   } else if (results[nym]) {
+		       results[nym] = [results[nym], val];
+		   } else {
+		       results[nym] = val;
+		   }
+	       });
+	return results;
+    };
 
-          var process_form = function(frm)
-          {
-      	var results = process_form_results($(frm).serializeArray());
-      	return results;
+    var process_form = function(frm)
+    {
+	var results = process_form_results($(frm).serializeArray());
+	return results;
     };
 

@@ -25,8 +25,11 @@ ruleset devtools {
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
 			rulesetGallery = rulesets.map(function(rid){
+
 				ridInfo = rsm:get_ruleset(rid).defaultsTo({});
+
 				appURL = ridInfo{"uri"};
+
 				ridInfo
 				});
 
@@ -87,23 +90,6 @@ ruleset devtools {
 		}
 	}
 
-	rule updateUrl {
-		select when web devtools update_url//submit "#form-update-url" //or on raised event of updateURL in api?
-		pre {
-			rid = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-			newURL = event:attr("url"); //should pull from the form on update url template
-		}
-		{
-			rsm:update(rid) setting(updatedSuccessfully)
-			with uri = newURL;
-			CloudRain:setHash('/refresh');
-		}
-		fired {
-			raise system event rulesetUpdated
-			with rid = rid if(updatedSuccessfully);
-		}
-	}
-
 	// ---------- ruleset installation ----------
 	rule installRulesets {
 	  select when devtools install_rulesets
@@ -121,7 +107,7 @@ ruleset devtools {
           }
         }
 
-    rule uninstallRulesets {
+        rule uninstallRulesets {
 	  select when devtools uninstall_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
