@@ -1,9 +1,7 @@
 <div data-role="page" id="page-authorize" data-title="Authorize Fuse" data-close-btn="none">
 
- <div data-role="header" style="text-align:center;">
-   <div class="header-image">
-    <img class="fuse-logo" src="https://s3.amazonaws.com/Fuse_assets/img/fuse_logo-40.png">
-  </div>
+  {% include header.html title="Authorize" %}
+
 
   <div data-role="collapsible" id="help-menu" data-mini="true" class="rightMenu" data-collapsed-icon="info" data-expanded-icon="info">
    <h3>Fuse Help</h3>
@@ -38,7 +36,6 @@
 
 </div><!-- /content -->
 
-<div data-role="footer" data-position="fixed">
-  <h4>Fuse by Kynetx</h4>
-</div><!-- /footer -->
+   {% include footer.html %}
+
 </div><!-- /page -->
