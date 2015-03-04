@@ -7,7 +7,7 @@ ruleset DevTools_bootstrap {
         >>
 
         use module a169x625 alias CloudOS
-
+        logging on
     }
 
     global {
