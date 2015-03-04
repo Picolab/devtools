@@ -73,33 +73,33 @@
       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-    var state = getParameterByName("state");
+   // var state = getParameterByName("state");
 
     $("document").ready(function() {
 
       CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
       {
-        if (oauth_payload.OAUTH_ECI) {
-          console.log("No need to bootstrap");
-          console.log("Authorized");            // display authorization 
-          window.location = "index.html";
-       } else {
-            //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
-            Devtools.initAccount({}, function(kns_directives){
-            console.log("Received directives from bootstrap.execute: ", kns_directives);
-            $.mobile.loading("hide");
+          if (oauth_payload.OAUTH_ECI) {
+            console.log("No need to bootstrap");
+            console.log("Authorized");            // display authorization 
             window.location = "index.html";
-            });
+         } else {
+              //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
+              Devtools.initAccount({}, function(kns_directives){
+              console.log("Received directives from bootstrap.execute: ", kns_directives);
+              $.mobile.loading("hide");
+              window.location = "index.html";
+              });
+          }
+        },
+        function(json){
+          console.log("something went wrong with the OAuth authorization " + json);
+          alert("Something went wrong with your authorization. Please try again. ");
+          // not ideal, but...
+          window.location = "https://" + CloudOS.login_server + "/login";
         }
-      },
-      function(json){
-        console.log("something went wrong with the OAuth authorization " + json);
-        alert("Something went wrong with your authorization. Please try again. ");
-        // not ideal, but...
-        window.location = "https://" + CloudOS.login_server + "/login";
-      }
-      );
-    });
+    );
+  });
 
 </script>
 
