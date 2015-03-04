@@ -48,7 +48,7 @@ ruleset DevTools_bootstrap {
       }
     }
 
-    rule strap_some_boots {
+    rule devtools_bootstrap {
         select when explicit bootstrap_needed
         pre {
 	       //remove_rulesets = CloudOS:rulesetRemoveChild(rulesets{"unwanted"}, meta:eci());
