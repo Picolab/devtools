@@ -81,31 +81,30 @@
 
       CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
       {
-         //   Devtools.getRulesets(function(rids_json){ 
-         //   console.log("is bootstrap?");
-
-
-            //    var keys = rids_json.sort(sortBy("rid_index"));
-         //   $.each(rids_json, function(){
-
-
-         //   });
-         //   console.log("refreshing manage-list listview.");
-         //   $('#manage-list').listview('refresh');
-        //  });
-          if (!oauth_payload.OAUTH_ECI) {
+          var bool = false;
+            Devtools.showInstalledRulesets(function(ruleset_list){
+             console.log("bootstrap Retrieved installed rulesets");
+             $.each(ruleset_list, function(k, ruleset) {
+               ruleset["rid"] = k;
+                if(k=="b506607x14.prod"){
+                  bool = true;
+                console.log(" found bootstrap ");
+                  return false; // breakout of foreach loop.
+                }
+             });
+           });
+          if (bool) {
+            console.log("No need to bootstrap");
+            console.log("Authorized");            // display authorization 
+            window.location = "index.html";
+            
+          } else {
               //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
               Devtools.initAccount({}, function(kns_directives){
               console.log("Received directives from bootstrap.execute: ", kns_directives);
               $.mobile.loading("hide");
               window.location = "index.html";
               });
-
-            
-         } else {
-            console.log("No need to bootstrap");
-            console.log("Authorized");            // display authorization 
-            window.location = "index.html";
           }
         },
         function(json){
