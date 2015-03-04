@@ -73,12 +73,26 @@
       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+
+
    // var state = getParameterByName("state");
 
     $("document").ready(function() {
 
       CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
       {
+         //   Devtools.getRulesets(function(rids_json){ 
+         //   console.log("is bootstrap?");
+
+
+            //    var keys = rids_json.sort(sortBy("rid_index"));
+         //   $.each(rids_json, function(){
+
+
+         //   });
+         //   console.log("refreshing manage-list listview.");
+         //   $('#manage-list').listview('refresh');
+        //  });
           if (!oauth_payload.OAUTH_ECI) {
               //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
               Devtools.initAccount({}, function(kns_directives){
