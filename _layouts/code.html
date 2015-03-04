@@ -79,17 +79,19 @@
 
       CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
       {
-          if (oauth_payload.OAUTH_ECI) {
-            console.log("No need to bootstrap");
-            console.log("Authorized");            // display authorization 
-            window.location = "index.html";
-         } else {
+          if (!oauth_payload.OAUTH_ECI) {
               //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
               Devtools.initAccount({}, function(kns_directives){
               console.log("Received directives from bootstrap.execute: ", kns_directives);
               $.mobile.loading("hide");
               window.location = "index.html";
               });
+
+            
+         } else {
+            console.log("No need to bootstrap");
+            console.log("Authorized");            // display authorization 
+            window.location = "index.html";
           }
         },
         function(json){
