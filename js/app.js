@@ -109,7 +109,7 @@
           var frmLabel = "Reset the URL to " + rid + ":";
 
           $(frm)[0].reset(); // clear the fields in the form
-          $("urlLabel").append(frmLabel);
+          $(".urlLabel").append(frmLabel);
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
           {
             $.mobile.loading("show", {
