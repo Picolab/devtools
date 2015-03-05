@@ -19,12 +19,7 @@ ruleset DevTools_bootstrap {
             "core": [
                    "a169x625.prod",  // CloudOS Service
                    "a169x676.prod",  // PDS
-                   "a16x161.prod",   // Notification service
-                   "a169x672.prod",  // MyProfile
-                   "a169x695.prod",  // Settings
-                   "a41x174.prod",   // Amazon S3 module
                    "a16x129.dev",    // SendGrid module
-                  // "b506607x15.prod", // DevTools
                    "b506607x14.prod", //DevTools
                    "b16x29.prod"     // logging
             ],
