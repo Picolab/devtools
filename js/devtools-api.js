@@ -52,7 +52,7 @@
         {"eci": channel});
     },
 
-    bootstrapped:function(cb,options){
+    bootstrapped: function(cb,options){
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
