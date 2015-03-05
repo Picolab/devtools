@@ -36,7 +36,7 @@ ruleset DevTools_bootstrap {
       select when devtools bootstrap
       pre {
         installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>"); // should this be a list of installed rids????????
-	      bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
+	      bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
       }
       if (bootstrapped > 0 ) then
       {
