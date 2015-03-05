@@ -82,7 +82,7 @@
       CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
       {
           var bool = false;
-            Devtools.showInstalledRulesets(function(ruleset_list){
+            Devtools.bootstrapped(function(ruleset_list){
              console.log("bootstrap Retrieved installed rulesets");
              $.each(ruleset_list, function(k, ruleset) {
                ruleset["rid"] = k;

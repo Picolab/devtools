@@ -17,6 +17,9 @@
             "rulesets": {"prod": "b506607x14", 
                           "dev": "b506607x14"
             }
+            "bootstrap":{"prod": "b506607x15", 
+                          "dev": "b506607x15"
+            }
         };
 
 	    return this.defaults.production ? rids[name].prod : rids[name].dev;
@@ -49,6 +52,16 @@
         {"eci": channel});
     },
 
+    bootstrapped:function(cb,options){
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("bootstrapped ??");
+        return CloudOS.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
+            Devtools.log("Displaying testingReturns", json);
+            cb(json);
+        }, {"eci":eci});
+    },
 
     getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {

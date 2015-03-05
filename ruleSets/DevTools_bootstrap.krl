@@ -39,19 +39,20 @@ ruleset DevTools_bootstrap {
     rule bootstrap_guard {
       select when devtools bootstrap
       pre {
-        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
+        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>"); // should this be a list of installed rids????????
 	      bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod" --- use a filter and check if length is > 0.
       }
       if (bootstrapped > 0 ) then
       {
-        send_directive("found_eci_for_developer") 
+        send_directive("found_b506607x14.prod_for_developer") 
 	         with eci = eci;
       }
       fired {
-        log ">>>> pico needs a bootstrap >>>> ";
-	      raise explicit event bootstrap_needed;
+	      log ">>>> pico already bootstraped, saw : " + installed_rids;
       } else {
-        log ">>>> pico already bootstraped, saw : " + installed_rids;
+        log ">>>> pico needs a bootstrap >>>> ";
+        raise explicit event bootstrap_needed;
+        
       }
     }
 
