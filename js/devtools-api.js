@@ -16,7 +16,7 @@
         var rids = {
             "rulesets": {"prod": "b506607x14", 
                           "dev": "b506607x14"
-            }
+            },
             "bootstrap":{"prod": "b506607x15", 
                           "dev": "b506607x15"
             }
