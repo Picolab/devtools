@@ -108,7 +108,7 @@
           var rid = router.getParams(match[1])["rid"]; //not sure if this will still work
           console.log("RID to update URL of: ", rid);
           
-          var frmLabel = "Update " + rid + "'s URL:";
+          var frmLabel = "URL for " + rid + " ";
           $(".urlLabel").append(frmLabel);
 
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
