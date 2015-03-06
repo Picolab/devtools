@@ -262,6 +262,10 @@
 		      });	
 		  } else {
 		      console.log("Invalid rid ", rid);
+		      $.mobile.loading("hide");
+		      $.mobile.changePage("#page-installed-rulesets", {
+			  transition: 'slide'
+		      });
 		  }
             });
         }
