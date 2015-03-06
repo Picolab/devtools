@@ -59,65 +59,38 @@
   <!-- <script src="https://s3.amazonaws.com/Fuse_assets/js/fuse-api-1.0.0.js"></script>
   <script src="js/fuse-api-config.js"></script> -->
 
-  <script src="js/devtools-api.js"></script>
-  <script src="js/devtools-api-config.js"></script>
-
   <!--getting access for devtools-api-->
   <script src="https://raw.githubusercontent.com/kre/devtools/gh-pages/js/devtools-api.js"></script>
  <!-- <script src="js/devtools-api-config.js"></script> -->
 
 
 
-  <script>
-    function getParameterByName(name) {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(location.search);
-      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+ <script>
 
+  $("document").ready(function() {
 
-
-   // var state = getParameterByName("state");
-
-    $("document").ready(function() {
-
-      CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
-      {
-          var bool = false;
-            Devtools.bootstrapped(function(ruleset_list){
-             console.log("bootstrap Retrieved installed rulesets");
-             $.each(ruleset_list, function(k, ruleset) {
-               ruleset["rid"] = k;
-                if(k=="b506607x14.prod"){
-                  bool = true;
-                console.log(" found bootstrap ");
-                  return false; // breakout of foreach loop.
-                }
-             });
-           });
-          if (bool) {
-            console.log("No need to bootstrap");
-            console.log("Authorized");            // display authorization 
-            window.location = "index.html";
-            
-          } else {
-              //alert("Authentication failed. We apologize for this inconvenience. Please try again.");
-              Devtools.initAccount({}, function(kns_directives){
+    CloudOS.getOAuthAccessToken(CloudOS.retrieveOAuthCode(), function(oauth_payload)
+    {
+      if (!oauth_payload.OAUTH_ECI) {
+        alert("Authentication failed. We apologize for this inconvenience. Please try again.");
+      } else {
+             console.log("Authorized");            // display authorization 
+             Devtools.initAccount({}, function(kns_directives){ // bootstraps
               console.log("Received directives from bootstrap.execute: ", kns_directives);
               $.mobile.loading("hide");
               window.location = "index.html";
-              });
-          }
-        },
-        function(json){
+            });
+            // window.location = "index.html";
+           }
+         },
+         function(json){
           console.log("something went wrong with the OAuth authorization " + json);
           alert("Something went wrong with your authorization. Please try again. ");
           // not ideal, but...
           window.location = "https://" + CloudOS.login_server + "/login";
         }
-    );
-  });
+        );
+});
 
 </script>
 
