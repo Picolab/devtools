@@ -48,8 +48,8 @@ ruleset DevTools_bootstrap {
 	      log ">>>> pico already bootstraped, saw : " + installed_rids;
       } else {
         log ">>>> pico needs a bootstrap >>>> ";
-        log ">>>> pico installed_rids, saw : " + installed_rids;
-        log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"});
+        log ">>>> pico installed_rids, saw : " + installed_rids.encode();
+        log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();
         raise explicit event bootstrap_needed;
         
