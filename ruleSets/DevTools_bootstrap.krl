@@ -35,8 +35,9 @@ ruleset DevTools_bootstrap {
     rule bootstrap_guard {
       select when devtools bootstrap
       pre {
-        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>"); 
-	      bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
+        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
+	      rids = rulesets{"rids"};
+        bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
       
       }
       if (bootstrapped > 0 ) then
@@ -48,7 +49,7 @@ ruleset DevTools_bootstrap {
 	      log ">>>> pico already bootstraped, saw : " + installed_rids;
       } else {
         log ">>>> pico needs a bootstrap >>>> ";
-        log ">>>> pico installed_rids, saw : " + installed_rids.encode();
+        log ">>>> pico installed_rids, saw : " + rids.encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();
         raise explicit event bootstrap_needed;
