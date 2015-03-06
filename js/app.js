@@ -103,13 +103,14 @@
 
         updatingUrl: function(type, match, ui, page) {
           console.log("updating Url Handler");
+            var frm = "#form-update-url";
+            $(frm)[0].reset(); // clear the fields in the form           
           var rid = router.getParams(match[1])["rid"]; //not sure if this will still work
           console.log("RID to update URL of: ", rid);
-          var frm = "#form-update-url";
-          var frmLabel = "Reset the URL to " + rid + ":";
-
-          $(frm)[0].reset(); // clear the fields in the form
+          
+          var frmLabel = "Update " + rid + "'s URL:";
           $(".urlLabel").append(frmLabel);
+
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
           {
             $.mobile.loading("show", {
@@ -128,14 +129,8 @@
                    });
                 });
 
-
             }
-            
           });
-
-
-
-
         },
 
         picologging: function(type, match, ui, page) {
