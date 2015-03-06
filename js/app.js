@@ -260,6 +260,8 @@
 			      transition: 'slide'
 			  });
 		      });	
+		  } else {
+		      console.log("Invalid rid ", rid);
 		  }
             });
         }
