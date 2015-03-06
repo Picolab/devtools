@@ -140,23 +140,23 @@
 
           $('#flush-rid-button').off('tap').on('tap', function(event)
           {
-            $.mobile.loading("show", {
-              text: "Flushing ruleset...",
-              textVisible: true
-            });
-            var update_form_data = process_form(flush_frm);
-            console.log(">>>>>>>>> RID to flush", update_form_data);
-            var url = update_form_data.url;
+              $.mobile.loading("show", {
+		  text: "Flushing ruleset...",
+		  textVisible: true
+              });
+              var update_form_data = process_form(flush_frm);
+              console.log(">>>>>>>>> RID to flush", update_form_data);
+	      var rid = update_form_data.flush;
 
-            if(typeof url !== "undefined") {
-                Devtools.updateUrl(rid, url, function(directives){
-                  console.log("updating the function is running", rid, directives);
-                  $.mobile.changePage("#listing", {
-                    transition: 'slide'
-                   });
-                });
+              if(typeof rid !== "undefined") {
+                  Devtools.flushRID(rid, function(directives){
+                      console.log("Flushing the rid", rid, directives);
+                      $.mobile.changePage("#listing", {
+			  transition: 'slide'
+                      });
+                  });
 
-            }
+              }
           });
 
 	    

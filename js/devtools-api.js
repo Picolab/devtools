@@ -113,6 +113,19 @@
         }, {"eci":eci});
     },
 
+    flushRID: function(rid, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {rid: rid}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Flushing RID " + rid);
+        return CloudOS.raiseEvent("devtools", "flush_rid", json, {}, function(json) {
+            Devtools.log("Directive from Flushing Rid", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+
 
     showInstalledRulesets: function(cb, options) // PJW
     {
