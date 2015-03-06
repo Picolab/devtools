@@ -1,0 +1,62 @@
+<div data-role="page" id="page-ECI-management" data-title="ECI-management">
+  {% include header.html title="ECI-management" %}
+
+   <div data-role="content">
+       <ul id="error-msg" data-role="listview" data-inset="true" class="alert alert-error" style="display:none"></ul>
+       <p>
+         Welcome to the Channel Manager. Here you can view and add channels for your personal cloud or clouds that you own.
+        </p>
+     <ul id="installed-channel-control" data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Channel Manager</li>
+       <li>
+         <a id="install-channel-button" href="#install-ruleset" class="ui-btn ui-icon-edit ui-btn-icon-right">New Channel</a>
+       </li>
+     </ul>
+
+     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="installed-channels">
+     </div>
+
+   </div><!-- /content -->
+
+   {% include footer.html %}
+</div><!-- /page -->
+
+<div data-role="page" id="install-channel" data-title="Install channel">
+  {% include header.html title="Install a Ruleset" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="install-channel" data-role="listview" data-inset="true"> 
+       	    <li data-role="list-divider" >Install Channel</li>
+	    <li>
+	      <form id="form-install-channel">
+	        <div data-role="fieldcontain">
+   	          <label for="rid">Channel ID:</label>
+		  <input type="text" name="rid" id="rid" value="" placeholder="b495674x14.prod" />
+		</div>
+	      </form>
+	      <div>
+                <a id="install-channel-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Install</a>
+                <a href="#page-installed-channels" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+	      </div>
+	    </li>
+     	  </ul>
+	</div>
+
+  {% include footer.html %}
+
+</div>
+
+<div data-role="page" id="confirm-uninstall-channel" data-title="Uninstall Channel">
+  {% include header.html title="Uninstall a Ruleset" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="remove-channel" data-role="listview" data-inset="true"> 
+       	    
+     	  </ul>
+	</div>
+
+
+  {% include footer.html %}
+
+
+</div>
