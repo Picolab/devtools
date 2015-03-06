@@ -96,7 +96,8 @@ ruleset devtools {
 	  select when devtools install_rulesets
 	  pre {
 	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-            result = CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ");
+            result = rsm:is_valid(rids) => CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ")
+	                                 | {"status": false};
           }
 	  if(result{"status"}) then {
  	    send_directive("installed #{rids}");
