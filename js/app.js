@@ -109,7 +109,7 @@
           console.log("RID to update URL of: ", rid);
           
           var frmLabel = "URL for " + rid + " ";
-          $(".urlLabel").append(frmLabel);
+          $(".urlLabel").html(frmLabel);
 
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
           {
