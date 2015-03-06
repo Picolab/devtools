@@ -16,7 +16,7 @@ ruleset devtools {
 		use module a169x625 alias CloudOS
 
 
-		provides showRulesets, showInstalledRulesets
+		provides showRulesets, showInstalledRulesets, aboutPico
 		sharing on
 	}
 
@@ -42,6 +42,10 @@ ruleset devtools {
 		  resp{"status_code"} eq "200" => resp{"content"}.decode()
 		                                | resp.klog(">> error retrieving description for rid list >> ")
 		}; 
+
+		aboutPico = function() {
+		  {"eci" : meta:eci() }
+		}
 		
 	}
 
