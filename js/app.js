@@ -200,7 +200,7 @@
       			    $("#installed-rulesets" ).append(
                  snippets.installed_ruleset_template(ruleset)
                  ).collapsibleset().collapsibleset( "refresh" );
-      			    $("#installed-rulesets").listview("refresh");
+//      			    $("#installed-rulesets").listview("refresh");
              });
            });
           };
