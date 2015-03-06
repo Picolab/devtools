@@ -33,6 +33,12 @@
        <p>Author: {{author}}
        <p>{{description}}</p>
        <p>Last cached: {{ruleset_cached}}</p>
+       {{#if sharing}}
+         <p>Sharing: {{sharing}}</p>
+       {{/if}}
+       {{#if provides_string}}
+         <p>Provides functions: {{provides_string}}</p>
+       {{/if}}
      </div>
    </div>
 </div>

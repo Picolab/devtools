@@ -225,11 +225,11 @@
              console.log("Retrieved installed rulesets");
              $.each(ruleset_list, function(k, ruleset) {
                ruleset["rid"] = k;
-      			    ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-      			    $("#installed-rulesets" ).append(
+	       ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name}).sort().join("; ");
+   	       ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
+      	       $("#installed-rulesets" ).append(
                  snippets.installed_ruleset_template(ruleset)
                  ).collapsibleset().collapsibleset( "refresh" );
-//      			    $("#installed-rulesets").listview("refresh");
              });
            });
           };
