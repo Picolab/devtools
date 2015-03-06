@@ -35,7 +35,7 @@ ruleset DevTools_bootstrap {
     rule bootstrap_guard {
       select when devtools bootstrap
       pre {
-        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>"); // should this be a list of installed rids????????
+        installed_rids = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>"); 
 	      bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
       }
       if (bootstrapped > 0 ) then
@@ -55,21 +55,11 @@ ruleset DevTools_bootstrap {
     rule devtools_bootstrap {
         select when explicit bootstrap_needed
         pre {
-	       //remove_rulesets = CloudOS:rulesetRemoveChild(rulesets{"unwanted"}, meta:eci());
-
           installed = CloudOS:rulesetAddChild(rulesets{"core"}, meta:eci());
-//	  account_profile = CloudOS:accountProfile();
-  //        profile = {
-    //        "myProfileName": account_profile{"firstname"} + " " + account_profile{"lastname"},
-       //     "myProfileEmail": account_profile{"email"}
-      //    };
         }
-
         if (installed) then {
             send_directive("New DevTools user bootstrapped") //with
-	     // profile = profile;
         }
-
         fired {
             log "DevTools user bootstrap succeeded";
 
