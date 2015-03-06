@@ -1,6 +1,6 @@
 <div data-role="page" id="updating-url">
 	
-	{% include header.html title="Update RID URL" %}
+	{% include header.html title="Manage Registered Ruleset" %}
 
 	<div data-role="main" class="ui-content">
 		
@@ -21,6 +21,18 @@
 		</ul>
 
 
+		<ul id="flush-rid" data-role="listview" data-inset="true"> 
+			<li data-role="list-divider" >Flush RID</li>
+			<li>
+			  <form id="form-flush-rid">
+  			    <label for="flush" id="flushLabel">Flush RID</label>
+			    <input type="hidden" name="flush" id="flush-input" value="" />
+				</form>
+  			  <div>
+  			    <a id="flush-rid-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Flush</a>
+		          </div>
+			</li>
+		</ul>
 
 
 	</div>

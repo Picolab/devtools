@@ -91,6 +91,20 @@ ruleset devtools {
 		}
 	}
 
+	rule flushRuleset {
+		select when devtools flush_rid
+		pre {
+			rid = event:attr("rid").defaultsTo("", ">> missing event attr rid >> ");
+		}
+		if(rid.length() > 0 ) then
+		{
+			rsm:flush(rid) 
+		}
+		fired {
+		  log ">>>> flushed #{rid} <<<<"
+		} 
+	}
+
 	// ---------- ruleset installation ----------
 	rule installRulesets {
 	  select when devtools install_rulesets

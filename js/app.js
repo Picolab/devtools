@@ -102,14 +102,20 @@
         },
 
         updatingUrl: function(type, match, ui, page) {
-          console.log("updating Url Handler");
-            var frm = "#form-update-url";
-            $(frm)[0].reset(); // clear the fields in the form           
+            console.log("Registered Ruleset Manager Handler");
+	    
+            var url_frm = "#form-update-url";
+            $(url_frm)[0].reset(); // clear the fields in the form
+	    
+            var flush_frm = "#form-flush-rid";
+            $(flush_frm)[0].reset(); // clear the fields in the form           
           var rid = router.getParams(match[1])["rid"]; //not sure if this will still work
           console.log("RID to update URL of: ", rid);
           
           var frmLabel = "URL for " + rid + " ";
           $("#urlLabel").html(frmLabel);
+          $("#flushLabel").html("Flush ruleset with RID " + rid);
+          $("#flush-input").val(rid);
 
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
           {
@@ -117,8 +123,8 @@
               text: "Updating URL...",
               textVisible: true
             });
-            var update_form_data = process_form(frm);
-            console.log(">>>>>>>>> RIDs to install", update_form_data);
+            var update_form_data = process_form(url_frm);
+            console.log(">>>>>>>>> RIDs to register", update_form_data);
             var url = update_form_data.url;
 
             if(typeof url !== "undefined") {
@@ -131,6 +137,29 @@
 
             }
           });
+
+          $('#flush-rid-button').off('tap').on('tap', function(event)
+          {
+            $.mobile.loading("show", {
+              text: "Flushing ruleset...",
+              textVisible: true
+            });
+            var update_form_data = process_form(flush_frm);
+            console.log(">>>>>>>>> RID to flush", update_form_data);
+            var url = update_form_data.url;
+
+            if(typeof url !== "undefined") {
+                Devtools.updateUrl(rid, url, function(directives){
+                  console.log("updating the function is running", rid, directives);
+                  $.mobile.changePage("#listing", {
+                    transition: 'slide'
+                   });
+                });
+
+            }
+          });
+
+	    
         },
 
         picologging: function(type, match, ui, page) {
