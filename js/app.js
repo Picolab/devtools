@@ -77,9 +77,10 @@
           $.mobile.loading("hide");
           
           Devtools.about(function(json){ 
-            console.log("About informtion ", json);
-            $("#eci").html(json.oauth_eci)
-            $('#about-list').listview('refresh');
+              console.log("About informtion ");
+              $("#about-account").html(snippets.about_account(json));
+              $("#about-eci").html(json.oauth_eci);
+              $('#about-list').listview('refresh');
           });
 
         },
@@ -425,7 +426,8 @@
           logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
           installed_channel_template: Handlebars.compile($("#installed-channel-template").html() || ""),
           installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
-	        confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || "")
+          confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
+          about_account: Handlebars.compile($("#about-account-template").html() || "")
       };
 
       function plant_authorize_button()
