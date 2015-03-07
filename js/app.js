@@ -74,12 +74,11 @@
 
         about: function(type, match, ui, page) {
           console.log("About Page Handler");
-          $("#about-list" ).empty();
+          $.mobile.loading("hide");
           
-          Devtools.about(function(json){ //the callback/function is where we need to have all of our code
+          Devtools.about(function(json){ 
             console.log("About informtion ", json);
-            //    var keys = rids_json.sort(sortBy("rid_index"));
-
+            $("#eci").html(json.oauth_eci)
             $('#about-list').listview('refresh');
           });
 
