@@ -46,7 +46,7 @@
 				events: "bs", // do when we show the page
 				argsre: true
     } },
-    {"#page-ECI-management": {handler: "installed_channels",
+    {"#page-channel-management": {handler: "installed_channels",
         events: "bs", // do when we show the page
         argsre: true
     } },
