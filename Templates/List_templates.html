@@ -23,6 +23,20 @@
    </div>
 </div>
 
+<div id="installed-channel-template" style="display:none;">
+   <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{channel}})" data-theme="a" data-content-theme="a">
+     <h2>{{name}} ({{rid}})</h2>
+     <div>
+       {{#if OK }}
+         <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-channel?rid={{channel}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Uninstall</a></p>
+       {{/if}}
+       <p>Author: {{author}}
+       <p>{{description}}</p>
+       <p>Last cached: {{channel_cached}}</p>
+     </div>
+   </div>
+</div>
+
 <div id="installed-ruleset-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{rid}})" data-theme="a" data-content-theme="a">
      <h2>{{name}} ({{rid}})</h2>

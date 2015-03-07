@@ -90,7 +90,7 @@
             {
         // note that because the channel is create asynchronously, processing callback does
         // NOT mean the channel exists. 
-                Devtools.log("account initialized");
+        //        Devtools.log("account initialized");
         if(response.length < 1) {
             throw "Account initialization failed";
         }
@@ -171,6 +171,41 @@
         cb = cb || function(){};
         options = options || {};
 	var json = {rids: ridlist}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Uninstalling rulesets");
+        return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
+            Devtools.log("Directive from uninstalling rulesets", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    showInstalledChannels: function(cb, options) // copied PJW
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the rulesets");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+            Devtools.log("Displaying installed rulesets", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    installChannel: function(ridlist, cb, options) // copied PJW
+    {
+        cb = cb || function(){};
+        options = options || {};
+    var json = {rids: ridlist}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Installing rulesets");
+        return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
+            Devtools.log("Directive from installing rulesets", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    uninstallChannel: function(ridlist, cb, options) // copied PJW
+    {
+        cb = cb || function(){};
+        options = options || {};
+    var json = {rids: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Uninstalling rulesets");
         return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {

@@ -45,7 +45,19 @@
     {"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
 				events: "bs", // do when we show the page
 				argsre: true
-	  
+    } },
+    {"#page-ECI-management": {handler: "installed_channels",
+        events: "bs", // do when we show the page
+        argsre: true
+    } },
+    {"#install-channel": {handler: "install_channel",
+        events: "bs", // do when we show the page
+        argsre: true
+    } },
+    {"#confirm-uninstall-channel": {handler: "uninstall_channel",
+        events: "bs", // do when we show the page
+        argsre: true
+    
     } }
     ],
       {
@@ -231,6 +243,85 @@
               });
 
           },
+      install_channels: function(type, match, ui, page) {
+         console.log("Showing install channel page");
+         $.mobile.loading("hide");
+         var frm = "#form-install-channel";
+            $(frm)[0].reset(); // clear the fields in the form
+            $('#install-channel-confirm-button').off('tap').on('tap', function(event)
+      {
+    $.mobile.loading("show", {
+        text: "Installing channel...",
+        textVisible: true
+    });
+    var install_form_data = process_form(frm);
+    console.log(">>>>>>>>> channels to install", install_form_data);
+    var eci = install_form_data.rid;
+    
+    if( typeof eci !== "undefined"
+     && eci.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+      ) {
+          Devtools.installChannels(eci, function(directives) {
+        console.log("installed ", eci, directives);
+        $.mobile.changePage("#page-installed-channels", {
+            transition: 'slide'
+        });
+          }); 
+      } else {
+          console.log("Invalid eci ", eci);
+          $.mobile.loading("hide");
+          $.mobile.changePage("#page-installed-channels", {
+        transition: 'slide'
+          });
+      }
+            });
+        },
+
+        installed_channels: function(type, match, ui, page) {
+          console.log("channel installation page");
+          $.mobile.loading("hide");
+
+          function populate_installed_channels() {
+            $("#installed-channels" ).empty();
+            Devtools.showInstalledChannels(function(channel_list){
+             console.log("Retrieved installed channel");
+             $.each(channel, function(k, channel) {
+                 channel["channel"] = k;
+                 channel["OK"] = k !== "a169x625.prod"; // don't allow ; this line is dead code.
+                $("#installed-channels" ).append(
+                 snippets.installed_channel_template(channel)
+                 ).collapsibleset().collapsibleset( "refresh" );
+//                $("#installed-rulesets").listview("refresh");
+             });
+           });
+          };
+          populate_installed_channels();
+          },
+           uninstall_channel: function(type, match, ui, page) {
+           console.log("Showing uninstall channel page");
+           $.mobile.loading("hide");
+           var channel = router.getParams(match[1])["channel"];
+           console.log("channel to uninstall: ", channel);
+           $("#remove-channel" ).empty();
+           $("#remove-channel").append(snippets.confirm_channel_remove({"channel": channel}));
+           $("#remove-channel").listview().listview("refresh");
+           $('#remove-channel-button').off('tap').on('tap', function(event)
+           {
+            $.mobile.loading("show", {
+              text: "Uninstalling channel...",
+              textVisible: true
+            });
+            console.log("Uninstalling channel ", channel);
+            if(typeof channel !== "undefined") {
+              Devtools.uninstallChannel(channel, function(directives) {
+                console.log("uninstalled ", channel, directives);
+                $.mobile.changePage("#page-installed-channels", {
+                 transition: 'slide'
+               });
+              }); 
+            }
+           });
+        },
 
         installed_rulesets: function(type, match, ui, page) {
           console.log("ruleset installation page");
@@ -333,6 +424,7 @@
       window['snippets'] = {
           list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
           logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
+          installed_channel_template: Handlebars.compile($("#installed-channel-template").html() || ""),
           installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
 	        confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || "")
       };
