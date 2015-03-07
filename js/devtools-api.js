@@ -183,33 +183,33 @@
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Showing the rulesets");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
-            Devtools.log("Displaying installed rulesets", json);
+        Devtools.log("Showing the channels");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
+            Devtools.log("Displaying installed channels", json);
             cb(json);
         }, {"eci":eci});
     },
-    installChannel: function(ridlist, cb, options) // copied PJW
+    installChannel: function(ECIs, cb, options) // copied PJW
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {rids: ridlist}; 
+    var json = {channels: ECIs}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Installing rulesets");
-        return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
-            Devtools.log("Directive from installing rulesets", json);
+        Devtools.log("Installing channels");
+        return CloudOS.raiseEvent("devtools", "install_channels", json, {}, function(json) {
+            Devtools.log("Directive from installing channels", json);
             cb(json);
         }, {"eci":eci});
     },
-    uninstallChannel: function(ridlist, cb, options) // copied PJW
+    uninstallChannel: function(ECIs, cb, options) // copied PJW
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {rids: ridlist}; 
+    var json = {channels: ECIs}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Uninstalling rulesets");
-        return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
-            Devtools.log("Directive from uninstalling rulesets", json);
+        Devtools.log("Uninstalling channels");
+        return CloudOS.raiseEvent("devtools", "uninstall_channels", json, {}, function(json) {
+            Devtools.log("Directive from uninstalling channels", json);
             cb(json);
         }, {"eci":eci});
     },

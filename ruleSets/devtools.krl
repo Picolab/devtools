@@ -15,8 +15,8 @@ ruleset devtools {
 
 		use module a169x625 alias CloudOS
 
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels
 
-		provides showRulesets, showInstalledRulesets, aboutPico
 		sharing on
 	}
 
@@ -43,6 +43,14 @@ ruleset devtools {
 		                                | resp.klog(">> error retrieving description for rid list >> ")
 		}; 
 
+		showInstalledChannels = function() {
+		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>");
+		  channels_string = channels{"Channels"}.join(";");
+		  describe_url = "https://#{meta:host()}/channel/describe/#{$channels_string}";//--------------????????????????????
+		  resp = http:get(describe_url);
+		  resp{"status_code"} eq "200" => resp{"content"}.decode()
+		                                | resp.klog(">> error retrieving description for channels list >> ")
+		}; 
 		aboutPico = function() {
 		  {"oauth_eci" : meta:eci() }
 		}
@@ -156,4 +164,37 @@ ruleset devtools {
 			with rulsetID = rid{"rid"} if(rid);
 		}
 	}
+	//---------------- channel manager ---------------
+	rule installChannels {
+	  select when devtools install_channels
+	  pre {
+	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
+            result = rsm:is_valid(channels) => CloudOS:rulesetAddChild(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
+	                                 | {"status": false};
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("installed #{channels}");
+          }
+	  fired {
+	    log(">> successfully installed channels #{channels} >>");
+          } else {
+	    log(">> could not install channels #{channels} >>");
+          }
+        }
+
+    rule uninstallChannels {
+	  select when devtools uninstall_channels
+	  pre {
+	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
+	    result = CloudOS:rulesetRemoveChild(channels, meta:eci()).klog(">> result of uninstalling #{channels} >> ");
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("uninstalled #{channels}");
+          }
+	  fired {
+	    log(">> successfully uninstalled channels #{channels} >>");
+          } else {
+	    log(">> could not uninstall channels #{channels} >>");
+          }
+        }
 }
