@@ -1,0 +1,30 @@
+<div data-role="page" id="about">
+	
+    {% include header.html title="About This Pico" %}
+
+  	<div data-role="main" class="ui-content">
+    
+          <ul id="about-list" class="ruleset" data-role="listview" data-inset="true" > 
+            <li data-role="list-divider" >Ruleset List</li>
+            <li>
+              <a href="#registering-ruleset" class="ui-btn ui-btn-inline ui-btn-icon-right ui-icon-carat-r  devtools-btn">Register a new ruleset</a>
+            </li>  
+	    <li>
+
+<p>
+<b>Primary ECI: </b> <span id="eci"></span>
+</p>
+
+<p>
+<b>Note: </b> the ECI is the path into your pico and should be treated as a shared secret between the pico and the application using the pico's Event-Qquery API. Do not disclose it or check it into a repository like Github.
+</p>
+
+	      
+	    </li>
+          </ul><!-- /listview -->
+
+	</div>
+	
+  {% include footer.html %}
+  
+</div>

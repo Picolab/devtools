@@ -44,7 +44,7 @@ ruleset devtools {
 		}; 
 
 		aboutPico = function() {
-		  {"eci" : meta:eci() }
+		  {"oauth_eci" : meta:eci() }
 		}
 		
 	}
