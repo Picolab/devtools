@@ -98,6 +98,20 @@
             });
         },
 
+
+    about: function(rid, url, cb, options) 
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {rids: rid,url: url}; //not sure what this does
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Updating the URL");
+        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
+            Devtools.log("Directive from updating URL", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+
 //---------the functions for updating rulesets
 
     updateUrl: function(rid, url, cb, options) //basing this off of updateCarvoyantVehicle

@@ -10,6 +10,10 @@
   		  argsre: true
 		} },
 
+    {"#about": {handler: "about",
+  	    events: "s", // do when we create the page
+  	    argsre: true
+    } },
     {"#listing": {handler: "listing",
   	    events: "s", // do when we create the page
   	    argsre: true
@@ -55,6 +59,19 @@
           $.mobile.loading("hide");
         },
 
+
+        about: function(type, match, ui, page) {
+          console.log("About Page Handler");
+          $("#about-list" ).empty();
+          
+          Devtools.about(function(json){ //the callback/function is where we need to have all of our code
+            console.log("About informtion ", json);
+            //    var keys = rids_json.sort(sortBy("rid_index"));
+
+            $('#about-list').listview('refresh');
+          });
+
+        },
 
         listing: function(type, match, ui, page) {
           console.log("listing Handler");

@@ -30,14 +30,14 @@
        {{#if OK }}
          <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-ruleset?rid={{rid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Uninstall</a></p>
        {{/if}}
-       <p>Author: {{author}}
+       <p><b>Author:</b> {{author}}
        <p>{{description}}</p>
-       <p>Last cached: {{ruleset_cached}}</p>
+       <p><b>Last cached:</b> {{ruleset_cached}}</p>
        {{#if sharing}}
-         <p>Sharing: {{sharing}}</p>
+         <p><b>Sharing:</b> {{sharing}}</p>
        {{/if}}
        {{#if provides_string}}
-         <p>Provides functions: {{provides_string}}</p>
+         <p><b>Provides functions:</b> {{provides_string}}</p>
        {{/if}}
      </div>
    </div>
