@@ -52,7 +52,10 @@ ruleset devtools {
 		                                | resp.klog(">> error retrieving description for channels list >> ")
 		}; 
 		aboutPico = function() {
-		  {"oauth_eci" : meta:eci() }
+	          account_profile = CloudOS:accountProfile()
+		                      .put( ["oauth_eci"], meta:eci() )
+		  		      ;
+		  account_profile 
 		}
 		
 	}
