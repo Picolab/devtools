@@ -54,7 +54,7 @@
         events: "bs", // do when we show the page
         argsre: true
     } },
-    {"#confirm-uninstall-channel": {handler: "uninstall_channel"
+    {"#confirm-uninstall-channel": {handler: "uninstall_channel",
         events: "bs", // do when we show the page
         argsre: true
     
