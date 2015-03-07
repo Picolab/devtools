@@ -284,7 +284,7 @@
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
              console.log("Retrieved installed channel");
-             $.each(channel, function(k, channel) {
+             $.each(channel_list, function(k, channel) {
                  channel["channel"] = k;
                  channel["OK"] = k !== "a169x625.prod"; // don't allow ; this line is dead code.
                 $("#installed-channels" ).append(
