@@ -39,7 +39,13 @@ ruleset DevTools_bootstrap {
 	   //   rids = rulesets{"rids"};
         rids_string = rulesets{"rids"}.join(";");
 
-        bootstrapped = installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
+        bootstrapped = installed_rids
+                         .klog(">>>> pico installed_rids before filter >>>> ")
+                         .filter(function(k,v){v eq "b506607x14.prod"})
+                         .klog(">>>> pico installed_rids after filter >>>> ")
+                         .length()
+                         .klog(">>>> pico installed_rids length >>>> ")
+                         ;// check if installed_rids includes b506607x14.prod --- use a filter and check if length is > 0.
       
       }
       if (bootstrapped > 0 ) then
