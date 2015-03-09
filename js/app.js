@@ -294,7 +294,7 @@
                  channel["channel"] = k;
                  channel["OK"] = k !== "a169x625.prod"; // don't allow ; this line is dead code.
                 $("#installed-channels" ).append(
-                 snippets.installed_channel_template(channel)
+                 snippets.installed_channels_template(channel)
                  ).collapsibleset().collapsibleset( "refresh" );
 //                $("#installed-rulesets").listview("refresh");
              });
@@ -429,7 +429,7 @@
       window['snippets'] = {
           list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
           logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
-          installed_channel_template: Handlebars.compile($("#installed-channel-template").html() || ""),
+          installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
           installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
           confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
           about_account: Handlebars.compile($("#about-account-template").html() || "")
