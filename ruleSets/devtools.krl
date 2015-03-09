@@ -46,9 +46,9 @@ ruleset devtools {
 		showInstalledChannels = function() {
 		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>");
 		  channels_string = channels{"Channels"}.join(";");
-		  describe_url = "https://#{meta:host()}/eci/describe/#{$channels_string}";//--------------????????????????????
-		  resp = http:get(describe_url);
-		  resp{"status_code"} eq "200" => resp{"content"}.decode()
+		//  describe_url = "https://#{meta:host()}/eci/describe/#{$channels_string}";//--------------????????????????????
+		//  resp = http:get(describe_url);
+		//  resp{"status_code"} eq "200" => resp{"content"}.decode()
 		                                | resp.klog(">> error retrieving description for channels list >> ")
 		}; 
 		aboutPico = function() {
