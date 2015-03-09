@@ -243,7 +243,7 @@
               });
 
           },
-      install_channels: function(type, match, ui, page) {
+      install_channel: function(type, match, ui, page) {
          console.log("Showing install channel page");
          $.mobile.loading("hide");
          var frm = "#form-install-channel";
