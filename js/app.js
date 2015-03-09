@@ -64,6 +64,11 @@
         pageAuthorize: function(type, match, ui, page) {
           console.log("manage fuse: authorize page");
           $.mobile.loading("hide");
+      //    Devtools.initAccount({}, function(kns_directives){ // bootstraps
+      //      console.log("Received directives from bootstrap.execute: ", kns_directives);
+      //      $.mobile.loading("hide");
+           // window.location = "index.html";
+      //    });
         }, 
         
         home: function(type, match, ui, page) {
@@ -261,7 +266,7 @@
     if( typeof eci !== "undefined"
      && eci.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
       ) {
-          Devtools.installChannels(eci, function(directives) {
+          Devtools.installChannel(eci, function(directives) {
         console.log("installed ", eci, directives);
         $.mobile.changePage("#page-installed-channels", {
             transition: 'slide'
