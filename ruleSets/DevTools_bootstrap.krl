@@ -43,7 +43,7 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(k,v){v eq "b506607x14.prod"})
+                         .filter(function(v){v eq "b506607x14.prod"})
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
