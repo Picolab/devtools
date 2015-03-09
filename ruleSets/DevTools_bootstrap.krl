@@ -36,7 +36,7 @@ ruleset DevTools_bootstrap {
       select when devtools bootstrap
       pre {
         installed_rids = CloudOS:rulesetList(meta:eci())
-                            .klog(">> the ruleset list >> ")
+                            .klog(">> the ruleset list >>  ")
                             .defaultsTo([], ">> list of installed rulesets undefined >>");
 	   //   rids = rulesets{"rids"};
         rids_string = installed_rids{"rids"}.join(";");
