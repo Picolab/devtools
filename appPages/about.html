@@ -1,33 +1,33 @@
 <div data-role="page" id="about">
 	
-    {% include header.html title="About This Pico" %}
+	{% include header.html title="About This Pico" %}
 
-  	<div data-role="main" class="ui-content">
-    
-          <ul id="about-list" class="ruleset" data-role="listview" data-inset="true" >
+	<div data-role="main" class="ui-content">
 
-            <li data-role="list-divider" >Account</li>
-	    <li id="about-account">
+		<ul id="about-list" class="ruleset" data-role="listview" data-inset="true" >
 
-	    </li>
+		<li data-role="list-divider">Account</li>
+			<li id="about-account">
 
-            <li data-role="list-divider" >Pico ECI</li>
-	    <li>
+			</li>
 
-<p>
-<b>Primary ECI: </b> <span id="about-eci"></span>
-</p>
+			<li data-role="list-divider">Pico ECI</li>
+			<li>
 
-<p>
-<b>Note: </b> the ECI is the path into your pico and should be treated as a shared secret between the pico and the application using the pico's Event-Qquery API. Do not disclose it or check it into a repository like Github.
-</p>
+				<p>
+					<b>Primary ECI: </b> <span id="about-eci"></span>
+				</p>
 
-	      
-	    </li>
-          </ul><!-- /listview -->
+				<p>
+					<b style="white-space : normal">Note: </b> the ECI is the path into your pico and should be treated as a shared secret between the pico and the application using the pico's Event-Qquery API. Do not disclose it or check it into a repository like Github.
+				</p>
+
+
+			</li>
+		</ul><!-- /listview -->
 
 	</div>
 	
-  {% include footer.html %}
-  
+	{% include footer.html %}
+
 </div>
