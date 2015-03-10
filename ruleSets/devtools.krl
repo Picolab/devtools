@@ -44,7 +44,12 @@ ruleset devtools {
 		}; 
 
 		showInstalledChannels = function() {
-		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>").klog(">>> channels cloud call >>>");
+		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>")
+		  //.klog(">>> channels cloud call >>>")
+		  ;
+		  krl_struct = channels.decode()
+		  .klog(">>krl_struct>> ")
+		  ;
 		  channels_string = channels{"channels"}
 		  	.join(";")
 		  	.klog(">> after join >>  ")
