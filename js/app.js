@@ -292,7 +292,10 @@
              console.log("Retrieved installed channels");
              $.each(channel_list["channels"], function(channel) {
                 $("#installed-channels" ).append(
-                 snippets.installed_channels_template(channel)
+                 snippets.installed_channels_template(
+                  {"channel_name": channel["name"],
+                  "cid": channel["cid"]}
+                  )
                  ).collapsibleset().collapsibleset( "refresh" );
 //                $("#installed-rulesets").listview("refresh");
              });
