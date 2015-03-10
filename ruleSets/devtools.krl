@@ -55,11 +55,9 @@ ruleset devtools {
 		 // 	.klog(">> after join >>  ")
 		 // 	;
 		//	channels_string.decode()
-		//  describe_url = "https://#{meta:host()}/eci/describe/#{$channels_string}";//--------------????????????????????
-		//  resp = http:get(describe_url);
-		 // resp{"status_code"} eq "200" => resp{"content"}.decode()
-		 //                               | resp.klog(">> error retrieving description for channels list >> ")
+		krl_struct;
 		}; 
+
 		aboutPico = function() {
 	          account_profile = CloudOS:accountProfile()
 		                      .put( ["oauth_eci"], meta:eci() )
