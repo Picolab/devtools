@@ -293,7 +293,7 @@
              var channels = channel_list["channels"];
              console.log("channels[channels]", channels);
              $.each(channels, function(channel) {
-              console.log("inside, channel passed in: ")
+              console.log("inside, channel passed in: ", channel)
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
                   {"channel_name": channel["name"],
