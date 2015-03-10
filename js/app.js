@@ -289,7 +289,8 @@
           function populate_installed_channels() {
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
-             console.log("Retrieved installed channels");
+             console.log("Retrieved installed channels", channel_list);
+             console.log("channels[channels]", channel_list["channels"]);
              $.each(channel_list["channels"], function(channel) {
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
