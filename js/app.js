@@ -297,8 +297,8 @@
               console.log("inside, data passed in(vs.2): ", data)
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
-                  {"channel_name": channel["name"],
-                  "cid": channel["cid"]}
+                //  {"channel_name": channel["name"],
+                //  "cid": channel["cid"]}
                   )
                  ).collapsibleset().collapsibleset( "refresh" );
 //                $("#installed-rulesets").listview("refresh");
