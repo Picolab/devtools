@@ -292,8 +292,9 @@
              console.log("Retrieved installed channels", channel_list);
              var channels = channel_list["channels"];
              console.log("channels[channels]", channels);
-             $.each(channels, function(channel) {
-              console.log("inside, channel passed in(vs.1): ", channel)
+             $.each(channels, function(index, data) {
+              console.log("inside, index passed in(vs.2): ", index)
+              console.log("inside, data passed in(vs.2): ", data)
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
                   {"channel_name": channel["name"],
