@@ -289,10 +289,8 @@
           function populate_installed_channels() {
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
-             console.log("Retrieved installed channel");
-             $.each(channel_list, function(k, channel) {
-                 channel["channel"] = k;
-                 channel["OK"] = k !== "a169x625.prod"; // don't allow ; this line is dead code.
+             console.log("Retrieved installed channels");
+             $.each(channel_list["channels"], function(channel) {
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(channel)
                  ).collapsibleset().collapsibleset( "refresh" );

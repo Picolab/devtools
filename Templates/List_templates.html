@@ -25,14 +25,10 @@
 
 <div id="installed-channels-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{channel}})" data-theme="a" data-content-theme="a">
-     <h2>{{name}} ({{rid}})</h2>
+     <h2>{{name}} ({{cid}})</h2>
      <div>
-       {{#if OK }}
-         <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-channel?rid={{channel}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Uninstall</a></p>
-       {{/if}}
-       <p>Author: {{author}}
-       <p>{{description}}</p>
-       <p>Last cached: {{channel_cached}}</p>
+         <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-channel?rid={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Uninstall</a></p>
+       <p>{{status}}</p>
      </div>
    </div>
 </div>
