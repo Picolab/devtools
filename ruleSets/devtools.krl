@@ -45,7 +45,10 @@ ruleset devtools {
 
 		showInstalledChannels = function() {
 		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>").klog(">>> channels cloud call >>>");
-		  channels_string = channels{"Channels"}.join(";");
+		  channels_string = channels{"Channels"}
+		  	.join(";")
+		  	.klog(">> after join")
+		  	;
 			channels_string.decode()
 		//  describe_url = "https://#{meta:host()}/eci/describe/#{$channels_string}";//--------------????????????????????
 		//  resp = http:get(describe_url);
