@@ -289,8 +289,8 @@
           function populate_installed_channels() {
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
-             $.each(channel_list, function(channel) {
-                console.log("channels passed in: ",channel["name"]);
+             $.each(channel_list["channels"], function(channel) {
+                console.log("channels passed as [channels]: ",channel);
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
                   {"channel_name": channel["name"],
