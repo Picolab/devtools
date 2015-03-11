@@ -15,7 +15,7 @@ ruleset devtools {
 
 		use module a169x625 alias CloudOS
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets
 
 		sharing on
 	}
@@ -70,13 +70,18 @@ ruleset devtools {
 	
 
 	rule deleteRulesets {
-		select when web cloudAppAction action re/deleteRulesets/
-		{
-			CloudRain:setHash('/app/#{meta:rid()}/listRulesets');
+		select when devtools delete_rid//subm form-update-url
+		pre {
+			rid = event:attr("rid").defaultsTo("", ">> missing event attr rids >> ");
 		}
-		//fired {
-			//TODO: Need to delete the ruleset.
-			//}
+		if(rid.length() > 0 ) then
+		{
+			rsm:delete(rid); 
+		}
+		fired {
+			log ">>>> flushed #{rid} <<<<";
+		}
+		
 	}
 
 	

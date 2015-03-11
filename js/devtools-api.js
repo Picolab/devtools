@@ -140,6 +140,19 @@
         }, {"eci":eci});
     },
 
+    deleteRID: function(rid, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {rid: rid}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Deleting RID " + rid);
+        return CloudOS.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
+            Devtools.log("Directive from Deleting Rid", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+
 
     showInstalledRulesets: function(cb, options) // PJW
     {
