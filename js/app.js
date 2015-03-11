@@ -315,7 +315,7 @@
       } else {
           console.log("Invalid eci ", eci);
           $.mobile.loading("hide");
-          $.mobile.changePage("#page-installed-channels", {
+          $.mobile.changePage("#page-channel-management", {
         transition: 'slide'
           });
       }
@@ -329,12 +329,8 @@
           function populate_installed_channels() {
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
-             console.log("Retrieved installed channels", channel_list);
              var channels = channel_list["channels"];
-             console.log("channels[channels]", channels);
              $.each(channels, function(index, channel) {
-              console.log("inside, index passed in(vs.3): ", channel)
-              console.log("inside, data[name] passed in(vs.3): ", channel["name"])
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
                   {"channel_name": channel["name"],
@@ -347,6 +343,7 @@
           };
           populate_installed_channels();
           },
+          
            uninstall_channel: function(type, match, ui, page) {
            console.log("Showing uninstall channel page");
            $.mobile.loading("hide");
@@ -365,7 +362,7 @@
             if(typeof channel !== "undefined") {
               Devtools.uninstallChannel(channel, function(directives) {
                 console.log("uninstalled ", channel, directives);
-                $.mobile.changePage("#page-installed-channels", {
+                $.mobile.changePage("#page-channel-management", {
                  transition: 'slide'
                });
               }); 
