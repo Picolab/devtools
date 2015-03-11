@@ -333,8 +333,8 @@
              var channels = channel_list["channels"];
              console.log("channels[channels]", channels);
              $.each(channels, function(index, data) {
-              console.log("inside, index passed in(vs.2): ", index)
-              console.log("inside, data passed in(vs.2): ", data)
+              console.log("inside, index passed in(vs.3): ", index)
+              console.log("inside, data[name] passed in(vs.3): ", data["name"])
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
                 //  {"channel_name": channel["name"],
