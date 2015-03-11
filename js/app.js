@@ -332,13 +332,13 @@
              console.log("Retrieved installed channels", channel_list);
              var channels = channel_list["channels"];
              console.log("channels[channels]", channels);
-             $.each(channels, function(index, data) {
-              console.log("inside, index passed in(vs.3): ", index)
-              console.log("inside, data[name] passed in(vs.3): ", data["name"])
+             $.each(channels, function(index, channel) {
+              console.log("inside, index passed in(vs.3): ", channel)
+              console.log("inside, data[name] passed in(vs.3): ", channel["name"])
                 $("#installed-channels" ).append(
                  snippets.installed_channels_template(
-                //  {"channel_name": channel["name"],
-                //  "cid": channel["cid"]}
+                  {"channel_name": channel["name"],
+                  "cid": channel["cid"]}
                   )
                  ).collapsibleset().collapsibleset( "refresh" );
 //                $("#installed-rulesets").listview("refresh");
