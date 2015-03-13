@@ -64,11 +64,6 @@
         pageAuthorize: function(type, match, ui, page) {
           console.log("manage fuse: authorize page");
           $.mobile.loading("hide");
-      //    Devtools.initAccount({}, function(kns_directives){ // bootstraps
-      //      console.log("Received directives from bootstrap.execute: ", kns_directives);
-      //      $.mobile.loading("hide");
-           // window.location = "index.html";
-      //    });
         }, 
         
         home: function(type, match, ui, page) {
@@ -343,7 +338,7 @@
           };
           populate_installed_channels();
           },
-          
+
            uninstall_channel: function(type, match, ui, page) {
            console.log("Showing uninstall channel page");
            $.mobile.loading("hide");

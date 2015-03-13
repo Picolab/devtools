@@ -1,4 +1,7 @@
 //for flushing: http://cs.kobj.net/ruleset/flush/b506607x15.prod;b506607x15.dev
+
+
+// this ruleset is the development bootstrap not the production. changes wont break production website.
 ruleset DevTools_bootstrap {
     meta {
         name "DevTools Bootstrap"
