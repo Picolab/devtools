@@ -71,7 +71,9 @@ ruleset DevTools_bootstrap {
     rule devtools_bootstrap {
         select when explicit bootstrap_needed
         pre {
-          installed = CloudOS:rulesetAddChild(rulesets{"core"}, meta:eci()).klog(">> what's installed >>");
+          installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
+	                                      meta:eci())
+                           .klog(">> installed rulesets >>");
         }
         if (installed) then {
             send_directive("New DevTools user bootstrapped") //with
