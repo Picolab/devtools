@@ -66,7 +66,7 @@ ruleset DevTools_bootstrap {
         log ">>>> pico installed_rids, saw : " + rids_string;
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();
-        raise explicit event bootstrap_needed;
+        raise explicit event bootstrap_needed for b506607x15;  // don't bootstrap everything
         
       }
     }
@@ -74,10 +74,12 @@ ruleset DevTools_bootstrap {
     rule devtools_bootstrap {
         select when explicit bootstrap_needed
         pre {
-          installed = CloudOS:rulesetAddChild(rulesets{"core"}, meta:eci());
+          installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
+	                                      meta:eci())
+                           .klog(">> installed rulesets >>");
         }
         if (installed) then {
-            send_directive("New DevTools user bootstrapped") //with
+            send_directive("New DevTools user bootstrapped") 
         }
         fired {
             log "DevTools user bootstrap succeeded";
