@@ -1,5 +1,8 @@
 //b506607x14
 //Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b506607x14.prod;b506607x14.dev
+
+
+// this ruleset is the development devtools not the production. changes wont break production website.
 ruleset devtools {
 	meta {
 		name "DevTools"

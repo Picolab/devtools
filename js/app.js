@@ -64,11 +64,6 @@
         pageAuthorize: function(type, match, ui, page) {
           console.log("manage fuse: authorize page");
           $.mobile.loading("hide");
-      //    Devtools.initAccount({}, function(kns_directives){ // bootstraps
-      //      console.log("Received directives from bootstrap.execute: ", kns_directives);
-      //      $.mobile.loading("hide");
-           // window.location = "index.html";
-      //    });
         }, 
         
         home: function(type, match, ui, page) {
@@ -112,7 +107,7 @@
           $('#regester-ruleset-confirm-button').off('tap').on('tap', function(event)
            {
             $.mobile.loading("show", {
-              text: "registering ruleset...",
+              text: "Registering ruleset...",
               textVisible: true
             });
             var registering_form_data = process_form(frm);
@@ -133,6 +128,32 @@
 
         confirmingDeletion: function(type, match, ui, page) {
           console.log("confirming Deletion Handler");
+         
+          $.mobile.loading("hide");
+          var rid = router.getParams(match[1])["rid"];
+          console.log("RID to delete: ", rid);
+          $("#delete-ruleset" ).empty();
+          $("#delete-ruleset").append(snippets.confirm_delete_ruleset({"rid": rid}));
+          $("#delete-ruleset").listview().listview("refresh");
+
+          $('#delete-rid-confirm-button').off('tap').on('tap', function(event)
+          {
+            $.mobile.loading("show", {
+              text: "Deleting ruleset...",
+              textVisible: true
+            });
+
+            if(typeof rid !== "undefined") {
+              Devtools.deleteRID(rid, function(directives){
+                console.log("Deleting the rid", rid, directives);
+                $.mobile.changePage("#listing", {
+                  transition: 'slide'
+                });
+              });
+            }
+
+          });
+
         },
 
         updatingUrl: function(type, match, ui, page) {
@@ -142,14 +163,20 @@
             $(url_frm)[0].reset(); // clear the fields in the form
 	    
             var flush_frm = "#form-flush-rid";
-            $(flush_frm)[0].reset(); // clear the fields in the form           
-          var rid = router.getParams(match[1])["rid"]; //not sure if this will still work
+            $(flush_frm)[0].reset(); // clear the fields in the form
+
+            var delete_frm = "#form-delete-rid";
+            $(delete_frm)[0].reset(); // clear the fields in the form 
+
+          var rid = router.getParams(match[1])["rid"]; 
           console.log("RID to update URL of: ", rid);
           
           var frmLabel = "URL for " + rid + " ";
           $("#urlLabel").html(frmLabel);
           $("#flushLabel").html("Flush ruleset with RID " + rid);
           $("#flush-input").val(rid);
+          $("#deleteLabel").html("Delete ruleset with RID " + rid);
+          $("#delete-input").val(rid);
 
           $('#update-url-confirm-button').off('tap').on('tap', function(event)
           {
@@ -174,23 +201,31 @@
 
           $('#flush-rid-button').off('tap').on('tap', function(event)
           {
-              $.mobile.loading("show", {
-		  text: "Flushing ruleset...",
-		  textVisible: true
+            $.mobile.loading("show", {
+        		  text: "Flushing ruleset...",
+        		  textVisible: true
+            });
+            var update_form_data = process_form(flush_frm);
+            console.log(">>>>>>>>> RID to flush", update_form_data);
+	          var rid = update_form_data.flush;
+
+            if(typeof rid !== "undefined") {
+              Devtools.flushRID(rid, function(directives){
+                console.log("Flushing the rid", rid, directives);
+                $.mobile.changePage("#listing", {
+			            transition: 'slide'
+                });
               });
-              var update_form_data = process_form(flush_frm);
-              console.log(">>>>>>>>> RID to flush", update_form_data);
-	      var rid = update_form_data.flush;
+            }
+          });
 
-              if(typeof rid !== "undefined") {
-                  Devtools.flushRID(rid, function(directives){
-                      console.log("Flushing the rid", rid, directives);
-                      $.mobile.changePage("#listing", {
-			  transition: 'slide'
-                      });
-                  });
-
-              }
+          $('#delete-rid-button').off('tap').on('tap', function(event)
+          {
+            var update_form_data = process_form(delete_frm);
+            console.log(">>>>>>>>> RID to delete", update_form_data);
+            var rid = update_form_data.deleteRIDval;
+            //I don't think I actually need anything in here - we shall see
+            
           });
 
 	    
@@ -275,7 +310,7 @@
       } else {
           console.log("Invalid eci ", eci);
           $.mobile.loading("hide");
-          $.mobile.changePage("#page-installed-channels", {
+          $.mobile.changePage("#page-channel-management", {
         transition: 'slide'
           });
       }
@@ -289,12 +324,13 @@
           function populate_installed_channels() {
             $("#installed-channels" ).empty();
             Devtools.showInstalledChannels(function(channel_list){
-             console.log("Retrieved installed channel");
-             $.each(channel_list, function(k, channel) {
-                 channel["channel"] = k;
-                 channel["OK"] = k !== "a169x625.prod"; // don't allow ; this line is dead code.
+             var channels = channel_list["channels"];
+             $.each(channels, function(index, channel) {
                 $("#installed-channels" ).append(
-                 snippets.installed_channels_template(channel)
+                 snippets.installed_channels_template(
+                  {"channel_name": channel["name"],
+                  "cid": channel["cid"]}
+                  )
                  ).collapsibleset().collapsibleset( "refresh" );
 //                $("#installed-rulesets").listview("refresh");
              });
@@ -302,6 +338,7 @@
           };
           populate_installed_channels();
           },
+
            uninstall_channel: function(type, match, ui, page) {
            console.log("Showing uninstall channel page");
            $.mobile.loading("hide");
@@ -320,7 +357,7 @@
             if(typeof channel !== "undefined") {
               Devtools.uninstallChannel(channel, function(directives) {
                 console.log("uninstalled ", channel, directives);
-                $.mobile.changePage("#page-installed-channels", {
+                $.mobile.changePage("#page-channel-management", {
                  transition: 'slide'
                });
               }); 
@@ -432,7 +469,8 @@
           installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
           installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
           confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
-          about_account: Handlebars.compile($("#about-account-template").html() || "")
+          about_account: Handlebars.compile($("#about-account-template").html() || ""),
+          confirm_delete_ruleset: Handlebars.compile($("#confirm-delete-ruleset-template").html() || "")
       };
 
       function plant_authorize_button()

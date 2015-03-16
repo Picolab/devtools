@@ -35,9 +35,40 @@
 		</ul>
 
 
+		<ul id="delete-rid" data-role="listview" data-inset="true"> 
+			<li data-role="list-divider" >Delete RID</li>
+			<li>
+				<form id="form-delete-rid">
+					<label for="deleteRIDval" id="deleteLabel">Delete RID</label>
+			    	<input type="hidden" name="delete" id="delete-input" value="" />
+				</form>
+				<div>
+					<a id="delete-rid-button" href="#confirming-deletion?rid={{rid}}*****" data-rel="dialog" class="ui-btn ui-btn-b ui-btn-inline">Delete</a>
+				</div>
+			</li>
+		</ul>
+
+
 	</div>
 
 	{% include footer.html %}
 
+</div>
+
+
+
+
+<div data-role="page" data-rel="dialog" id="confirming-deletion">
+	<div data-role="header">
+	</div>
+
+	<div data-role="main" class="ui-content">
+		<ul id="delete-ruleset" data-role="listview" data-inset="true"> 
+     	  </ul>
+		   
+	</div>
+
+	<div data-role="footer">
+	</div>
 </div>
 
