@@ -136,7 +136,7 @@ ruleset devtools {
 	rule installRulesets {
 	  select when devtools install_rulesets
 	  pre {
-	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+	    rids = event:attr("rids").klog(">> rids attribute <<").defaultsTo("", ">> missing event attr rids >> ").klog(">> rids attribute <<");
             result = rsm:is_valid(rids) => CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ")
 	                                 | {"status": false};
           }
