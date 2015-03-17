@@ -63,7 +63,7 @@ ruleset DevTools_bootstrap {
         log ">>>> pico installed_rids, saw : " + rids_string;
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();
-        raise explicit event bootstrap_needed for meta:rid();  // don't bootstrap everything
+        raise explicit event bootstrap_needed for meta:rid().klog(">>>> raise bootstrap event for <<<");  // don't bootstrap everything
         
       }
     }
