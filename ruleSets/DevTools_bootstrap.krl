@@ -58,6 +58,8 @@ ruleset DevTools_bootstrap {
       fired {
 	      log ">>>> pico already bootstraped, saw : " + installed_rids;
       } else {
+        send_directive("did not find b506607x14.prod_for_developer") 
+           with eci = eci
         log ">>>> pico needs a bootstrap >>>> ";
         log ">>>> pico installed_rids, saw : " + rids.encode();
         log ">>>> pico installed_rids, saw : " + rids_string;
