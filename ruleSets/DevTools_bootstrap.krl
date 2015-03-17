@@ -63,13 +63,13 @@ ruleset DevTools_bootstrap {
         log ">>>> pico installed_rids, saw : " + rids_string;
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b506607x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b506607x14.prod"}).length();
-        raise explicit event bootstrap_needed for meta:rid().klog(">>>> raise bootstrap event for <<<");  // don't bootstrap everything
+        raise explicit event devtools_bootstrap_needed ;  // don't bootstrap everything
         
       }
     }
 
     rule devtools_bootstrap {
-        select when explicit bootstrap_needed
+        select when explicit devtools_bootstrap_needed
         pre {
           installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
 	                                      meta:eci())
