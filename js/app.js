@@ -442,9 +442,6 @@
 		        } else {
 		          console.log("Invalid rid ", rid);
 		          $.mobile.loading("hide");
-		          $.mobile.changePage("#install-ruleset", {
-			          transition: 'slide'
-		          });
               var n = noty({
                 type: 'error',
                 text: rid + ' is not a valid ruleset. Please check your ruleset and try again. The general format is b######x##.prod or .dev',
