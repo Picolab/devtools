@@ -22,10 +22,6 @@
   			events: "s", // do when we show the page
   			argsre: true
     } },
-    {"#confirming-deletion": {handler: "confirmingDeletion",
-  			events: "s", // do when we show the page
-  			argsre: true
-    } },
     {"#updating-url": {handler: "updatingUrl",
     		events: "s", // do when we show the page
     		argsre: true
@@ -126,35 +122,6 @@
          
         },
 
-        confirmingDeletion: function(type, match, ui, page) {
-          console.log("confirming Deletion Handler");
-         
-          $.mobile.loading("hide");
-          var rid = router.getParams(match[1])["rid"];
-          console.log("RID to delete: ", rid);
-          $("#delete-ruleset" ).empty();
-          $("#delete-ruleset").append(snippets.confirm_delete_ruleset({"rid": rid}));
-          $("#delete-ruleset").listview().listview("refresh");
-
-          $('#delete-rid-confirm-button').off('tap').on('tap', function(event)
-          {
-            $.mobile.loading("show", {
-              text: "Deleting ruleset...",
-              textVisible: true
-            });
-
-            if(typeof rid !== "undefined") {
-              Devtools.deleteRID(rid, function(directives){
-                console.log("Deleting the rid", rid, directives);
-                $.mobile.changePage("#listing", {
-                  transition: 'slide'
-                });
-              });
-            }
-
-          });
-
-        },
 
         updatingUrl: function(type, match, ui, page) {
             console.log("Registered Ruleset Manager Handler");
@@ -221,10 +188,36 @@
 
           $('#delete-rid-button').off('tap').on('tap', function(event)
           {
-            var update_form_data = process_form(delete_frm);
-            console.log(">>>>>>>>> RID to delete", update_form_data);
-            var rid = update_form_data.deleteRIDval;
+            //var update_form_data = process_form(delete_frm);
+            //console.log(">>>>>>>>> RID to delete", update_form_data);
+            //var rid = update_form_data.deleteRIDval;
             //I don't think I actually need anything in here - we shall see
+            noty({
+              layout: 'topCenter',
+              text: 'Are you sure you want to delete this ruleset?',
+              type: 'warning',
+
+              buttons: [
+                {addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+                    $noty.close();
+                    noty({layout: 'topCenter', text: 'You clicked "Ok" button', type: 'success'});
+                    if(typeof rid !== "undefined") {
+                      Devtools.deleteRID(rid, function(directives){
+                        console.log("Deleting the rid", rid, directives);
+                        $.mobile.changePage("#listing", {
+                          transition: 'slide'
+                        });
+                      });
+                    }
+                  }
+                },
+                {addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+                    $noty.close();
+                    noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+                  }
+                }
+              ]
+            });
             
           });
 
