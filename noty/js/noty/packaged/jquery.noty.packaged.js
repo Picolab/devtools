@@ -451,6 +451,8 @@
     $.noty.returns = 'object';
     $.noty.store = {};
 
+    //---------------api functions of noty----------------------
+
     $.noty.get = function(id) {
         return $.noty.store.hasOwnProperty(id) ? $.noty.store[id] : false;
     };
@@ -494,6 +496,8 @@
     $.noty.stopConsumeAlert = function() {
         window.alert = windowAlert;
     };
+
+    //----------Noty Defaults-------------------------------------
 
     $.noty.defaults = {
         layout      : 'topRight',
@@ -539,6 +543,9 @@
     window.noty = function noty(options) {
         return jQuery.notyRenderer.init(options);
     };
+
+//-------------------noty layouts---------------------
+
 $.noty.layouts.bottom = {
     name     : 'bottom',
     options  : {},
@@ -1028,6 +1035,10 @@ $.noty.layouts.topRight = {
     },
     addClass : ''
 };
+
+
+//----------noty themes--------------------------------
+
 $.noty.themes.bootstrapTheme = {
     name: 'bootstrapTheme',
     modal: {
