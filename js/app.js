@@ -416,37 +416,42 @@
       	},
 
       	install_ruleset: function(type, match, ui, page) {
-         console.log("Showing install ruleset page");
-         $.mobile.loading("hide");
-         var frm = "#form-install-ruleset";
-      	    $(frm)[0].reset(); // clear the fields in the form
-            $('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
-	    {
-		$.mobile.loading("show", {
-		    text: "Installing ruleset...",
-		    textVisible: true
-		});
-		var install_form_data = process_form(frm);
-		console.log(">>>>>>>>> RIDs to install", install_form_data);
-		var rid = install_form_data.rid;
+          console.log("Showing install ruleset page");
+          $.mobile.loading("hide");
+          var frm = "#form-install-ruleset";
+      	  $(frm)[0].reset(); // clear the fields in the form
+          $('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
+	        {
+		        $.mobile.loading("show", {
+		          text: "Installing ruleset...",
+		          textVisible: true
+		        });
+		        var install_form_data = process_form(frm);
+		        console.log(">>>>>>>>> RIDs to install", install_form_data);
+		        var rid = install_form_data.rid;
 		
-		if( typeof rid !== "undefined"
-		 && rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
-		  ) {
-		      Devtools.installRulesets(rid, function(directives) {
-			  console.log("installed ", rid, directives);
-			  $.mobile.changePage("#page-installed-rulesets", {
-			      transition: 'slide'
-			  });
-		      });	
-		  } else {
-		      console.log("Invalid rid ", rid);
-		      $.mobile.loading("hide");
-		      $.mobile.changePage("#page-installed-rulesets", {
-			  transition: 'slide'
-		      });
-		  }
-            });
+		        if( typeof rid !== "undefined"
+		          && rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
+		        ) {
+		          Devtools.installRulesets(rid, function(directives) {
+			          console.log("installed ", rid, directives);
+			          $.mobile.changePage("#page-installed-rulesets", {
+			            transition: 'slide'
+			          });
+		          });	
+		        } else {
+		          console.log("Invalid rid ", rid);
+		          $.mobile.loading("hide");
+		          $.mobile.changePage("#page-installed-rulesets", {
+			          transition: 'slide'
+		          });
+              var n = noty({
+                type: 'error',
+                text: rid + ' is not a valid ruleset.',
+              });
+              $.noty.get(n);
+		        }
+          });
         }
 	  
       },
