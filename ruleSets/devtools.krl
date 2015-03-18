@@ -183,7 +183,7 @@ ruleset devtools {
 	rule installChannels {
 	  select when devtools install_channels
 	  pre {
-	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
+	    channels = event:attr("channel_name").defaultsTo("", ">> missing event attr channels >> ");
             result = rsm:is_valid(channels) => CloudOS:createChannel(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
 	                                 | {"status": false};
           }

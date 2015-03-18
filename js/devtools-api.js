@@ -202,17 +202,21 @@
             cb(json);
         }, {"eci":eci});
     },
-    installChannel: function(ECIs, cb, options) // copied PJW
+    installChannel: function(channel_name, cb, options) // does not use devtools.krl ---------------?
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {channels: ECIs}; 
+    var json = {channelName: channel_name}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing channels");
-        return CloudOS.raiseEvent("devtools", "install_channels", json, {}, function(json) {
+        return CloudOS.raiseEvent("cloudos", "api_Create_Channel", json, {}, function(json) {
             Devtools.log("Directive from installing channels", json);
             cb(json);
         }, {"eci":eci});
+    //    return CloudOS.raiseEvent("devtools", "install_channels", json, {}, function(json) {
+    //        Devtools.log("Directive from installing channels", json);
+    //        cb(json);
+    //    }, {"eci":eci});
     },
     uninstallChannel: function(ECIs, cb, options) // copied PJW
     {

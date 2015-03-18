@@ -53,12 +53,7 @@ ruleset devtools {
 		  krl_struct = channels.decode()
 		  .klog(">>krl_struct>> ")
 		  ;
-		 // channels_string = channels{"channels"}
-		 // 	.join(";")
-		 // 	.klog(">> after join >>  ")
-		 // 	;
-		//	channels_string.decode()
-		krl_struct;
+		  krl_struct;
 		}; 
 
 		aboutPico = function() {
@@ -187,7 +182,7 @@ ruleset devtools {
 	  select when devtools install_channels
 	  pre {
 	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
-            result = rsm:is_valid(channels) => CloudOS:rulesetAddChild(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
+            result = rsm:is_valid(channels) => CloudOS:createChannel(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
 	                                 | {"status": false};
           }
 	  if(result{"status"}) then {
@@ -204,7 +199,7 @@ ruleset devtools {
 	  select when devtools uninstall_channels
 	  pre {
 	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
-	    result = CloudOS:rulesetRemoveChild(channels, meta:eci()).klog(">> result of uninstalling #{channels} >> ");
+	    result = CloudOS:destroyChannel(channels, meta:eci()).klog(">> result of uninstalling #{channels} >> ");
           }
 	  if(result{"status"}) then {
  	    send_directive("uninstalled #{channels}");

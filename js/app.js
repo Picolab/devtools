@@ -289,19 +289,19 @@
     });
     var install_form_data = process_form(frm);
     console.log(">>>>>>>>> channels to install", install_form_data);
-    var eci = install_form_data.rid;
+    var channel_name = install_form_data.channel_name;
     
-    if( typeof eci !== "undefined"
-     && eci.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+    if( true //typeof channel_name !== "undefined"
+     //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
       ) {
-          Devtools.installChannel(eci, function(directives) {
-        console.log("installed ", eci, directives);
+          Devtools.installChannel(channel_name, function(directives) {
+        console.log("installed ", channel_name, directives);
         $.mobile.changePage("#page-installed-channels", {
             transition: 'slide'
         });
           }); 
       } else {
-          console.log("Invalid eci ", eci);
+          console.log("Invalid channel_name ", channel_name);
           $.mobile.loading("hide");
           $.mobile.changePage("#page-channel-management", {
         transition: 'slide'
@@ -458,12 +458,14 @@
 
       // Handlebar templates compiled at load time to create functions
       // templates are included to index.html from Templates directory.
+      //confirm_channel_remove
       window['snippets'] = {
           list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
           logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
           installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
           installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
           confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
+          confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
           about_account: Handlebars.compile($("#about-account-template").html() || ""),
           confirm_delete_ruleset: Handlebars.compile($("#confirm-delete-ruleset-template").html() || "")
       };
