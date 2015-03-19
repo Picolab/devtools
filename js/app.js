@@ -70,10 +70,16 @@
 
 				about: function(type, match, ui, page) {
 					console.log("About Page Handler");
-					$.mobile.loading("hide");
+            $("#about-account" ).empty();
+            $("#about-eci" ).empty();
+					   $.mobile.loading("show", {
+              text: "Loading about page...",
+              textVisible: true
+            });
 					
 					Devtools.about(function(json){ 
 							console.log("About informtion ");
+              $.mobile.loading("hide");
 							$("#about-account").html(snippets.about_account(json));
 							$("#about-eci").html(json.oauth_eci);
 							$('#about-list').listview('refresh');
