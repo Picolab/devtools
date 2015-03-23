@@ -158,6 +158,7 @@
 
 					$('#update-url-confirm-button').off('tap').on('tap', function(event)
 					{
+						
 						$.mobile.loading("show", {
 							text: "Updating URL...",
 							textVisible: true
@@ -166,6 +167,7 @@
 						console.log(">>>>>>>>> RIDs to register", update_form_data);
 						var url = update_form_data.url;
 
+
 						if(typeof url !== "undefined") {
 								Devtools.updateUrl(rid, url, function(directives){
 									console.log("updating the function is running", rid, directives);
@@ -173,7 +175,6 @@
 										transition: 'slide'
 									 });
 								});
-
 						}
 					});
 
@@ -237,7 +238,7 @@
 
 				picologging: function(type, match, ui, page) {
 					console.log("pico logging page");
-					$.mobile.loading("hide");
+					//$.mobile.loading("hide");
 
 					function populate_logpage() {
 						Pico.logging.status(CloudOS.defaultECI, function(json){
@@ -245,6 +246,10 @@
 							if(json) {
 							 $("#logstatus").val("on").slider("refresh");
 							 $("#loglist" ).empty();
+							 $.mobile.loading("show", {
+									text: "Loading pico logs...",
+									textVisible: true
+								});
 							 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
 								 console.log("Retrieved logs");
 								 $.each(logdata, function(i, logobj) {
@@ -255,6 +260,7 @@
 									 snippets.logitem_template(logobj)
 									 ).collapsibleset().collapsibleset( "refresh" );
 									$("#loglist").listview("refresh");
+									$.mobile.loading("hide");
 								 });
 							 });
 
