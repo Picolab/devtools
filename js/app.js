@@ -215,8 +215,11 @@
 							buttons: [
 								{addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
 										$noty.close();
-										noty({layout: 'topCenter', text: 'You clicked "Ok" button', type: 'success'});
 										if(typeof rid !== "undefined") {
+											$.mobile.loading("show", {
+												text: "Deleting ruleset...",
+												textVisible: true
+											});
 											Devtools.deleteRID(rid, function(directives){
 												console.log("Deleting the rid", rid, directives);
 												$.mobile.changePage("#listing", {
