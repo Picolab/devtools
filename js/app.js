@@ -70,12 +70,13 @@
 
 				about: function(type, match, ui, page) {
 					console.log("About Page Handler");
-            $("#about-account" ).empty();
+            /*$("#about-account" ).empty();
             $("#about-eci" ).empty();
 					   $.mobile.loading("show", {
               text: "Loading about page...",
               textVisible: true
-            });
+            });*/
+					//place in a better method for loading on this page
 					
 					Devtools.about(function(json){ 
 							console.log("About informtion ");
@@ -246,12 +247,12 @@
 							console.log("Logging status: ", json);
 							if(json) {
 							 $("#logstatus").val("on").slider("refresh");
-							 $("#loglist" ).empty();
 							 $.mobile.loading("show", {
 									text: "Loading pico logs...",
 									textVisible: true
 								});
 							 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+							 	$("#loglist" ).empty();
 								 console.log("Retrieved logs");
 								 $.each(logdata, function(i, logobj) {
 									var eid_re = RegExp("\\s+" + logobj.eid);
@@ -336,10 +337,10 @@
 						});
 
 					function populate_installed_channels() {
-						$("#installed-channels" ).empty();
 						Devtools.showInstalledChannels(function(channel_list){
-						 var channels = channel_list["channels"];
-						 $.each(channels, function(index, channel) {
+							$("#installed-channels" ).empty();
+							var channels = channel_list["channels"];
+							$.each(channels, function(index, channel) {
 								$("#installed-channels" ).append(
 								 snippets.installed_channels_template(
 									{"channel_name": channel["name"],
@@ -347,12 +348,12 @@
 									)
 								 ).collapsibleset().collapsibleset( "refresh" );
                 //$("#installed-rulesets").listview("refresh");
-						 });
-						 $.mobile.loading("hide");
-					 });
+						  });
+						  $.mobile.loading("hide");
+					  });
 					}
 					populate_installed_channels();
-					},
+				},
 
 				uninstall_channel: function(type, match, ui, page) {
 					 console.log("Showing uninstall channel page");
@@ -389,21 +390,22 @@
 						});
 
 					function populate_installed_rulesets() {
-						$("#installed-rulesets" ).empty();
+						
 
 						Devtools.showInstalledRulesets(function(ruleset_list){
-						 console.log("Retrieved installed rulesets");
-						 $.each(ruleset_list, function(k, ruleset) {
-							 ruleset["rid"] = k;
-				 			 ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-					 		 ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-							 $("#installed-rulesets" ).append(
-								 snippets.installed_ruleset_template(ruleset)
-								 ).collapsibleset().collapsibleset( "refresh" );
-						 });
-						 $.mobile.loading("hide");
+							$("#installed-rulesets" ).empty();
+						 	console.log("Retrieved installed rulesets");
+						 	$.each(ruleset_list, function(k, ruleset) {
+							 	ruleset["rid"] = k;
+				 			 	ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
+					 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
+							 	$("#installed-rulesets" ).append(
+								 	snippets.installed_ruleset_template(ruleset)
+								 	).collapsibleset().collapsibleset( "refresh" );
+						 	});
+						 	$.mobile.loading("hide");
 
-					 });
+						});
 					}
 
 					populate_installed_rulesets();
