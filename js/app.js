@@ -1,60 +1,61 @@
 (function($)
 {
-	var router = new $.mobile.Router( [
-		{"#page-authorize": {handler: "pageAuthorize",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
-		{"#home": {handler: "home",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
+	var router = new $.mobile.Router( 
+		[
+			{"#page-authorize": {handler: "pageAuthorize",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#home": {handler: "home",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
 
-		{"#about": {handler: "about",
-				events: "s", // do when we create the page
-				argsre: true
-		} },
-		{"#listing": {handler: "listing",
-				events: "s", // do when we create the page
-				argsre: true
-		} },
-		{"#registering-ruleset": {handler: "registeringRuleset",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
-		{"#updating-url": {handler: "updatingUrl",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
-		{"#page-picologging": {handler: "picologging",
-				events: "bs", // do page before show
-				argsre: true
-		} },
-		{"#page-installed-rulesets": {handler: "installed_rulesets",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
-		{"#install-ruleset": {handler: "install_ruleset",
-				events: "bs", // do page before show
-				argsre: true
-		} },
-		{"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
-				events: "bs", // do page before show
-				argsre: true
-		} },
-		{"#page-channel-management": {handler: "installed_channels",
-				events: "s", // do when we show the page
-				argsre: true
-		} },
-		{"#install-channel": {handler: "install_channel",
-				events: "bs", // do page before show
-				argsre: true
-		} },
-		{"#confirm-uninstall-channel": {handler: "uninstall_channel",
-				events: "bs", // do page before show
-				argsre: true
-		
-		} }
+			{"#about": {handler: "about",
+					events: "s", // do when we create the page
+					argsre: true
+			} },
+			{"#listing": {handler: "listing",
+					events: "s", // do when we create the page
+					argsre: true
+			} },
+			{"#registering-ruleset": {handler: "registeringRuleset",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#updating-url": {handler: "updatingUrl",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#page-picologging": {handler: "picologging",
+					events: "bs", // do page before show
+					argsre: true
+			} },
+			{"#page-installed-rulesets": {handler: "installed_rulesets",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#install-ruleset": {handler: "install_ruleset",
+					events: "bs", // do page before show
+					argsre: true
+			} },
+			{"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
+					events: "bs", // do page before show
+					argsre: true
+			} },
+			{"#page-channel-management": {handler: "installed_channels",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#install-channel": {handler: "install_channel",
+					events: "bs", // do page before show
+					argsre: true
+			} },
+			{"#confirm-uninstall-channel": {handler: "uninstall_channel",
+					events: "bs", // do page before show
+					argsre: true
+			
+			} }
 		],
 			{
 				pageAuthorize: function(type, match, ui, page) {
@@ -66,7 +67,6 @@
 					console.log("home Handler");
 					$.mobile.loading("hide");
 				},
-
 
 				about: function(type, match, ui, page) {
 					console.log("About Page Handler");
@@ -113,17 +113,20 @@
 						$(frm)[0].reset(); // clear the fields in the form
 					$('#regester-ruleset-confirm-button').off('tap').on('tap', function(event)
 					 {
-						$.mobile.loading("show", {
-							text: "Registering ruleset...",
-							textVisible: true
-						});
+						
 						var registering_form_data = process_form(frm);
 						console.log(">>>>>>>>> RID to register", registering_form_data);
-						var appURL = registering_form_data.appURL;
+						var url = registering_form_data.appURL;
 
-						if(typeof appURL !== "undefined") {
-							Devtools.RegisterRuleset(appURL, function(directives) {
-								console.log("registered ", appURL, directives);
+						var url_check = check_html(url);
+
+						if(typeof url !== "undefined" && url_check === true) {
+							$.mobile.loading("show", {
+								text: "Registering ruleset...",
+								textVisible: true
+							});
+							Devtools.RegisterRuleset(url, function(directives) {
+								console.log("registered ", url, directives);
 								$.mobile.changePage("#listing", {
 								 transition: 'slide'
 							 });
@@ -133,18 +136,17 @@
 				 
 				},
 
-
 				updatingUrl: function(type, match, ui, page) {
-						console.log("Registered Ruleset Manager Handler");
-			
-						var url_frm = "#form-update-url";
-						$(url_frm)[0].reset(); // clear the fields in the form
-			
-						var flush_frm = "#form-flush-rid";
-						$(flush_frm)[0].reset(); // clear the fields in the form
+					console.log("Registered Ruleset Manager Handler");
+		
+					var url_frm = "#form-update-url";
+					$(url_frm)[0].reset(); // clear the fields in the form
+		
+					var flush_frm = "#form-flush-rid";
+					$(flush_frm)[0].reset(); // clear the fields in the form
 
-						var delete_frm = "#form-delete-rid";
-						$(delete_frm)[0].reset(); // clear the fields in the form 
+					var delete_frm = "#form-delete-rid";
+					$(delete_frm)[0].reset(); // clear the fields in the form 
 
 					var rid = router.getParams(match[1])["rid"]; 
 					console.log("RID to update URL of: ", rid);
@@ -156,21 +158,24 @@
 					$("#deleteLabel").html("Delete ruleset with RID " + rid);
 					$("#delete-input").val(rid);
 
+					//-------------------Update URL-------------------------------
 					$('#update-url-confirm-button').off('tap').on('tap', function(event)
 					{
 						
-						$.mobile.loading("show", {
-							text: "Updating URL...",
-							textVisible: true
-						});
+						
 						var update_form_data = process_form(url_frm);
 						console.log(">>>>>>>>> RIDs to register", update_form_data);
 						var url = update_form_data.url;
 
+						var url_check = check_html(url);
 
-						if(typeof url !== "undefined") {
+						if(typeof url !== "undefined" && url_check === true) {
+								$.mobile.loading("show", {
+									text: "Updating URL...",
+									textVisible: true
+								});
 								Devtools.updateUrl(rid, url, function(directives){
-									console.log("updating the function is running", rid, directives);
+									console.log("updating the function", rid, directives);
 									$.mobile.changePage("#listing", {
 										transition: 'slide'
 									 });
@@ -178,6 +183,7 @@
 						}
 					});
 
+					//-------------------Flush Ruleset-------------------------------
 					$('#flush-rid-button').off('tap').on('tap', function(event)
 					{
 						$.mobile.loading("show", {
@@ -198,12 +204,9 @@
 						}
 					});
 
+					//-------------------Delete Ruleset-------------------------------
 					$('#delete-rid-button').off('tap').on('tap', function(event)
 					{
-						//var update_form_data = process_form(delete_frm);
-						//console.log(">>>>>>>>> RID to delete", update_form_data);
-						//var rid = update_form_data.deleteRIDval;
-						//I don't think I actually need anything in here - we shall see
 						noty({
 							layout: 'topCenter',
 							text: 'Are you sure you want to delete this ruleset?',
@@ -232,8 +235,6 @@
 						});
 						
 					});
-
-			
 				},
 
 				picologging: function(type, match, ui, page) {
@@ -293,38 +294,39 @@
 							});
 
 					},
-			install_channel: function(type, match, ui, page) {
-				 console.log("Showing install channel page");
-				 $.mobile.loading("hide");
-				 var frm = "#form-install-channel";
+				
+				install_channel: function(type, match, ui, page) {
+					console.log("Showing install channel page");
+					$.mobile.loading("hide");
+				 	var frm = "#form-install-channel";
 						$(frm)[0].reset(); // clear the fields in the form
 						$('#install-channel-confirm-button').off('tap').on('tap', function(event)
-			{
-		$.mobile.loading("show", {
-				text: "Installing channel...",
-				textVisible: true
-		});
-		var install_form_data = process_form(frm);
-		console.log(">>>>>>>>> channels to install", install_form_data);
-		var channel_name = install_form_data.channel_name;
-		
-		if( true //typeof channel_name !== "undefined"
-		 //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
-			) {
-					Devtools.installChannel(channel_name, function(directives) {
-				console.log("installed ", channel_name, directives);
-				$.mobile.changePage("#page-installed-channels", {
-						transition: 'slide'
-				});
-					}); 
-			} else {
-					console.log("Invalid channel_name ", channel_name);
-					$.mobile.loading("hide");
-					$.mobile.changePage("#page-channel-management", {
-				transition: 'slide'
-					});
-			}
+				 	{
+						$.mobile.loading("show", {
+							text: "Installing channel...",
+							textVisible: true
 						});
+						var install_form_data = process_form(frm);
+						console.log(">>>>>>>>> channels to install", install_form_data);
+						var channel_name = install_form_data.channel_name;
+					
+						if( true //typeof channel_name !== "undefined"
+					 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+						) {
+							Devtools.installChannel(channel_name, function(directives) {
+								console.log("installed ", channel_name, directives);
+								$.mobile.changePage("#page-installed-channels", {
+									transition: 'slide'
+								});
+							}); 
+						} else {
+								console.log("Invalid channel_name ", channel_name);
+								$.mobile.loading("hide");
+								$.mobile.changePage("#page-channel-management", {
+									transition: 'slide'
+								});
+						}
+					});
 				},
 
 				installed_channels: function(type, match, ui, page) {
@@ -345,7 +347,7 @@
 									"cid": channel["cid"]}
 									)
 								 ).collapsibleset().collapsibleset( "refresh" );
-//                $("#installed-rulesets").listview("refresh");
+                //$("#installed-rulesets").listview("refresh");
 						 });
 						 $.mobile.loading("hide");
 					 });
@@ -628,5 +630,21 @@
 	var process_form = function(frm) {
 	 var results = process_form_results($(frm).serializeArray());
 	 return results;
+	};
+
+	var check_html = function(url) {
+		
+		if (url.match(/^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+([a-z0-9][a-z0-9\-]*\.)[a-z0-9][a-z0-9\-]*/)) {
+			console.log("This is a URL");
+			return true;
+		} else {
+			console.log("This is not a valid URL");
+			var n = noty({
+				type: 'error',
+				text: '\'' + url + '\' is not a valid URL. Please check and try again.',
+			});
+			$.noty.get(n);
+			return false;
+		};
 	};
 
