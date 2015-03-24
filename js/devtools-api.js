@@ -19,9 +19,6 @@
             },
             "bootstrap":{"prod": "b506607x15.prod", 
                           "dev": "b506607x15.dev"
-            },
-            "cloud_os":{"prod": "a169x625.prod", 
-                          "dev": "a169x625.dev"
             }
         };
 
@@ -79,23 +76,7 @@
             cb(json);
         }, {"eci":eci});
     },
-    status: function(cb, options){
-        cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Showing the channels");
-        var installed_rules = CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
-            Devtools.log("Displaying installed rulesets", json);
-            cb(json);
-        }, {"eci":eci});
-        if ($.inArray('b506607x14.prod', installed_rules) > -1) {
-            console.log("???");
-            return true;}
-        else {
-            console.log(installed_rules["rids"]);
-            Devtools.log("Displaying False");
-            return false;}
-    },
+
 // ---------- account ----------
     // this is called in _layouts/code.html when the account is created
     initAccount: function(attrs, cb, options)
@@ -223,15 +204,12 @@
     },
     installChannel: function(channel_name, cb, options) // does not use devtools.krl ---------------?
     {
-        //sky call to function takes a perfered name
-        // cloudOS.skyCloud......... look at rulesets....
         cb = cb || function(){};
         options = options || {};
-        var json = {channelName: channel_name}; 
+    var json = {channelName: channel_name}; 
         var eci = options.eci || CloudOS.defaultECI;
-        var param = "channelName" + channel_name;
         Devtools.log("Installing channels");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "channelCreate", {param}, function(json) {
+        return CloudOS.raiseEvent("cloudos", "api_Create_Channel", json, {}, function(json) {
             Devtools.log("Directive from installing channels", json);
             cb(json);
         }, {"eci":eci});
@@ -242,14 +220,12 @@
     },
     uninstallChannel: function(ECIs, cb, options) // copied PJW
     {
-        //sky call to function takes a channel ID
         cb = cb || function(){};
         options = options || {};
     var json = {channels: ECIs}; 
         var eci = options.eci || CloudOS.defaultECI;
-        var param = "channelName=" + ECIs;
-        Devtools.log("Destroying Channel");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "destroyChannel", {param}, function(json) {
+        Devtools.log("Uninstalling channels");
+        return CloudOS.raiseEvent("devtools", "uninstall_channels", json, {}, function(json) {
             Devtools.log("Directive from uninstalling channels", json);
             cb(json);
         }, {"eci":eci});
