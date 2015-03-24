@@ -70,12 +70,12 @@
 
 				about: function(type, match, ui, page) {
 					console.log("About Page Handler");
-            /*$("#about-account" ).empty();
-            //$("#about-eci" ).empty();
+            $("#about-account" ).empty();
+            $("#about-eci" ).empty();
 					   $.mobile.loading("show", {
               text: "Loading about page...",
               textVisible: true
-            });*/
+            });
 					
 					Devtools.about(function(json){ 
 							console.log("About informtion ");
@@ -88,16 +88,16 @@
 
 				listing: function(type, match, ui, page) {
 					console.log("listing Handler");
-					//$("#manage-list" ).empty();
+					$("#manage-list" ).empty();
 						$.mobile.loading("show", {
 							text: "Loading registered rulesets...",
 							textVisible: true
 						});
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-						$("#manage-list" ).empty();
-						var sortedRids = rids_json.sort(sortBy("rid"));
-
-						$.each(sortedRids, paint_item);
+						
+						console.log("attempting rough listview");
+						//    var keys = rids_json.sort(sortBy("rid_index"));
+						$.each(rids_json, paint_item);
 						$.mobile.loading("hide");
 						console.log("refreshing manage-list listview.");
 						$('#manage-list').listview('refresh');
@@ -246,13 +246,12 @@
 							console.log("Logging status: ", json);
 							if(json) {
 							 $("#logstatus").val("on").slider("refresh");
-							 
+							 $("#loglist" ).empty();
 							 $.mobile.loading("show", {
 									text: "Loading pico logs...",
 									textVisible: true
 								});
 							 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-							 	$("#loglist" ).empty();
 								 console.log("Retrieved logs");
 								 $.each(logdata, function(i, logobj) {
 									var eid_re = RegExp("\\s+" + logobj.eid);
@@ -337,9 +336,8 @@
 						});
 
 					function populate_installed_channels() {
-						
+						$("#installed-channels" ).empty();
 						Devtools.showInstalledChannels(function(channel_list){
-							$("#installed-channels" ).empty();
 						 var channels = channel_list["channels"];
 						 $.each(channels, function(index, channel) {
 								$("#installed-channels" ).append(
@@ -391,21 +389,21 @@
 						});
 
 					function populate_installed_rulesets() {
-						
+						$("#installed-rulesets" ).empty();
 
 						Devtools.showInstalledRulesets(function(ruleset_list){
-							$("#installed-rulesets" ).empty();
-							console.log("Retrieved installed rulesets");
-							$.each(ruleset_list, function(k, ruleset) {
-							  ruleset["rid"] = k;
-					 			ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-						 		ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-								$("#installed-rulesets" ).append(
-									snippets.installed_ruleset_template(ruleset)
-									).collapsibleset().collapsibleset( "refresh" );
-							});
-							$.mobile.loading("hide");
-					  });
+						 console.log("Retrieved installed rulesets");
+						 $.each(ruleset_list, function(k, ruleset) {
+							 ruleset["rid"] = k;
+				 			 ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
+					 		 ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
+							 $("#installed-rulesets" ).append(
+								 snippets.installed_ruleset_template(ruleset)
+								 ).collapsibleset().collapsibleset( "refresh" );
+						 });
+						 $.mobile.loading("hide");
+
+					 });
 					}
 
 					populate_installed_rulesets();
@@ -561,40 +559,21 @@
 			$(document).ready(onPageLoad);
 	})(jQuery);
 
-	function sortBy(rid){
+	function sortBy(prop){
 
 		return function(a,b){
-			if(a[rid].match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) && b[rid].match(/^[A-Za-z][\w\d]+\.[\w\d]+$/))
-			//if a and b both are b###x##.dev/.prod
-			{
-				// split on . ex: b506537x11, prod
-				var aSplitrid = a[rid].split(".");
-				var bSplitrid = b[rid].split(".");
 
-				// split on x ex: b506537, 11
-				var aSplitx = aSplitrid[0].split("x");
-				var bSplitx = bSplitrid[0].split("x");
-
-				//makes the string into an integer so "11" becomes 11
-				var aRidNum = parseFloat(aSplitx[1]); 
-				var bRidNum = parseFloat(bSplitx[1]);
-
-				//compare
-				if (aSplitx[0] > bSplitx[0]) { return 1; } //if b506537 is bigger than 
-				else if (aSplitx[0] < bSplitx[0]) { return -1; } //if b506537 is smaller than
-				else { 															//if both are b506537
-					if (aRidNum < bRidNum) { return -1; }//checks if 11 is less than
-					else if (aRidNum > bRidNum) { return 1; }
- 					else { 																		//only happens if both are x11
- 						if (aSplitrid[1] > bSplitrid[1]) { return -1; } //checks which one is prod or dev
-						else { return 1; } 
-						return 0; //only if both are literally the same rid
-					}
-				}
-			} 
-			return 1; //if it doesn't follow the normal b##x##.prod, it gets placed at the end
+		//if a and b match regex /\w+\d+xd+\.\w+/
+		// split on .
+			// split on x
+				//compare 
+			if( a[prop] < b[prop]){
+				return 1;
+			}else if( a[prop] > b[prop] ){
+				return -1;
+			}
+			return 0;
 		};
-			
 	}
 
 	function paint_item(id, rids) {
@@ -605,6 +584,17 @@
 			)
 		);
 	}
+
+	var sortByName = function (a, b) {
+		if (a.name > b.name) {
+				return 1;
+		}
+		if (a.name < b.name) {
+				return -1;
+		}
+		// a must be equal to b
+		return 0;
+	};
 
 		// process an array of objects from a form to be a proper object
 	var process_form_results = function(raw_results) {
