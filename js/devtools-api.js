@@ -14,11 +14,11 @@
 	get_rid : function(name) {
         
         var rids = {
-            "rulesets": {"prod": "b506607x14", 
-                          "dev": "b506607x14"
+            "rulesets": {"prod": "b506607x14.prod", 
+                          "dev": "b506607x14.dev"
             },
-            "bootstrap":{"prod": "b506607x15", 
-                          "dev": "b506607x15"
+            "bootstrap":{"prod": "b506607x15.prod", 
+                          "dev": "b506607x15.dev"
             }
         };
 

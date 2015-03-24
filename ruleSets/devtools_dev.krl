@@ -1,13 +1,10 @@
 //b506607x14
 //Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b506607x14.prod;b506607x14.dev
-
-
-// this ruleset is the development devtools not the production. changes wont break production website.
 ruleset devtools {
 	meta {
 		name "DevTools"
 		description <<
-		ruleset for DevTools website.
+			ruleset for DevTools developing website
 		>>
 		author "KRL-DevTools Developer"
 
@@ -34,7 +31,7 @@ ruleset devtools {
 				ridInfo
 				});
 
-			rulesetGallery
+			rulesetGallery.klog("Calling developer ruleset only is working!")
 		};
 
 		showInstalledRulesets = function() {
@@ -53,7 +50,12 @@ ruleset devtools {
 		  krl_struct = channels.decode()
 		  .klog(">>krl_struct>> ")
 		  ;
-		  krl_struct;
+		 // channels_string = channels{"channels"}
+		 // 	.join(";")
+		 // 	.klog(">> after join >>  ")
+		 // 	;
+		//	channels_string.decode()
+		krl_struct;
 		}; 
 
 		aboutPico = function() {
@@ -134,7 +136,7 @@ ruleset devtools {
 	rule installRulesets {
 	  select when devtools install_rulesets
 	  pre {
-	    rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+	    rids = event:attr("rids").klog(">> rids attribute <<").defaultsTo("", ">> missing event attr rids >> ").klog(">> rids attribute <<");
             result = rsm:is_valid(rids) => CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ")
 	                                 | {"status": false};
           }
@@ -181,7 +183,7 @@ ruleset devtools {
 	rule installChannels {
 	  select when devtools install_channels
 	  pre {
-	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
+	    channels = event:attr("channel_name").defaultsTo("", ">> missing event attr channels >> ");
             result = rsm:is_valid(channels) => CloudOS:createChannel(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
 	                                 | {"status": false};
           }

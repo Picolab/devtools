@@ -3,7 +3,7 @@ ruleset DevTools_bootstrap {
     meta {
         name "DevTools Bootstrap"
         description <<
-            Bootstrap ruleset for DevTools
+            Bootstrap ruleset for DevTools produciton (picolabs)
         >>
 
         use module a169x625 alias CloudOS
