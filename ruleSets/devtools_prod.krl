@@ -4,7 +4,7 @@ ruleset devtools {
 	meta {
 		name "DevTools"
 		description <<
-		ruleset for DevTools website.
+			ruleset for DevTools produciton (picolabs)
 		>>
 		author "KRL-DevTools Developer"
 
