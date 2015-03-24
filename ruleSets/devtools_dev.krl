@@ -26,7 +26,7 @@ ruleset devtools {
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
 			rulesetGallery = rulesets.map(function(rid){
-				ridInfo = rsm:get_ruleset(rid).defaultsTo({}).klog("Calling developer ruleset only is working!");
+				ridInfo = rsm:get_ruleset(rid).defaultsTo({});
 				appURL = ridInfo{"uri"};
 				ridInfo
 				});
