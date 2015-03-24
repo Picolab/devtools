@@ -84,7 +84,6 @@
 							$("#about-eci").html(json.oauth_eci);
 							$('#about-list').listview('refresh');
 					});
-
 				},
 
 				listing: function(type, match, ui, page) {
@@ -103,7 +102,6 @@
 						console.log("refreshing manage-list listview.");
 						$('#manage-list').listview('refresh');
 					});
-
 				},
 
 				registeringRuleset: function(type, match, ui, page) {
@@ -132,8 +130,7 @@
 							 });
 							}); 
 						}
-					});
-				 
+					}); 
 				},
 
 				updatingUrl: function(type, match, ui, page) {
@@ -276,27 +273,26 @@
 
 					populate_logpage();
 
-							// triggers 
-							$("#logstatus").unbind("change").change(function(){
-								var newstatus = $("#logstatus").val();
-								if(newstatus === "on") {
-									Pico.logging.reset(CloudOS.defaultECI, {});
-									populate_logpage();
-								} else {
-									Pico.logging.inactive(CloudOS.defaultECI, {});
-									$("#loglist" ).empty();
-								}
-							});
-							$( "#logrefresh" ).unbind("click").click(function(event, ui) {
-								$("#loglist" ).empty();
-								populate_logpage();
-							});
-							$( "#logclear" ).unbind("click").click(function(event, ui) {
-								$("#loglist" ).empty();
-								Pico.logging.flush(CloudOS.defaultECI, {});
-							});
-
-					},
+					// triggers 
+					$("#logstatus").unbind("change").change(function(){
+						var newstatus = $("#logstatus").val();
+						if(newstatus === "on") {
+							Pico.logging.reset(CloudOS.defaultECI, {});
+							populate_logpage();
+						} else {
+							Pico.logging.inactive(CloudOS.defaultECI, {});
+							$("#loglist" ).empty();
+						}
+					});
+					$( "#logrefresh" ).unbind("click").click(function(event, ui) {
+						$("#loglist" ).empty();
+						populate_logpage();
+					});
+					$( "#logclear" ).unbind("click").click(function(event, ui) {
+						$("#loglist" ).empty();
+						Pico.logging.flush(CloudOS.defaultECI, {});
+					});
+				},
 				
 				install_channel: function(type, match, ui, page) {
 					console.log("Showing install channel page");
@@ -354,11 +350,11 @@
 						 });
 						 $.mobile.loading("hide");
 					 });
-					};
+					}
 					populate_installed_channels();
 					},
 
-					 uninstall_channel: function(type, match, ui, page) {
+				uninstall_channel: function(type, match, ui, page) {
 					 console.log("Showing uninstall channel page");
 					 $.mobile.loading("hide");
 					 var channel = router.getParams(match[1])["channel"];
@@ -399,7 +395,7 @@
 						 console.log("Retrieved installed rulesets");
 						 $.each(ruleset_list, function(k, ruleset) {
 							 ruleset["rid"] = k;
-				 			 ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name}).sort().join("; ");
+				 			 ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
 					 		 ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
 							 $("#installed-rulesets" ).append(
 								 snippets.installed_ruleset_template(ruleset)
@@ -408,15 +404,10 @@
 						 $.mobile.loading("hide");
 
 					 });
-					};
-
+					}
 
 					populate_installed_rulesets();
-
-
-
-				
-					},
+				},
 	
 				uninstall_ruleset: function(type, match, ui, page) {
 					 console.log("Showing uninstall ruleset page");
@@ -503,8 +494,7 @@
 					installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
 					confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
 					confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
-					about_account: Handlebars.compile($("#about-account-template").html() || ""),
-					confirm_delete_ruleset: Handlebars.compile($("#confirm-delete-ruleset-template").html() || "")
+					about_account: Handlebars.compile($("#about-account-template").html() || "")
 			};
 
 			function plant_authorize_button()
@@ -520,7 +510,7 @@
 			function onMobileInit() {
 			 console.log("mobile init");
 			 $.mobile.autoInitialize = false;
-		 }
+		 	}
 
 			function onPageLoad() {// Document.Ready
 				console.log("document ready");
@@ -560,7 +550,6 @@
 					$.mobile.initializePage();
 					$.mobile.loading("hide");
 				}
-
 			}
 
 		/////////////////////////////////////////////////////////////////////
@@ -570,9 +559,6 @@
 			$(document).ready(onPageLoad);
 	})(jQuery);
 
-	function clear_error_msg(frm) {// we dont have #error-msg ---------------
-			 $("#error-msg", frm).html("").hide();
-	}
 	function sortBy(prop){
 
 		return function(a,b){
@@ -588,19 +574,16 @@
 			}
 			return 0;
 		};
-	};
+	}
 
 	function paint_item(id, rids) {
-		var status = "no status"; // place holder for description
-		//console.log("rid: "+ rids.rid);
-
 		$('#manage-list').append( 
 			snippets.list_rulesets_template(
 				{"rid": rids["rid"],
 				"uri": rids["uri"]}
 			)
 		);
-	};
+	}
 
 	var sortByName = function (a, b) {
 		if (a.name > b.name) {
@@ -648,6 +631,6 @@
 			});
 			$.noty.get(n);
 			return false;
-		};
+		}
 	};
 
