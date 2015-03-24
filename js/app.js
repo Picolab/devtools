@@ -88,16 +88,16 @@
 
 				listing: function(type, match, ui, page) {
 					console.log("listing Handler");
-					$("#manage-list" ).empty();
+					//$("#manage-list" ).empty();
 						$.mobile.loading("show", {
 							text: "Loading registered rulesets...",
 							textVisible: true
 						});
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-						
-						console.log("attempting rough listview");
-						//    var keys = rids_json.sort(sortBy("rid_index"));
-						$.each(rids_json, paint_item);
+						$("#manage-list" ).empty();
+						var sortedRids = rids_json.sort(sortBy("rid"));
+
+						$.each(sortedRids, paint_item);
 						$.mobile.loading("hide");
 						console.log("refreshing manage-list listview.");
 						$('#manage-list').listview('refresh');
@@ -559,21 +559,40 @@
 			$(document).ready(onPageLoad);
 	})(jQuery);
 
-	function sortBy(prop){
+	function sortBy(rid){
 
 		return function(a,b){
+			if(a[rid].match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) && b[rid].match(/^[A-Za-z][\w\d]+\.[\w\d]+$/))
+			//if a and b both are b###x##.dev/.prod
+			{
+				// split on . ex: b506537x11, prod
+				var aSplitrid = a[rid].split(".");
+				var bSplitrid = b[rid].split(".");
 
-		//if a and b match regex /\w+\d+xd+\.\w+/
-		// split on .
-			// split on x
-				//compare 
-			if( a[prop] < b[prop]){
-				return 1;
-			}else if( a[prop] > b[prop] ){
-				return -1;
-			}
-			return 0;
+				// split on x ex: b506537, 11
+				var aSplitx = aSplitrid[0].split("x");
+				var bSplitx = bSplitrid[0].split("x");
+
+				//makes the string into an integer so "11" becomes 11
+				var aRidNum = parseFloat(aSplitx[1]); 
+				var bRidNum = parseFloat(bSplitx[1]);
+
+				//compare
+				if (aSplitx[0] > bSplitx[0]) { return 1; } //if b506537 is bigger than 
+				else if (aSplitx[0] < bSplitx[0]) { return -1; } //if b506537 is smaller than
+				else { 															//if both are b506537
+					if (aRidNum < bRidNum) { return -1; }//checks if 11 is less than
+					else if (aRidNum > bRidNum) { return 1; }
+ 					else { 																		//only happens if both are x11
+ 						if (aSplitrid[1] > bSplitrid[1]) { return -1; } //checks which one is prod or dev
+						else { return 1; } 
+						return 0; //only if both are literally the same rid
+					}
+				}
+			} 
+			return 1; //if it doesn't follow the normal b##x##.prod, it gets placed at the end
 		};
+			
 	}
 
 	function paint_item(id, rids) {
@@ -584,17 +603,6 @@
 			)
 		);
 	}
-
-	var sortByName = function (a, b) {
-		if (a.name > b.name) {
-				return 1;
-		}
-		if (a.name < b.name) {
-				return -1;
-		}
-		// a must be equal to b
-		return 0;
-	};
 
 		// process an array of objects from a form to be a proper object
 	var process_form_results = function(raw_results) {
