@@ -77,6 +77,16 @@
         }, {"eci":eci});
     },
 
+    status: function(cb, options){
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the channels");
+        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+            Devtools.log("Displaying installed rulesets", json);
+            cb(json);
+        }, {"eci":eci});   
+    },
 // ---------- account ----------
     // this is called in _layouts/code.html when the account is created
     initAccount: function(attrs, cb, options)

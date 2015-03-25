@@ -537,7 +537,26 @@
 
 				console.log("Choose page to show");
 
+        function persistant_bootstarp(){
+          Devtools.status(function(rid_list){
+             var rids = rid_list["rids"];
+            if ($.inArray('b506607x14.prod', rids) > -1) {
+            console.log("true , Bootstrapped");
+
+            return true;}
+          else {
+            console.log("false , Bootstrapped");
+            
+            return false;}
+             
+           });
+          
+
+        }
 				try {
+
+          persistant_bootstarp();
+
 					var authd = CloudOS.authenticatedSession();
 					if(authd) {
 						console.log("Authorized");

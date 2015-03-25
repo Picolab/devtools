@@ -50,13 +50,9 @@ ruleset devtools {
 		  krl_struct = channels.decode()
 		  .klog(">>krl_struct>> ")
 		  ;
-		 // channels_string = channels{"channels"}
-		 // 	.join(";")
-		 // 	.klog(">> after join >>  ")
-		 // 	;
-		//	channels_string.decode()
 		krl_struct;
-		}; 
+		};
+
 
 		aboutPico = function() {
 	          account_profile = CloudOS:accountProfile()
