@@ -70,12 +70,12 @@
 
 				about: function(type, match, ui, page) {
 					console.log("About Page Handler");
-            /*$("#about-account" ).empty();
+            $("#about-account" ).empty();
             $("#about-eci" ).empty();
 					   $.mobile.loading("show", {
               text: "Loading about page...",
               textVisible: true
-            });*/
+            });
 					//place in a better method for loading on this page
 					
 					Devtools.about(function(json){ 
