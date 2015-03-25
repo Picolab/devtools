@@ -89,7 +89,7 @@
 
 				listing: function(type, match, ui, page) {
 					console.log("listing Handler");
-					//$("#manage-list" ).empty();
+					$("#manage-list" ).empty();
 						$.mobile.loading("show", {
 							text: "Loading registered rulesets...",
 							textVisible: true
@@ -331,6 +331,7 @@
 
 				installed_channels: function(type, match, ui, page) {
 					console.log("channel installation page");
+          $("#installed-channels" ).empty();
 					$.mobile.loading("show", {
 							text: "Loading installed channels...",
 							textVisible: true
@@ -338,7 +339,6 @@
 
 					function populate_installed_channels() {
 						Devtools.showInstalledChannels(function(channel_list){
-							$("#installed-channels" ).empty();
 							var channels = channel_list["channels"];
 							$.each(channels, function(index, channel) {
 								$("#installed-channels" ).append(
