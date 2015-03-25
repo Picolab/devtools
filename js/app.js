@@ -546,7 +546,14 @@
             return true;}
           else {
             console.log("false , Bootstrapped");
-            
+//----------------------------------------------------------------------------------needs to be recoded
+            CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
+            {
+              if(response.length < 1) {
+                  throw "Account initialization failed";// should rebootstrap with exponential back off.......
+              }
+            });
+//----------------------------------------------------------------------------------needs to be recoded
             return false;}
              
            });
