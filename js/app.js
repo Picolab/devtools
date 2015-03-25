@@ -315,7 +315,7 @@
 						) {
 							Devtools.installChannel(channel_name, function(directives) {
 								console.log("installed ", channel_name, directives);
-								$.mobile.changePage("#page-installed-channels", {
+								$.mobile.changePage("#page-channel-management", {
 									transition: 'slide'
 								});
 							}); 

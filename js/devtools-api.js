@@ -19,6 +19,9 @@
             },
             "bootstrap":{"prod": "b506607x15.prod", 
                           "dev": "b506607x15.dev"
+            },
+            "cloud_os":{"prod": "a169x625.prod", 
+                          "dev": "a169x625.dev"
             }
         };
 
@@ -216,27 +219,23 @@
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {channelName: channel_name}; 
+    var parameters = {channelName:channel_name}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing channels");
-        return CloudOS.raiseEvent("cloudos", "api_Create_Channel", json, {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelCreate", parameters, function(json) {
             Devtools.log("Directive from installing channels", json);
             cb(json);
         }, {"eci":eci});
-    //    return CloudOS.raiseEvent("devtools", "install_channels", json, {}, function(json) {
-    //        Devtools.log("Directive from installing channels", json);
-    //        cb(json);
-    //    }, {"eci":eci});
     },
-    uninstallChannel: function(ECIs, cb, options) // copied PJW
+    uninstallChannel: function(ECI, cb, options) // copied PJW
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {channels: ECIs}; 
+    var json = {channelID:ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Uninstalling channels");
-        return CloudOS.raiseEvent("devtools", "uninstall_channels", json, {}, function(json) {
-            Devtools.log("Directive from uninstalling channels", json);
+        Devtools.log("Destroy channels");
+        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelDestroy", json, function(json) {
+            Devtools.log("Directive from Destroy channel", json);
             cb(json);
         }, {"eci":eci});
     },
