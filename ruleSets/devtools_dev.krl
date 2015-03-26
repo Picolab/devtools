@@ -14,6 +14,8 @@ ruleset devtools {
 		logging on
 
 		use module a169x625 alias CloudOS
+		//use module a41x226 alias appManager
+		//use module a169x625 alias PicoInspector
 
 		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets
 
@@ -176,36 +178,52 @@ ruleset devtools {
 		}
 	}
 	//---------------- channel manager ---------------
-	rule installChannels {
-	  select when devtools install_channels
+	rule CreateChannel {
+	  select when devtools install_channel
 	  pre {
-	    channels = event:attr("channel_name").defaultsTo("", ">> missing event attr channels >> ");
-            result = rsm:is_valid(channels) => CloudOS:createChannel(channels, meta:eci()).klog(">> result of installing #{channels} >> ")
+	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
+            result = rsm:is_valid(channels) => CloudOS:channelCreate(channelName, meta:eci()).klog(">> result of creating #{channels} >> ")
 	                                 | {"status": false};
           }
 	  if(result{"status"}) then {
- 	    send_directive("installed #{channels}");
+ 	    send_directive("Created #{channelName}");
           }
 	  fired {
-	    log(">> successfully installed channels #{channels} >>");
+	    log(">> successfully created channels #{channelName} >>");
           } else {
-	    log(">> could not install channels #{channels} >>");
+	    log(">> could not create channels #{channelName} >>");
           }
         }
 
-    rule uninstallChannels {
-	  select when devtools uninstall_channels
+    rule DeleteChannel {
+	  select when devtools delete_channel
 	  pre {
-	    channels = event:attr("channels").defaultsTo("", ">> missing event attr channels >> ");
-	    result = CloudOS:destroyChannel(channels, meta:eci()).klog(">> result of uninstalling #{channels} >> ");
+	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+	    result = CloudOS:channelDestroy(channelID, meta:eci()).klog(">> result of deleteing #{channels} >> ");
           }
 	  if(result{"status"}) then {
- 	    send_directive("uninstalled #{channels}");
+ 	    send_directive("deleted #{channelID}");
           }
 	  fired {
-	    log(">> successfully uninstalled channels #{channels} >>");
+	    log(">> successfully deleted channel #{channelID} >>");
           } else {
-	    log(">> could not uninstall channels #{channels} >>");
+	    log(">> could not delete channel #{channelID} >>");
+          }
+        }
+
+    rule UpdateChannel {
+	  select when devtools update_channel
+	  pre {
+	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+	    result = CloudOS:channelUpdate(channelID, meta:eci()).klog(">> result of updating #{channels} >> ");
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("update #{channelID}");
+          }
+	  fired {
+	    log(">> successfully updated channel #{channelID} >>");
+          } else {
+	    log(">> could not update channel #{channelID} >>");
           }
         }
 }
