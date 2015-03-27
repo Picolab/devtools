@@ -191,7 +191,6 @@ ruleset devtools {
 	  fired {
 	    log(">> successfully created channels #{channelName} >>");
           } else {
- 	    send_directive("failed to created #{channelName}");
 	    log(">> could not create channels #{channelName} >>");
           }
         }
