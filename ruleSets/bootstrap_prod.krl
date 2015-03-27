@@ -21,6 +21,7 @@ ruleset DevTools_bootstrap {
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
                    "b506607x14.prod", //DevTools
+                   "b506607x14.dev", //DevTools
                    "b16x29.prod"     // logging
             ],
 	    "unwanted": []
