@@ -182,7 +182,8 @@ ruleset devtools {
 	  select when devtools install_channel
 	  pre {
 	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
-            result = rsm:is_valid(channelName) => CloudOS:channelCreate(channelName, meta:eci()).klog(">> result of creating #{channels} >> ")
+	    	// .match (re/\w[\w\d_-]*/)
+            result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
 	                                 | {"status": false};
           }
 	  if(result{"status"}) then {

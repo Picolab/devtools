@@ -537,7 +537,7 @@
 
 				console.log("Choose page to show");
 
-        function persistant_bootstarp(){
+        function persistant_bootstrap(){
           Devtools.status(function(rid_list){
              var rids = rid_list["rids"];
             if ($.inArray('b506607x14.prod', rids) > -1) {
@@ -562,7 +562,7 @@
         }
 				try {
 
-          persistant_bootstarp();
+          persistant_bootstrap();
 
 					var authd = CloudOS.authenticatedSession();
 					if(authd) {
