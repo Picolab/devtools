@@ -89,20 +89,35 @@
 
 				listing: function(type, match, ui, page) {
 					console.log("listing Handler");
-					$("#manage-list" ).empty();
-						$.mobile.loading("show", {
-							text: "Loading registered rulesets...",
-							textVisible: true
-						});
-					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-						$("#manage-list" ).empty();
-						var sortedRids = rids_json.sort(sortBy("rid"));
 
-						$.each(sortedRids, paint_item);
-						$.mobile.loading("hide");
-						console.log("refreshing manage-list listview.");
-						$('#manage-list').listview('refresh');
-					});
+					loadSpinner("#manage-list", "registered rulesets");
+
+
+					function populate_registered_rulesets(){	
+						Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
+							$.mobile.loading("hide");
+							$("#manage-list" ).empty();
+							var sortedRids = rids_json.sort(sortBy("rid"));
+
+							$.each(sortedRids, function (id, rids) {
+									$("#manage-list").append( 
+										snippets.list_rulesets_template(
+											{"rid": rids["rid"],
+											"uri": rids["uri"]}
+											)
+										).collapsibleset().collapsibleset( "refresh" );
+								});
+							
+							console.log("refreshing manage-list listview.");
+							//$('#manage-list').listview('refresh');
+						});
+					}
+
+					populate_registered_rulesets();
+
+					//in the future uncomment the flush and delete buttons in the template
+					//and place in button actions here -- trying to place actions in this
+					//part of the code instead of in updatingUrl (makes it easier on the user)
 				},
 
 				registeringRuleset: function(type, match, ui, page) {
@@ -247,10 +262,10 @@
 							console.log("Logging status: ", json);
 							if(json) {
 							 $("#logstatus").val("on").slider("refresh");
-							 $.mobile.loading("show", {
-									text: "Loading pico logs...",
-									textVisible: true
-								});
+							 
+							
+							 loadSpinner("#loglist", "pico logs");
+
 							 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
 							 	$("#loglist" ).empty();
 								 console.log("Retrieved logs");
@@ -262,8 +277,9 @@
 									 snippets.logitem_template(logobj)
 									 ).collapsibleset().collapsibleset( "refresh" );
 									$("#loglist").listview("refresh");
-									$.mobile.loading("hide");
+									
 								 });
+								 $.mobile.loading("hide");
 							 });
 
 							} else {
@@ -331,14 +347,12 @@
 
 				installed_channels: function(type, match, ui, page) {
 					console.log("channel installation page");
-          $("#installed-channels" ).empty();
-					$.mobile.loading("show", {
-							text: "Loading installed channels...",
-							textVisible: true
-						});
+          
+					loadSpinner("#installed-channels", "installed channels");
 
 					function populate_installed_channels() {
 						Devtools.showInstalledChannels(function(channel_list){
+							$("#installed-channels" ).empty();
 							var channels = channel_list["channels"];
 							$.each(channels, function(index, channel) {
 								$("#installed-channels" ).append(
@@ -384,10 +398,7 @@
 				installed_rulesets: function(type, match, ui, page) {
 					console.log("ruleset installation page");
 					
-					$.mobile.loading("show", {
-							text: "Loading installed rulesets...",
-							textVisible: true
-						});
+					loadSpinner("#installed-rulesets", "installed rulesets");
 
 					function populate_installed_rulesets() {
 						
@@ -546,14 +557,14 @@
             return true;}
           else {
             console.log("false , Bootstrapped");
-//----------------------------------------------------------------------------------needs to be recoded
+						//------------------------------------------------------------------------needs to be recoded
             CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
             {
               if(response.length < 1) {
                   throw "Account initialization failed";// should rebootstrap with exponential back off.......
               }
             });
-//----------------------------------------------------------------------------------needs to be recoded
+						//------------------------------------------------------------------------needs to be recoded
             return false;}
              
            });
@@ -623,13 +634,19 @@
 			
 	}
 
-	function paint_item(id, rids) {
-		$('#manage-list').append( 
-			snippets.list_rulesets_template(
-				{"rid": rids["rid"],
-				"uri": rids["uri"]}
-			)
-		);
+	function loadSpinner(listID, pageData) {
+		var listName = listID + " > div";
+		if ( $(listName).length > 0 ) {
+			$.mobile.loading("show", {
+				text: "Updating " + pageData + "...",
+				textVisible: true
+			});
+		} else {
+			$.mobile.loading("show", {
+				text: "Loading " + pageData + "...",
+				textVisible: true
+			});
+		}
 	}
 
 		// process an array of objects from a form to be a proper object

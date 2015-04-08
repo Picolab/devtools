@@ -1,17 +1,25 @@
 {% raw %} <!-- turn off jekyl (in github pages) -->
 
 <div id="list-rulesets-template" style="display:none;">
-  <li class="ui-field-contain">
-      <a data-transition="slide" href="#updating-url?rid={{rid}}">
-       <h3><b>{{rid}}</b></h3> <!--pulls these values from paint_item in app.js-->
-       <p>{{uri}}</p>
-      </a>
-  </li>
+   <div id="{{rid}}" data-role="collapsible" data-filtertext="{{rid}}{{uri}}" data-theme="a" data-content-theme="a">
+     <h4 style="font-size:1em;">
+     		{{rid}} <span><p style="font-weight:normal; font-size:12px;">{{uri}}</p></span>
+     </h4>
+     
+    <div style = "padding-top: 10px; padding-bottom:40px;"> 
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#updating-url?rid={{rid}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit Ruleset</a></p>
+
+         <!--<p style="position:relative; top:-20px"><a href="#" id="flush-rid-button2" style="float:right;" data-role="button" data-icon="refresh" data-iconpos="notext" data-theme="a" data-inline="true" class="ui-btn ui-icon-refresh ui-btn-icon-right">Flush</a></p>
+
+         <p style="position:relative; top:-20px"><a href="#updating-url?rid={{rid}}" style="float:right;" data-role="button" data-icon="delete" data-iconpos="notext" data-theme="a" data-inline="true" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right">Delete</a></p>-->
+         <p>Actions to take:</p>
+     </div>
+   </div>
 </div>
 
 <div id="logitem-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b">
-   <h2>{{timestamp}} ({{eid}})</h2>
+   <h4>{{timestamp}} ({{eid}})</h4>
         {{#each log_items}}
 	 {{#ifDivider this }}
 	   <span style="color:blue">{{this}}</span> 
@@ -25,7 +33,7 @@
 
 <div id="installed-channels-template" style="display:none;">
    <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
-     <h2>{{channel_name}} ({{cid}})</h2>
+     <h4>{{channel_name}} ({{cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
          <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
          <!--<h2>Channel Attributes</h2>-->
@@ -48,7 +56,7 @@
 
 <div id="installed-ruleset-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{rid}})" data-theme="a" data-content-theme="a">
-     <h2>{{name}} ({{rid}})</h2>
+     <h4>{{name}} ({{rid}})</h4>
      <div>
        {{#if OK }}
          <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-ruleset?rid={{rid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Uninstall</a></p>
