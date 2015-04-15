@@ -109,15 +109,73 @@
 								});
 							
 							console.log("refreshing manage-list listview.");
-							//$('#manage-list').listview('refresh');
+
+							//----------------flush button-----------------------------
+							$(".flushButton").click( function() {
+							    console.log(this.id);
+							    rid = this.id;
+
+							    $.mobile.loading("show", {
+										text: "Flushing ruleset...",
+										textVisible: true
+									});
+									//var update_form_data = process_form(flush_frm);
+									console.log(">>>>>>>>> RID to flush", rid);
+									//var rid = update_form_data.flush;
+
+									if(typeof rid !== "undefined") {
+										Devtools.flushRID(rid, function(directives){
+											console.log("Flushing the rid", rid, directives);
+											$.mobile.loading("hide");
+										});
+
+									}
+							});
+
+							//---------------delete button----------------------
+							$('.deleteButton').off('tap').on('tap', function(event)
+							{	
+								rid = this.id;
+								console.log("Deleting this rid: " + rid);
+								noty({
+									layout: 'topCenter',
+									text: 'Are you sure you want to delete this ruleset?',
+									type: 'warning',
+
+									buttons: [
+										{addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+												$noty.close();
+												if(typeof rid !== "undefined") {
+													$.mobile.loading("show", {
+														text: "Deleting ruleset...",
+														textVisible: true
+													});
+													Devtools.deleteRID(rid, function(directives){
+														console.log("Deleting the rid", rid, directives);
+														$.mobile.loading("hide");
+														//refreshPage(); //takes us to an empty about page at the moment
+														//want to update page
+														$.mobile.changePage("#home", {
+															transition: 'slide'
+														 });
+													});
+												}
+											}
+										},
+										{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+												$noty.close();
+												noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+											}
+										}
+									]
+								});
+								
+							});
 						});
 					}
 
 					populate_registered_rulesets();
 
-					//in the future uncomment the flush and delete buttons in the template
-					//and place in button actions here -- trying to place actions in this
-					//part of the code instead of in updatingUrl (makes it easier on the user)
 				},
 
 				registeringRuleset: function(type, match, ui, page) {
@@ -155,21 +213,13 @@
 					var url_frm = "#form-update-url";
 					$(url_frm)[0].reset(); // clear the fields in the form
 		
-					var flush_frm = "#form-flush-rid";
-					$(flush_frm)[0].reset(); // clear the fields in the form
-
-					var delete_frm = "#form-delete-rid";
-					$(delete_frm)[0].reset(); // clear the fields in the form 
 
 					var rid = router.getParams(match[1])["rid"]; 
 					console.log("RID to update URL of: ", rid);
 					
 					var frmLabel = "URL for " + rid + " ";
 					$("#urlLabel").html(frmLabel);
-					$("#flushLabel").html("Flush ruleset with RID " + rid);
-					$("#flush-input").val(rid);
-					$("#deleteLabel").html("Delete ruleset with RID " + rid);
-					$("#delete-input").val(rid);
+					
 
 					//-------------------Update URL-------------------------------
 					$('#update-url-confirm-button').off('tap').on('tap', function(event)
@@ -196,61 +246,6 @@
 						}
 					});
 
-					//-------------------Flush Ruleset-------------------------------
-					$('#flush-rid-button').off('tap').on('tap', function(event)
-					{
-						$.mobile.loading("show", {
-							text: "Flushing ruleset...",
-							textVisible: true
-						});
-						var update_form_data = process_form(flush_frm);
-						console.log(">>>>>>>>> RID to flush", update_form_data);
-						var rid = update_form_data.flush;
-
-						if(typeof rid !== "undefined") {
-							Devtools.flushRID(rid, function(directives){
-								console.log("Flushing the rid", rid, directives);
-								$.mobile.changePage("#listing", {
-									transition: 'slide'
-								});
-							});
-						}
-					});
-
-					//-------------------Delete Ruleset-------------------------------
-					$('#delete-rid-button').off('tap').on('tap', function(event)
-					{
-						noty({
-							layout: 'topCenter',
-							text: 'Are you sure you want to delete this ruleset?',
-							type: 'warning',
-
-							buttons: [
-								{addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
-										$noty.close();
-										if(typeof rid !== "undefined") {
-											$.mobile.loading("show", {
-												text: "Deleting ruleset...",
-												textVisible: true
-											});
-											Devtools.deleteRID(rid, function(directives){
-												console.log("Deleting the rid", rid, directives);
-												$.mobile.changePage("#listing", {
-													transition: 'slide'
-												});
-											});
-										}
-									}
-								},
-								{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
-										$noty.close();
-										noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
-									}
-								}
-							]
-						});
-						
-					});
 				},
 
 				picologging: function(type, match, ui, page) {
@@ -483,7 +478,7 @@
 							$.noty.get(n);
 						}
 					});
-				}
+				  }
 		
 			},
 
@@ -649,6 +644,18 @@
 		}
 	}
 
+	function refreshPage() { //takes us to the empty about page again... just like entering on input fields...
+	  $.mobile.changePage(
+	    window.location.href,
+	    {
+	      allowSamePageTransition : true,
+	      transition              : 'none',
+	      showLoadMsg             : false,
+	      reloadPage              : true
+	    }
+	  );
+	}
+
 		// process an array of objects from a form to be a proper object
 	var process_form_results = function(raw_results) {
 		var results = {};
@@ -686,4 +693,5 @@
 			return false;
 		}
 	};
+
 
