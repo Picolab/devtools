@@ -513,6 +513,8 @@
 				$('#authorize-link').attr('href', OAuth_kynetx_URL);
 				var OAuth_kynetx_newuser_URL = CloudOS.getOAuthNewAccountURL();
 				$('#create-link').attr('href', OAuth_kynetx_newuser_URL);
+				
+				$('#account-link').attr('href', "https://" + CloudOS.login_server + "/login/profile");
 			}
 
 			function onMobileInit() {
@@ -528,6 +530,7 @@
 
 				$('.logout').off("tap").on("tap", function(event)
 				{
+					window.open("https://" + CloudOS.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
 					CloudOS.removeSession(true); // true for hard reset (log out of login server too)
 					$.mobile.changePage('#page-authorize', {
 						transition: 'slide'
