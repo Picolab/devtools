@@ -36,11 +36,11 @@
 					argsre: true
 			} },
 			{"#install-ruleset": {handler: "install_ruleset",
-					events: "bs", // do page before show
+					events: "s", // do page before show
 					argsre: true
 			} },
 			{"#confirm-uninstall-ruleset": {handler: "uninstall_ruleset",
-					events: "bs", // do page before show
+					events: "s", // do page before show
 					argsre: true
 			} },
 			{"#page-channel-management": {handler: "installed_channels",
@@ -48,11 +48,11 @@
 					argsre: true
 			} },
 			{"#install-channel": {handler: "install_channel",
-					events: "bs", // do page before show
+					events: "s", // do page before show
 					argsre: true
 			} },
 			{"#confirm-uninstall-channel": {handler: "uninstall_channel",
-					events: "bs", // do page before show
+					events: "s", // do page before show
 					argsre: true
 			
 			} }
@@ -513,7 +513,7 @@
 		
 		$('#account-link').attr('href', "https://" + CloudOS.login_server + "/login/profile");
 	}
-	
+
 	function onMobileInit() {
 	 console.log("mobile init");
 	 $.mobile.autoInitialize = false;
