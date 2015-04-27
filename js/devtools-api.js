@@ -216,7 +216,7 @@
             cb(json);
         }, {"eci":eci});
     },
-    
+
     //--------------------------------Channels mannagement----------------------
     showInstalledChannels: function(cb, options) // copied PJW
     {
@@ -240,11 +240,6 @@
            Devtools.log("Directive from create channel", json);
            cb(json);
        }, {"eci":eci});
-
-        // return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelCreate", parameters, function(json) {
-        //     Devtools.log("Directive from installing channels", json);
-        //     cb(json);
-        // }, {"eci":eci});
     },
     uninstallChannel: function(ECI, cb, options) 
     {
@@ -253,10 +248,15 @@
     var json = {channelID:ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Destroy channels");
-        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelDestroy", json, function(json) {
-            Devtools.log("Directive from Destroy channel", json);
-            cb(json);
+        // return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelDestroy", json, function(json) {
+        //     Devtools.log("Directive from Destroy channel", json);
+        //     cb(json);
+        // }, {"eci":eci});
+        return CloudOS.raiseEvent("devtools", "channel_destroy", parameters,{}, function(json) {
+           Devtools.log("Directive from create channel", json);
+           cb(json);
         }, {"eci":eci});
+
     }
 
 	 

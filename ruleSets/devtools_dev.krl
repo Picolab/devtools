@@ -195,8 +195,8 @@ ruleset devtools {
           }
         }
 
-    rule DeleteChannel {
-	  select when devtools delete_channel
+    rule DestroyChannel {
+	  select when devtools channel_destroy
 	  pre {
 	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
 	    result = CloudOS:channelDestroy(channelID, meta:eci()).klog(">> result of deleteing #{channels} >> ");
@@ -210,7 +210,7 @@ ruleset devtools {
 	    log(">> could not delete channel #{channelID} >>");
           }
         }
-
+        //----------------- not a CloudOS function yet (update channel) ----------------
     rule UpdateChannel {
 	  select when devtools update_channel
 	  pre {
