@@ -252,7 +252,7 @@
         //     Devtools.log("Directive from Destroy channel", json);
         //     cb(json);
         // }, {"eci":eci});
-        return CloudOS.raiseEvent("devtools", "channel_destroy", parameters,{}, function(json) {
+        return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
         }, {"eci":eci});
