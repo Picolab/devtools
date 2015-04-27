@@ -28,7 +28,7 @@
 					argsre: true
 			} },
 			{"#page-picologging": {handler: "picologging",
-					events: "bs", // do page before show
+					events: "s", // do page before show
 					argsre: true
 			} },
 			{"#page-installed-rulesets": {handler: "installed_rulesets",
