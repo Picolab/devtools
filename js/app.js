@@ -94,19 +94,20 @@
 
 				function populate_registered_rulesets(){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-						$.mobile.loading("hide");
 						$("#manage-list" ).empty();
 						var sortedRids = rids_json.sort(sortBy("rid"));
 
+						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
-							$("#manage-list").append( 
+							dynamicRegRulesets += 
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
 									"uri": rids["uri"]}
-									)
-							).collapsibleset().collapsibleset( "refresh" );
+									);
 						});
-						
+						$("#manage-list").append(dynamicRegRulesets).collapsibleset().collapsibleset("refresh");
+						$.mobile.loading("hide");
+
 						console.log("refreshing manage-list listview.");
 
 						//----------------flush button-----------------------------
@@ -255,26 +256,25 @@
 					Pico.logging.status(CloudOS.defaultECI, function(json){
 						console.log("Logging status: ", json);
 						if(json) {
-						 $("#logstatus").val("on").slider("refresh");
-						 
-						
-						 loadSpinner("#loglist", "pico logs");
+						 	$("#logstatus").val("on").slider("refresh");
+						 	loadSpinner("#loglist", "pico logs");
+						 	
 
-						 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-						 	$("#loglist" ).empty();
-							 console.log("Retrieved logs");
-							 $.each(logdata, function(i, logobj) {
-								var eid_re = RegExp("\\s+" + logobj.eid);
-								logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
-								});
-								$("#loglist" ).append( 
-								 snippets.logitem_template(logobj)
-								 ).collapsibleset().collapsibleset( "refresh" );
-								$("#loglist").listview("refresh");
-								
+						 	Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+							 	$("#loglist" ).empty();
+								console.log("Retrieved logs");
+
+								dynamicLogItems = "";
+								$.each(logdata, function(i, logobj) {
+									var eid_re = RegExp("\\s+" + logobj.eid);
+									logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
+									});
+									dynamicLogItems += snippets.logitem_template(logobj)
+
+								 });
+								$("#loglist").append(dynamicLogItems).collapsibleset().collapsibleset( "refresh" );
+								$.mobile.loading("hide");
 							 });
-							 $.mobile.loading("hide");
-						 });
 
 						} else {
 						 $("#logstatus").val("off").slider("refresh");
@@ -341,22 +341,24 @@
 
 			installed_channels: function(type, match, ui, page) {
 				console.log("channel installation page");
-        
 				loadSpinner("#installed-channels", "installed channels");
+
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
+						
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
+
+						dynamicChannelItems = "";
 						$.each(channels, function(index, channel) {
-							$("#installed-channels" ).append(
+							dynamicChannelItems +=
 							 snippets.installed_channels_template(
 								{"channel_name": channel["name"],
 								"cid": channel["cid"]}
-								)
-							 ).collapsibleset().collapsibleset( "refresh" );
-              //$("#installed-rulesets").listview("refresh");
+								);
 					  });
+					  $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
 					  $.mobile.loading("hide");
 				  });
 				}
@@ -391,7 +393,6 @@
 
 			installed_rulesets: function(type, match, ui, page) {
 				console.log("ruleset installation page");
-				
 				loadSpinner("#installed-rulesets", "installed rulesets");
 
 				function populate_installed_rulesets() {
@@ -400,16 +401,17 @@
 					Devtools.showInstalledRulesets(function(ruleset_list){
 						$("#installed-rulesets" ).empty();
 					 	console.log("Retrieved installed rulesets");
+					 	
+					 	dynamicInsRulesets = "";
 					 	$.each(ruleset_list, function(k, ruleset) {
 						 	ruleset["rid"] = k;
 			 			 	ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-						 	$("#installed-rulesets" ).append(
-							 	snippets.installed_ruleset_template(ruleset)
-							 	).collapsibleset().collapsibleset( "refresh" );
+				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
+							dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
 					 	});
+					 	$("#installed-rulesets" ).append(dynamicInsRulesets).collapsibleset().collapsibleset( "refresh" );
 					 	$.mobile.loading("hide");
-
+					 	
 					});
 				}
 
