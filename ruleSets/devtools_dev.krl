@@ -199,7 +199,7 @@ ruleset devtools {
 	  select when devtools channel_destroy
 	  pre {
 	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
-	    result => CloudOS:channelDestroy(channelID).klog(">> result of creating #{channels} >> ");
+	    result = CloudOS:channelDestroy(channelID).klog(">> result of creating #{channels} >> ");
           }
 	  if(result{"status"}) then {
  	    send_directive("deleted #{channelID}");
