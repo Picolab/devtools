@@ -204,41 +204,6 @@
             cb(json);
         }, {"eci":eci});
     },
-    showInstalledChannels: function(cb, options) // copied PJW
-    {
-        cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Showing the channels");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
-            Devtools.log("Displaying installed channels", json);
-            cb(json);
-        }, {"eci":eci});
-    },
-    installChannel: function(channel_name, cb, options) // does not use devtools.krl ---------------?
-    {
-        cb = cb || function(){};
-        options = options || {};
-    var parameters = {channelName:channel_name}; 
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Installing channels");
-        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelCreate", parameters, function(json) {
-            Devtools.log("Directive from installing channels", json);
-            cb(json);
-        }, {"eci":eci});
-    },
-    uninstallChannel: function(ECI, cb, options) // copied PJW
-    {
-        cb = cb || function(){};
-        options = options || {};
-    var json = {channelID:ECI}; 
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Destroy channels");
-        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelDestroy", json, function(json) {
-            Devtools.log("Directive from Destroy channel", json);
-            cb(json);
-        }, {"eci":eci});
-    },
     RegisterRuleset: function(url,cb,options)
     {
         cb = cb || function(){};
@@ -250,7 +215,50 @@
             Devtools.log("Directive from register ruleset", json);
             cb(json);
         }, {"eci":eci});
+    },
+    
+    //--------------------------------Channels mannagement----------------------
+    showInstalledChannels: function(cb, options) // copied PJW
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the channels");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
+            Devtools.log("Displaying installed channels", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    installChannel: function(channel_name, cb, options) 
+    {
+        cb = cb || function(){};
+        options = options || {};
+    var parameters = {channelName:channel_name}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Installing channels");
+       return CloudOS.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
+           Devtools.log("Directive from create channel", json);
+           cb(json);
+       }, {"eci":eci});
+
+        // return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelCreate", parameters, function(json) {
+        //     Devtools.log("Directive from installing channels", json);
+        //     cb(json);
+        // }, {"eci":eci});
+    },
+    uninstallChannel: function(ECI, cb, options) 
+    {
+        cb = cb || function(){};
+        options = options || {};
+    var json = {channelID:ECI}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Destroy channels");
+        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "channelDestroy", json, function(json) {
+            Devtools.log("Directive from Destroy channel", json);
+            cb(json);
+        }, {"eci":eci});
     }
+
 	 
 //
 }; //closes the "window" inside the function DON'T DELETE

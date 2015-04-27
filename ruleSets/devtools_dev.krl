@@ -179,10 +179,9 @@ ruleset devtools {
 	}
 	//---------------- channel manager ---------------
 	rule CreateChannel {
-	  select when devtools install_channel
+	  select when devtools create_channel
 	  pre {
 	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
-	    	// .match (re/\w[\w\d_-]*/)
             result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
 	                                 | {"status": false};
           }
