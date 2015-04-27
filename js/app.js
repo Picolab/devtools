@@ -310,33 +310,44 @@
 				$.mobile.loading("hide");
 			 	var frm = "#form-install-channel";
 					$(frm)[0].reset(); // clear the fields in the form
-					$('#install-channel-confirm-button').off('tap').on('tap', function(event)
-			 	{
-					$.mobile.loading("show", {
-						text: "Installing channel...",
-						textVisible: true
-					});
-					var install_form_data = process_form(frm);
-					console.log(">>>>>>>>> channels to install", install_form_data);
-					var channel_name = install_form_data.channel_name;
+					
+					submitChannel = function(){
+					 	{
+							$.mobile.loading("show", {
+								text: "Installing channel...",
+								textVisible: true
+							});
+							var install_form_data = process_form(frm);
+							console.log(">>>>>>>>> channels to install", install_form_data);
+							var channel_name = install_form_data.channel_name;
 				
-					if( true //typeof channel_name !== "undefined"
-				 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
-					) {
-						Devtools.installChannel(channel_name, function(directives) {
-							console.log("installed ", channel_name, directives);
-							$.mobile.changePage("#page-channel-management", {
-								transition: 'slide'
-							});
-						}); 
-					} else {
-							console.log("Invalid channel_name ", channel_name);
-							$.mobile.loading("hide");
-							$.mobile.changePage("#page-channel-management", {
-								transition: 'slide'
-							});
+							if( true //typeof channel_name !== "undefined"
+						 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+							) {
+								Devtools.installChannel(channel_name, function(directives) {
+									console.log("installed ", channel_name, directives);
+									$.mobile.changePage("#page-channel-management", {
+										transition: 'slide'
+									});
+								}); 
+							} else {
+									console.log("Invalid channel_name ", channel_name);
+									$.mobile.loading("hide");
+									$.mobile.changePage("#page-channel-management", {
+										transition: 'slide'
+									});
+							}
+						}
 					}
-				});
+					
+					$(frm).keypress(function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							submitChannel();
+						}
+					});
+					
+					$('#install-channel-confirm-button').off('tap').on('tap', submitChannel);
 			},
 
 			installed_channels: function(type, match, ui, page) {
@@ -450,35 +461,45 @@
 				$.mobile.loading("hide");
 				var frm = "#form-install-ruleset";
 				$(frm)[0].reset(); // clear the fields in the form
-				$('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
-				{
-					$.mobile.loading("show", {
-						text: "Installing ruleset...",
-						textVisible: true
-					});
-					var install_form_data = process_form(frm);
-					console.log(">>>>>>>>> RIDs to install", install_form_data);
-					var rid = install_form_data.rid;
-	
-					if( typeof rid !== "undefined"
-						&& rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
-					) {
-						Devtools.installRulesets(rid, function(directives) {
-							console.log("installed ", rid, directives);
-							$.mobile.changePage("#page-installed-rulesets", {
-								transition: 'slide'
-							});
-						});	
-					} else {
-						console.log("Invalid rid ", rid);
-						$.mobile.loading("hide");
-						var n = noty({
-							type: 'error',
-							text: rid + ' is not a valid ruleset. Please check your ruleset and try again. The general format is b######x##.prod or .dev',
+				
+				submitInstall = function(){
+					{
+						$.mobile.loading("show", {
+							text: "Installing ruleset...",
+							textVisible: true
 						});
-						$.noty.get(n);
+						var install_form_data = process_form(frm);
+						console.log(">>>>>>>>> RIDs to install", install_form_data);
+						var rid = install_form_data.rid;
+	
+						if( typeof rid !== "undefined"
+							&& rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
+						) {
+							Devtools.installRulesets(rid, function(directives) {
+								console.log("installed ", rid, directives);
+								$.mobile.changePage("#page-installed-rulesets", {
+									transition: 'slide'
+								});
+							});	
+						} else {
+							console.log("Invalid rid ", rid);
+							$.mobile.loading("hide");
+							var n = noty({
+								type: 'error',
+								text: rid + ' is not a valid ruleset. Please check your ruleset and try again. The general format is b######x##.prod or .dev',
+							});
+							$.noty.get(n);
+						}
+					}	
+				}
+				
+				$(frm).keypress(function(event){
+					if (event.which == 13) {
+						event.preventDefault();
+						submitInstall();
 					}
 				});
+				$('#install-ruleset-confirm-button').off('tap').on('tap', submitInstall);
 			},
 		},
 
