@@ -66,7 +66,7 @@ ruleset devtools {
 			krl_struct = clients.decode()
 			.klog(">>>>krl_struct")
 			;
-			krl_struct
+			krl_struct;
 		};
 	}
 
