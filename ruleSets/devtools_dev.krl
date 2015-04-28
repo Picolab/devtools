@@ -19,7 +19,6 @@ ruleset devtools {
 
 		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients//deleteRulesets is not a function?
 
-
 		sharing on
 	}
 
