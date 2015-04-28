@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showOAuthClients
 		sharing on
 	}
 
@@ -44,6 +44,13 @@ ruleset devtools {
 		                                | resp.klog(">> error retrieving description for rid list >> ")
 		}; 
 
+		aboutPico = function() {
+	          account_profile = CloudOS:accountProfile()
+		                      .put( ["oauth_eci"], meta:eci() )
+		  		      ;
+		  account_profile 
+		};
+
 		showInstalledChannels = function() {
 		  channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>")
 		  //.klog(">>> channels cloud call >>>")
@@ -52,14 +59,6 @@ ruleset devtools {
 		  .klog(">>krl_struct>> ")
 		  ;
 		krl_struct;
-		};
-
-
-		aboutPico = function() {
-	          account_profile = CloudOS:accountProfile()
-		                      .put( ["oauth_eci"], meta:eci() )
-		  		      ;
-		  account_profile 
 		};
 
 		showOAuthClients = function() {
