@@ -17,7 +17,7 @@ ruleset devtools {
 		//use module a41x226 alias appManager
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients
 
 		sharing on
 	}
