@@ -54,6 +54,30 @@
   <h1>Do NOT delete channels unless you know what you're doing.<br> Deletion of key channels could make your pico inoperable.</h1>
   </li>
 </div>
+<!--      Authorize clients      -->
+<div id="authorized-clients-template" style="display:none;">
+   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{client_name}} ({{cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{client_name}} ({{cid}})</h4>
+    <div style = "padding-top: 18px; padding-bottom:24px;"> 
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
+         <!--<h2>client Attributes</h2>-->
+       <p><b>client ID:</b> {{cid}}</p>
+     </div>
+   </div>
+</div>
+
+<div id="confirm-client-remove-template" style="display:none;">
+  <li data-role="list-divider" >Remove Client</li>
+  <li>
+  <p>
+  <h3>Remove Client {{client}}?</h3>
+    <a id="remove-client-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Remove</a>
+    <a href="#oAuth-client-registration" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+  </p>
+  <h1>Do NOT remove clients unless you know what you're doing.</h1>
+  </li>
+</div>
+<!--  -->
 
 <div id="installed-ruleset-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{rid}})" data-theme="a" data-content-theme="a">

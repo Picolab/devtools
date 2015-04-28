@@ -1,0 +1,71 @@
+<div data-role="page" id="oAuth-client-registration" data-title="ECI Management" >
+  {% include header.html title="Client Registration" %}
+
+   <div data-role="content">
+       <p>
+         Welcome to the Authorize Client Manager. Below are your Clients.
+        </p>
+     <ul id="authorized-clients-control" data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Client Manager</li>
+       <li>
+         <a id="authorized-button" href="#authorize-client" class="ui-btn ui-icon-edit ui-btn-icon-right">New client</a>
+       </li>
+     </ul>
+
+     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="authorized-clients">
+     </div>
+
+   </div><!-- /content -->
+
+   {% include footer.html %}
+</div><!-- /page -->
+
+<div data-role="page" id="authorize-client" data-title="Authorize channel">
+  {% include header.html title="Authorize a Client" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="authorize-client" data-role="listview" data-inset="true"> 
+       	    <li data-role="list-divider" >Authorize Client</li>
+	    <li>
+	      <form id="form-authorize-client">
+	        <div data-role="fieldcontain">
+   	          <label for="client_name">Client Name:</label>
+		  <input type="text" name="client_name" id="client_name" value="" placeholder="KRL Rocks" />
+		</div>
+	      </form>
+	      <div>
+                <a id="authorize-client-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Athorize</a>
+                <a href="#oAuth-client-registration" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+	      </div>
+	    </li>
+     	  </ul>
+	</div>
+
+  {% include footer.html %}
+
+</div>
+
+<div data-role="page" id="confirm-deAuthorization" data-title="DeAuthorize Client">
+  {% include header.html title="DeAuthorize Client" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="remove-client" data-role="listview" data-inset="true"> 
+       	    
+     	  </ul>
+	</div>
+
+
+  {% include footer.html %}
+</div>
+<div data-role="page" id="update-client" data-title="DeAuthorize Client">
+  {% include header.html title="DeAuthorize Client" %}
+
+  <div data-role="main" class="ui-content">
+    <ul id="update-client" data-role="listview" data-inset="true"> 
+            
+        </ul>
+  </div>
+
+
+  {% include footer.html %}
+</div>

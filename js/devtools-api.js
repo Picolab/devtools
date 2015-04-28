@@ -253,9 +253,55 @@
            cb(json);
         }, {"eci":eci});
 
+    },
+    //---------------------------------Authorize Client mannagement----------------
+    authorizeClient: function(client_name, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+    var parameters = {channelName:channel_name}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Installing channels");
+       return CloudOS.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
+           Devtools.log("Directive from create channel", json);
+           cb(json);
+       }, {"eci":eci});
+    },
+	showAthorizedClients: function(cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Showing the channels");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
+            Devtools.log("Displaying installed channels", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    removeClient: function(client, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {channelID:ECI}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Destroy channels");
+        return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
+           Devtools.log("Directive from create channel", json);
+           cb(json);
+        }, {"eci":eci});
+    },
+    updateClient: function(client, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {rids: rid,url: url}; //not sure what this does
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Updating the URL");
+        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
+            Devtools.log("Directive from updating URL", json);
+            cb(json);
+        }, {"eci":eci});
     }
-
-	 
 //
 }; //closes the "window" inside the function DON'T DELETE
 

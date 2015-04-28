@@ -14,10 +14,11 @@ ruleset devtools {
 		logging on
 
 		use module a169x625 alias CloudOS
-		//use module a41x226 alias appManager
+		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients//deleteRulesets is not a function?
+
 
 		sharing on
 	}
@@ -62,7 +63,13 @@ ruleset devtools {
 		  		      ;
 		  account_profile 
 		}
-		
+		showOAuthClients = function() {
+			clients = OAuthRegistry:get_my_apps(meta:eci()).defaultsTo({},">> list of authorize clients undefined");
+			krl_struct = clients.decode()
+			.klog(">>>>krl_struct")
+			;
+			krl_struct
+		};
 	}
 
 	
@@ -226,4 +233,54 @@ ruleset devtools {
 	    log(">> could not update channel #{channelID} >>");
           }
         }
+    //-------------------OAuthRegistry---------------
+    rule AuthorizeClient {
+	  select when devtools authorize_client
+	  pre {
+	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
+            result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
+	                                 | {"status": false};
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("Created #{channelName}");
+          }
+	  fired {
+	    log(">> successfully created channels #{channelName} >>");
+          } else {
+	    log(">> could not create channels #{channelName} >>");
+          }
+        }
+
+    rule RemoveClient {
+	  select when devtools remove_client
+	  pre {
+	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+	    result = CloudOS:channelDestroy(channelID).klog(">> result of creating #{channels} >> ");
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("deleted #{channelID}");
+          }
+	  fired {
+	    log(">> successfully deleted channel #{channelID} >>");
+          } else {
+	    log(">> could not delete channel #{channelID} >>");
+          }
+        }
+        //----------------- not a CloudOS function yet (update channel) ----------------
+    rule UpdateClient {
+	  select when devtools update_client
+	  pre {
+	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+	    result = CloudOS:channelUpdate(channelID, meta:eci()).klog(">> result of updating #{channels} >> ");
+          }
+	  if(result{"status"}) then {
+ 	    send_directive("update #{channelID}");
+          }
+	  fired {
+	    log(">> successfully updated channel #{channelID} >>");
+          } else {
+	    log(">> could not update channel #{channelID} >>");
+          }
+        }
 }
+

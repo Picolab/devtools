@@ -55,7 +55,27 @@
 					events: "s", // do page before show
 					argsre: true
 			
-			} }
+			} },
+      {"#oAuth-client-registration": {handler: "authorized_clients",
+          events: "s", // do page before show
+          argsre: true
+      
+      } },
+      {"#authorize-client": {handler: "authorize_client",
+          events: "s", // do page before show
+          argsre: true
+      
+      } },
+      {"#confirm-deAuthorization": {handler: "remove_client",
+          events: "s", // do page before show
+          argsre: true
+      
+      } },
+      {"#update-client": {handler: "update_client",
+          events: "s", // do page before show
+          argsre: true
+      
+      } }      
 		],
 
 		{
@@ -94,19 +114,20 @@
 
 				function populate_registered_rulesets(){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
-						$.mobile.loading("hide");
 						$("#manage-list" ).empty();
 						var sortedRids = rids_json.sort(sortBy("rid"));
 
+						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
-							$("#manage-list").append( 
+							dynamicRegRulesets += 
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
 									"uri": rids["uri"]}
-									)
-							).collapsibleset().collapsibleset( "refresh" );
+									);
 						});
-						
+						$("#manage-list").append(dynamicRegRulesets).collapsibleset().collapsibleset("refresh");
+						$.mobile.loading("hide");
+
 						console.log("refreshing manage-list listview.");
 
 						//----------------flush button-----------------------------
@@ -255,26 +276,25 @@
 					Pico.logging.status(CloudOS.defaultECI, function(json){
 						console.log("Logging status: ", json);
 						if(json) {
-						 $("#logstatus").val("on").slider("refresh");
-						 
-						
-						 loadSpinner("#loglist", "pico logs");
+						 	$("#logstatus").val("on").slider("refresh");
+						 	loadSpinner("#loglist", "pico logs");
+						 	
 
-						 Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
-						 	$("#loglist" ).empty();
-							 console.log("Retrieved logs");
-							 $.each(logdata, function(i, logobj) {
-								var eid_re = RegExp("\\s+" + logobj.eid);
-								logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
-								});
-								$("#loglist" ).append( 
-								 snippets.logitem_template(logobj)
-								 ).collapsibleset().collapsibleset( "refresh" );
-								$("#loglist").listview("refresh");
-								
+						 	Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+							 	$("#loglist" ).empty();
+								console.log("Retrieved logs");
+
+								dynamicLogItems = "";
+								$.each(logdata, function(i, logobj) {
+									var eid_re = RegExp("\\s+" + logobj.eid);
+									logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
+									});
+									dynamicLogItems += snippets.logitem_template(logobj)
+
+								 });
+								$("#loglist").append(dynamicLogItems).collapsibleset().collapsibleset( "refresh" );
+								$.mobile.loading("hide");
 							 });
-							 $.mobile.loading("hide");
-						 });
 
 						} else {
 						 $("#logstatus").val("off").slider("refresh");
@@ -310,53 +330,66 @@
 				$.mobile.loading("hide");
 			 	var frm = "#form-install-channel";
 					$(frm)[0].reset(); // clear the fields in the form
-					$('#install-channel-confirm-button').off('tap').on('tap', function(event)
-			 	{
-					$.mobile.loading("show", {
-						text: "Installing channel...",
-						textVisible: true
-					});
-					var install_form_data = process_form(frm);
-					console.log(">>>>>>>>> channels to install", install_form_data);
-					var channel_name = install_form_data.channel_name;
+					
+					submitChannel = function(){
+					 	{
+							$.mobile.loading("show", {
+								text: "Installing channel...",
+								textVisible: true
+							});
+							var install_form_data = process_form(frm);
+							console.log(">>>>>>>>> channels to install", install_form_data);
+							var channel_name = install_form_data.channel_name;
 				
-					if( true //typeof channel_name !== "undefined"
-				 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
-					) {
-						Devtools.installChannel(channel_name, function(directives) {
-							console.log("installed ", channel_name, directives);
-							$.mobile.changePage("#page-channel-management", {
-								transition: 'slide'
-							});
-						}); 
-					} else {
-							console.log("Invalid channel_name ", channel_name);
-							$.mobile.loading("hide");
-							$.mobile.changePage("#page-channel-management", {
-								transition: 'slide'
-							});
+							if( true //typeof channel_name !== "undefined"
+						 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+							) {
+								Devtools.installChannel(channel_name, function(directives) {
+									console.log("installed ", channel_name, directives);
+									$.mobile.changePage("#page-channel-management", {
+										transition: 'slide'
+									});
+								}); 
+							} else {
+									console.log("Invalid channel_name ", channel_name);
+									$.mobile.loading("hide");
+									$.mobile.changePage("#page-channel-management", {
+										transition: 'slide'
+									});
+							}
+						}
 					}
-				});
+					
+					$(frm).keypress(function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							submitChannel();
+						}
+					});
+					
+					$('#install-channel-confirm-button').off('tap').on('tap', submitChannel);
 			},
 
 			installed_channels: function(type, match, ui, page) {
 				console.log("channel installation page");
-        
 				loadSpinner("#installed-channels", "installed channels");
+
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
+						
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
+
+						dynamicChannelItems = "";
 						$.each(channels, function(index, channel) {
-							$("#installed-channels" ).append(
+							dynamicChannelItems +=
 							 snippets.installed_channels_template(
 								{"channel_name": channel["name"],
 								"cid": channel["cid"]}
-								)
-							 ).collapsibleset().collapsibleset( "refresh" );
-              //$("#installed-rulesets").listview("refresh");
+								);
 					  });
+					  $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
 					  $.mobile.loading("hide");
 				  });
 				}
@@ -388,10 +421,99 @@
 					}
 				 });
 			},
+      //------------------------------- Authorize Clients --------------------
+      authorize_client: function(type, match, ui, page) {
+        console.log("Showing authorize client page");
+        $.mobile.loading("hide");
+        var frm = "#form-authorize-client";
+          $(frm)[0].reset(); // clear the fields in the form
+          $('#authorize-client-confirm-button').off('tap').on('tap', function(event)
+        {
+          $.mobile.loading("show", {
+            text: "Authorizing Client...",
+            textVisible: true
+          });
+          var athorize_form_data = process_form(frm);
+          console.log(">>>>>>>>> client to authorize", athorize_form_data);
+          var client_name = athorize_form_data.client_name;
+        
+          if( true //typeof channel_name !== "undefined"
+            //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+          ) {
+            Devtools.authorizeClient(client_name, function(directives) {
+              console.log("authorize ", client_name, directives);
+              $.mobile.changePage("#oAuth-client-registration", {
+                transition: 'slide'
+              });
+            }); 
+          } else {
+              console.log("Invalid client_name ", client_name);
+              $.mobile.loading("hide");
+              $.mobile.changePage("#oAuth-client-registration", {
+                transition: 'slide'
+              });
+          }
+        });
+      },
 
+      authorized_clients: function(type, match, ui, page) {
+        console.log("authorized Clients page");
+        
+        loadSpinner("#authorized client", "authorized client");
+
+        function populate_Authorized_clients() {
+          Devtools.showAthorizedClients(function(client_list){
+            $("#authorized-clients" ).empty();
+            var Clients = client_list["clients"];
+            $.each(Clients, function(index, client) {
+              $("#authorized-clients" ).append(
+               snippets.installed_channels_template(
+                {"client_name": client["name"],
+                "cid": client["cid"]}
+                )
+               ).collapsibleset().collapsibleset( "refresh" );
+              //$("#installed-rulesets").listview("refresh");
+            });
+            $.mobile.loading("hide");
+          });
+        }
+        populate_Authorized_clients();
+      },
+
+      remove_client: function(type, match, ui, page) {
+         console.log("Showing remove client page");
+         $.mobile.loading("hide");
+         var client = router.getParams(match[1])["client"];
+         console.log("client to remove ", client);
+         $("#remove-client" ).empty();
+         $("#remove-client").append(snippets.confirm_channel_remove({"channel": client}));
+         $("#remove-client").listview().listview("refresh");
+         $('#remove-client-button').off('tap').on('tap', function(event)
+         {
+          $.mobile.loading("show", {
+            text: "Removing client...",
+            textVisible: true
+          });
+          console.log("removing client ", client);
+          if(typeof client !== "undefined") {
+            Devtools.removeClient(client, function(directives) {
+              console.log("uninstalled ", client, directives);
+              $.mobile.changePage("#oAuth-client-registration", {
+               transition: 'slide'
+             });
+            }); 
+          }
+         });
+      },
+
+      update_client: function(type, match, ui, page){
+        console.log("Showing update client page")
+
+      },
+
+      //--------------------------Installed Rulesets------------------------
 			installed_rulesets: function(type, match, ui, page) {
 				console.log("ruleset installation page");
-				
 				loadSpinner("#installed-rulesets", "installed rulesets");
 
 				function populate_installed_rulesets() {
@@ -400,16 +522,17 @@
 					Devtools.showInstalledRulesets(function(ruleset_list){
 						$("#installed-rulesets" ).empty();
 					 	console.log("Retrieved installed rulesets");
+					 	
+					 	dynamicInsRulesets = "";
 					 	$.each(ruleset_list, function(k, ruleset) {
 						 	ruleset["rid"] = k;
 			 			 	ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust
-						 	$("#installed-rulesets" ).append(
-							 	snippets.installed_ruleset_template(ruleset)
-							 	).collapsibleset().collapsibleset( "refresh" );
+				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
+							dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
 					 	});
+					 	$("#installed-rulesets" ).append(dynamicInsRulesets).collapsibleset().collapsibleset( "refresh" );
 					 	$.mobile.loading("hide");
-
+					 	
 					});
 				}
 
@@ -448,35 +571,45 @@
 				$.mobile.loading("hide");
 				var frm = "#form-install-ruleset";
 				$(frm)[0].reset(); // clear the fields in the form
-				$('#install-ruleset-confirm-button').off('tap').on('tap', function(event)
-				{
-					$.mobile.loading("show", {
-						text: "Installing ruleset...",
-						textVisible: true
-					});
-					var install_form_data = process_form(frm);
-					console.log(">>>>>>>>> RIDs to install", install_form_data);
-					var rid = install_form_data.rid;
-	
-					if( typeof rid !== "undefined"
-						&& rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
-					) {
-						Devtools.installRulesets(rid, function(directives) {
-							console.log("installed ", rid, directives);
-							$.mobile.changePage("#page-installed-rulesets", {
-								transition: 'slide'
-							});
-						});	
-					} else {
-						console.log("Invalid rid ", rid);
-						$.mobile.loading("hide");
-						var n = noty({
-							type: 'error',
-							text: rid + ' is not a valid ruleset. Please check your ruleset and try again. The general format is b######x##.prod or .dev',
+				
+				submitInstall = function(){
+					{
+						$.mobile.loading("show", {
+							text: "Installing ruleset...",
+							textVisible: true
 						});
-						$.noty.get(n);
+						var install_form_data = process_form(frm);
+						console.log(">>>>>>>>> RIDs to install", install_form_data);
+						var rid = install_form_data.rid;
+	
+						if( typeof rid !== "undefined"
+							&& rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
+						) {
+							Devtools.installRulesets(rid, function(directives) {
+								console.log("installed ", rid, directives);
+								$.mobile.changePage("#page-installed-rulesets", {
+									transition: 'slide'
+								});
+							});	
+						} else {
+							console.log("Invalid rid ", rid);
+							$.mobile.loading("hide");
+							var n = noty({
+								type: 'error',
+								text: rid + ' is not a valid ruleset. Please check your ruleset and try again. The general format is b######x##.prod or .dev',
+							});
+							$.noty.get(n);
+						}
+					}	
+				}
+				
+				$(frm).keypress(function(event){
+					if (event.which == 13) {
+						event.preventDefault();
+						submitInstall();
 					}
 				});
+				$('#install-ruleset-confirm-button').off('tap').on('tap', submitInstall);
 			},
 		},
 
