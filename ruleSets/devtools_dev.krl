@@ -62,7 +62,13 @@ ruleset devtools {
 		  		      ;
 		  account_profile 
 		}
-		
+		showOAuthClients = function() {
+			clients = OAuthRegistry:get_my_apps(meta:eci()).defaultsTo({},">> list of authorize clients undefined");
+			krl_struct = clients.decode()
+			.klog(">>>>krl_struct")
+			;
+			krl_struct
+		};
 	}
 
 	
