@@ -17,8 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients//deleteRulesets is not a function?
-
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, deleteRulesets, showOAuthClients
 		sharing on
 	}
 
@@ -61,7 +60,7 @@ ruleset devtools {
 		                      .put( ["oauth_eci"], meta:eci() )
 		  		      ;
 		  account_profile 
-		}
+		};
 		showOAuthClients = function() {
 			clients = OAuthRegistry:get_my_apps(meta:eci()).defaultsTo({},">> list of authorize clients undefined");
 			krl_struct = clients.decode()
