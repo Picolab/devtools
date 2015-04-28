@@ -272,9 +272,9 @@
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Showing the channels");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
-            Devtools.log("Displaying installed channels", json);
+        Devtools.log("Showing the showing clients");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOAuthClients", {}, function(json) {
+            Devtools.log("Displaying athorize clients", json);
             cb(json);
         }, {"eci":eci});
     },
