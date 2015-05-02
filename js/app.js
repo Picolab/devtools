@@ -626,7 +626,7 @@
 	if (!("formatDate" in Handlebars.helpers)) {
 		Handlebars.registerHelper("formatDate", function(datetime) {
 			// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
-			return datetime.toLocaleString();
+			return new Date(datetime).toLocaleString();
 		});
 	}
 	// Handlebar templates compiled at load time to create functions
