@@ -85,13 +85,6 @@
 			}, 
 			
 			home: function(type, match, ui, page) {
-				// Register a formatDate hanblebars helper, but only once.
-				if (!"formatDate" in Handlebars.helpers) {
-					Handlebars.registerHelper("formatDate", function(datetime) {
-						// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
-						return datetime.toLocaleString();
-					});
-				}
 				console.log("home Handler");
 				$.mobile.loading("hide");
 			},
@@ -629,6 +622,13 @@
 		}
 	);
 
+	// Register a formatDate hanblebars helper, but only once.
+	if (!"formatDate" in Handlebars.helpers) {
+		Handlebars.registerHelper("formatDate", function(datetime) {
+			// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
+			return datetime.toLocaleString();
+		});
+	}
 	// Handlebar templates compiled at load time to create functions
 	// templates are included to index.html from Templates directory.
 	//confirm_channel_remove
