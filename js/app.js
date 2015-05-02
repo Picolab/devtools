@@ -85,9 +85,13 @@
 			}, 
 			
 			home: function(type, match, ui, page) {
-				Handlebars.registerHelper("formatDate", function(datetime) {
-
-				});
+				// Register a formatDate hanblebars helper, but only once.
+				if (!"formatDate" in Handlebars.helpers) {
+					Handlebars.registerHelper("formatDate", function(datetime) {
+						// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
+						return datetime.toLocaleString();
+					});
+				}
 				console.log("home Handler");
 				$.mobile.loading("hide");
 			},
