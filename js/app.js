@@ -623,7 +623,7 @@
 	);
 
 	// Register a formatDate hanblebars helper, but only once.
-	if (!"formatDate" in Handlebars.helpers) {
+	if (!("formatDate" in Handlebars.helpers)) {
 		Handlebars.registerHelper("formatDate", function(datetime) {
 			// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
 			return datetime.toLocaleString();
