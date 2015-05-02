@@ -622,14 +622,6 @@
 		}
 	);
 
-	// Register a formatDate hanblebars helper, but only once.
-	if (!("formatDate" in Handlebars.helpers)) {
-		Handlebars.registerHelper("formatDate", function(datetime) {
-			// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
-			return new Date(datetime).toLocaleString();
-		});
-	}
-	
 	// Handlebar templates compiled at load time to create functions
 	// templates are included to index.html from Templates directory.
 	//confirm_channel_remove
@@ -675,12 +667,21 @@
 			}); // this will go to the authorization page.
 		});
 
-		Handlebars.registerHelper('ifDivider', function(v1, options) {
-		 if(v1.match(/-----\*\*\*----/)) {
-			return options.fn(this);
-		 }
-			return options.inverse(this);
-		 });
+		Handlebars.registerHelper({
+
+			ifDivider: function(v1, options) {
+		 		if(v1.match(/-----\*\*\*----/)) {
+					return options.fn(this);
+		 		}
+				return options.inverse(this);
+		 	},
+
+		 	formatDate: function(datetime) {
+				// For now just be cheap and lazy and use .toLocaleString(). We can get even fancier later.
+				return new Date(datetime).toLocaleString();
+			}
+			
+		});
 
 		console.log("Choose page to show");
 
