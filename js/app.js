@@ -629,6 +629,7 @@
 			return new Date(datetime).toLocaleString();
 		});
 	}
+	
 	// Handlebar templates compiled at load time to create functions
 	// templates are included to index.html from Templates directory.
 	//confirm_channel_remove
