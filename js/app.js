@@ -85,6 +85,8 @@
 			}, 
 			
 			home: function(type, match, ui, page) {
+                // Check if handlebars is defined.
+                console.log(typeof Handlebars);
 				console.log("home Handler");
 				$.mobile.loading("hide");
 			},
