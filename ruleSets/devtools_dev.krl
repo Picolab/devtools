@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showOAuthClients
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients
 		sharing on
 	}
 
@@ -60,8 +60,7 @@ ruleset devtools {
 		  ;
 		krl_struct;
 		};
-
-		showOAuthClients = function() {
+		showClients = function() {
 			clients = OAuthRegistry:get_my_apps();
 			krl_struct = clients.decode()
 			.klog(">>>>krl_struct")
@@ -183,6 +182,7 @@ ruleset devtools {
 		}
 	}
 	//---------------- channel manager ---------------
+
 	rule CreateChannel {
 	  select when devtools create_channel
 	  pre {
@@ -235,50 +235,46 @@ ruleset devtools {
     rule AuthorizeClient {
 	  select when devtools authorize_client
 	  pre {
-	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
-            result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
-	                                 | {"status": false};
+	    appData = event:attr("appData").defaultsTo("", ">> missing event attr appData >> ");
           }
-	  if(result{"status"}) then {
- 	    send_directive("Created #{channelName}");
+          {
+          	noop();
           }
-	  fired {
-	    log(">> successfully created channels #{channelName} >>");
-          } else {
-	    log(">> could not create channels #{channelName} >>");
-          }
+	  always {
+	   	raise explicit event 'createNewApp'
+  			with appData = appData
         }
+    }
 
     rule RemoveClient {
-	  select when devtools remove_client
+	  select when devtools deleteApp
 	  pre {
-	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
-	    result = CloudOS:channelDestroy(channelID).klog(">> result of creating #{channels} >> ");
+	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
+	    appData = event:attr("appData").defaultsTo("", ">> missing event attr channels >> ");
           }
-	  if(result{"status"}) then {
- 	    send_directive("deleted #{channelID}");
+          {
+          	noop();
           }
-	  fired {
-	    log(">> successfully deleted channel #{channelID} >>");
-          } else {
-	    log(">> could not delete channel #{channelID} >>");
-          }
+	  always {
+	   raise explicit event 'updateApp'
+  			with appData = appData
+  			and appECI = appECI
         }
-        //----------------- not a CloudOS function yet (update channel) ----------------
+    }
     rule UpdateClient {
 	  select when devtools update_client
 	  pre {
-	    channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
-	    result = CloudOS:channelUpdate(channelID, meta:eci()).klog(">> result of updating #{channels} >> ");
+	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
+	    appData = event:attr("appData").defaultsTo("", ">> missing event attr channels >> ");
           }
-	  if(result{"status"}) then {
- 	    send_directive("update #{channelID}");
+          {
+          	noop();
           }
-	  fired {
-	    log(">> successfully updated channel #{channelID} >>");
-          } else {
-	    log(">> could not update channel #{channelID} >>");
-          }
+	  always {
+	   raise explicit event 'updateApp'
+  			with appData = appData
+  			and appECI = appECI
         }
+    }
 }
 
