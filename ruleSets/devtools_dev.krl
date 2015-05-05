@@ -246,7 +246,7 @@ ruleset devtools {
     }
 
     rule RemoveClient {
-	  select when devtools deleteApp
+	  select when devtools remove_client
 	  pre {
 	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
 	    appData = event:attr("appData").defaultsTo("", ">> missing event attr channels >> ");
@@ -255,7 +255,7 @@ ruleset devtools {
           	noop();
           }
 	  always {
-	   raise explicit event 'updateApp'
+	   raise explicit event 'deleteApp'
   			with appData = appData
   			and appECI = appECI
         }
@@ -273,6 +273,21 @@ ruleset devtools {
 	   raise explicit event 'updateApp'
   			with appData = appData
   			and appECI = appECI
+        }
+    }
+    rule UpdateClientCallBack {
+	  select when devtools update_client_call_back
+	  pre {
+	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
+	    oldCbURL = event:attr("oldCbURL").defaultsTo("", ">> missing event attr channels >> ");
+          }
+          {
+          	noop();
+          }
+	  always {
+	   raise explicit event 'updateCallback'
+  			with appData = appData
+  			and oldCbURL = oldCbURL
         }
     }
 }

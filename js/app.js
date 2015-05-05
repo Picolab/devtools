@@ -467,7 +467,7 @@
             var Clients = client_list["clients"];
             $.each(Clients, function(index, client) {
               $("#authorized-clients" ).append(
-               snippets.installed_channels_template(
+               snippets.authorized_clients_template(
                 {"client_name": client["name"],
                 "cid": client["cid"]}
                 )
@@ -486,7 +486,7 @@
          var client = router.getParams(match[1])["client"];
          console.log("client to remove ", client);
          $("#remove-client" ).empty();
-         $("#remove-client").append(snippets.confirm_channel_remove({"channel": client}));
+         $("#remove-client").append(snippets.confirm_client_remove_template({"client": client}));
          $("#remove-client").listview().listview("refresh");
          $('#remove-client-button').off('tap').on('tap', function(event)
          {
@@ -632,7 +632,9 @@
 			installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
 			confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
 			confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
-			about_account: Handlebars.compile($("#about-account-template").html() || "")
+			about_account: Handlebars.compile($("#about-account-template").html() || ""),
+      authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
+      confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || "")
 	};
 
 	function plant_authorize_button()
