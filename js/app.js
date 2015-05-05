@@ -66,7 +66,7 @@
           argsre: true
       
       } },
-      {"#confirm-deAuthorization": {handler: "remove_client",
+      {"#confirm-client-remove": {handler: "remove_client",
           events: "s", // do page before show
           argsre: true
       
@@ -436,17 +436,28 @@
           var athorize_form_data = process_form(frm);
           console.log(">>>>>>>>> client to authorize", athorize_form_data);
           var client_name = athorize_form_data.client_name;
+          var client_Description = athorize_form_data.client_Description;
+          var client_image_url = athorize_form_data.client_image_url;
+          var client_callback_url = athorize_form_data.client_callback_url;
+          var client_declined_url = athorize_form_data.client_declined_url;
         
           if( true //typeof channel_name !== "undefined"
             //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
           ) {
-            Devtools.authorizeClient(client_name, function(directives) {
+          var appData={
+            "appName": client_name,
+            "appDescription": client_Description,
+            "appImageURL": client_image_url,
+            "appCallbackURL": client_callback_url,
+            "appDeclinedURL": client_declined_url
+          };
+            Devtools.authorizeClient(appData, function(directives) {
               console.log("authorize ", client_name, directives);
               $.mobile.changePage("#oAuth-client-registration", {
                 transition: 'slide'
               });
             }); 
-          } else {
+          } else {//never comes here, we dont check for valid name.........
               console.log("Invalid client_name ", client_name);
               $.mobile.loading("hide");
               $.mobile.changePage("#oAuth-client-registration", {
@@ -463,13 +474,15 @@
 
         function populate_Authorized_clients() {
           Devtools.showAthorizedClients(function(client_list){
+            Object.values = obj => Object.keys(obj).map(key => obj[key]);
+            var Clients = Object.values(client_list);
             $("#authorized-clients" ).empty();
-            var Clients = client_list["clients"];
             $.each(Clients, function(index, client) {
               $("#authorized-clients" ).append(
                snippets.authorized_clients_template(
-                {"client_name": client["name"],
-                "cid": client["cid"]}
+                {"appName": client["appName"],
+                "appECI": client["appECI"],
+                "appImageURL":client["appImageURL"]}
                 )
                ).collapsibleset().collapsibleset( "refresh" );
               //$("#installed-rulesets").listview("refresh");

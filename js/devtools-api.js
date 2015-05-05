@@ -261,7 +261,8 @@
         options = options || {};
     var parameters = {appData:app_Data}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("authorizing clientlient");
+        console.log(parameters);
+        Devtools.log("authorizing clientlient ");
        return CloudOS.raiseEvent("devtools", "authorize_client", parameters,{}, function(json) {
            Devtools.log("Directive from AuthorizeClient", json);
            cb(json);
