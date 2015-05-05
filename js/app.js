@@ -380,6 +380,10 @@
 						
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
+						
+						channels.sort(function(a, b){
+							return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
+						});
 
 						dynamicChannelItems = "";
 						$.each(channels, function(index, channel) {
@@ -474,7 +478,7 @@
 
         function populate_Authorized_clients() {
           Devtools.showAthorizedClients(function(client_list){
-            Object.values = obj => Object.keys(obj).map(key => obj[key]);
+            //Object.values = obj => Object.keys(obj).map(key => obj[key]);
             var Clients = Object.values(client_list);
             $("#authorized-clients" ).empty();
             $.each(Clients, function(index, client) {
