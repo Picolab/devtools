@@ -20,7 +20,6 @@ ruleset devtools {
 		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients
 		sharing on
 	}
-
 	global {
 		
 		showRulesets = function(){
