@@ -122,7 +122,8 @@
 							dynamicRegRulesets += 
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
-									"uri": rids["uri"]}
+									"uri": rids["uri"],
+									"encoded": encodeURIComponent(rids["uri"])}
 									);
 						});
 						$("#manage-list").append(dynamicRegRulesets).collapsibleset().collapsibleset("refresh");
@@ -235,11 +236,14 @@
 				$(url_frm)[0].reset(); // clear the fields in the form
 	
 
-				var rid = router.getParams(match[1])["rid"]; 
+				var rid = router.getParams(match[1])["rid"];
+				var oldUrl = router.getParams(match[1])["url"];
 				console.log("RID to update URL of: ", rid);
 				
 				var frmLabel = "URL for " + rid + " ";
 				$("#urlLabel").html(frmLabel);
+				
+				$("#url").val(oldUrl);
 				
 
 				//-------------------Update URL-------------------------------
