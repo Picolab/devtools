@@ -2,6 +2,11 @@
 {
 	var router = new $.mobile.Router( 
 		[
+			{"": {handler: "authCheck", //run before every page change
+					events: "bC", // before change
+					step: "string"
+			} },
+			
 			{"#page-authorize": {handler: "pageAuthorize",
 					events: "s", // do when we show the page
 					argsre: true
@@ -79,6 +84,17 @@
 		],
 
 		{
+			authCheck: function(type, match, ui, page, e) {
+				e.preventDefault();
+				console.log("authCheck handler called");
+				var pageComponents = ui.toPage.split("#");
+				if (!CloudOS.authenticatedSession()){
+					pageComponents[pageComponents.length-1] = "page-authorize";
+					ui.toPage = pageComponents.join("#");
+				}
+				ui.bCDeferred.resolve();
+			},
+			
 			pageAuthorize: function(type, match, ui, page) {
 				console.log("manage fuse: authorize page");
 				$.mobile.loading("hide");
