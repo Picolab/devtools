@@ -498,10 +498,10 @@
 
         function populate_Authorized_clients() {
           Devtools.showAthorizedClients(function(client_list){
-            //Object.values = obj => Object.keys(obj).map(key => obj[key]);
-            var Clients = Object.values(client_list);
+
             $("#authorized-clients" ).empty();
-            $.each(Clients, function(index, client) {
+
+            $.each(client_list, function(index, client) {
               $("#authorized-clients" ).append(
                snippets.authorized_clients_template(
                 {"appName": client["appName"],
@@ -511,6 +511,7 @@
                ).collapsibleset().collapsibleset( "refresh" );
               //$("#installed-rulesets").listview("refresh");
             });
+
             $.mobile.loading("hide");
           });
         }
