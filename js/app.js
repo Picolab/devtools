@@ -86,9 +86,9 @@
 		{
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
-				console.log("authCheck handler called");
-				var pageComponents = ui.toPage.split("#");
+				console.log("authChecked");
 				if (!CloudOS.authenticatedSession()){
+					var pageComponents = ui.toPage.split("#");
 					pageComponents[pageComponents.length-1] = "page-authorize";
 					ui.toPage = pageComponents.join("#");
 				}
@@ -708,52 +708,55 @@
 		});
 
 		Handlebars.registerHelper('ifDivider', function(v1, options) {
-		 if(v1.match(/-----\*\*\*----/)) {
-			return options.fn(this);
-		 }
+			if(v1.match(/-----\*\*\*----/)) {
+				return options.fn(this);
+			}
 			return options.inverse(this);
-		 });
+		});
 
 		console.log("Choose page to show");
 
-    function persistant_bootstrap(){
-      Devtools.status(function(rid_list){
-         var rids = rid_list["rids"];
-        if ($.inArray('b506607x14.prod', rids) > -1) {
-        console.log("true , Bootstrapped");
 
-        return true;}
-      else {
-        console.log("false , Bootstrapped");
-				//------------------------------------------------------------------------needs to be recoded
-        CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
-        {
-          if(response.length < 1) {
-              throw "Account initialization failed";// should rebootstrap with exponential back off.......
-          }
-        });
-				//------------------------------------------------------------------------needs to be recoded
-        return false;}
-         
-       });
-      
-
-    }
+		var timeToWait = 0;
+		var timeStep = 500;
+		function persistant_bootstrap(){
+			Devtools.status(function(rid_list){
+				var rids = rid_list["rids"];
+				if ($.inArray('b506607x14.prod', rids) > -1) {
+					console.log("true , Bootstrapped");
+					return true;
+				}
+				else {
+					console.log("false , Bootstrapped");
+					if (timeToWait >= 10 * timeStep) {
+						throw "Bootstrap failure";
+					}
+					else {
+						setTimeout(function() {
+							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+								timeToWait += timeStep;
+								persistant_bootstrap();
+						})}, timeToWait);
+					}
+					return false;
+				}
+			});
+		}
+		
+		
+		
 		try {
-
-      persistant_bootstrap();
-
-
 			var authd = CloudOS.authenticatedSession();
 			if(authd) {
 				console.log("Authorized");
+				persistant_bootstrap();
 				document.location.hash = "#home";
 			} else {  
 				console.log("Asking for authorization");
 				document.location.hash = "#page-authorize";
 			}
 		} catch (exception) {
-
+			
 		} finally {
 			$.mobile.initializePage();
 			$.mobile.loading("hide");
