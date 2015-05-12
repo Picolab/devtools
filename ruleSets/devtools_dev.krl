@@ -185,6 +185,8 @@ ruleset devtools {
 	rule CreateChannel {
 	  select when devtools create_channel
 	  pre {
+		channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>")
+		.klog(">>>>> list of channel. ");
 	    channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
             result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
 	                                 | {"status": false};
