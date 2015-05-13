@@ -2,6 +2,11 @@
 {
 	var router = new $.mobile.Router( 
 		[
+			{"": {handler: "authCheck", //run before every page change
+					events: "bC", // before change
+					step: "string"
+			} },
+			
 			{"#page-authorize": {handler: "pageAuthorize",
 					events: "s", // do when we show the page
 					argsre: true
@@ -66,7 +71,7 @@
           argsre: true
       
       } },
-      {"#confirm-deAuthorization": {handler: "remove_client",
+      {"#confirm-client-remove": {handler: "remove_client",
           events: "s", // do page before show
           argsre: true
       
@@ -79,6 +84,17 @@
 		],
 
 		{
+			authCheck: function(type, match, ui, page, e) {
+				e.preventDefault();
+				console.log("authChecked");
+				if (!CloudOS.authenticatedSession()){
+					var pageComponents = ui.toPage.split("#");
+					pageComponents[pageComponents.length-1] = "page-authorize";
+					ui.toPage = pageComponents.join("#");
+				}
+				ui.bCDeferred.resolve();
+			},
+			
 			pageAuthorize: function(type, match, ui, page) {
 				console.log("manage fuse: authorize page");
 				$.mobile.loading("hide");
@@ -122,7 +138,8 @@
 							dynamicRegRulesets += 
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
-									"uri": rids["uri"]}
+									"uri": rids["uri"],
+									"encoded": encodeURIComponent(rids["uri"])}
 									);
 						});
 						$("#manage-list").append(dynamicRegRulesets).collapsibleset().collapsibleset("refresh");
@@ -235,11 +252,14 @@
 				$(url_frm)[0].reset(); // clear the fields in the form
 	
 
-				var rid = router.getParams(match[1])["rid"]; 
+				var rid = router.getParams(match[1])["rid"];
+				var oldUrl = router.getParams(match[1])["url"];
 				console.log("RID to update URL of: ", rid);
 				
 				var frmLabel = "URL for " + rid + " ";
 				$("#urlLabel").html(frmLabel);
+				
+				$("#url").val(oldUrl);
 				
 
 				//-------------------Update URL-------------------------------
@@ -380,6 +400,10 @@
 						
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
+						
+						channels.sort(function(a, b){
+							return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
+						});
 
 						dynamicChannelItems = "";
 						$.each(channels, function(index, channel) {
@@ -436,17 +460,28 @@
           var athorize_form_data = process_form(frm);
           console.log(">>>>>>>>> client to authorize", athorize_form_data);
           var client_name = athorize_form_data.client_name;
+          var client_Description = athorize_form_data.client_Description;
+          var client_image_url = athorize_form_data.client_image_url;
+          var client_callback_url = athorize_form_data.client_callback_url;
+          var client_declined_url = athorize_form_data.client_declined_url;
         
           if( true //typeof channel_name !== "undefined"
             //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
           ) {
-            Devtools.authorizeClient(client_name, function(directives) {
+          var appData={
+            "appName": client_name,
+            "appDescription": client_Description,
+            "appImageURL": client_image_url,
+            "appCallbackURL": client_callback_url,
+            "appDeclinedURL": client_declined_url
+          };
+            Devtools.authorizeClient(appData, function(directives) {
               console.log("authorize ", client_name, directives);
               $.mobile.changePage("#oAuth-client-registration", {
                 transition: 'slide'
               });
             }); 
-          } else {
+          } else {//never comes here, we dont check for valid name.........
               console.log("Invalid client_name ", client_name);
               $.mobile.loading("hide");
               $.mobile.changePage("#oAuth-client-registration", {
@@ -463,17 +498,20 @@
 
         function populate_Authorized_clients() {
           Devtools.showAthorizedClients(function(client_list){
+
             $("#authorized-clients" ).empty();
-            var Clients = client_list["clients"];
-            $.each(Clients, function(index, client) {
+
+            $.each(client_list, function(index, client) {
               $("#authorized-clients" ).append(
-               snippets.installed_channels_template(
-                {"client_name": client["name"],
-                "cid": client["cid"]}
+               snippets.authorized_clients_template(
+                {"appName": client["appName"],
+                "appECI": client["appECI"],
+                "appImageURL":client["appImageURL"]}
                 )
                ).collapsibleset().collapsibleset( "refresh" );
               //$("#installed-rulesets").listview("refresh");
             });
+
             $.mobile.loading("hide");
           });
         }
@@ -486,7 +524,7 @@
          var client = router.getParams(match[1])["client"];
          console.log("client to remove ", client);
          $("#remove-client" ).empty();
-         $("#remove-client").append(snippets.confirm_channel_remove({"channel": client}));
+         $("#remove-client").append(snippets.confirm_client_remove_template({"client": client}));
          $("#remove-client").listview().listview("refresh");
          $('#remove-client-button').off('tap').on('tap', function(event)
          {
@@ -632,7 +670,9 @@
 			installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
 			confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
 			confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
-			about_account: Handlebars.compile($("#about-account-template").html() || "")
+			about_account: Handlebars.compile($("#about-account-template").html() || ""),
+      authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
+      confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || "")
 	};
 
 	function plant_authorize_button()
@@ -685,44 +725,47 @@
 
 		console.log("Choose page to show");
 
-    function persistant_bootstrap(){
-      Devtools.status(function(rid_list){
-         var rids = rid_list["rids"];
-        if ($.inArray('b506607x14.prod', rids) > -1) {
-        console.log("true , Bootstrapped");
 
-        return true;}
-      else {
-        console.log("false , Bootstrapped");
-				//------------------------------------------------------------------------needs to be recoded
-        CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
-        {
-          if(response.length < 1) {
-              throw "Account initialization failed";// should rebootstrap with exponential back off.......
-          }
-        });
-				//------------------------------------------------------------------------needs to be recoded
-        return false;}
-         
-       });
-      
-
-    }
+		var timeToWait = 0;
+		var timeStep = 500;
+		function persistant_bootstrap(){
+			Devtools.status(function(rid_list){
+				var rids = rid_list["rids"];
+				if ($.inArray('b506607x14.prod', rids) > -1) {
+					console.log("true , Bootstrapped");
+					return true;
+				}
+				else {
+					console.log("false , Bootstrapped");
+					if (timeToWait >= 10 * timeStep) {
+						throw "Bootstrap failure";
+					}
+					else {
+						setTimeout(function() {
+							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+								timeToWait += timeStep;
+								persistant_bootstrap();
+						})}, timeToWait);
+					}
+					return false;
+				}
+			});
+		}
+		
+		
+		
 		try {
-
-      persistant_bootstrap();
-
-
 			var authd = CloudOS.authenticatedSession();
 			if(authd) {
 				console.log("Authorized");
+				persistant_bootstrap();
 				document.location.hash = "#home";
 			} else {  
 				console.log("Asking for authorization");
 				document.location.hash = "#page-authorize";
 			}
 		} catch (exception) {
-
+			
 		} finally {
 			$.mobile.initializePage();
 			$.mobile.loading("hide");

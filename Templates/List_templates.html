@@ -7,7 +7,7 @@
      </h4>
      
     <div style = "padding-top: 10px; padding-bottom:20px;"> 
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#updating-url?rid={{rid}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit URL</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#updating-url?rid={{rid}}&url={{encoded}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit URL</a></p>
 
          <p style="position:relative; top:-20px"><a href="#" id="{{rid}}" style="float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton">Flush</a></p>
 
@@ -54,14 +54,15 @@
   <h1>Do NOT delete channels unless you know what you're doing.<br> Deletion of key channels could make your pico inoperable.</h1>
   </li>
 </div>
-<!--      Authorize clients      -->
+<!--      Authorize clients      appimageURL is not being used--> 
 <div id="authorized-clients-template" style="display:none;">
-   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{client_name}} ({{cid}})" data-theme="a" data-content-theme="a">
-     <h4>{{client_name}} ({{cid}})</h4>
+   <div id="{{appECI}}" data-role="collapsible" data-filtertext="{{appName}} ({{appECI}})" data-theme="a" data-content-theme="a">
+     <h4>{{appName}} ({{appECI}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-client-remove?client={{appECI}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
          <!--<h2>client Attributes</h2>-->
-       <p><b>client ID:</b> {{cid}}</p>
+       <p><b>client ECI:</b> {{appECI}}
+       <img src={{appImageURL}}></p>
      </div>
    </div>
 </div>

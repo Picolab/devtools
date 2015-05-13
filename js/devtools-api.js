@@ -255,15 +255,16 @@
 
     },
     //---------------------------------Authorize Client mannagement----------------
-    authorizeClient: function(client_name, cb, options)
+    authorizeClient: function(app_Data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
-    var parameters = {channelName:channel_name}; 
+    var parameters = {appData:app_Data}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Installing channels");
-       return CloudOS.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
-           Devtools.log("Directive from create channel", json);
+        console.log(parameters);
+        Devtools.log("authorizing clientlient ");
+       return CloudOS.raiseEvent("devtools", "authorize_client", parameters,{}, function(json) {
+           Devtools.log("Directive from AuthorizeClient", json);
            cb(json);
        }, {"eci":eci});
     },
@@ -273,35 +274,51 @@
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Showing the showing clients");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOAuthClients", {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
             Devtools.log("Displaying athorize clients", json);
             cb(json);
         }, {"eci":eci});
     },
-    removeClient: function(client, cb, options)
+    removeClient: function(app_ECI,app_Data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {channelID:ECI}; 
+        var json = {appECI:app_ECI,
+                    appData:app_Data}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Destroy channels");
-        return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
-           Devtools.log("Directive from create channel", json);
+        Devtools.log("remove client");
+        return CloudOS.raiseEvent("devtools", "remove_client", json,{}, function(json) {
+           Devtools.log("Directive from remove client", json);
            cb(json);
         }, {"eci":eci});
     },
-    updateClient: function(client, cb, options)
+    updateClient: function(app_ECI, app_Data, options)
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: rid,url: url}; //not sure what this does
+        var json = {appECI:app_ECI,
+                    appData:app_Data}; 
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Updating the URL");
-        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
-            Devtools.log("Directive from updating URL", json);
+        Devtools.log("Updating client");
+        return CloudOS.raiseEvent("devtools", "update_client", json, {}, function(json) {
+            Devtools.log("Directive from updating Client", json);
+            cb(json);
+        }, {"eci":eci});
+    },
+    updateClientCallBack: function(app_ECI, old_CbURL, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var json = {appECI:app_ECI,
+                    oldCbURL:old_CbURL}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Updating client callback");
+        return CloudOS.raiseEvent("devtools", "update_client_call_back", json, {}, function(json) {
+            Devtools.log("Directive from updating Client CallBack", json);
             cb(json);
         }, {"eci":eci});
     }
+   // lookupScheduledEvent: function(){}
 //
 }; //closes the "window" inside the function DON'T DELETE
 
