@@ -22,6 +22,7 @@ ruleset devtools {
 	}
 	global {
 		
+		
 		showRulesets = function(){
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
