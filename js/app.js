@@ -558,6 +558,14 @@
 					
 
 					Devtools.showInstalledRulesets(function(ruleset_list){
+						if (ruleset_list.error == 102) {
+							$.noty.get(noty({
+								timeout: false,
+								text: "You just broke your account, please reload this app to fix it.",
+								type: "error"
+							}));
+							return;
+						}
 						$("#installed-rulesets" ).empty();
 					 	console.log("Retrieved installed rulesets");
 					 	
