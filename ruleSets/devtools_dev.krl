@@ -22,6 +22,7 @@ ruleset devtools {
 	}
 	global {
 		
+		
 		showRulesets = function(){
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
@@ -236,14 +237,14 @@ ruleset devtools {
     rule AuthorizeClient {
 	  select when devtools authorize_client
 	  pre {
-	    appData = event:attr("appData").defaultsTo("", ">> missing event attr appData >> ");
+	    appData = event:attrs().defaultsTo("", ">> missing event attr appData >> ");
           }
           {
           	noop();
           }
 	  always {
-	   	raise explicit event 'createNewApp'
-  			with appData = appData
+      raise explicit event createNewApp for a41x226
+        with appData = appData;
         }
     }
 
