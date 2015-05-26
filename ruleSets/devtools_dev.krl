@@ -234,19 +234,19 @@ ruleset devtools {
           }
         }
     //-------------------OAuthRegistry---------------
-    rule AuthorizeClient {
-	  select when devtools authorize_client
-	  pre {
-	    appData = event:attrs().defaultsTo("", ">> missing event attr appData >> ");
-          }
-          {
-          	noop();
-          }
-	  always {
-      raise explicit event createNewApp for a41x226
-        with appData = appData;
-        }
-    }
+//    rule AuthorizeClient {
+//	  select when devtools authorize_client
+//	  pre {
+//	    appData = event:attrs().defaultsTo("", ">> missing event attr appData >> ");
+//          }
+//          {
+//          	noop();
+//          }
+//	  always {
+//      raise explicit event createNewApp for a41x226
+//        with appData = appData;
+//        }
+//    }
 
     rule RemoveClient {
 	  select when devtools remove_client
