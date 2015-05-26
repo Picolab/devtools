@@ -67,6 +67,9 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
+		appData = function(appECI) {
+			OAuthRegistry:get_my_apps()[appECI].decode();
+		};
 	}
 
 	
@@ -252,13 +255,13 @@ ruleset devtools {
 	  select when devtools remove_client
 	  pre {
 	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
-	    appData = event:attr("appData").defaultsTo("", ">> missing event attr channels >> ");
+	    appData = appData(appECI);
           }
           {
           	noop();
           }
 	  always {
-	   raise explicit event 'deleteApp'
+	   raise explicit event deleteApp for a41x226
   			with appData = appData
   			and appECI = appECI
         }
@@ -273,7 +276,7 @@ ruleset devtools {
           	noop();
           }
 	  always {
-	   raise explicit event 'updateApp'
+	   raise explicit event updateApp for a41x226
   			with appData = appData
   			and appECI = appECI
         }
@@ -288,10 +291,9 @@ ruleset devtools {
           	noop();
           }
 	  always {
-	   raise explicit event 'updateCallback'
+	   raise explicit event updateCallback for a41x226
   			with appData = appData
   			and oldCbURL = oldCbURL
         }
     }
 }
-
