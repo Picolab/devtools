@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, appData
 		sharing on
 	}
 	global {
@@ -68,7 +68,9 @@ ruleset devtools {
 			krl_struct;
 		};
 		appData = function(appECI) {
-			OAuthRegistry:get_my_apps()[appECI].decode();
+			appData = OAuthRegistry:get_my_apps();
+			appData = appData[appECI].decode();
+			appData;
 		};
 	}
 
