@@ -69,7 +69,7 @@ ruleset devtools {
 		};
 		appData = function(appECI) {
 			appData = OAuthRegistry:get_my_apps();
-			appData = appData.decode();
+			//appData = appData.decode();
 			appData = appData.values([appECI]);
 			appData;
 		};
