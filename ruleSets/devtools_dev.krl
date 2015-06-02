@@ -327,7 +327,7 @@ ruleset devtools {
     rule UpdateClient {
 	  select when devtools update_client
 	    pre {
-	      oldApp = app:appRegistry{event:attr("appECI")};
+	      oldApp = app:appRegistry{event:attr("appECI")}.klog(">>>>>> oldApp >>>>>>>");
 	      resp = pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
 
 	      appData = (
