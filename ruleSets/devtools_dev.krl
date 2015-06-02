@@ -328,12 +328,14 @@ ruleset devtools {
 	  select when devtools update_client
 	    pre {
 	      oldApp = app:appRegistry{event:attr("appECI")};
+	      resp = pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
 
 	      appData = (
 	        ((event:attr("appData")
 	        ).put(["appSecret"], oldApp{"appSecret"})
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
+          reg = pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
 
 	      apps = (ent:apps || {}).put([oldApp{"appECI"}], appData);
 
@@ -357,6 +359,7 @@ ruleset devtools {
 	          and  oldCbURL = oldApp{"appCallbackURL"};
 	    }
     }
+    /*
     rule UpdateClientCallBack {
 		select when devtools update_client_call_back
 		pre {
@@ -378,5 +381,5 @@ ruleset devtools {
       if (true) then {
           noop();
       }
-    }
+    }*/
 }
