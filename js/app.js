@@ -464,9 +464,10 @@
 				 console.log("Showing uninstall channel page");
 				 $.mobile.loading("hide");
 				 var channel = router.getParams(match[1])["channel"];
+				 var name = router.getParams(match[1])["name"];
 				 console.log("channel to uninstall: ", channel);
 				 $("#remove-channel" ).empty();
-				 $("#remove-channel").append(snippets.confirm_channel_remove({"channel": channel}));
+				 $("#remove-channel").append(snippets.confirm_channel_remove({"channel": channel,"name":name}));
 				 $("#remove-channel").listview().listview("refresh");
 				 $('#remove-channel-button').off('tap').on('tap', function(event)
 				 {
