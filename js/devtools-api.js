@@ -277,12 +277,11 @@
             cb(json);
         }, {"eci":eci});
     },
-    removeClient: function(app_ECI,app_Data, cb, options)
+    removeClient: function(app_ECI, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {appECI:app_ECI,
-                    appData:app_Data}; 
+        var json = {appECI:app_ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("remove client");
         return CloudOS.raiseEvent("devtools", "remove_client", json,{}, function(json) {
@@ -290,7 +289,7 @@
            cb(json);
         }, {"eci":eci});
     },
-    updateClient: function(app_ECI, app_Data, options)
+    updateClient: function(app_ECI, app_Data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -302,7 +301,7 @@
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, {"eci":eci});
-    },
+    }/*,
     updateClientCallBack: function(app_ECI, old_CbURL, options)
     {
         cb = cb || function(){};
@@ -315,7 +314,7 @@
             Devtools.log("Directive from updating Client CallBack", json);
             cb(json);
         }, {"eci":eci});
-    }
+    }*/
    // lookupScheduledEvent: function(){}
 //
 }; //closes the "window" inside the function DON'T DELETE

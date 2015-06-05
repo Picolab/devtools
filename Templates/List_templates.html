@@ -33,16 +33,37 @@
 </div>
 
 <div id="installed-channels-template" style="display:none;">
+   <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a">
+     <h4>{{Type}}</h4>
+
+    <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="{{Type}}2">
+    </div>
+
+
+   </div>
+</div>
+
+<<div id="installed-channels-template2" style="display:none;">
    <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
      <h4>{{channel_name}} ({{cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
+        <p><b>Last Active:</b> {{time}}</p>
          <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
-         <!--<h2>Channel Attributes</h2>-->
        <p><b>Channel ID:</b> {{cid}}</p>
      </div>
    </div>
 </div>
 
+<!--<div id="installed-channels-template" style="display:none;">
+   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{channel_name}} ({{cid}})</h4>
+    <div style = "padding-top: 18px; padding-bottom:24px;"> 
+    
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
+       <p><b>Channel ID:</b> {{cid}}</p>
+     </div>
+   </div>
+</div>-->
 <div id="confirm-channel-remove-template" style="display:none;">
   <li data-role="list-divider" >Delete Channel</li>
   <li>
@@ -60,6 +81,7 @@
      <h4>{{appName}} ({{appECI}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
          <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-client-remove?client={{appECI}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#update-client?client={{appECI}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit client</a></p>
          <!--<h2>client Attributes</h2>-->
        <p><b>client ECI:</b> {{appECI}}
        <img src={{appImageURL}}></p>

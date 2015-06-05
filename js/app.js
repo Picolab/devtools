@@ -397,23 +397,62 @@
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
-						
+						//parse json into list of list by type
+
+						//use teplate to format 
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
-						
-						channels.sort(function(a, b){
-							return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
+						//var reg = /OAUTH*/;
+						var map = {};
+						var key = "";
+
+						$.each(channels, function(index, channel) {
+							key= channel["type"].substr(0,5);
+							//reg = new RegExp(key+'*')];
+							//if(map[reg]){map[channel[reg]].push(channel);}
+							if(map[key]){map[key].push(channel);}
+							else{
+								map[key]=[channel];
+							}
 						});
 
+						console.log("map of channels",map);
 						dynamicChannelItems = "";
-						$.each(channels, function(index, channel) {
-							dynamicChannelItems +=
-							 snippets.installed_channels_template(
-								{"channel_name": channel["name"],
-								"cid": channel["cid"]}
-								);
-					  });
-					  $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+						dynamicChannelItems2 = "";
+						key = "";
+						time = "";
+						$.each(map, function(index, chAray) {
+							dynamicChannelItems2 = "";
+							dynamicChannelItems = "";
+							//Sort
+							chAray.sort(function(a, b){
+							return ((a.last_active>b.last_active) ?-1:1);
+							//return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
+							});
+							//inner div
+							$.each(chAray,function(index,channel){
+								time = new Date(channel["last_active"]*1000);
+								dynamicChannelItems2 +=
+								 snippets.installed_channels_template2(
+									{"channel_name": channel["name"],
+									"cid": channel["cid"],
+									"time": time }
+									);
+
+								 key = channel["type"].substr(0,5);//hack of how to get key, assigned every iteration(bad)
+						  });
+						  //outter div
+							dynamicChannelItems += 
+								snippets.installed_channels_template(
+									{"Type": key}//,
+										//"channelDivs": dynamicChannelItems2}
+									);
+					  		$("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+					  		$("#"+key+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
+
+							});
+						
+					 // $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
 					  $.mobile.loading("hide");
 				  });
 				}
@@ -464,16 +503,22 @@
           var client_image_url = athorize_form_data.client_image_url;
           var client_callback_url = athorize_form_data.client_callback_url;
           var client_declined_url = athorize_form_data.client_declined_url;
-        
+          var client_info_page_url = athorize_form_data.client_info_page_url;
+          var client_bootstrapRids = athorize_form_data.client_bootstrapRids;
           if( true //typeof channel_name !== "undefined"
             //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
           ) {
           var appData={
+
+         		"info_page": client_info_page_url,
+         		"bootstrapRids": client_bootstrapRids,
+
             "appName": client_name,
             "appDescription": client_Description,
             "appImageURL": client_image_url,
             "appCallbackURL": client_callback_url,
             "appDeclinedURL": client_declined_url
+
           };
             Devtools.authorizeClient(appData, function(directives) {
               console.log("authorize ", client_name, directives);
@@ -546,6 +591,54 @@
 
       update_client: function(type, match, ui, page){
         console.log("Showing update client page")
+        $.mobile.loading("hide");
+        var frm = "#form-update-client";
+          $(frm)[0].reset(); // clear the fields in the form
+				var client = router.getParams(match[1])["client"];
+          $('#update-client-confirm-button').off('tap').on('tap', function(event)
+        {
+          $.mobile.loading("show", {
+            text: "Updating Client...",
+            textVisible: true
+          });
+          var athorize_form_data = process_form(frm);
+          console.log(">>>>>>>>> client to update", athorize_form_data);
+          var client_name = athorize_form_data.client_name;
+          var client_Description = athorize_form_data.client_Description;
+          var client_image_url = athorize_form_data.client_image_url;
+          var client_callback_url = athorize_form_data.client_callback_url;
+          var client_declined_url = athorize_form_data.client_declined_url;
+          var client_info_page_url = athorize_form_data.client_info_page_url;
+          var client_bootstrapRids = athorize_form_data.client_bootstrapRids;
+          if( true //typeof channel_name !== "undefined"
+            //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
+          ) {
+          var appData={
+
+         		"info_page": client_info_page_url,
+         		"bootstrapRids": client_bootstrapRids,
+
+            "appName": client_name,
+            "appDescription": client_Description,
+            "appImageURL": client_image_url,
+            "appCallbackURL": client_callback_url,
+            "appDeclinedURL": client_declined_url
+
+          };
+            Devtools.updateClient(client,appData, function(directives) {
+              console.log("update ", client_name, directives);
+              $.mobile.changePage("#oAuth-client-registration", {
+                transition: 'slide'
+              });
+            }); 
+          } else {//never comes here, we dont check for valid name.........
+              console.log("Invalid client_name ", client_name);
+              $.mobile.loading("hide");
+              $.mobile.changePage("#oAuth-client-registration", {
+                transition: 'slide'
+              });
+          }
+        });
 
       },
 
@@ -667,6 +760,7 @@
 			list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
 			logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
 			installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
+			installed_channels_template2: Handlebars.compile($("#installed-channels-template2").html() || ""),
 			installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
 			confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
 			confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
