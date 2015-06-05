@@ -436,7 +436,8 @@
 								 snippets.installed_channels_template2(
 									{"channel_name": channel["name"],
 									"cid": channel["cid"],
-									"time": time }
+									"time": time,
+									"attributes":channel["attributes"] }
 									);
 
 								 key = channel["type"].substr(0,5);//hack of how to get key, assigned every iteration(bad)
