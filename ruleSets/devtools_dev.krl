@@ -306,7 +306,7 @@ ruleset devtools {
     rule RemoveClient {
 	  select when devtools remove_client
 	  pre {
-	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
+	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
 	    developer_secret = get_secret(appECI);
 	    //undo all of pci pemissions
 	    isset = pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??

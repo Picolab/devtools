@@ -281,9 +281,10 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {appECI:app_ECI}; 
+        var json = {"appECI":app_ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("remove client");
+        console.log("attributes",json);
         return CloudOS.raiseEvent("devtools", "remove_client", json,{}, function(json) {
            Devtools.log("Directive from remove client", json);
            cb(json);
