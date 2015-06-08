@@ -313,10 +313,10 @@ ruleset devtools {
 	    	//isset = pci:remove
 	    	//isset = pci:remove_appinfo(appECI);
 	    //remove app from persistant varibles. 
-	    apps = ent:apps;
-	    apps = apps.delete([appECI]);
-	    appRegistry = app:appRegistry;
-	    appRegistry = appRegistry.delete([appECI]);
+	    apps = ent:apps.klog(">>>>>> apps >>>>>>>");
+	    apps = apps.delete([appECI]).klog(">>>>>> apps delete >>>>>>>");
+	    appRegistry = app:appRegistry.klog(">>>>>> app >>>>>>>");
+	    appRegistry = appRegistry.delete([appECI]).klog(">>>>>> app delete >>>>>>>");
           }
           {
           	noop();
