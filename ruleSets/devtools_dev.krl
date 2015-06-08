@@ -68,7 +68,10 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
-
+		updatePCIbootstrap = defaction(bootstrapRids){
+			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
+			send_directive("pci bootstraps updated");
+		}
 		//------------------------------- Authorize clients-------------------
 		get_my_apps = function(){
 	      ent:appRegistry
@@ -273,7 +276,7 @@ ruleset devtools {
       	  bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 
       	  // [FIXME, PJW] hack. a41x226 shouldn't be keeping this data, should be in PCI
-    	  appinfo = pci:add_appinfo(appECI, 
+    	  appinfo = pci:add_appinfo(appECI, // is appinfo used anywhere????????
     	    {"icon": appDataPassed{"appImageURL"},
       		"name": appDataPassed{"appName"},
          	"description": appDataPassed{"appDescription"},
@@ -286,9 +289,9 @@ ruleset devtools {
 	        ).put(["appECI"], application_eci)
 	      );
 
-	      apps = (ent:apps || {}).put([application_eci], appData);
+	      apps = (ent:appRegistry || {}).put([application_eci], appData);
 	    }
-	    if (
+	    if (// redundant???
 	      appData &&
 	      appData{"appName"} &&
 	      appData{"appImageURL"} &&
@@ -298,52 +301,46 @@ ruleset devtools {
 	      noop();
 	    }
 	    fired {
-	      log appCallbackURL;
-	      set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty????
-	      set app:appRegistry{application_eci} appData if (application_eci);
-	      set ent:apps apps;
+	      log appCallbackURL;//???????????
+	      //set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
+	      //set app:appRegistry{application_eci} appData if (application_eci);
+	      set app:appRegistry apps;
 	    }
     }
 
     rule RemoveClient {
-	  select when devtools remove_client
-	  pre {
-	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
-	    developer_secret = get_secret(appECI);
-	    //undo all of pci pemissions
-	    //isset = pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+	  	select when devtools remove_client
+	  	pre {
+	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
+	    	developer_secret = get_secret(appECI);
 	    	//isset = pci:remove
 	    	//isset = pci:remove_appinfo(appECI);
-	    //remove app from persistant varibles. 
-	    apps = (app:apps).klog(">>>>>> apps delete >>>>>>>");
-	    appRegistry = app:appRegistry.klog(">>>>>> app >>>>>>>");
-	    //appRegistry = appRegistry.delete([appECI]).klog(">>>>>> app delete >>>>>>>");
-          }
-          {
-          	noop();
-          }
-	  always {
-	  	set app:appRegistry appRegistry;
-	  	set ent:apps;
+	    	apps = app:appRegistry;
+		}//remove app from persistant varibles. 
+	    if (app:appRegistry{appECI}) then {
+	  		//undo all of pci pemissions
+	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+			send_directive("removing  #{appECI}");
+        }
+	  	fired { 
+	  		set app:appRegistry apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
         }
     }
     rule UpdateClient {
 	  select when devtools update_client
 	    pre {
 	      oldApp = app:appRegistry{event:attr("appECI").klog(">>>>>> appECI >>>>>>>")}.klog(">>>>>> oldApp >>>>>>>");
-	      resp = pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
-
-	      appData = (
+	      appData = ( // keep apps secrets 
 	        ((event:attr("appData")
 	        ).put(["appSecret"], oldApp{"appSecret"})
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
-          reg = pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
-
-	      apps = (ent:apps || {}).put([oldApp{"appECI"}], appData);
+	    
+	      bootstrapRids = appData{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+	      apps = (ent:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
 
 	    }
-	        if (
+	        if ( // valid input for update... is it checked one level down? do we need this check?
 	      oldApp &&
 	      appData &&
 	      appData{"appName"} &&
@@ -351,21 +348,34 @@ ruleset devtools {
 	      appData{"appCallbackURL"} &&
 	      appData{"appDeclinedURL"}
 	    ) then{
-	      noop();
+	        send_directive("Updating clients");
+	      	pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
+          	pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
+	     	pci:list_bootstrap(appECI);
+	     	pci:add_appinfo(appECI, 
+		        {"icon": appData{"appImageURL"},
+		         "name": appData {"appName"},
+		         "description": appData {"appDescription"},
+		         "info_page": appData {"appInfoURL"}
+		        });
+	      	pci:remove_bootstrap(appECI, oldBootstrapRids);
+	      	updatePCIbootstrap(bootstrapRids);// hack.. is there a better way?
+      	//	bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	    }
 	    fired {
-	      set app:appRegistry {} if (not app:appRegistry);
-	      set app:appRegistry{oldApp{"appECI"}} appData if(appData);
-	      set ent:apps apps;
-	      raise explicit event updateCallback 
-	          with appECI = oldApp{"appECI"}
-	          and  oldCbURL = oldApp{"appCallbackURL"};
+	    //  set app:appRegistry {} if (not app:appRegistry);
+	    //  set app:appRegistry{oldApp{"appECI"}} appData if(appData);
+	      set ent:appRegistry apps;
+	   //   raise explicit event updateCallback 
+	   //       with appECI = oldApp{"appECI"}
+	   //       and  oldCbURL = oldApp{"appCallbackURL"};
 	    }
 	}
-	  rule ImportClientDataBase {
+	  rule ImportClientDataBase {// only call once before you create any clients.
 	  select when devtools ImportClientDataBase
 	  pre {
 	    	apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
+	    	apps = apps.union(app:appRegistry);
           }
           {
           	noop();
