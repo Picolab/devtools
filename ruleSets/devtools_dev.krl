@@ -68,9 +68,10 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
+
 		//------------------------------- Authorize clients-------------------
 		get_my_apps = function(){
-	      ent:apps
+	      ent:appRegistry
 	    };
 
 	    get_app = function(appECI){
@@ -360,6 +361,18 @@ ruleset devtools {
 	          with appECI = oldApp{"appECI"}
 	          and  oldCbURL = oldApp{"appCallbackURL"};
 	    }
+	}
+	  rule ImportClientDataBase {
+	  select when devtools ImportClientDataBase
+	  pre {
+	    	apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
+          }
+          {
+          	noop();
+          }
+	  always {
+	  	set ent:appRegistry apps;
+        }
     }
     /*
     rule UpdateClientCallBack {
