@@ -309,13 +309,13 @@ ruleset devtools {
 	    appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
 	    developer_secret = get_secret(appECI);
 	    //undo all of pci pemissions
-	    isset = pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+	    //isset = pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
 	    	//isset = pci:remove
 	    	//isset = pci:remove_appinfo(appECI);
 	    //remove app from persistant varibles. 
-	    apps = (apps.delete([appECI])|| app:apps).klog(">>>>>> apps delete >>>>>>>");
+	    apps = (app:apps).klog(">>>>>> apps delete >>>>>>>");
 	    appRegistry = app:appRegistry.klog(">>>>>> app >>>>>>>");
-	    appRegistry = appRegistry.delete([appECI]).klog(">>>>>> app delete >>>>>>>");
+	    //appRegistry = appRegistry.delete([appECI]).klog(">>>>>> app delete >>>>>>>");
           }
           {
           	noop();
