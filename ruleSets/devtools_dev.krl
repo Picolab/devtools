@@ -289,7 +289,7 @@ ruleset devtools {
 	        ).put(["appECI"], application_eci)
 	      );
 
-	      apps = (ent:appRegistry || {}).put([application_eci], appData);
+	      apps = (app:appRegistry || {}).put([application_eci], appData);
 	    }
 	    if (// redundant???
 	      appData &&
