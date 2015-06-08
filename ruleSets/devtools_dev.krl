@@ -375,7 +375,7 @@ ruleset devtools {
 	  select when devtools ImportClientDataBase
 	  pre {
 	    	apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
-	    	apps = apps.union(app:appRegistry);
+	    	//apps = apps.union(app:appRegistry);
           }
           {
           	noop();
