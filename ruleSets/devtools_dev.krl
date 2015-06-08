@@ -61,7 +61,8 @@ ruleset devtools {
 		krl_struct;
 		};
 		showClients = function() {
-			clients = OAuthRegistry:get_my_apps();
+			clients = get_my_apps();
+			//clients = OAuthRegistry:get_my_apps();//__________----------------------------------- should not use this ruleset
 			krl_struct = clients.decode()
 			.klog(">>>>krl_struct")
 			;
