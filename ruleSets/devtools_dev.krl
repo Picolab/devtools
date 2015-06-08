@@ -317,7 +317,7 @@ ruleset devtools {
 	    	//isset = pci:remove_appinfo(appECI);
 	    	apps = app:appRegistry;
 		}//remove app from persistant varibles. 
-	    if (app:appRegistry{appECI}) then {
+	    if (app:appRegistry{appECI} != {}) then {
 	  		//undo all of pci pemissions
 	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
 			send_directive("removing  #{appECI}");
