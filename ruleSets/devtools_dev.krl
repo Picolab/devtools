@@ -323,7 +323,7 @@ ruleset devtools {
 			send_directive("removing  #{appECI}");
         }
 	  	fired { 
-	  		set app:appRegistry apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
+	  		set app:appRegistry apps.delete([appECI,"appData"]).klog(">>>>>> app >>>>>>>");
         }
     }
     rule UpdateClient {
