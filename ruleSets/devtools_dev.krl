@@ -276,7 +276,7 @@ ruleset devtools {
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
-	      appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
+	      appDataPassed = event:attr("appData");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
 	      bootstrapRids = appDataPassed{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
