@@ -379,7 +379,7 @@ ruleset devtools {
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
 	    
-	      bootstrapRids = appData{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+	      bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 	      apps = (app:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
 
 	    }
