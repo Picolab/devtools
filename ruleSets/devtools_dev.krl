@@ -324,7 +324,7 @@ ruleset devtools {
       	  bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 
       	  // [FIXME, PJW] hack. a41x226 shouldn't be keeping this data, should be in PCI
-    	  appinfo = pci:add_appinfo(appECI, // is appinfo used anywhere????????
+    	  appinfo = pci:add_appinfo(application_eci, // is appinfo used anywhere????????
     	    {"icon": appDataPassed{"appImageURL"},
       		"name": appDataPassed{"appName"},
          	"description": appDataPassed{"appDescription"},
@@ -411,11 +411,11 @@ ruleset devtools {
 	    ) then{
 	        send_directive("Updating clients");
 	        //remove all 
-	      	pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
+	    	removePCIcallback(appECI,pci:list_callback(appECI));
           	pci:remove_appinfo(appECI);
 	     	removePCIbootstraps(appECI,oldBootstrapRids);
           	// add new 
-          	pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
+          	pci:add_callback(appECI, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
 	     	pci:add_appinfo(appECI, 
 		        {"icon": appData{"appImageURL"},
 		         "name": appData {"appName"},
