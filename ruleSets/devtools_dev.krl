@@ -281,7 +281,7 @@ ruleset devtools {
 	    pre {
 	    	appData={
          	"info_page": event:attr("info_page"),
-         	"bootstrapRids": event:attr("bootstrapRids"),
+         	"bootstrapRids": event:attr("bootstrapRids").klog(">>>>>> bootstrap >>>>>>>"),
             "appName": event:attr("appName"),
             "appDescription": event:attr("appDescription"),
             "appImageURL": event:attr("appImageURL"),
