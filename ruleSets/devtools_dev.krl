@@ -276,7 +276,7 @@ ruleset devtools {
       	  bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 
       	  // [FIXME, PJW] hack. a41x226 shouldn't be keeping this data, should be in PCI
-    	  appinfo = pci:add_appinfo(appECI, // is appinfo used anywhere????????
+    	  appinfo = pci:add_appinfo(appECI, 
     	    {"icon": appDataPassed{"appImageURL"},
       		"name": appDataPassed{"appName"},
          	"description": appDataPassed{"appDescription"},
@@ -289,7 +289,7 @@ ruleset devtools {
 	        ).put(["appECI"], application_eci)
 	      );
 
-	      apps = (app:appRegistry || {}).put([application_eci], appData);
+	      apps = (ent:apps || {}).put([application_eci], appData);
 	    }
 	    if (// redundant???
 	      appData &&
@@ -301,10 +301,10 @@ ruleset devtools {
 	      noop();
 	    }
 	    fired {
-	      log appCallbackURL;//???????????
-	      //set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
-	      //set app:appRegistry{application_eci} appData if (application_eci);
-	      set app:appRegistry apps;
+	      log appCallbackURL;
+	      set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
+	      set app:appRegistry{application_eci} appData if (application_eci);
+	      set ent:apps apps;
 	    }
     }
 
