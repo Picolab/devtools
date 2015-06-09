@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret, list_bootstrap
 		sharing on
 	}
 	global {
