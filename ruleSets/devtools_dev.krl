@@ -81,13 +81,13 @@ ruleset devtools {
 			client_callback_url = event:attr("appCallbackURL");
 			client_declined_url = event:attr("appDeclinedURL");
 			appData={
-         	"info_page": client_info_page_url,
-         	"bootstrapRids": client_bootstrapRids,
-            "appName": client_name,
-            "appDescription": client_Description,
-            "appImageURL": client_image_url,
-            "appCallbackURL": client_callback_url,
-            "appDeclinedURL": client_declined_url
+         	"info_page": event:attr("info_page"),
+         	"bootstrapRids": event:attr("bootstrapRids"),
+            "appName": event:attr("appName"),
+            "appDescription": event:attr("appDescription"),
+            "appImageURL": event:attr("appImageURL"),
+            "appCallbackURL": event:attr("appCallbackURL"),
+            "appDeclinedURL": event:attr("appDeclinedURL")
           };
           appData;
 		};
@@ -276,7 +276,16 @@ ruleset devtools {
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
-	      appDataPassed = appData().decode().klog(">>>>>> attr appData >>>>>>>");
+	    	appData={
+         	"info_page": event:attr("info_page"),
+         	"bootstrapRids": event:attr("bootstrapRids"),
+            "appName": event:attr("appName"),
+            "appDescription": event:attr("appDescription"),
+            "appImageURL": event:attr("appImageURL"),
+            "appCallbackURL": event:attr("appCallbackURL"),
+            "appDeclinedURL": event:attr("appDeclinedURL")
+          };
+	      appDataPassed = appData;
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
