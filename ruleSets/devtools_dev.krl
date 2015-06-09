@@ -69,17 +69,17 @@ ruleset devtools {
 			krl_struct;
 		};
 		addPCIbootstraps = defaction(appECI,bootstrapRids){
-			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
+			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
 			send_directive("pci bootstraps updated.")
 			 	with rulesets = list_bootstrap(appECI); // is this working?
 		};
 		removePCIbootstraps = defaction(appEC,IbootstrapRids){
-			boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap removed result >>>>>>>");
+			boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
 			send_directive("pci bootstraps removed.")
 			 	with rulesets = list_bootstrap(appECI); 
 		};
 		removePCIcallback = defaction(appECI,PCIcallbacks){
-			boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url) }).klog(">>>>>> callback remove result >>>>>>>");
+			boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
 			send_directive("pci callback removed.")
 			 	with rulesets = pci:list_callback(appECI);
 		};
