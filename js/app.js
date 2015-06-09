@@ -871,7 +871,8 @@
 			if(authd) {
 				console.log("Authorized");
 				persistant_bootstrap();
-				//document.location.hash = "#home";
+				if (!document.location.hash)
+					document.location.hash = "#home";
 			} else {  
 				console.log("Asking for authorization");
 				document.location.hash = "#page-authorize";
