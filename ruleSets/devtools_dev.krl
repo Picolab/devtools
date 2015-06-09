@@ -68,10 +68,15 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
-		updatePCIbootstrap = defaction(bootstrapRids,appECI){
+		addPCIbootstraps = defaction(bootstrapRids,appECI){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 			send_directive("pci bootstraps updated.")
 			 	with rulesets = list_bootstrap(appECI); // is this working?
+		};
+		removePCIbootstraps = defaction(bootstrapRids,appECI){
+			boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
+			send_directive("pci bootstraps removed.")
+			 	with rulesets = list_bootstrap(appECI); 
 		};
 		appData = function() {
 			client_info_page_url = event:attr("info_page");
@@ -380,7 +385,7 @@ ruleset devtools {
 	      );
 	    
 	      bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
-      	  oldBootstrapRids = pci:list_bootstrap(appECI);
+      	  oldBootstrapRids = list_bootstrap(appECI).klog(">>>>>> bootstrap >>>>>>>");
 
 	      apps = (app:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
 
@@ -402,9 +407,8 @@ ruleset devtools {
 		         "description": appData {"appDescription"},
 		         "info_page": appData {"appInfoURL"}
 		        });
-	      	pci:remove_bootstrap(appECI, oldBootstrapRids);
-	      	updatePCIbootstrap(bootstrapRids,appECI);// hack.. is there a better way?
-      	//	bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
+	     	removePCIbootstraps(oldBootstrapRids,appECI);
+	      	addPCIbootstraps(bootstrapRids,appECI);// hack.. is there a better way?
 	    }
 	    fired {
 	   //   set app:appRegistry {} if (not app:appRegistry);
