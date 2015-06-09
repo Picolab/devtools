@@ -71,7 +71,7 @@ ruleset devtools {
 		updatePCIbootstrap = defaction(bootstrapRids,appECI){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 			send_directive("pci bootstraps updated.")
-			 	with rulesets = pci:list_bootstrap(appECI);
+			 	with rulesets = list_bootstrap(appECI); // is this working?
 		};
 		appData = function() {
 			client_info_page_url = event:attr("info_page");
@@ -104,6 +104,10 @@ ruleset devtools {
 	    get_secret = function(appECI){
 	      app:appRegistry{[appECI, "appSecret"]}
 	    };
+
+	    list_bootstrap = function(appECI){
+	    	pci:list_bootstrap(appECI);
+	    }
 	}
 
 	
