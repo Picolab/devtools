@@ -358,15 +358,24 @@ ruleset devtools {
     rule UpdateClient {
 	  select when devtools update_client
 	    pre {
+	    	app_Data={
+	         	"info_page": event:attr("info_page"),
+	         	"bootstrapRids": event:attr("bootstrapRids"),
+	            "appName": event:attr("appName"),
+	            "appDescription": event:attr("appDescription"),
+	            "appImageURL": event:attr("appImageURL"),
+	            "appCallbackURL": event:attr("appCallbackURL"),
+	            "appDeclinedURL": event:attr("appDeclinedURL")
+          	};
 	      oldApp = app:appRegistry{event:attr("appECI").klog(">>>>>> appECI >>>>>>>")}.klog(">>>>>> oldApp >>>>>>>");
 	      appData = ( // keep apps secrets 
-	        ((event:attr("appData")
+	        ((app_Data
 	        ).put(["appSecret"], oldApp{"appSecret"})
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
 	    
 	      bootstrapRids = appData{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
-	      apps = (ent:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
+	      apps = (app:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
 
 	    }
 	        if ( // valid input for update... is it checked one level down? do we need this check?
@@ -392,9 +401,9 @@ ruleset devtools {
       	//	bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	    }
 	    fired {
-	    //  set app:appRegistry {} if (not app:appRegistry);
-	    //  set app:appRegistry{oldApp{"appECI"}} appData if(appData);
-	      set ent:appRegistry apps;
+	   //   set app:appRegistry {} if (not app:appRegistry);
+	   //   set app:appRegistry{oldApp{"appECI"}} appData if(appData);
+	      set app:appRegistry apps;
 	   //   raise explicit event updateCallback 
 	   //       with appECI = oldApp{"appECI"}
 	   //       and  oldCbURL = oldApp{"appCallbackURL"};
