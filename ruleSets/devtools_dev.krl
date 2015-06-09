@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret, list_bootstrap
 		sharing on
 	}
 	global {
@@ -68,9 +68,10 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
-		updatePCIbootstrap = defaction(bootstrapRids){
+		updatePCIbootstrap = defaction(bootstrapRids,appECI){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
-			send_directive("pci bootstraps updated");
+			send_directive("pci bootstraps updated.")
+			 	with rulesets = list_bootstrap(appECI); // is this working?
 		};
 		appData = function() {
 			client_info_page_url = event:attr("info_page");
@@ -103,6 +104,10 @@ ruleset devtools {
 	    get_secret = function(appECI){
 	      app:appRegistry{[appECI, "appSecret"]}
 	    };
+
+	    list_bootstrap = function(appECI){
+	    	pci:list_bootstrap(appECI);
+	    }
 	}
 
 	
@@ -271,8 +276,6 @@ ruleset devtools {
         }
     //-------------------OAuthRegistry---------------
 
-// why are there apps and appRegistry, not just 1?????
-
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
@@ -289,7 +292,7 @@ ruleset devtools {
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
-	      bootstrapRids = appDataPassed{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+	      bootstrapRids = appDataPassed{"bootstrapRid"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 
 	      application_eci_result = (pci:new_eci(meta:eci(), {
 	        'name' : 'Oauth Developer ECI',
@@ -337,22 +340,23 @@ ruleset devtools {
 	    }
     }
 
-    rule RemoveClient {
+    rule RemoveClient {//pci may not be working how I think.
 	  	select when devtools remove_client
 	  	pre {
 	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
 	    	developer_secret = get_secret(appECI);
-	    	//isset = pci:remove
-	    	//isset = pci:remove_appinfo(appECI);
+
 	    	apps = app:appRegistry;
-		}//remove app from persistant varibles. 
+		}
 	    if (app:appRegistry{appECI} != {}) then {
 	  		//undo all of pci pemissions
+	  		//isset = pci:remove
 	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+	    	pci:remove_appinfo(appECI);
 			send_directive("removing  #{appECI}");
         }
 	  	fired { 
-	  		set app:appRegistry apps.delete([appECI,"appData"]).klog(">>>>>> app >>>>>>>");
+	  		set app:appRegistry apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
         }
     }
     rule UpdateClient {
@@ -367,7 +371,8 @@ ruleset devtools {
 	            "appCallbackURL": event:attr("appCallbackURL"),
 	            "appDeclinedURL": event:attr("appDeclinedURL")
           	};
-	      oldApp = app:appRegistry{event:attr("appECI").klog(">>>>>> appECI >>>>>>>")}.klog(">>>>>> oldApp >>>>>>>");
+          appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
+	      oldApp = app:appRegistry{appECI}.klog(">>>>>> oldApp >>>>>>>");
 	      appData = ( // keep apps secrets 
 	        ((app_Data
 	        ).put(["appSecret"], oldApp{"appSecret"})
@@ -397,7 +402,7 @@ ruleset devtools {
 		         "info_page": appData {"appInfoURL"}
 		        });
 	      	pci:remove_bootstrap(appECI, oldBootstrapRids);
-	      	updatePCIbootstrap(bootstrapRids);// hack.. is there a better way?
+	      	updatePCIbootstrap(bootstrapRids,appECI);// hack.. is there a better way?
       	//	bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	    }
 	    fired {
