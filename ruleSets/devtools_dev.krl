@@ -276,8 +276,6 @@ ruleset devtools {
         }
     //-------------------OAuthRegistry---------------
 
-// why are there apps and appRegistry, not just 1?????
-
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
@@ -342,18 +340,19 @@ ruleset devtools {
 	    }
     }
 
-    rule RemoveClient {
+    rule RemoveClient {//pci may not be working how I think.
 	  	select when devtools remove_client
 	  	pre {
 	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
 	    	developer_secret = get_secret(appECI);
-	    	//isset = pci:remove
-	    	//isset = pci:remove_appinfo(appECI);
+
 	    	apps = app:appRegistry;
-		}//remove app from persistant varibles. 
+		}
 	    if (app:appRegistry{appECI} != {}) then {
 	  		//undo all of pci pemissions
+	  		//isset = pci:remove
 	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+	    	pci:remove_appinfo(appECI);
 			send_directive("removing  #{appECI}");
         }
 	  	fired { 
