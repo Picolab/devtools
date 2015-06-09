@@ -292,7 +292,7 @@ ruleset devtools {
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
-	      bootstrapRids = appDataPassed{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+	      bootstrapRids = appDataPassed{"bootstrapRid"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 
 	      application_eci_result = (pci:new_eci(meta:eci(), {
 	        'name' : 'Oauth Developer ECI',
