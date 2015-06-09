@@ -728,6 +728,14 @@
 						) {
 							Devtools.installRulesets(rid, function(directives) {
 								console.log("installed ", rid, directives);
+								if (directives.directives.length === 0) {
+									var n = noty({
+										type: 'warning',
+										text: rid + ' not found.  Please confirm your desired rid.'
+									});
+									$.noty.get(n);
+								}
+								
 								$.mobile.changePage("#page-installed-rulesets", {
 									transition: 'slide'
 								});
