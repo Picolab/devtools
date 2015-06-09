@@ -68,9 +68,10 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
-		updatePCIbootstrap = defaction(bootstrapRids){
+		updatePCIbootstrap = defaction(bootstrapRids,appECI){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
-			send_directive("pci bootstraps updated");
+			send_directive("pci bootstraps updated.")
+			 	with rulesets = pci:list_bootstrap(appECI);
 		};
 		appData = function() {
 			client_info_page_url = event:attr("info_page");
@@ -367,7 +368,8 @@ ruleset devtools {
 	            "appCallbackURL": event:attr("appCallbackURL"),
 	            "appDeclinedURL": event:attr("appDeclinedURL")
           	};
-	      oldApp = app:appRegistry{event:attr("appECI").klog(">>>>>> appECI >>>>>>>")}.klog(">>>>>> oldApp >>>>>>>");
+          appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
+	      oldApp = app:appRegistry{appECI}.klog(">>>>>> oldApp >>>>>>>");
 	      appData = ( // keep apps secrets 
 	        ((app_Data
 	        ).put(["appSecret"], oldApp{"appSecret"})
@@ -397,7 +399,7 @@ ruleset devtools {
 		         "info_page": appData {"appInfoURL"}
 		        });
 	      	pci:remove_bootstrap(appECI, oldBootstrapRids);
-	      	updatePCIbootstrap(bootstrapRids);// hack.. is there a better way?
+	      	updatePCIbootstrap(bootstrapRids,appECI);// hack.. is there a better way?
       	//	bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	    }
 	    fired {
