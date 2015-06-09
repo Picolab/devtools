@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret, list_bootstrap
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret, list_bootstrap, get_appinfo, list_callback
 		sharing on
 	}
 	global {
@@ -68,15 +68,20 @@ ruleset devtools {
 			;
 			krl_struct;
 		};
-		addPCIbootstraps = defaction(bootstrapRids,appECI){
+		addPCIbootstraps = defaction(appECI,bootstrapRids){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 			send_directive("pci bootstraps updated.")
 			 	with rulesets = list_bootstrap(appECI); // is this working?
 		};
-		removePCIbootstraps = defaction(bootstrapRids,appECI){
-			boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
+		removePCIbootstraps = defaction(appEC,IbootstrapRids){
+			boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap removed result >>>>>>>");
 			send_directive("pci bootstraps removed.")
 			 	with rulesets = list_bootstrap(appECI); 
+		};
+		removePCIcallback = defaction(appECI,PCIcallbacks){
+			boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url) }).klog(">>>>>> callback remove result >>>>>>>");
+			send_directive("pci callback removed.")
+			 	with rulesets = pci:list_callback(appECI);
 		};
 		appData = function() {
 			client_info_page_url = event:attr("info_page");
@@ -112,7 +117,13 @@ ruleset devtools {
 
 	    list_bootstrap = function(appECI){
 	    	pci:list_bootstrap(appECI);
-	    }
+	    };
+	    get_appinfo = function(appECI){
+	    	pci:get_appinfo(appECI);
+	    };
+	    list_callback = function(appECI){
+	    	pci:list_callback(appECI);
+	    };
 	}
 
 	
@@ -355,10 +366,10 @@ ruleset devtools {
 		}
 	    if (app:appRegistry{appECI} != {}) then {
 	  		//undo all of pci pemissions
-	  		//isset = pci:remove
 	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
 	    	pci:remove_appinfo(appECI);
-			send_directive("removing  #{appECI}");
+	    	removePCIcallback(appECI,pci:list_callback(appECI));
+	    	removePCIbootstraps(appECI,pci:list_bootstrap(appECI));
         }
 	  	fired { 
 	  		set app:appRegistry apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
@@ -399,7 +410,11 @@ ruleset devtools {
 	      appData{"appDeclinedURL"}
 	    ) then{
 	        send_directive("Updating clients");
+	        //remove all 
 	      	pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
+          	pci:remove_appinfo(appECI);
+	     	removePCIbootstraps(appECI,oldBootstrapRids);
+          	// add new 
           	pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
 	     	pci:add_appinfo(appECI, 
 		        {"icon": appData{"appImageURL"},
@@ -407,8 +422,7 @@ ruleset devtools {
 		         "description": appData {"appDescription"},
 		         "info_page": appData {"appInfoURL"}
 		        });
-	     	removePCIbootstraps(oldBootstrapRids,appECI);
-	      	addPCIbootstraps(bootstrapRids,appECI);// hack.. is there a better way?
+	      	addPCIbootstraps(appECI,bootstrapRids);// hack.. is there a better way?
 	    }
 	    fired {
 	   //   set app:appRegistry {} if (not app:appRegistry);
