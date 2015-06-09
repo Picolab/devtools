@@ -71,10 +71,29 @@ ruleset devtools {
 		updatePCIbootstrap = defaction(bootstrapRids){
 			boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 			send_directive("pci bootstraps updated");
-		}
+		};
+		appData = function() {
+			client_info_page_url = event:attr("info_page");
+			client_bootstrapRids = event:attr("bootstrapRids");
+			client_name = event:attr("appName");
+			client_Description = event:attr("appDescription");
+			client_image_url = event:attr("appImageURL");
+			client_callback_url = event:attr("appCallbackURL");
+			client_declined_url = event:attr("appDeclinedURL");
+			appData={
+         	"info_page": client_info_page_url,
+         	"bootstrapRids": client_bootstrapRids,
+            "appName": client_name,
+            "appDescription": client_Description,
+            "appImageURL": client_image_url,
+            "appCallbackURL": client_callback_url,
+            "appDeclinedURL": client_declined_url
+          };
+          appData;
+		};
 		//------------------------------- Authorize clients-------------------
 		get_my_apps = function(){
-	      ent:appRegistry
+	      app:appRegistry
 	    };
 
 	    get_app = function(appECI){
@@ -257,7 +276,8 @@ ruleset devtools {
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
-	      appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
+	      appDataPassed = appData().klog(">>>>>> attr appData >>>>>>>");
+	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
 	      bootstrapRids = appDataPassed{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
@@ -276,7 +296,7 @@ ruleset devtools {
       	  bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 
       	  // [FIXME, PJW] hack. a41x226 shouldn't be keeping this data, should be in PCI
-    	  appinfo = pci:add_appinfo(appECI, 
+    	  appinfo = pci:add_appinfo(appECI, // is appinfo used anywhere????????
     	    {"icon": appDataPassed{"appImageURL"},
       		"name": appDataPassed{"appName"},
          	"description": appDataPassed{"appDescription"},
@@ -289,7 +309,7 @@ ruleset devtools {
 	        ).put(["appECI"], application_eci)
 	      );
 
-	      apps = (ent:apps || {}).put([application_eci], appData);
+	      apps = (app:appRegistry || {}).put([application_eci], appData);
 	    }
 	    if (// redundant???
 	      appData &&
@@ -301,10 +321,10 @@ ruleset devtools {
 	      noop();
 	    }
 	    fired {
-	      log appCallbackURL;
-	      set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
-	      set app:appRegistry{application_eci} appData if (application_eci);
-	      set ent:apps apps;
+	      log appCallbackURL;//???????????
+	      //set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
+	      //set app:appRegistry{application_eci} appData if (application_eci);
+	      set app:appRegistry apps;
 	    }
     }
 
@@ -381,7 +401,7 @@ ruleset devtools {
           	noop();
           }
 	  always {
-	  	set ent:appRegistry apps;
+	  	set app:appRegistry apps;
         }
     }
     /*
