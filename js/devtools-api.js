@@ -294,11 +294,10 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {appECI:app_ECI,
-                    appData:app_Data}; 
+        app_Data["appECI"]=app_ECI;
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating client");
-        return CloudOS.raiseEvent("devtools", "update_client", json, {}, function(json) {
+        return CloudOS.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, {"eci":eci});
