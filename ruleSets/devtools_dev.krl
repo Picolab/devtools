@@ -380,6 +380,8 @@ ruleset devtools {
 	      );
 	    
 	      bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+      	  oldBootstrapRids = pci:list_bootstrap(appECI);
+
 	      apps = (app:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
 
 	    }
@@ -394,7 +396,6 @@ ruleset devtools {
 	        send_directive("Updating clients");
 	      	pci:remove_callback(eci, oldApp{"appCallbackURL"});// remove old callback. do we need this????
           	pci:add_callback(eci, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
-	     	pci:list_bootstrap(appECI);
 	     	pci:add_appinfo(appECI, 
 		        {"icon": appData{"appImageURL"},
 		         "name": appData {"appName"},
