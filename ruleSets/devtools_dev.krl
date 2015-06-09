@@ -276,17 +276,7 @@ ruleset devtools {
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
-	    	appData={
-         	"info_page": event:attr("info_page"),
-         	"bootstrapRids": event:attr("bootstrapRids"),
-            "appName": event:attr("appName"),
-            "appDescription": event:attr("appDescription"),
-            "appImageURL": event:attr("appImageURL"),
-            "appCallbackURL": event:attr("appCallbackURL"),
-            "appDeclinedURL": event:attr("appDeclinedURL")
-          };
-	      appDataPassed = appData;
-	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
+	      appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
 	      bootstrapRids = appDataPassed{"bootstrapRid"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
@@ -358,18 +348,9 @@ ruleset devtools {
     rule UpdateClient {
 	  select when devtools update_client
 	    pre {
-	    	app_Data={
-	         	"info_page": event:attr("info_page"),
-	         	"bootstrapRids": event:attr("bootstrapRids"),
-	            "appName": event:attr("appName"),
-	            "appDescription": event:attr("appDescription"),
-	            "appImageURL": event:attr("appImageURL"),
-	            "appCallbackURL": event:attr("appCallbackURL"),
-	            "appDeclinedURL": event:attr("appDeclinedURL")
-          	};
 	      oldApp = app:appRegistry{event:attr("appECI").klog(">>>>>> appECI >>>>>>>")}.klog(">>>>>> oldApp >>>>>>>");
 	      appData = ( // keep apps secrets 
-	        ((app_Data
+	        ((event:attr("appData")
 	        ).put(["appSecret"], oldApp{"appSecret"})
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
