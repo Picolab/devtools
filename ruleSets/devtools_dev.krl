@@ -281,7 +281,7 @@ ruleset devtools {
 	    pre {
 	    	appData={
          	"info_page": event:attr("info_page"),
-         	"bootstrapRids": event:attr("bootstrapRids").klog(">>>>>> bootstrap >>>>>>>"),
+         	"bootstrapRids": event:attr("bootstrapRids"),
             "appName": event:attr("appName"),
             "appDescription": event:attr("appDescription"),
             "appImageURL": event:attr("appImageURL"),
@@ -292,7 +292,7 @@ ruleset devtools {
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
-	      bootstrapRids = appDataPassed{"bootstrapRid"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+	      bootstrapRids = appDataPassed{"bootstrapRids"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 
 	      application_eci_result = (pci:new_eci(meta:eci(), {
 	        'name' : 'Oauth Developer ECI',
