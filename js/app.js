@@ -380,7 +380,7 @@
 						}
 					}
 					
-					$(frm).keypress(function(event) {
+					$(frm).off('keypress').on('keypress', function(event) {
 						if (event.which == 13) {
 							event.preventDefault();
 							submitChannel();
@@ -752,7 +752,7 @@
 					}	
 				}
 				
-				$(frm).keypress(function(event){
+				$(frm).off('keypress').on('keypress', function(event){
 					if (event.which == 13) {
 						event.preventDefault();
 						submitInstall();
@@ -871,7 +871,7 @@
 			if(authd) {
 				console.log("Authorized");
 				persistant_bootstrap();
-				document.location.hash = "#home";
+				//document.location.hash = "#home";
 			} else {  
 				console.log("Asking for authorization");
 				document.location.hash = "#page-authorize";
