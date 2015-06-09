@@ -276,7 +276,7 @@ ruleset devtools {
     rule AuthorizeClient {
 		select when devtools authorize_client
 	    pre {
-	      appDataPassed = appData().klog(">>>>>> attr appData >>>>>>>");
+	      appDataPassed = appData().decode().klog(">>>>>> attr appData >>>>>>>");
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
 	      appCallbackURL = appDataPassed{"appCallbackURL"};
 
