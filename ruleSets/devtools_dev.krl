@@ -17,7 +17,7 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_secret, list_bootstrap, get_appinfo, list_callback
+		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_registry, get_secret, list_bootstrap, get_appinfo, list_callback
 		sharing on
 	}
 	global {
@@ -60,6 +60,7 @@ ruleset devtools {
 		  ;
 		krl_struct;
 		};
+		//------------------------------- Authorize clients-------------------
 		showClients = function() {
 			clients = get_my_apps();
 			//clients = OAuthRegistry:get_my_apps();//__________----------------------------------- should not use this ruleset
@@ -83,38 +84,18 @@ ruleset devtools {
 			send_directive("pci callback removed.")
 			 	with rulesets = pci:list_callback(appECI);
 		};
-		appData = function() {
-			client_info_page_url = event:attr("info_page");
-			client_bootstrapRids = event:attr("bootstrapRids");
-			client_name = event:attr("appName");
-			client_Description = event:attr("appDescription");
-			client_image_url = event:attr("appImageURL");
-			client_callback_url = event:attr("appCallbackURL");
-			client_declined_url = event:attr("appDeclinedURL");
-			appData={
-         	"info_page": event:attr("info_page"),
-         	"bootstrapRids": event:attr("bootstrapRids"),
-            "appName": event:attr("appName"),
-            "appDescription": event:attr("appDescription"),
-            "appImageURL": event:attr("appImageURL"),
-            "appCallbackURL": event:attr("appCallbackURL"),
-            "appDeclinedURL": event:attr("appDeclinedURL")
-          };
-          appData;
-		};
-		//------------------------------- Authorize clients-------------------
 		get_my_apps = function(){
-	      app:appRegistry
+      	  ent:apps
 	    };
-
+	    get_registry = function(){
+	    	app:appRegistry;
+	    };
 	    get_app = function(appECI){
 	      (app:appRegistry{appECI}).delete(["appSecret"])
 	    };
-	    
 	    get_secret = function(appECI){
 	      app:appRegistry{[appECI, "appSecret"]}
 	    };
-
 	    list_bootstrap = function(appECI){
 	    	pci:list_bootstrap(appECI);
 	    };
@@ -124,6 +105,7 @@ ruleset devtools {
 	    list_callback = function(appECI){
 	    	pci:list_callback(appECI);
 	    };
+		//------------------------------- <End oF> Authorize clients-------------------
 	}
 
 	
@@ -318,18 +300,7 @@ ruleset devtools {
 	      application_eci = application_eci_result{"cid"};
 
 	      developer_secret = pci:create_developer_key();
-	      permission = pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
-	      callback = pci:add_callback(application_eci, appCallbackURL);
-      	  
-      	  bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
-
-      	  // [FIXME, PJW] hack. a41x226 shouldn't be keeping this data, should be in PCI
-    	  appinfo = pci:add_appinfo(application_eci, // is appinfo used anywhere????????
-    	    {"icon": appDataPassed{"appImageURL"},
-      		"name": appDataPassed{"appName"},
-         	"description": appDataPassed{"appDescription"},
-         	"info_page": appDataPassed{"info_page"}
-        	}).klog(">>>>> stored appinfo >>>>>> ");
+      	  //bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	      
 	      appData = (
 	        ((appDataPassed
@@ -337,7 +308,9 @@ ruleset devtools {
 	        ).put(["appECI"], application_eci)
 	      );
 
-	      apps = (app:appRegistry || {}).put([application_eci], appData);
+	      registery = (app:appRegistry || {}).put([application_eci], appData);
+	      apps = (ent:apps || {}).put([application_eci], appData);
+
 	    }
 	    if (// redundant???
 	      appData &&
@@ -346,13 +319,21 @@ ruleset devtools {
 	      appData{"appCallbackURL"} &&
 	      appData{"appDeclinedURL"}
 	    ) then{
-	      noop();
+	      pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
+	      pci:add_callback(application_eci, appCallbackURL);
+	      addPCIbootstraps(application_eci,bootstrapRids);
+	      // [FIXME, PJW] hack. a41x226/b506607x14 shouldn't be keeping this data, should be in PCI
+    	  pci:add_appinfo(application_eci, 
+    	    {"icon": appDataPassed{"appImageURL"},
+      		"name": appDataPassed{"appName"},
+         	"description": appDataPassed{"appDescription"},
+         	"info_page": appDataPassed{"info_page"}
+        	});
 	    }
 	    fired {
 	      log appCallbackURL;//???????????
-	      //set app:appRegistry {} if (not app:appRegistry); // whats this line do? clear if empty or not created????
-	      //set app:appRegistry{application_eci} appData if (application_eci);
-	      set app:appRegistry apps;
+	      set app:appRegistry registery;
+	      set ent:apps apps;
 	    }
     }
 
@@ -360,19 +341,19 @@ ruleset devtools {
 	  	select when devtools remove_client
 	  	pre {
 	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
-	    	developer_secret = get_secret(appECI);
-
-	    	apps = app:appRegistry;
+	    	registery = app:appRegistry;
+	    	apps = ent:apps;
 		}
-	    if (app:appRegistry{appECI} != {}) then {
+	    if (registery{appECI} != {}) then {
 	  		//undo all of pci pemissions
-	    	pci:clear_permissions(appECI,developer_secret, ['oauth','access_token']); // do I need to do anything else then clear_permissions??
+	    	pci:clear_permissions(appECI,get_secret(appECI), ['oauth','access_token']); // do I need to do anything else then clear_permissions??
 	    	pci:remove_appinfo(appECI);
 	    	removePCIcallback(appECI,pci:list_callback(appECI));
 	    	removePCIbootstraps(appECI,pci:list_bootstrap(appECI));
         }
 	  	fired { 
-	  		set app:appRegistry apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
+	  		set app:appRegistry registery.delete([appECI]).klog(">>>>>> app >>>>>>>");
+	  		set ent:apps apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
         }
     }
     rule UpdateClient {
@@ -389,17 +370,14 @@ ruleset devtools {
           	};
           appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
 	      oldApp = app:appRegistry{appECI}.klog(">>>>>> oldApp >>>>>>>");
-	      appData = ( // keep apps secrets 
+	      appData = ( // keep app secrets for update
 	        ((app_Data
 	        ).put(["appSecret"], oldApp{"appSecret"})
 	        ).put(["appECI"], oldApp{"appECI"})
 	      );
-	    
 	      bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
-      	  oldBootstrapRids = list_bootstrap(appECI).klog(">>>>>> bootstrap >>>>>>>");
-
-	      apps = (app:appRegistry || {}).put([oldApp{"appECI"}], appData);// create new appRegistry
-
+	      registery = (app:appRegistry || {}).put([appECI], appData);
+	      apps = (ent:apps || {}).put([appECI], appData);
 	    }
 	        if ( // valid input for update... is it checked one level down? do we need this check?
 	      oldApp &&
@@ -413,7 +391,7 @@ ruleset devtools {
 	        //remove all 
 	    	removePCIcallback(appECI,pci:list_callback(appECI));
           	pci:remove_appinfo(appECI);
-	     	removePCIbootstraps(appECI,oldBootstrapRids);
+	     	removePCIbootstraps(appECI,list_bootstrap(appECI));
           	// add new 
           	pci:add_callback(appECI, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
 	     	pci:add_appinfo(appECI, 
@@ -425,48 +403,28 @@ ruleset devtools {
 	      	addPCIbootstraps(appECI,bootstrapRids);// hack.. is there a better way?
 	    }
 	    fired {
-	   //   set app:appRegistry {} if (not app:appRegistry);
-	   //   set app:appRegistry{oldApp{"appECI"}} appData if(appData);
-	      set app:appRegistry apps;
-	   //   raise explicit event updateCallback 
-	   //       with appECI = oldApp{"appECI"}
-	   //       and  oldCbURL = oldApp{"appCallbackURL"};
+	      set app:appRegistry registery;
+	      set ent:apps apps;
 	    }
 	}
 	  rule ImportClientDataBase {// only call once before you create any clients.
 	  select when devtools ImportClientDataBase
-	  pre {
-	    	apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
-	    	//apps = apps.union(app:appRegistry);
-          }
-          {
-          	noop();
-          }
-	  always {
-	  	set app:appRegistry apps;
-        }
+	 // foreach ent:apps setting (n,v)
+		  pre {
+		    	apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
+		   // 	newapp = ent:apps;
+		    //	newregistery = app:appRegistry;
+		    //	apps = apps.keys().map(function(k,v) {v+2}); 
+		    	//	{ newapp = newapp.put([eci],apps{eci}); newregistery = newregistery.put([eci],apps{eci}); });
+
+	          }
+	          {
+	          	noop();
+	          }
+		  always {
+		  	set ent:apps apps;
+		  //	set app:appRegistry newregistery;
+	        }
     }
-    /*
-    rule UpdateClientCallBack {
-		select when devtools update_client_call_back
-		pre {
-          // get the applications eci for which we are updating
-          // the callback url
-          eci = event:attr("appECI");
-          // get the old callback url that we need to remove
-          // via the pci
-          oldCbURL = event:attr("oldCbURL");
-          // get the new callback that we need to register
-          // via the pci
-          cbURL = app:appRegistry{[eci, "appCallbackURL"]};
-          // perform deregistration of old callback
-          // url
-          resp = pci:remove_callback(eci, oldCbURL);
-          // perform registry of new callback url
-          reg = pci:add_callback(eci, cbURL)
-      }
-      if (true) then {
-          noop();
-      }
-    }*/
+
 }
