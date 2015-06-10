@@ -82,11 +82,14 @@
    <div id="{{appECI}}" data-role="collapsible" data-filtertext="{{appName}} ({{appECI}})" data-theme="a" data-content-theme="a">
      <h4>{{appName}} ({{appECI}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-client-remove?client={{appECI}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#update-client?client={{appECI}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit client</a></p>
+         <p style="position:relative; top:-10px"><a style="float:right;" href="#confirm-client-remove?client={{appECI}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
+         <p style="position:relative; top:-10px"><a style="float:right;" href="#update-client?client={{appECI}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit client</a></p>
          <!--<h2>client Attributes</h2>-->
-       <p><b>client ECI:</b> {{appECI}}
-       <img src={{appImageURL}}></p>
+       <p>
+		   <img src={{appImageURL}} onerror="this.src='http://news.pcc.edu/wp-content/uploads/2015/04/NasaI.jpg'" width="200" height="150"> 
+		   <br>
+		   <b>client ECI:</b> {{appECI}}
+       </p>
      </div>
    </div>
 </div>
