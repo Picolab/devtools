@@ -14,11 +14,11 @@
 	get_rid : function(name) {
         
         var rids = {
-            "rulesets": {"prod": "b506607x14.prod", 
-                          "dev": "b506607x14.dev"
+            "rulesets": {"prod": "b507199x0.prod", 
+                          "dev": "b507199x0.dev"
             },
-            "bootstrap":{"prod": "b506607x15.prod", 
-                          "dev": "b506607x15.dev"
+            "bootstrap":{"prod": "b507199x1.prod", 
+                          "dev": "b507199x1.dev"
             },
             "cloud_os":{"prod": "a169x625.prod", 
                           "dev": "a169x625.dev"
@@ -301,20 +301,7 @@
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, {"eci":eci});
-    }/*,
-    updateClientCallBack: function(app_ECI, old_CbURL, options)
-    {
-        cb = cb || function(){};
-        options = options || {};
-        var json = {appECI:app_ECI,
-                    oldCbURL:old_CbURL}; 
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Updating client callback");
-        return CloudOS.raiseEvent("devtools", "update_client_call_back", json, {}, function(json) {
-            Devtools.log("Directive from updating Client CallBack", json);
-            cb(json);
-        }, {"eci":eci});
-    }*/
+    }
    // lookupScheduledEvent: function(){}
 //
 }; //closes the "window" inside the function DON'T DELETE
