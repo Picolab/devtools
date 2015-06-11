@@ -80,6 +80,7 @@ ruleset devtools {
 			 	with rulesets = list_bootstrap(appECI); 
 		};
 		removePCIcallback = defaction(appECI,PCIcallbacks){
+			PCIcallbacks =[].append(PCIcallbacks);
 			boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
 			send_directive("pci callback removed.")
 			 	with rulesets = pci:list_callback(appECI);
