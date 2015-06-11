@@ -1,4 +1,4 @@
-//b506607x14
+//b507199x0
 //Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b507199x0.prod;b507199x0.dev
 ruleset devtools {
 	meta {
@@ -323,7 +323,7 @@ ruleset devtools {
 	      pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
 	      pci:add_callback(application_eci, appCallbackURL);
 	      addPCIbootstraps(application_eci,bootstrapRids);
-	      // [FIXME, PJW] hack. a41x226/b506607x14 shouldn't be keeping this data, should be in PCI
+	      // [FIXME, PJW] hack. a41x226/b507199x0 shouldn't be keeping this data, should be in PCI
     	  pci:add_appinfo(application_eci, 
     	    {"icon": appDataPassed{"appImageURL"},
       		"name": appDataPassed{"appName"},
