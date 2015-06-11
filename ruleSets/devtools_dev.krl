@@ -416,6 +416,8 @@ ruleset devtools {
 		    //	newregistery = app:appRegistry;
 		    //	apps = apps.keys().map(function(k,v) {v+2}); 
 		    	//	{ newapp = newapp.put([eci],apps{eci}); newregistery = newregistery.put([eci],apps{eci}); });
+          		registery = (app:appRegistry || {}).put(apps);
+	      		apps = (ent:apps || {}).put(apps);
 
 	          }
 	          {
@@ -423,8 +425,52 @@ ruleset devtools {
 	          }
 		  always {
 		  	set ent:apps apps;
-		  //	set app:appRegistry newregistery;
+		  	set app:appRegistry registery;
 	        }
     }
+/*    rule AddClient {
+	  select when explicit add
+		  pre {
+		  		app_Data={
+	         	"info_page": event:attr("info_page"),
+	         	"bootstrapRids": event:attr("bootstrapRids"),
+	            "appName": event:attr("appName"),
+	            "appDescription": event:attr("appDescription"),
+	            "appImageURL": event:attr("appImageURL"),
+	            "appCallbackURL": event:attr("appCallbackURL"),
+	            "appDeclinedURL": event:attr("appDeclinedURL")
+          			};
+          		appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
 
+          		registery = (app:appRegistry || {}).put([appECI], appData);
+	      		apps = (ent:apps || {}).put([appECI], appData);
+	          }
+	          if ( // valid input for update... is it checked one level down? do we need this check?
+			      oldApp &&
+			      appData &&
+			      appData{"appName"} &&
+			      appData{"appImageURL"} &&
+			      appData{"appCallbackURL"} &&
+			      appData{"appDeclinedURL"}
+			    ) then{
+	          	noop();
+	          }
+		  always {
+		  	set ent:apps apps;
+		  	set app:appRegistry registery;
+	        }
+    }*/
+    	rule clear_registery {
+	  select when devtools ImportClientDataBase
+		  pre {
+
+	          }
+	          {
+	          	noop();
+	          }
+		  always {
+		  	clear ent:apps;
+		  	clear app:appRegistry;
+	        }
+    }
 }
