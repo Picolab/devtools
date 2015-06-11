@@ -461,7 +461,7 @@ ruleset devtools {
 	        }
     }*/
     	rule clear_registery {
-	  select when devtools ImportClientDataBase
+	  select when devtools clear_registery
 		  pre {
 
 	          }
