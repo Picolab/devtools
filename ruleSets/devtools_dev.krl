@@ -349,7 +349,8 @@ ruleset devtools {
 	  		//undo all of pci pemissions
 	    	pci:clear_permissions(appECI,get_secret(appECI), ['oauth','access_token']); // do I need to do anything else then clear_permissions??
 	    	pci:remove_appinfo(appECI);
-	    	removePCIcallback(appECI,pci:list_callback(appECI));
+          	pci:remove_callback(appECI,pci:list_callback(appECI));
+	    	//removePCIcallback(appECI,pci:list_callback(appECI));//not working
 	    	removePCIbootstraps(appECI,pci:list_bootstrap(appECI));
         }
 	  	fired { 
@@ -390,7 +391,8 @@ ruleset devtools {
 	    ) then{
 	        send_directive("Updating clients");
 	        //remove all 
-	    	removePCIcallback(appECI,pci:list_callback(appECI));
+	    	//removePCIcallback(appECI,pci:list_callback(appECI)); //not working
+          	pci:remove_callback(appECI,pci:list_callback(appECI));
           	pci:remove_appinfo(appECI);
 	     	removePCIbootstraps(appECI,list_bootstrap(appECI));
           	// add new 
