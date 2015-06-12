@@ -17,12 +17,29 @@ ruleset devtools {
 		use module a41x226 alias OAuthRegistry //(appManager)
 		//use module a169x625 alias PicoInspector
 
-		provides showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_registry, get_secret, list_bootstrap, get_appinfo, list_callback
+		provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_registry, get_secret, list_bootstrap, get_appinfo, list_callback
 		sharing on
 	}
 	global {
 		
-		
+	rulesetList = function(eci) {
+      userToken = eci || ent:userToken || "none";
+
+      // Retrieve list of RIDs installed for userToken
+      r = pci:list_ruleset(userToken);
+
+      // Harvest the list of RIDs if list_ruleset request was valid
+      // rids = (r) => r{'rids'} | [];
+
+      rids = (r) => ((r{'rids'}.length() != 0) => r{'rids'} | []) | [];
+
+      status = (r) => true | false;
+
+      {
+        'rids'     : rids,
+        'status'   : status
+      }
+    };
 		showRulesets = function(){
 			rulesets = rsm:list_rulesets(meta:eci()).sort();
 
