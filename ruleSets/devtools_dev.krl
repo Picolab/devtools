@@ -289,18 +289,18 @@ ruleset devtools {
           };
 	      appDataPassed = appData;
 	      //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
-	      appCallbackURL = appDataPassed{"appCallbackURL"};
+	      appCallbackURL = appDataPassed{"appCallbackURL"}.klog(">>>>>> app callback >>>>>>>");
 
 	      bootstrapRids = appDataPassed{"bootstrapRids"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 
 	      application_eci_result = (pci:new_eci(meta:eci(), {
 	        'name' : 'Oauth Developer ECI',
 	        'eci_type' : 'OAUTH'
-	      }) || {});
+	      }) || {}).klog(">>>>>>>>>> eci results >>>>>>>>>>");
 
 	      application_eci = application_eci_result{"cid"};
 
-	      developer_secret = pci:create_developer_key();
+	      developer_secret = pci:create_developer_key().klog(">>>>>> developer secret >>>>>>>");
       	  //bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
 	      
 	      appData = (
