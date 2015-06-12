@@ -26,7 +26,7 @@ ruleset devtools {
       userToken = eci || ent:userToken || "none";
 
       // Retrieve list of RIDs installed for userToken
-      r = pci:list_ruleset(userToken);
+      r = pci:list_ruleset(userToken).klog(">>>>>>>>> pci:list_ruleset >>>>>>>>>>");
 
       // Harvest the list of RIDs if list_ruleset request was valid
       // rids = (r) => r{'rids'} | [];
