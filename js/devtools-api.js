@@ -21,7 +21,7 @@
                           "dev": "b507199x1.dev"
             },
             "cloud_os":{"prod": "a169x625.prod", 
-                          "dev": "a169x625.dev"
+                          "dev": "a169x625.prod"
             }
         };
 
@@ -85,8 +85,8 @@
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Showing the channels");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        //return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+        //return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   
