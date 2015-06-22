@@ -22,7 +22,7 @@ ruleset devtools {
 	}
 	global {
 		
-	rulesetList = function(eci) {
+	rulesetList = function(eci) {// ------ from cloudOS
       userToken = eci || ent:userToken || "none";
 
       // Retrieve list of RIDs installed for userToken
@@ -41,13 +41,13 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			rulesets = rsm:list_rulesets(meta:eci()).sort();
+			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result >>>>>>>");
 
 			rulesetGallery = rulesets.map(function(rid){
 				ridInfo = rsm:get_ruleset(rid).defaultsTo({});
 				appURL = ridInfo{"uri"};
 				ridInfo
-				});
+				}).klog(">>>>>> rulesets map() ... rsm:get_ruleset result >>>>>>>");
 
 			rulesetGallery
 		};
