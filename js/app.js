@@ -397,6 +397,21 @@
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
+						function generateKey(channel){
+							var key ="";
+							if ("type" in channel){ // if channel["type"] is not null
+								if(/OAUTH/.test(channel["type"])){
+									key = "OAUTH";
+								}else{
+									key = channel["type"];
+								}
+							}
+							else{ // if channel does not have type
+								key = "GENERIC";
+							}
+							return key;
+						}
+
 						//parse json into list of list by type
 
 						//use teplate to format 
@@ -407,9 +422,8 @@
 						var key = "";
 
 						$.each(channels, function(index, channel) {
-							key= channel["type"].substr(0,5);
-							//reg = new RegExp(key+'*')];
-							//if(map[reg]){map[channel[reg]].push(channel);}
+
+							key = generateKey(channel);
 							if(map[key]){map[key].push(channel);}
 							else{
 								map[key]=[channel];
@@ -419,8 +433,7 @@
 						console.log("map of channels",map);
 						dynamicChannelItems = "";
 						dynamicChannelItems2 = "";
-						key = "";
-						time = "";
+						var type = "";
 						$.each(map, function(index, chAray) {
 							dynamicChannelItems2 = "";
 							dynamicChannelItems = "";
@@ -430,17 +443,23 @@
 							//return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
 							});
 							//inner div
+							type = "";
 							$.each(chAray,function(index,channel){
+								console.log("channel: ",channel);
 								time = new Date(channel["last_active"]*1000);
+								if ("type" in channel ){type = channel["type"];}
+								else{type = "generic";}
 								dynamicChannelItems2 +=
 								 snippets.installed_channels_template2(
 									{"channel_name": channel["name"],
 									"cid": channel["cid"],
+									"type": type,
 									"time": time,
 									"attributes":channel["attributes"] }
 									);
 
-								 key = channel["type"].substr(0,5);//hack of how to get key, assigned every iteration(bad)
+								//hack of how to get key, assigned every iteration(bad)
+									key = generateKey(channel);
 						  });
 						  //outter div
 							dynamicChannelItems += 
