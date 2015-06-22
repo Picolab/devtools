@@ -44,7 +44,7 @@ ruleset devtools {
 			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result >>>>>>>");
 
 			rulesetGallery = rulesets.map(function(rid){
-				ridInfo = rsm:get_ruleset(rid).defaultsTo({});
+				ridInfo = rsm:get_ruleset(rid).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
 				appURL = ridInfo{"uri"};
 				ridInfo
 				}).klog(">>>>>> rulesets map() ... rsm:get_ruleset result >>>>>>>");
