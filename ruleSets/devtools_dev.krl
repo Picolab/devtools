@@ -41,11 +41,11 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.3 >>>>>>>");
+			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.4 >>>>>>>");
 
 			rulesetGallery = rulesets.map(function(ruleID){
 				foo = ruleID.klog(">>>>>> ruleID >>>>>>>");
-				ridInfo = rsm:get_ruleset(foo).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
+				ridInfo = rsm:get_ruleset(ruleID).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
 				appURL = ridInfo{"uri"};
 				ridInfo
 				}).klog(">>>>>> rulesets map()->rsm:get_ruleset result >>>>>>>");
