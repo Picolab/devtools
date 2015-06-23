@@ -41,16 +41,17 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.6 >>>>>>>");
+			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.7 >>>>>>>");
 
 			rulesetGallery = rulesets.map( 
 				function(ruleID){
 					foo = ruleID.klog(">>>>>> ruleID >>>>>>>");
-					ridInfo = rsm:get_ruleset(ruleID).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
-					appURL = ridInfo{"uri"};
-					ridInfo;
+					//ridInfo = rsm:get_ruleset(ruleID).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
+					//appURL = ridInfo{"uri"};
+					//ridInfo;
+					foo;
 				}
-			).klog(">>>>>> rulesets map()->rsm:get_ruleset result >>>>>>>");
+			);//.klog(">>>>>> rulesets map()->rsm:get_ruleset result >>>>>>>");
 
 			rulesetGallery
 		};
