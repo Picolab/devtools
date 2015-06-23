@@ -41,7 +41,7 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			//rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.13 >>>>>>>");
+			//rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.14 >>>>>>>");
 
 			//rulesetGallery = rulesets.map( 
 			//	function(){
@@ -51,7 +51,7 @@ ruleset devtools {
 			//		ridInfo;
 			//	}
 			//);//.klog(">>>>>> rulesets map()->rsm:get_ruleset result >>>>>>>");
-			ridInfo = rsm:get_ruleset("b506607x15.prod").defaultsTo({}).klog(">>>>>> rsm:get_ruleset result vs.13>>>>>>>");
+			ridInfo = rsm:get_ruleset("b506607x15.prod").klog(">>>>>> rsm:get_ruleset result vs.14>>>>>>>");
 			//rulesetGallery
 			ridInfo;
 		};
