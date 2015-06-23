@@ -44,12 +44,11 @@ ruleset devtools {
 			rulesets = rsm:list_rulesets(meta:eci()).klog(">>>>>> rsm:list_rulesets result >>>>>>>");
 
 			rulesetGallery = rulesets.map(function(rid){
-				foo = rid.klog(">>>>>> rid >>>>>>>");
-				foo;
-			//	ridInfo = rsm:get_ruleset("b506607x9.prod").defaultsTo({}).klog(">>>>>> rsm:get_rulesetb506607x9.prod result >>>>>>>");
-			//	ridInfo = rsm:get_ruleset(rid).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
-			//	appURL = ridInfo{"uri"};
-			//	ridInfo
+				rid = rid.klog(">>>>>> rid >>>>>>>");
+				ridInfo = rsm:get_ruleset("b506607x9.prod").defaultsTo({}).klog(">>>>>> rsm:get_rulesetb506607x9.prod result >>>>>>>");
+				ridInfo = rsm:get_ruleset(rid).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
+				appURL = ridInfo{"uri"};
+				ridInfo
 				}).klog(">>>>>> rulesets map() ... rsm:get_ruleset result >>>>>>>");
 
 			rulesetGallery
