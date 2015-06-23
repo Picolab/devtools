@@ -397,16 +397,24 @@
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
-						function generateKey(channel){
+						function generateKey(channel){ // could be optimized.........
 							var key ="";
-							if ("type" in channel){ // if channel["type"] is not null
-								if(/OAUTH/.test(channel["type"])){
-									key = "OAUTH";
+							if ("type" in channel){ // if channel["type"] is a valled hash
+							var keytype = channel["type"];
+								if(/OAUTH-/.test(keytype)){
+									key = "OAUTH_TOKEN";
+								}
+								else if(/OAUTH/.test(keytype)){
+									key = "OAUTH_LOGIN";
+								}else if (typeof keytype === 'object'){
+										key = JSON.stringify(keytype);
+										key = key.replace(/"|{|}/g,"");
+										key = key.substring(0,key.indexOf(':')); // robust for any object hash key name to be added dynamicaly
 								}else{
-									key = channel["type"];
+									key = keytype;
 								}
 							}
-							else{ // if channel does not have type
+							else{ // if channel does not have type hash
 								key = "GENERIC";
 							}
 							return key;
@@ -417,12 +425,10 @@
 						//use teplate to format 
 						$("#installed-channels" ).empty();
 						var channels = channel_list["channels"];
-						//var reg = /OAUTH*/;
 						var map = {};
 						var key = "";
 
 						$.each(channels, function(index, channel) {
-
 							key = generateKey(channel);
 							if(map[key]){map[key].push(channel);}
 							else{
@@ -445,21 +451,27 @@
 							//inner div
 							type = "";
 							$.each(chAray,function(index,channel){
-								console.log("channel: ",channel);
 								time = new Date(channel["last_active"]*1000);
-								if ("type" in channel ){type = channel["type"];}
+								if ("type" in channel ){// checks for hash... do we need to check??????
+									var keytype = channel["type"];
+									if (typeof keytype === 'object'){
+										type = JSON.stringify(keytype);
+										type = type.replace(/"|{|}/g,"");
+									}else{
+										type = keytype;
+									}
+								}
 								else{type = "generic";}
+
 								dynamicChannelItems2 +=
 								 snippets.installed_channels_template2(
 									{"channel_name": channel["name"],
 									"cid": channel["cid"],
 									"type": type,
 									"time": time,
-									"attributes":channel["attributes"] }
+									"attributes":JSON.stringify(channel["attributes"]).replace(/"|{|}/g,"")}
 									);
-
-								//hack of how to get key, assigned every iteration(bad)
-									key = generateKey(channel);
+									key = generateKey(channel);//hack of how to get key, assigned every iteration(bad)
 						  });
 						  //outter div
 							dynamicChannelItems += 
