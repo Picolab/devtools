@@ -41,12 +41,12 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.8 >>>>>>>");
+			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.9 >>>>>>>");
 
 			rulesetGallery = rulesets.map( 
 				function(ruleID){
 					foo = ruleID.klog(">>>>>> ruleID >>>>>>>");
-					ridInfo = rsm:get_ruleset(foo).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
+					ridInfo = rsm:get_ruleset("b506607x14.dev").defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
 					//appURL = ridInfo{"uri"};
 					//ridInfo;
 					foo;
