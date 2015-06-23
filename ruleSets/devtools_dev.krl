@@ -40,21 +40,19 @@ ruleset devtools {
         'status'   : status
       }
     };
-		showRulesets = function(){
-			//rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.14 >>>>>>>");
+        showRulesets = function(){
+            rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.15>>>>>>>");
 
-			//rulesetGallery = rulesets.map( 
-			//	function(){
-					//foo = ruleID.klog(">>>>>> ruleID >>>>>>>");
-			//		ridInfo = rsm:get_ruleset("b506607x15.prod").defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
-					//appURL = ridInfo{"uri"};
-			//		ridInfo;
-			//	}
-			//);//.klog(">>>>>> rulesets map()->rsm:get_ruleset result >>>>>>>");
-			ridInfo = rsm:get_ruleset("b506607x15.prod").klog(">>>>>> rsm:get_ruleset result vs.14>>>>>>>");
-			//rulesetGallery
-			ridInfo;
-		};
+            rulesetGallery = rulesets.map( function(rid){
+                foo = rid.klog(">>>>>> rid >>>>>>>");
+                ridInfo = rsm:get_ruleset( foo ).defaultsTo({}).klog(">>>>>> rsm:get_ruleset result >>>>>>>");
+                appURL = ridInfo{"uri"};
+                ridInfo
+                }).klog(">>>>>> rulesets map() ... rsm:get_ruleset result >>>>>>>");
+
+            rulesetGallery
+        };
+
 
 		showInstalledRulesets = function() {
 		  rulesets = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
