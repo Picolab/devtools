@@ -41,7 +41,7 @@ ruleset devtools {
       }
     };
 		showRulesets = function(){
-			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.4 >>>>>>>");
+			rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.5 >>>>>>>");
 
 			rulesetGallery = rulesets.map( function(ruleID){
 				foo = ruleID.klog(">>>>>> ruleID >>>>>>>");
