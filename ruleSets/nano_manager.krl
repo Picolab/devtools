@@ -63,9 +63,20 @@ ruleset b507199x5 {
     select when nano_manager update 
 
   }
-  
+
   rule Channels {
     select when nano_manager channels with  option eq "update"
 
   }
-  rule cli
+  rule Clients {
+    select when nano_manager clients with  option eq "Authorize"
+
+  }
+  rule Clients {
+    select when nano_manager clients with option eq "update"
+
+  }
+  rule Picos {
+    select when nano_manager picos with  option eq "delete"
+
+  }
