@@ -450,7 +450,7 @@ ruleset devtools {
 		  	set app:appRegistry registery;
 	        }
     }
-/*    rule AddClient {
+/*    rule AddClient { // to local persistance...
 	  select when explicit add
 		  pre {
 		  		app_Data={
