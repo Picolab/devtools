@@ -1,7 +1,7 @@
 
 
 
-ruleset nano_manager {
+ruleset b507199x5 {
   meta {
     name "nano_manager"
     description <<
@@ -29,3 +29,43 @@ ruleset nano_manager {
   //dispatch {
     //domain "ktest.heroku.com"
   //}
+  global {
+    Rulsets = function() { 
+      //single
+      //list
+      //installed
+    }
+
+    Channels = function() {
+
+    }
+    Clients = function() {
+
+    }
+    Picos = function() {
+
+    }
+  }
+
+  rule Rulesets {
+    select when nano_manager rulesets with  option eq "register"
+    pre{}
+    {}
+    fired{}
+  }
+  rule Rulesets {
+    select when nano_manager rulesets with  option eq "update"
+    pre{}
+    {}
+    fired{}
+  }
+  rule Update {
+    select when nano_manager update 
+
+  }
+  
+  rule Channels {
+    select when nano_manager channels with  option eq "update"
+
+  }
+  rule cli
