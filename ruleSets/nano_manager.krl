@@ -32,21 +32,54 @@ ruleset b507199x5 {
   global {
     //functions
   //-------------------- Rulesets --------------------
-    Registrations = function() { }
-    Ruleset = function() { }
-    Installed = function(eci) {
+    Registered = function(eci) {
       userToken = eci || ent:userToken || "none";
-      results = pci:list_ruleset(userToken);  // list of RIDs installed for userToken
-      rids = results{'rids'};
+        rulesets = rsm:list_rulesets(userToken);
+        rulesetGallery = rulesets.map( function(rid){
+          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},">> undefined >>");
+          ridInfo;
+        });
+
+       rulesetGallery
+    }
+    Ruleset = function(eci,rid) { 
+      userToken = eci || ent:userToken || "none";
+      results = Registered(userToken);
+      results = results{rid};
+      results;
+    }
+    Installed = function(eci) {
+      userToken = eci || ent:userToken || "none";// when is ent:userToken set??
+      results = pci:list_ruleset(userToken).defaultsTo({},">> undefined >>");  // list of RIDs installed for userToken
+      rids = results{'rids'} | {};
       {
-        'rids'     : rids,
-        'status'   : rids.length() != 0
+     //   'status'   : (rids != {}),// is this valid krl? // do we need status
+        'rids'     : rids
       }
     }
   //-------------------- Channels --------------------
-    Channels = function() { }
+    Channels = function(eci) { 
+      userToken = eci || ent:userToken || "none";
+     // userPenID = (ent:UserPenID + 0) || 0;//  why ??????
+      
+      results = pci:list_eci(userToken).defaultsTo({},">> undefined >>"); // list of ECIs assigned to userid
+      channels = results{'channels'} | {}; // list of channels if list_eci request was valid
+      {
+     //   'nid'      : userPenID, // ???????
+     //   'token'    : userToken, // ???????
+     //   'status'   : (channels),
+        'channels' : channels
+      }
+    }
   //-------------------- Clients --------------------
-    Clients = function() { }
+    Clients = function(eci) { 
+      userToken = eci || ent:userToken || "none";
+      clients = pci:get_authorized(userToken).defaultsTo({},">> undefined >>"); // pci does not have this function yet........
+      krl_struct = clients.decode()
+      .klog(">>>>krl_struct")
+      ;
+      krl_struct;
+    }
   //-------------------- Picos ----------------------
     Picos = function() { }
   //-------------------- Subscriptions ----------------------
