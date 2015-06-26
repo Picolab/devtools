@@ -35,7 +35,7 @@ ruleset b507199x5 {
     // Accounting keys
       //none
     sharing on
-    provides 
+    //provides 
 
   }
 
@@ -50,9 +50,9 @@ ruleset b507199x5 {
   //-------------------- Rulesets --------------------
     Registered = function() {
       eci = meta:eci();
-        rulesets = rsm:list_rulesets(eci).defaultsTo({},">> undefined >>");
+        rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
         rulesetGallery = rulesets.map( function(rid){
-          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},">> undefined >>");
+          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
           ridInfo;
         });
        rulesetGallery
@@ -64,7 +64,7 @@ ruleset b507199x5 {
     Ruleset = function(rid) { 
       eci = meta:eci();
       results = Registered(eci){"rulesets"};
-      results = results{rid}.defaultsTo( null,">> undefined >>");// is this dangerous in krl
+      results = results{rid}.defaultsTo( null,standardError("undefined"));// is this dangerous in krl
       {
         'status' : (results ),
         'ruleset' : results
@@ -72,7 +72,7 @@ ruleset b507199x5 {
     }
     Installed = function() {
       eci = meta:eci();
-      results = pci:list_ruleset(eci).defaultsTo({},">> undefined >>");  // list of RIDs installed for userToken
+      results = pci:list_ruleset(eci).defaultsTo({},standardError("undefined"));  // list of RIDs installed for userToken
       rids = results{'rids'} | {};
       {
        'status'   : (rids != {}),// is this valid krl? // do we need status
@@ -89,8 +89,8 @@ ruleset b507199x5 {
   //-------------------- Channels --------------------
     Channels = function() { 
       eci = meta:eci();
-      results = pci:list_eci(eci).defaultsTo({},">> undefined >>"); // list of ECIs assigned to userid
-      channels = results{'channels'}.defaultsTo({},">> undefined >>"); // list of channels if list_eci request was valid
+      results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
+      channels = results{'channels'}.defaultsTo({},standardError("undefined")); // list of channels if list_eci request was valid
       {
         'status'   : (results != {}),
         'channels' : channels
@@ -110,7 +110,7 @@ ruleset b507199x5 {
     }
     /*Type = function(channel_id) { // we dont need this yet.....
       channels = Channels().defaultsTo({},">> undefined >>");
-      channel = Channels{channel_id}.defaultsTo("undefined",">> undefined >>");
+      channel = Channels{channel_id}.defaultsTo("undefined",standardError("undefined"));
 
       getType = function() {
         type = (channel{"type"}.typeof() eq ;
@@ -129,7 +129,7 @@ ruleset b507199x5 {
   //-------------------- Clients --------------------
     Clients = function() { 
       eci = meta:eci();
-      clients = pci:get_authorized(eci).defaultsTo({},">> undefined >>"); // pci does not have this function yet........
+      clients = pci:get_authorized(eci).defaultsTo({},standardError("undefined")); // pci does not have this function yet........
       krl_struct = clients.decode() // I dont know if we needs decode
       .klog(">>>>krl_struct")
       ;
@@ -140,7 +140,7 @@ ruleset b507199x5 {
     }
   //-------------------- Picos ----------------------
     Picos = function() {
-      picos = ent:my_picos.defaultsTo({},">> undefined >>");
+      picos = ent:my_picos.defaultsTo({},standardError("undefined"));
       {
         'status' : (picos != {}),
         'picos'  : picos
@@ -155,13 +155,19 @@ ruleset b507199x5 {
 
   //defactions
 
+
+  	standardError = function(message) {
+  		error = ">> error: " + message + " >>";
+  		error
+  	}
+
   }
   //Rules
   //-------------------- Rulesets --------------------
   rule RegisterRuleset {
     select when nano_manager ruleset_registered
     pre {
-      rulesetURL= event:attr("rulesetURL")defaultsTo("", ">> missing event attr rids >> ");
+      rulesetURL= event:attr("rulesetURL")defaultsTo("", standardError("missing event attr rids"));
       //description = event:attr("description")defaultsTo("", ">>  >> ");
       //flush_code = event:attr("flush_code")defaultsTo("", ">>  >> ");
       //version = event:attr("version")defaultsTo("", ">>  >> ");
@@ -189,7 +195,7 @@ ruleset b507199x5 {
   rule DeleteRuleset {
     select when nano_manager ruleset_deleted
     pre {
-      rid = event:attr("rid").defaultsTo("", ">> missing event attr rids >> ");
+      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
     }
     //if(Ruleset(){"status"} != "null" ) then// is this check redundent??
     {
@@ -205,7 +211,7 @@ ruleset b507199x5 {
   rule FlushRulesets {
     select when nano_manager ruleset_flushed
     pre {
-      rid = event:attr("rid").defaultsTo("", ">> missing event attr rid >> ");
+      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
     if(rid.length() > 0 ) then // redundent??
     {
@@ -222,7 +228,7 @@ ruleset b507199x5 {
   rule RelinkRuleset {
     select when nano_manager ruleset_relinked
     pre {
-      rid = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+      rid = event:attr("rids").defaultsTo("", standardError("missing event attr rids"));
       newURL = event:attr("url"); //should pull from the form on update url template
     }
     if(Validate(rid)) then // redundent??
@@ -248,7 +254,7 @@ ruleset b507199x5 {
   rule InstallRuleset {// should this handle multiple rulesets or a single one
     select when nano_manager ruleset_installed
     pre {
-      eci = meta:eci().defaultsTo({},">> undefined >>");
+      eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
       rid = rids[0] //for validat
       ridlist = rids.typeof() eq "array" => rids | rids.split(re/;/); 
@@ -267,7 +273,7 @@ ruleset b507199x5 {
   rule UninstallRuleset { // should this handle multiple uninstalls ??? 
     select when nano_manager ruleset_uninstalled
     pre {
-      eci = meta:eci().defaultsTo({},">> undefined >>");
+      eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
       ridlist = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
@@ -288,8 +294,8 @@ ruleset b507199x5 {
   rule UpdateChannelAttributes {
     select when nano_manager channel_attributes_updated
     pre {
-      channel_id = event:attr("channel_id").defaultsTo("", ">> missing event attr channels >> ");
-      attributes = event:attr("attributes").defaultsTo("", ">> >> ");
+      channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
+      attributes = event:attr("attributes").defaultsTo("", standardError("undefined"));
     }
     if(Channels(){"channel_id"} and attributes != "") then { // check??redundent????
       pci:set_eci_attributes(channel_id, attributes);// attributes need to be an array, do we need to cast type?
@@ -306,8 +312,8 @@ ruleset b507199x5 {
   rule UpdateChannelPolicy {
     select when nano_manager channel_policy_updated
     pre {
-      channel_id = event:attr("channel_id").defaultsTo("", ">> missing event attr channels >> ");
-      policy = event:attr("policy").defaultsTo("", ">> >> ");
+      channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
+      policy = event:attr("policy").defaultsTo("", standardError("undefined"));
     }
     if(Channels(){"channelID"} and policy != "") then { // check??redundent??whats better??
       pci:set_eci_policy(channel_id, policy) // policy needs to be a map, do we need to cast types?
@@ -325,12 +331,12 @@ ruleset b507199x5 {
     select when nano_manager channel_updated
     select when devtools update_channel
     pre {
-      channel_id = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+      channel_id = event:attr("channelID").defaultsTo("", standardError("missing event attr channels"));
 
           }
     if(Channels(){"channelID"}) then { // check??redundent????
-      attributes = pci:get_eci_attributes(channel_id).defaultsTo("", ">>  >> ");
-      policy = pci:get_eci_policy(channel_id).defaultsTo("", ">>  >> ");
+      attributes = pci:get_eci_attributes(channel_id).defaultsTo("", standardError("undefined"));
+      policy = pci:get_eci_policy(channel_id).defaultsTo("", standardError("undefined"));
      
       send_directive("update #{channelID}");
           }
@@ -343,7 +349,7 @@ ruleset b507199x5 {
   rule DeleteChannel {
     select when nano_manager channel_deleted
     pre {
-      channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
+      channelID = event:attr("channelID").defaultsTo("", standardError("missing event attr channels"));
     }
     {
       pci:delete_eci(channelID);
@@ -359,9 +365,9 @@ ruleset b507199x5 {
   rule Create Channel{
     select when nano_manager channel_created
     pre {
-      channels = Channels().defaultsTo({}, ">> list of installed channels undefined >>");
-      channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
-      user = pci:session_token(meta:eci()).defaultsTo("", ">> missing event attr channels >> "); // this is old way.. why not just eci??
+      channels = Channels().defaultsTo({}, standardError("list of installed channels undefined"));
+      channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
+      user = pci:session_token(meta:eci()).defaultsTo("", standardError("missing event attr channels")); // this is old way.. why not just eci??
       options = {
         'name' : channelName//,
         //'eci_type' : ,

@@ -237,7 +237,7 @@ ruleset devtools {
 		}
 		fired {
 			raise system event rulesetRegistered
-			with rulsetID = rid{"rid"} if(rid);
+			with rulesetID = rid{"rid"} if(rid);
 		}
 	}
 	//---------------- channel manager ---------------
