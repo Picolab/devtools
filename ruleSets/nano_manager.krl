@@ -57,38 +57,31 @@ ruleset b507199x5 {
         rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
         rulesetGallery = rulesets.map( function(rid){
           ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
-          ridInfo;
-        });
-       rulesetGallery
+          ridInfo
+        }).defaultsTo({},standardError("undefined"));
         {
-          'status' : (),
+          'status' : (rulesetGallery neq {}),
           'rulesets' : rulesetGallery          
-        }
+        };
     }
     Ruleset = function(rid) { 
       eci = meta:eci();
-      results = Registered(eci){"rulesets"};
+      results = Registered(eci).defaultsTo("",standardError("undefined"));
+      results = results{"rulesets"}.defaultsTo("",standardError("undefined"));
       results = results{rid}.defaultsTo( null,standardError("undefined"));// is this dangerous in krl
       {
-        'status' : (results ),
+        'status' : (results neq null),
         'ruleset' : results
-      }
+      };
     }
     Installed = function() {
       eci = meta:eci();
       results = pci:list_ruleset(eci).defaultsTo({},standardError("undefined"));  // list of RIDs installed for userToken
-      rids = results{'rids'} | {};
+      rids = results{'rids'}.defaultsTo({},standardError("undefined"));
       {
-       'status'   : (rids != {}),// is this valid krl? // do we need status
+       'status'   : (rids neq {}),// is this valid krl? // do we need status
         'rids'     : rids
-      }
-    }
-    Validate = function(rid) { // do we need this ??
-      eci = meta:eci();
-      valid = rsm:is_valid(rid);
-      {
-        'status'  : valid
-      }
+      };
     }
   //-------------------- Channels --------------------
     Channels = function() { 
@@ -96,21 +89,21 @@ ruleset b507199x5 {
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo({},standardError("undefined")); // list of channels if list_eci request was valid
       {
-        'status'   : (results != {}),
+        'status'   : (results neq {}),
         'channels' : channels
-      }
+      };
     }
     Attributes = function() {
       {
-        'status'   : (results != {}),
+        'status'   : (results neq {}),
         'channels' : channels
-      }
+      };
     }
     Policy = function() {
       {
-        'status'   : (results != {}),
+        'status'   : (results neq {}),
         'channels' : channels
-      }
+      };
     }
     /*Type = function(channel_id) { // we dont need this yet.....
       channels = Channels().defaultsTo({},">> undefined >>");
@@ -151,17 +144,7 @@ ruleset b507199x5 {
       }
      }
   //-------------------- Subscriptions ----------------------
-    Subscriptions = function(namespace, relationship) { 
-      eci = meta:eci();
-      /*// list of keys which match criteria
-      keyList = subscriptions.keys().filter(function(cid) {
-        ((subscriptions{[cid, "namespace"]} eq namespace) &&
-         (subscriptions{[cid, "relationship"]} eq relationship))
-      });
-      subList = keyList.map(function(cid) {
-        subscriptions{cid}
-      });
-      subList || []*/
+    /*Subscriptions = function(namespace, relationship) { 
       ent:subscriptions;
     }
     OutGoing = function() { 
@@ -169,9 +152,9 @@ ruleset b507199x5 {
     }
     Incoming = function() { 
       ent:pending_in_coming;
-    }
+    }*/
   //-------------------- Scheduled ----------------------
-    Scheduled = function() { }
+    //Scheduled = function() { }
 
   
   //-------------------- error handling ----------------------
@@ -184,37 +167,12 @@ ruleset b507199x5 {
 
   }
   //defactions
-  /*//-------------------- Subscriptions ----------------------
-    sendSubcription = defaction(user,options,channelName){
-      // create backChannel for confirmation
-      backChannel = pci:new_eci(user, options){"cid"};  
-      // build pending subscription entry
-      pendingEntry = {
-        "channelName"  : channelName,
-        "namespace"    : namespace,
-        "relationship" : myRole,
-        "backChannel"  : backChannel,
-        "subAttrs"     : subAttrs.encode()
-      };
-
-      event:send(subscription_map, "system", "requestSubscription")
-        with attrs = {
-          "channelName"  : channelName,
-          "namespace"    : namespace,
-          "relationship" : relationship,
-          "backChannel"  : backChannel,
-          "subSummary"   : subSummary,
-          "profileName"  : profileName,
-          "profilePhoto" : profilePhoto,
-          "subAttrs"     : subAttrs
-        };
-    }*/
   //Rules
   //-------------------- Rulesets --------------------
   rule RegisterRuleset {
     select when nano_manager ruleset_registered
     pre {
-      rulesetURL= event:attr("rulesetURL")defaultsTo("", standardError("missing event attr rids"));
+      rulesetURL= event:attr("rulesetURL").defaultsTo("", standardError("missing event attr rids"));
       //description = event:attr("description")defaultsTo("", ">>  >> ");
       //flush_code = event:attr("flush_code")defaultsTo("", ">>  >> ");
       //version = event:attr("version")defaultsTo("", ">>  >> ");
@@ -291,8 +249,6 @@ ruleset b507199x5 {
     }
     fired {
       log ""
-      raise system event rulesetUpdated // why do we raise an event ?? 
-      with rid = rid if(updatedSuccessfully);
     }
     else{
       log ""
@@ -342,8 +298,9 @@ ruleset b507199x5 {
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("", standardError("undefined"));
+      channels = Channels();
     }
-    if(Channels(){"channel_id"} && attributes != "") then { // check??redundent????
+    if(channels{"channel_id"} && attributes != "") then { // check??redundent????
       pci:set_eci_attributes(channel_id, attributes);// attributes need to be an array, do we need to cast type?
       send_directive("updated #{channelID} attributes");
     }
@@ -360,9 +317,10 @@ ruleset b507199x5 {
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("", standardError("undefined"));
+      channels = Channels();
     }
-    if(Channels(){"channelID"} && policy != "") then { // check??redundent??whats better??
-      pci:set_eci_policy(channel_id, policy) // policy needs to be a map, do we need to cast types?
+    if(channels{"channelID"} && policy != "") then { // check??redundent??whats better??
+      pci:set_eci_policy(channel_id, policy); // policy needs to be a map, do we need to cast types?
       send_directive("updated #{channel_id} policy");
     }
     fired {
@@ -388,19 +346,18 @@ ruleset b507199x5 {
       log(">> could not delete channel #{channelID} >>");
           }
         }
-  }
-  rule Create Channel{
+  rule CreateChannel {
     select when nano_manager channel_created
     pre {
       channels = Channels().defaultsTo({}, standardError("list of installed channels undefined"));
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
-      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed"); // this is old way.. why not just eci??
+      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
       options = {
         'name' : channelName//,
         //'eci_type' : ,
         //'attributes' : ,
         //'policy' : ,
-      }
+      };
           }
     if(channelName.match(re/\w[\w\d_-]*/) && user != "") then {
       pci:new_eci(user, options);
@@ -409,11 +366,12 @@ ruleset b507199x5 {
           }
     fired {
       log(">> successfully created channels #{channelName} >>");
-          } else {
+          } 
+    else {
       log(">> could not create channels #{channelName} >>");
           }
-        }
-  }
+    }
+  
  /* //-------------------- Clients --------------------
   rule AuthorizeClient {
     select when nano_manager client_authorized
@@ -467,7 +425,7 @@ ruleset b507199x5 {
 
   }
   */
-  //-------------------- Subscriptions ----------------------
+  //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+CloudOS+Service
    // ========================================================================
   // Persistent Variables:
   //
@@ -503,7 +461,7 @@ ruleset b507199x5 {
   //  }
   //
   // ========================================================================
-  rule SubscriptionRequest {// need to change varibles to snake case.
+ /* rule SubscriptionRequest {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
       channelName   = event:attr("channelName").defaultsTo("orphan", standardError(""));
@@ -524,21 +482,15 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : targetChannel
       };
-      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed"); // this is old way.. why not just eci??
+
       options = {
         'name' : "#{namespace}:#{myRole}:#{channelName}"//,
         //'eci_type' : ,
         //'attributes' : ,
         //'policy' : ,
       }
-    }
-    if(targetChannel neq "NoTargetChannel" && user neq "") then
-    {
-      // --------------------------------------------
-      // create backChannel for confirmation
-      // needs to move to a defactions ???
-      backChannel = pci:new_eci(user, options){"cid"};  
-      // --------------------------------------------
+      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed"); 
+      backChannel = pci:new_eci(user, options){"cid"}.defaultsTo("", standardError("pci session_token failed");  // cant find a way to move this out of pre and still capture backChannel
       // build pending subscription entry
       pendingEntry = {
         "channelName"  : channelName,
@@ -546,8 +498,13 @@ ruleset b507199x5 {
         "relationship" : myRole,
         "backChannel"  : backChannel,
         "subAttrs"     : subAttrs.encode()
-      };
-
+      }; 
+    }
+    if(targetChannel neq "NoTargetChannel" &&
+     user neq "" &&
+     backChannel neq "") 
+    then
+    {
       event:send(subscription_map, "system", "requestSubscription")
         with attrs = {
           "channelName"  : channelName,
@@ -562,15 +519,39 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
-      set ent:pending_out_going{backChannel} pending_out_going;
-          } 
+      set ent:pending_out_going{backChannel} pendingEntry;
+
+    } 
     else {
       log(">> falure >>");
     }
   }
   rule ReceiveSubscriptionRequest {
     select when nano_manager subscription_request_recieved
-    pre{}
+    pre {
+      channelName  = event:attr("channelName")   || "orphan";
+      namespace    = event:attr("namespace")     || "shared";
+      relationship = event:attr("relationship")  || "peer-peer";
+      eventChannel = event:attr("backChannel")   || "NoEventChannel";
+      subSummary   = event:attr("subSummary")    || "";
+      profileName  = event:attr("profileName")   || "Unknown";
+      profilePhoto = event:attr("profilePhoto")  || "";
+      subAttrs     = event:attr("subAttrs")      || "";
+
+      // --------------------------------------------
+      // build pending pending approval entry
+
+      pendingApprovalEntry = {
+        "channelName"  : channelName,
+        "namespace"    : namespace,
+        "relationship" : relationship,
+        "eventChannel" : eventChannel,
+        "subSummary"   : subSummary,
+        "profileName"  : profileName,
+        "profilePhoto" : profilePhoto,
+        "subAttrs"     : subAttrs
+      };
+    }
     {}
     fired {
       log(">> successfull>>");
