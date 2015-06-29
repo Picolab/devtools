@@ -38,8 +38,8 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
+    provides Registered, Ruleset, Installed, Channels,Attributes, Policy, Clients,Picos
     sharing on
-    //provides 
 
   }
 
