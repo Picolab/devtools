@@ -71,7 +71,7 @@ ruleset b507199x5 {
       result = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( {},standardError("undefined"));
       {
         'status' : (result neq {}),
-        'ruleset' : result
+        'ruleset' : result[0]
       };
     }
     Installed = function() {
