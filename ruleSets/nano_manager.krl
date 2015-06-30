@@ -67,10 +67,10 @@ ruleset b507199x5 {
     Ruleset = function(rid) { 
       eci = meta:eci();
       results = Registered().defaultsTo({},standardError("undefined"));
-      results = results{"rulesets"}.defaultsTo([],standardError("undefined"));
-      results = results{rid}.defaultsTo( null,standardError("undefined"));// is this dangerous in krl
+      results = results{"rulesets"}.defaultsTo({},standardError("undefined"));
+      results = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( {},standardError("undefined"));
       {
-        'status' : (results neq null),
+        'status' : (results neq {}),
         'ruleset' : results
       };
     }
