@@ -76,8 +76,8 @@ ruleset b507199x5 {
     }
     Installed = function() {
       eci = meta:eci();
-      results = pci:list_ruleset(eci).defaultsTo({},standardError("undefined"));  // list of RIDs installed for userToken
-      rids = results{'rids'}.defaultsTo({},standardError("undefined"));
+      results = pci:list_ruleset(eci).defaultsTo({},standardError("pci list_ruleset failed"));  // list of RIDs installed for userToken
+      rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
       {
        'status'   : (rids neq {}),// is this valid krl? // do we need status
         'rids'     : rids
