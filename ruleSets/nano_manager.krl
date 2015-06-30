@@ -58,9 +58,9 @@ ruleset b507199x5 {
         rulesetGallery = rulesets.map( function(rid){
           ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
           ridInfo
-        }).defaultsTo({},standardError("undefined"));
+        }).defaultsTo("wrong",standardError("undefined"));
         {
-          'status' : (rulesetGallery neq {}),
+          'status' : (rulesetGallery neq "wrong"),
           'rulesets' : rulesetGallery          
         };
     }
@@ -68,19 +68,19 @@ ruleset b507199x5 {
       eci = meta:eci();
       results = Registered().defaultsTo({},standardError("undefined"));
       results = results{"rulesets"}.defaultsTo({},standardError("undefined"));
-      result = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( {},standardError("undefined"));
+      result = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( "wrong",standardError("undefined"));
       {
-        'status' : (result neq {}),
+        'status' : (result neq "wrong"),
         'ruleset' : result[0]
       };
     }
     Installed = function() {
       eci = meta:eci();
-      results = pci:list_ruleset(eci).defaultsTo({},standardError("pci list_ruleset failed"));  // list of RIDs installed for userToken
+      results = pci:list_ruleset(eci).defaultsTo("wrong",standardError("pci list_ruleset failed"));  // list of RIDs installed for userToken
       results;
    //   rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
    //   {
-   //    'status'   : (rids neq {}),// is this valid krl? // do we need status
+   //    'status'   : (rids neq "wrong"),// is this valid krl? // do we need status
    //     'rids'     : rids
    //   };
     }
@@ -88,24 +88,24 @@ ruleset b507199x5 {
     Channels = function() { 
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
-      channels = results{'channels'}.defaultsTo({},standardError("undefined")); // list of channels if list_eci request was valid
+      channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
       {
-        'status'   : (results neq {}),
+        'status'   : (results neq "wrong"),
         'channels' : channels
       };
     }
     Attributes = function(eci) {
-      results = pci:get_eci_attributes(eci).defaultsTo("",standardError("undefined")); // list of ECIs assigned to userid
+      results = pci:get_eci_attributes(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq ""),
-        'channels' : results
+        'status'   : (results neq "wrong"),
+        'Attributes' : results
       };
     }
     Policy = function(eci) {
-      results = pci:get_eci_policy(eci).defaultsTo("",standardError("undefined")); // list of ECIs assigned to userid
+      results = pci:get_eci_policy(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq ""),
-        'channels' : results
+        'status'   : (results neq "wrong"),
+        'Policy' : results
       };
     }
     /*Type = function(channel_id) { // we dont need this yet.....
@@ -129,20 +129,20 @@ ruleset b507199x5 {
   //-------------------- Clients --------------------
     Clients = function() { 
       eci = meta:eci();
-      clients = pci:get_authorized(eci).defaultsTo({},standardError("undefined")); // pci does not have this function yet........
+      clients = pci:get_authorized(eci).defaultsTo("wrong",standardError("undefined")); // pci does not have this function yet........
       //krl_struct = clients.decode() // I dont know if we needs decode
      // .klog(">>>>krl_struct")
      // ;
       {
-        'status' : (clients != {}),
+        'status' : (clients != "wrong"),
         'clients' : krl_struct
       }
     }
   //-------------------- Picos ----------------------
     Picos = function() {
-      picos = ent:my_picos.defaultsTo({},standardError("undefined"));
+      picos = ent:my_picos.defaultsTo("wrong",standardError("undefined"));
       {
-        'status' : (picos != {}),
+        'status' : (picos != "wrong"),
         'picos'  : picos
       }
      }
@@ -157,8 +157,22 @@ ruleset b507199x5 {
       ent:pending_in_coming;
     }*/
   //-------------------- Scheduled ----------------------
-    //Scheduled = function() { }
+    Schedules = function() { 
+      sched_event_list = event:get_list().defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (sched_event_list != "wrong"),
+        'schedules'  : sched_event_list
+      }
 
+    }
+    History = function(id) { 
+      sched_event_history = event:get_history(id).defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (sched_event_history != "wrong"),
+        'history'  : sched_event_history
+      }
+    
+    }
   
   //-------------------- error handling ----------------------
 
@@ -614,11 +628,16 @@ ruleset b507199x5 {
       log(">> falure >>");
     }
   }  
-  //-------------------- Scheduled ----------------------
- /* rule DeleteScheduled {
+  *///-------------------- Scheduled ----------------------
+  rule DeleteScheduled {
     select when nano_manager scheduled_deleted
-    pre{}
-    {}
+    pre{
+      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
+    }
+    if (sid neq "") then
+    {
+      event:delete(sid);
+    }
     fired {
       log(">> successfull>>");
           } 
@@ -626,15 +645,29 @@ ruleset b507199x5 {
       log(">> falure >>");
     }
   }  
-  rule CreateScheduled {
+ /* rule CreateScheduled {
     select when nano_manager scheduled_created
-    pre{}
-    {}
+    pre{
+      eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
+      time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
+      do_main =
+      eventtype =
+      date_time =
+      attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
+      attributes = attributes.decode();
+
+    }
+    if (type eq "single" && type neq "wrong" ) then
+    {
+
+    }
     fired {
       log(">> successfull>>");
+      schedule <domain> event <eventtype> at <ISO8601 DateTime> [ attributes <expr>] [setting(<var>)]
           } 
     else {
       log(">> falure >>");
+      schedule <domain> event <eventtype> repeat <timespec> [with <modifier_clause> | attributes <expr>] [setting(<var>)]
     }
   } */ 
 }
