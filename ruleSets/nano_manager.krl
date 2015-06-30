@@ -94,16 +94,18 @@ ruleset b507199x5 {
         'channels' : channels
       };
     }
-    Attributes = function() {
+    Attributes = function(eci) {
+      results = pci:get_eci_attributes(eci).defaultsTo("",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq {}),
-        'channels' : channels
+        'status'   : (results neq ""),
+        'channels' : results
       };
     }
-    Policy = function() {
+    Policy = function(eci) {
+      results = pci:get_eci_policy(eci).defaultsTo("",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq {}),
-        'channels' : channels
+        'status'   : (results neq ""),
+        'channels' : results
       };
     }
     /*Type = function(channel_id) { // we dont need this yet.....
@@ -128,9 +130,9 @@ ruleset b507199x5 {
     Clients = function() { 
       eci = meta:eci();
       clients = pci:get_authorized(eci).defaultsTo({},standardError("undefined")); // pci does not have this function yet........
-      krl_struct = clients.decode() // I dont know if we needs decode
-      .klog(">>>>krl_struct")
-      ;
+      //krl_struct = clients.decode() // I dont know if we needs decode
+     // .klog(">>>>krl_struct")
+     // ;
       {
         'status' : (clients != {}),
         'clients' : krl_struct
@@ -161,10 +163,10 @@ ruleset b507199x5 {
   //-------------------- error handling ----------------------
 
 
-  	standardError = function(message) {
-  		error = ">> error: " + message + " >>";
-  		error
-  	}
+    standardError = function(message) {
+      error = ">> error: " + message + " >>";
+      error
+    }
 
   }
   //defactions
