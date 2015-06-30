@@ -68,10 +68,10 @@ ruleset b507199x5 {
       eci = meta:eci();
       results = Registered().defaultsTo({},standardError("undefined"));
       results = results{"rulesets"}.defaultsTo({},standardError("undefined"));
-      results = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( {},standardError("undefined"));
+      result = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( {},standardError("undefined"));
       {
-        'status' : (results neq {}),
-        'ruleset' : results
+        'status' : (result neq {}),
+        'ruleset' : result
       };
     }
     Installed = function() {
