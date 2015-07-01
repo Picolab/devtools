@@ -75,7 +75,7 @@ ruleset b507199x5 {
       };
     }
     Installed = function() {
-      eci = meta:eci();
+      eci = meta:eci().klog(">> meta:eci results: >>");
       results = pci:list_ruleset(eci).defaultsTo("wrong",standardError("pci list_ruleset failed"));  // list of RIDs installed for userToken
       results;
    //   rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
@@ -108,21 +108,26 @@ ruleset b507199x5 {
         'Policy' : results
       };
     }
-    /*Type = function(channel_id) { // we dont need this yet.....
-      channels = Channels().defaultsTo({},">> undefined >>");
-      channel = Channels{channel_id}.defaultsTo("undefined",standardError("undefined"));
+   /* Type = function(channel_id) { 
+      channels = Channels().defaultsTo("wrong",">> undefined >>");
 
-      getType = function() {
-        type = (channel{"type"}.typeof() eq ;
+      GetType = function(channel_id,channels) {
+    //    channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
+    //    channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "wrong",standardError("undefined"));
+    //    channel = channel[0];
+    //    type = channel{"type"};
+    //    temp = (type.typeof() eq "str" ) => type | type.typeof() eq "array" => type[0] |  type.keys();
+    //    type = (temp.typeof() eq "array") => temp[0] | temp;   
+        type;
+      };
+      GetType();
+     // type = GetType(channel_id,channels);
 
-      }
+      //type = ((channels neq "wrong") && (channels neq {} )) => getType() | "wrong";
 
-      type = (channel != "undefined") => Type(Channel) | "";
-
-      type = () =>
       
       {
-        'status'   : (results != {}),
+        'status'   : (type neq "wrong"),
         'channels' : channels
       }
     }*/
@@ -645,29 +650,30 @@ ruleset b507199x5 {
       log(">> falure >>");
     }
   }  
- /* rule CreateScheduled {
+  rule CreateScheduled {
     select when nano_manager scheduled_created
     pre{
       eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
       time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
-      do_main =
-      eventtype =
-      date_time =
+      do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
+      eventype = event:attr("eventype").defaultsTo("wrong", standardError("missing event attr type"));
+      timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
+      date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
       attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
-      attributes = attributes.decode();
+      attr = attributes.decode();
 
     }
     if (type eq "single" && type neq "wrong" ) then
     {
-
+      noop();
     }
     fired {
-      log(">> successfull>>");
-      schedule <domain> event <eventtype> at <ISO8601 DateTime> [ attributes <expr>] [setting(<var>)]
+      log(">> single >>");
+      schedule do_main event eventype at date_time attributes attr ;
           } 
     else {
-      log(">> falure >>");
-      schedule <domain> event <eventtype> repeat <timespec> [with <modifier_clause> | attributes <expr>] [setting(<var>)]
+      log(">> multiple >>");
+      schedule do_main event eventype repeat timespec  attributes attr ;
     }
-  } */ 
+  }  
 }
