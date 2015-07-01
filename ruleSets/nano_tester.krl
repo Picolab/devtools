@@ -18,7 +18,7 @@ ruleset NanoTester {
         use module b507199x5 alias NanoManager 
         //use module a169x625 alias PicoInspector
 
-        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients, get_my_apps, get_app, get_registry, get_secret, list_bootstrap, get_appinfo, list_callback
+        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients
         sharing on
     }
     global {
@@ -76,7 +76,7 @@ ruleset NanoTester {
           noop();
         }
         fired {
-            raise "nano_manager" event "ruleset_registered"
+            raise nano_manager event "ruleset_registered"
               attributes event:attrs();
         }
     }
@@ -91,11 +91,11 @@ ruleset NanoTester {
         }
         fired {
             log ">>>> flushed #{rid} <<<<";
-            raise "nano_manager" event "ruleset_deleted"
+            raise nano_manager event "ruleset_deleted"
               attributes event:attrs();
         }
         else{
-          log standardOut("flush failure: #{rid}");
+          log (standardOut("flush failure: #{rid}"));
         }
         
     }
@@ -111,8 +111,8 @@ ruleset NanoTester {
            noop();
         }
         fired {
-          log standardOut("success");
-            raise "nano_manager" event "ruleset_relinked"
+          log (standardOut("success"));
+            raise nano_manager event "ruleset_relinked"
               with rid = rulesetID
               and url = newURL;
         }
@@ -128,8 +128,8 @@ ruleset NanoTester {
           noop();
         }
         fired {
-          log ">>>> flushed #{rid} <<<<"
-          raise "nano_manager" event "ruleset_flushed"
+          log (">>>> flushed #{rid} <<<<");
+          raise nano_manager event "ruleset_flushed"
               attributes event:attrs();
         } 
     }
