@@ -91,7 +91,7 @@ ruleset b507199x5 {
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
       {
         'status'   : (results neq "wrong"),
-        'channels' : channels
+        'channels' : channels[0]
       };
     }
     Attributes = function(eci) {
@@ -255,8 +255,8 @@ ruleset b507199x5 {
   rule RelinkRuleset {
     select when nano_manager ruleset_relinked
     pre {
-      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
-      newURL = event:attr("url"); //should pull from the form on update url template
+      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
+      newURL = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
     }
     if(rid neq "") then // redundent??
     {// do we nee to check for a url or is it done on a different level?? like if (rulesetURL != "") or should we check for the rid 
