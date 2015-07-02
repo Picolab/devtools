@@ -141,14 +141,14 @@ ruleset NanoTester {
       select when devtools install_rulesets
       pre {
         rids = event:attr("rids").klog(">> rids attribute <<").defaultsTo("", ">> missing event attr rids >> ").klog(">> rids attribute <<");
-            result = rsm:is_valid(rids) => CloudOS:rulesetAddChild(rids, meta:eci()).klog(">> result of installing #{rids} >> ")
-                                     | {"status": false};
           }
-      if(result{"status"}) then {
-        send_directive("installed #{rids}");
+      if(rids neq "") then {
+        noop();
           }
       fired {
         log(">> successfully installed rids #{rids} >>");
+        raise nano_manager event "ruleset_installed"
+              attributes event:attrs();
           } else {
         log(">> could not install rids #{rids} >>");
           }
@@ -158,13 +158,14 @@ ruleset NanoTester {
       select when devtools uninstall_rulesets
       pre {
         rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-        result = CloudOS:rulesetRemoveChild(rids, meta:eci()).klog(">> result of uninstalling #{rids} >> ");
           }
-      if(result{"status"}) then {
-        send_directive("uninstalled #{rids}");
+      if(rids neq "") then {
+        noop();
           }
       fired {
         log(">> successfully uninstalled rids #{rids} >>");
+        raise nano_manager event "ruleset_uninstalled"
+              attributes event:attrs();
           } else {
         log(">> could not uninstall rids #{rids} >>");
           }
