@@ -43,7 +43,8 @@ ruleset NanoTester {
         //------------------------------- Channnels -------------------
         showInstalledChannels = function() {
             channels = NanoManager:Channels().klog(standardOut("NanoManager:Channels()"));
-            channels{'channels'};
+            channelsHash = channels{'channels'}.klog(standardOut("channels hash"));
+            channelsHash;
         };
         //------------------------------- <End oF>  Channnels -------------------
 
@@ -53,6 +54,7 @@ ruleset NanoTester {
             clients{'clients'};
         };
         //------------------------------- <End oF> Authorize clients-------------------
+        //------------------------------- Picos -------------------
         showPicos = function() {
             picos = NanoManager:Clients().klog(standardOut("NanoManager:Picos()"));
             picos{'picos'};
@@ -63,6 +65,7 @@ ruleset NanoTester {
                       ;
           account_profile 
         };
+        //------------------------------- <End of> Picos -------------------
     }
 
         //------------------------------- Rulesets -------------------
