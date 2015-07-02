@@ -89,10 +89,10 @@ ruleset b507199x5 {
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
-      result = Channels[0].defaultsTo("wrong",standardError("undefined"));
+      //result = Channels[0].defaultsTo("wrong",standardError("undefined"));
       {
         'status'   : (results neq "wrong"),
-        'channels' : result
+        'channels' : channels
       };
     }
     Attributes = function(eci) {
