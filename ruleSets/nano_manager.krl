@@ -38,7 +38,7 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides Registered, Ruleset, Installed, Channels,Attributes, Policy, Clients,Picos
+    provides Registered, Ruleset, Installed, Channels,Attributes, Policy, Clients,Picos,Schedules,History
     sharing on
 
   }
@@ -89,7 +89,6 @@ ruleset b507199x5 {
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
-      //result = Channels[0].defaultsTo("wrong",standardError("undefined"));
       {
         'status'   : (results neq "wrong"),
         'channels' : channels
@@ -655,7 +654,6 @@ ruleset b507199x5 {
       eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
       time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
       do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
-      eventype = event:attr("eventype").defaultsTo("wrong", standardError("missing event attr type"));
       timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
       date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
       attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));

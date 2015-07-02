@@ -35,11 +35,8 @@
 <div id="installed-channels-template" style="display:none;">
    <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a">
      <h4>{{Type}}</h4>
-
     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="{{Type}}2">
     </div>
-
-
    </div>
 </div>
 
@@ -56,16 +53,6 @@
    </div>
 </div>
 
-<!--<div id="installed-channels-template" style="display:none;">
-   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
-     <h4>{{channel_name}} ({{cid}})</h4>
-    <div style = "padding-top: 18px; padding-bottom:24px;"> 
-    
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
-       <p><b>Channel ID:</b> {{cid}}</p>
-     </div>
-   </div>
-</div>-->
 <div id="confirm-channel-remove-template" style="display:none;">
   <li data-role="list-divider" >Delete Channel</li>
   <li>
@@ -147,6 +134,23 @@
     <b>Email: </b> {{email}}
   </p>
 </div>
+  <!-- -------------------- Scheduled Templates---------------------- -->
+
+<div id="scheduled-events-template" style="display:none;">
+   <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a">
+     <h4>{{name}}</h4>
+     <div>
+      <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-ruleset?rid={{rid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Cancel Scheduled Event</a></p>
+       <p><b>SchedEv id:</b> {{id}}
+       <p><b>Domain/Event name:</b> {{name}}
+       <p><b>Type:</b> {{type}}</p>
+       <p><b>Rid:</b> {{rid}}</p>
+       <p><b>Next Scheduled Fire:</b> {{epoch_time}}</p>
+     </div>
+   </div>
+</div>
+
+  <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
 
 
 

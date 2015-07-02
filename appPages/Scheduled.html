@@ -1,0 +1,64 @@
+<div data-role="page" id="page-schedules" data-title="Scheduled Events">
+  {% include header.html title="Installed Rulesets" %}
+
+   <div data-role="content">
+     <ul id="scheduled-events-control" data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Sceduled Events</li>
+       <li>
+         <a id="schedule-event-button" href="#schedule-event" class="ui-btn ui-icon-edit ui-btn-icon-right">Schedule Event</a>
+       </li>
+     </ul>
+
+     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="scheduled-events">
+     </div>
+
+   </div><!-- /content -->
+
+   {% include footer.html %}
+</div><!-- /page -->
+
+<div data-role="page" id="schedule-event" data-title="Schedule Event">
+  {% include header.html title="Install a Ruleset" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="schedule-events" data-role="listview" data-inset="true"> 
+       	    <li data-role="list-divider" >Schedule Events</li>
+	    <li>
+	      <form id="form-schedule-event">
+	        <div data-role="fieldcontain">
+   	      <label for="event_domain">Event Domain:</label>
+		  <input type="text" name="event_domain" id="event_domain" value="" placeholder="Nano" />
+          <label for="event_type">Event Type:</label>
+      <input type="text" name="event_type" id="event_type" value="" placeholder="Rocks" />
+          <label for="date_time">Date, Time:</label>
+      <input type="text" name="date_time" id="date_time" value="" placeholder="" />
+          <label for="event_attributes">Event Attributes:</label>
+      <input type="text" name="event_attributes" id="event_attributes" value="" placeholder="{'nano': rocks, ...}" />
+		</div>
+	      </form>
+	      <div>
+                <a id="schedule-event-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Schedule</a>
+                <a href="#page-schedules" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+	      </div>
+	    </li>
+     	  </ul>
+	</div>
+
+  {% include footer.html %}
+
+</div>
+
+<div data-role="page" id="confirm-event-cancel" data-title="Cancel Scheduled Event">
+  {% include header.html title="Cancel Scheduled Event" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="remove-scheduled-event" data-role="listview" data-inset="true"> 
+       	    
+     	  </ul>
+	</div>
+
+
+  {% include footer.html %}
+
+
+</div>

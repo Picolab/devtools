@@ -65,6 +65,17 @@ ruleset NanoTester {
           account_profile 
         };
         //------------------------------- <End of> Picos -------------------
+        // -------------------- Scheduled ---------------------- 
+        showScheduledEvents = function() {
+          events = NanoManager:Schedules().klog(standardOut("NanoManager:Schedules()"));
+          events{'schedules'};
+        }
+        showScheduleHistory = function(id) {
+          events = NanoManager:History(id).klog(standardOut("NanoManager:History()"));
+          events{'history'};
+        }
+        // -------------------- <End oF> Scheduled ---------------------- 
+
     }
 
         //------------------------------- Rulesets -------------------
@@ -438,4 +449,22 @@ ruleset NanoTester {
             clear app:appRegistry;
             }
     }
+ // <!-- -------------------- Scheduled ---------------------- -->
+      rule ScheduleEvent {
+        select when devtools event_scheduled
+        pre {
+          eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
+          time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
+        }
+        if( eventtype neq "wrong" || time neq "wrong" ) then
+        {
+          noop();
+        }
+        fired {
+            raise nano_manager event "scheduled_created"
+              attributes event:attrs();
+        }
+    }
+  //<!-- -------------------- <End oF> Scheduled ---------------------- -->
+
 }
