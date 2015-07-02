@@ -213,8 +213,6 @@ ruleset b507199x5 {
     }
     fired {
       log ">>>> <<<<";
-      raise system event rulesetRegistered // do we need to raise an event ???
-      with rulsetID = rid{"rid"} if(rid);
     }
     else{
       log""
@@ -674,7 +672,7 @@ ruleset b507199x5 {
           } 
     else {
       log(">> multiple >>");
-      schedule do_main event eventype repeat timespec  attributes attr ;
+      schedule do_main event eventype repeat timespec attributes attr ;
     }
   }  
 }
