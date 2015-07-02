@@ -43,8 +43,7 @@ ruleset NanoTester {
         //------------------------------- Channnels -------------------
         showInstalledChannels = function() {
             channels = NanoManager:Channels().klog(standardOut("NanoManager:Channels()"));
-            channelsHash = channels{'channels'}.klog(standardOut("channels hash"));
-            channelsHash;
+            channels{'channels'};
         };
         //------------------------------- <End oF>  Channnels -------------------
 
