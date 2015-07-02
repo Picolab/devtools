@@ -89,9 +89,10 @@ ruleset b507199x5 {
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
+      result = Channels[0].defaultsTo("wrong",standardError("undefined"));
       {
         'status'   : (results neq "wrong"),
-        'channels' : channels[0]
+        'channels' : result
       };
     }
     Attributes = function(eci) {
@@ -242,7 +243,7 @@ ruleset b507199x5 {
     }
     if(rid.length() > 0 ) then // redundent??
     {
-      rsm:flush(rid) 
+      rsm:flush(rid); 
     }
     fired {
       log ">>>> flushed #{rid} <<<<"
