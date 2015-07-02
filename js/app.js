@@ -151,7 +151,7 @@
 
 				function populate_schedule_events() {
 
-					Devtools.showScheduleEvents(function(events_list){
+					Devtools.showScheduledEvents(function(events_list){
 
 						$("#scheduled-events").empty();
 					 	
@@ -905,7 +905,8 @@
 			confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
 			about_account: Handlebars.compile($("#about-account-template").html() || ""),
       authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
-      confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || "")
+      confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
+			scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || "")
 	};
 
 	function plant_authorize_button()
