@@ -302,7 +302,7 @@
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, {"eci":eci});
-    }
+    },
    // lookupScheduledEvent: function(){}
 
 
@@ -321,7 +321,7 @@
            Devtools.log("Creating a scheduled event", json);
            cb(json);
        }, {"eci":eci});
-    },
+    }
 //
 }; //closes the "window" inside the function DON'T DELETE
 
