@@ -495,4 +495,35 @@ ruleset devtools {
 		  	clear app:appRegistry;
 	        }
     }
+
+
+
+    //TESTING NEW CODE WHICH IS FROM NANO MANAGER
+
+    rule CreateScheduled {
+	    select when nano_manager scheduled_created
+	    pre{
+	      eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
+	      //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
+	      do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
+	      //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
+	      date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
+	      attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
+	      attr = attributes.decode();
+
+	    }
+	    if (type eq "single" && type neq "wrong" ) then
+	    {
+	      noop();
+	    }
+	    fired {
+	      log(">> single >>");
+	      schedule do_main event eventype at date_time attributes attr ;
+	          } 
+	    else {
+	      log(">> multiple >>");
+	      schedule do_main event eventype repeat timespec attributes attr ;
+	    }
+	  }  
+
 }

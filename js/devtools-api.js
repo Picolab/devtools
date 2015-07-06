@@ -304,6 +304,24 @@
         }, {"eci":eci});
     }
    // lookupScheduledEvent: function(){}
+
+
+
+
+
+   //TESTING CODE WRITTEN IN NANO MANAGER
+   scheduleEvent: function(data, cb, options) 
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var parameters = {channelName:channel_name}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Installing channels");
+       return CloudOS.raiseEvent("nano_manager", "scheduled_event", data,{}, function(json) {
+           Devtools.log("Creating a scheduled event", json);
+           cb(json);
+       }, {"eci":eci});
+    },
 //
 }; //closes the "window" inside the function DON'T DELETE
 
