@@ -92,87 +92,7 @@
 		],
 
 		{
-  //<!-- -------------------- Scheduled Templates---------------------- -->
-				schedule_event: function(type, match, ui, page) {
-				console.log("schedule event");
-				loadSpinner("#schedule_event", "Schedule Events");
-				var frm = "#form-schedule-event";
-					$(frm)[0].reset(); // clear the fields in the form
-					
-					submitEventSchedule = function(){
-					 	{
-							$.mobile.loading("show", {
-								text: "scheduleing event...",
-								textVisible: true
-							});
-							var schedule_form_data = process_form(frm);
-							console.log(">>>>>>>>> event to schedule", schedule_form_data);
-							var event_domain = schedule_form_data.event_domain;
-							var event_type 	 = schedule_form_data.event_type;
-							var	date_time 	 = schedule_form_data.date_time;
-							var event_attributes	 = schedule_form_data.event_attributes;
-							var sch_data ={
-								"eventtype": event_type,
-								"time" : date_time,
-								"do_main": event_domain,
-								//"timespec": ,
-								"date_time" : date_time,
-								"attributes" : event_attributes
-							}
-							if( true ) {
-								Devtools.scheduleEvent(sch_data, function(directives) {
-									console.log("scheduled ", sch_data, directives);
-									$.mobile.changePage("#page-schedules", {
-										transition: 'slide'
-									});
-								}); 
-							} else {
-								//	console.log("Invalid channel_name ", channel_name);
-								//	$.mobile.loading("hide");
-								//	$.mobile.changePage("#page-channel-management", {
-								//		transition: 'slide'
-								//	});
-							}
-						}
-					}
-					
-					$(frm).off('keypress').on('keypress', function(event) {
-						if (event.which == 13) {
-							event.preventDefault();
-							submitEventSchedule();
-						}
-					});
-					
-					$('#schedule-event-confirm-button').off('tap').on('tap', submitEventSchedule);
-			},
-			scheduled_events: function(type, match, ui, page) {
-				console.log("scheduled events");
-				loadSpinner("#schedule_events", "Schedule Events");
-
-				function populate_schedule_events() {
-
-					Devtools.showScheduledEvents(function(events_list){
-
-						$("#scheduled-events").empty();
-					 	
-					 	dynamicScheduledEvents = "";
-					 	$.each(events_list, function(k, scheduled_event) {
-							dynamicScheduledEvents += snippets.scheduled_events_template({
-								"id": scheduled_event[0],
-								"name": scheduled_event[1],
-								"type": scheduled_event[2],
-								"rid": scheduled_event[3],
-								"epoch_time": scheduled_event[4]
-							});
-					 	});
-					 	$("#scheduled-events").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
-					 	$.mobile.loading("hide");
-					 	
-					});
-				}
-
-				populate_schedule_events();
-			},
+ 
 			 // <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
@@ -880,6 +800,89 @@
 					}
 				});
 				$('#install-ruleset-confirm-button').off('tap').on('tap', submitInstall);
+			},
+
+
+			 //<!-- -------------------- Scheduled Templates---------------------- -->
+				schedule_event: function(type, match, ui, page) {
+				console.log("schedule event");
+				loadSpinner("#schedule_event", "Schedule Events");
+				var frm = "#form-schedule-event";
+					$(frm)[0].reset(); // clear the fields in the form
+					
+					submitEventSchedule = function(){
+					 	{
+							$.mobile.loading("show", {
+								text: "scheduleing event...",
+								textVisible: true
+							});
+							var schedule_form_data = process_form(frm);
+							console.log(">>>>>>>>> event to schedule", schedule_form_data);
+							var event_domain = schedule_form_data.event_domain;
+							var event_type 	 = schedule_form_data.event_type;
+							var	date_time 	 = schedule_form_data.date_time;
+							var event_attributes	 = schedule_form_data.event_attributes;
+							var sch_data ={
+								"eventtype": event_type,
+								"time" : date_time,
+								"do_main": event_domain,
+								//"timespec": ,
+								"date_time" : date_time,
+								"attributes" : event_attributes
+							}
+							if( true ) {
+								Devtools.scheduleEvent(sch_data, function(directives) {
+									console.log("scheduled ", sch_data, directives);
+									$.mobile.changePage("#page-schedules", {
+										transition: 'slide'
+									});
+								}); 
+							} else {
+								//	console.log("Invalid channel_name ", channel_name);
+								//	$.mobile.loading("hide");
+								//	$.mobile.changePage("#page-channel-management", {
+								//		transition: 'slide'
+								//	});
+							}
+						}
+					}
+					
+					$(frm).off('keypress').on('keypress', function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							submitEventSchedule();
+						}
+					});
+					
+					$('#schedule-event-confirm-button').off('tap').on('tap', submitEventSchedule);
+			},
+			scheduled_events: function(type, match, ui, page) {
+				console.log("scheduled events");
+				loadSpinner("#schedule_events", "Schedule Events");
+
+				function populate_schedule_events() {
+
+					Devtools.showScheduledEvents(function(events_list){
+
+						$("#scheduled-events").empty();
+					 	
+					 	dynamicScheduledEvents = "";
+					 	$.each(events_list, function(k, scheduled_event) {
+							dynamicScheduledEvents += snippets.scheduled_events_template({
+								"id": scheduled_event[0],
+								"name": scheduled_event[1],
+								"type": scheduled_event[2],
+								"rid": scheduled_event[3],
+								"epoch_time": scheduled_event[4]
+							});
+					 	});
+					 	$("#scheduled-events").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
+					 	$.mobile.loading("hide");
+					 	
+					});
+				}
+
+				populate_schedule_events();
 			},
 		},
 
