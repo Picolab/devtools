@@ -1,0 +1,67 @@
+<!-- naming needs to be redone ???? -->
+
+<div data-role="page" id="page-subscription-management" data-title="Subcription Management" >
+  {% include header.html title="Subcription Management" %}
+
+   <div data-role="content">
+       <p>
+         Welcome to the Subcription Manager. Here you can view and add Subcription for your Pico or Picos that you own.
+        </p>
+     <ul id="Subcriptions-control" data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Subcription Manager</li>
+       <li>
+         <a id="install-Subcription-button" href="#install-Subcription" class="ui-btn ui-icon-edit ui-btn-icon-right">New Subcription</a>
+       </li>
+     </ul>
+
+     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="Subscriptions">
+     </div>
+
+   </div><!-- /content -->
+
+   {% include footer.html %}
+</div><!-- /page -->
+
+<div data-role="page" id="install-Subcription" data-title="Install Subcription">
+  {% include header.html title="Create a Subcription" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="install-Subcription" data-role="listview" data-inset="true"> 
+       	    <li data-role="list-divider" >Create Subcription</li>
+	    <li>
+	      <form id="form-install-Subcription">
+	        <div data-role="fieldcontain">
+   	          <label for="Subcription_name">Name:</label>
+		  <input type="text" name="Subcription_name" id="Subcription_name" value="" placeholder="KRL Rocks" />
+      <label for="Subcription_name_spce">Name Space:</label>
+      <input type="text" name="Subcription_name_spce" id="Subcription_name_spce" value="" placeholder="KRL Rocks" />
+      <label for="Subcription_target">Target:</label>
+      <input type="text" name="Subcription_target" id="Subcription_target" value="" placeholder="KRL Rocks" />
+      <label for="Subcription_attrs">Attrs:</label>
+      <input type="text" name="Subcription_attrs" id="Subcription_attrs" value="" placeholder="KRL Rocks" />
+		</div>
+	      </form>
+	      <div>
+                <a id="install-Subcription-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Install</a>
+                <a href="#page-Subcription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+	      </div>
+	    </li>
+     	  </ul>
+	</div>
+
+  {% include footer.html %}
+
+</div>
+
+<div data-role="page" id="confirm-uninstall-Subcription" data-title="Uninstall Subcription">
+  {% include header.html title="Delete a Subcription" %}
+
+	<div data-role="main" class="ui-content">
+	  <ul id="remove-Subcription" data-role="listview" data-inset="true"> 
+       	    
+     	  </ul>
+	</div>
+
+
+  {% include footer.html %}
+</div>

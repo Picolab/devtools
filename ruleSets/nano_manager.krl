@@ -150,13 +150,25 @@ ruleset b507199x5 {
      }
   //-------------------- Subscriptions ----------------------
     Subscriptions = function(namespace, relationship) { 
-      ent:subscriptions;
+      subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (subscriptions != "wrong"),
+        'subscriptions'  : subscriptions
+      }
     }
     OutGoing = function() { 
-      ent:pending_out_going;
+      pending = ent:pending_out_going.defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (pending != "wrong"),
+        'subscriptions'  : pending
+      }
     }
     Incoming = function() { 
-      ent:pending_in_coming;
+      pending = ent:pending_in_coming.defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (pending != "wrong"),
+        'subscriptions'  : pending
+      }
     }
   //-------------------- Scheduled ----------------------
     Schedules = function() { 
@@ -453,7 +465,7 @@ ruleset b507199x5 {
   //      "relationship"   : ,
   //      "eventChannel"  : ,
   //      "backChannel"   : ,
-  //      "Attrs"  :
+  //      "attrs"  :
   //    }
   //  }
   //
@@ -463,7 +475,7 @@ ruleset b507199x5 {
   //      "namespace"   : ,
   //      "relationship"   : ,
   //      "backChannel"   : ,
-  //      "Attrs"  :
+  //      "attrs"  :
   //    }
   //  }
   //
@@ -473,7 +485,7 @@ ruleset b507199x5 {
   //      "namespace"   : ,
   //      "relationship"   : ,
   //      "eventChannel"  : ,
-  //      "Attrs"  :
+  //      "attrs"  :
   //    }
   //  }
   //
@@ -513,7 +525,7 @@ ruleset b507199x5 {
         "namespace"    : namespace,
         "relationship" : myRole,
         "backChannel"  : backChannel_b,
-        "subAttrs"     : subAttrs.encode()
+        "attrs"     : subAttrs.encode()
       }; 
     }
     if(targetChannel neq "NoTargetChannel" &&
@@ -547,7 +559,7 @@ ruleset b507199x5 {
       namespace    = event:attr("namespace").defaultsTo("shared", standardError(""));
       relationship = event:attr("relationship").defaultsTo("peer-peer", standardError(""));
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-      attrs     = event:attr("subAttrs").defaultsTo("", standardError(""));
+      attrs     = event:attr("attrs").defaultsTo("", standardError(""));
 
       // --------------------------------------------
       // build pending pending approval entry
@@ -600,7 +612,7 @@ ruleset b507199x5 {
     fired {// can I do all this in the postlude??????????????????????
       log(">> successfull>>");
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending after delete");
-      set ent:subscriptions subscriptions.put([eventChannel],subscription);
+      set ent:subscriptions subscriptions.put([backChannel_b],subscription);
           } 
     else {
       log(">> falure >>");

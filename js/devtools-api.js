@@ -303,9 +303,63 @@
             cb(json);
         }, {"eci":eci});
     },
-   // lookupScheduledEvent: function(){}
 
-
+    showScheduleEvents: function(cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("show scheduled events");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showScheduleEvents", {}, function(json) {
+            Devtools.log("Displaying scheduled events", json);
+            cb(json);
+        }, {"eci":eci});   
+    },
+    scheduleEvent: function(Data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("scheduling event");
+       return CloudOS.raiseEvent("devtools", "event_scheduled", Data,{}, function(json) {
+           Devtools.log("Directive from ScheduleEvent", json);
+           cb(json);
+       }, {"eci":eci});
+    },
+    //-------------------Subscriptions--------------------
+    showSubscriptions: function(Data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("show Subscriptions");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", {}, function(json) {
+            Devtools.log("Displaying showSubscriptions", json);
+            cb(json);
+        }, {"eci":eci});  
+    },
+    showIncoming: function(Data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("show Incoming");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", {}, function(json) {
+            Devtools.log("Displaying showIncoming", json);
+            cb(json);
+        }, {"eci":eci});  
+    },
+    showOutGoing: function(Data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("show OutGoing");
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOutGoing", {}, function(json) {
+            Devtools.log("Displaying showOutGoing", json);
+            cb(json);
+        }, {"eci":eci});  
+    },
 
 
 

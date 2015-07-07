@@ -75,6 +75,20 @@ ruleset NanoTester {
           events{'history'};
         }
         // -------------------- <End oF> Scheduled ---------------------- 
+        // -------------------- SUBSCRIPTIONS ---------------------- 
+        showSubscriptions = function() {
+          subscriptions = NanoManager:Subscriptions().klog(standardOut("NanoManager:Subscriptions()"));
+          subscriptions{'subscriptions'};
+        }
+        showIncoming = function() {
+          subscriptions = NanoManager:Incoming().klog(standardOut("NanoManager:Incoming()"));
+          subscriptions{'subscriptions'};
+        }
+        showOutGoing = function() {
+          subscriptions = NanoManager:OutGoing().klog(standardOut("NanoManager:OutGoing()"));
+          subscriptions{'subscriptions'};
+        }
+        // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 
 
     }
 

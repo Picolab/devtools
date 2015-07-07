@@ -40,7 +40,7 @@
    </div>
 </div>
 
-<<div id="installed-channels-template2" style="display:none;">
+<div id="installed-channels-template2" style="display:none;">
    <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
      <h4>{{channel_name}} ({{cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
@@ -151,7 +151,85 @@
 </div>
 
   <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
+  <!-- -------------------- subscriptions Templates---------------------- -->
 
+<div id="subscription-incoming-template" style="display:none;">
+   <div id="{{e_cid}}}" data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{name}} ({{e_cid}}})</h4>
+    <div style = "padding-top: 18px; padding-bottom:24px;"> 
+        <p><b>Name:</b> {{name}}</p>
+        <p><b>Name Space:</b> {{name_space}}</p> 
+        <p><b>Relationship:</b> {{relationship}}</p>
+        <p><b>Event Channel:</b> {{e_cid}}</p>
+        <p><b>Attributes:</b> {{attributes}}</p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#reject-subscription?eventChannel={{e_cid}}}&name={{name}}" data-role="button" data-icon="reject" class="ui-btn ui-icon-delete ">Reject</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#approve-subscription?eventChannel={{e_cid}}}&name={{name}}" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete ">Approve</a></p>
+     </div>
+   </div>
+</div>
+<div id="subscription-out-going-template" style="display:none;">
+   <div id="{{b_cid}}}" data-role="collapsible" data-filtertext="{{name}} ({{b_cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{name}} ({{b_cid}}})</h4>
+    <div style = "padding-top: 18px; padding-bottom:24px;"> 
+        <p><b>Name:</b> {{name}}</p>
+        <p><b>Name Space:</b> {{name_space}}</p> 
+        <p><b>Relationship:</b> {{relationship}}</p>
+        <p><b>Back Channel:</b> {{b_cid}}</p>
+        <p><b>Attributes:</b> {{attributes}}</p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#cancel-subscription?backChannel={{b_cid}}}&name={{name}}" data-role="button" data-icon="cancel" class="ui-btn ui-icon-delete ">Cancel</a></p>
+     </div>
+   </div>
+</div>
+<div id="subscription-template" style="display:none;">
+   <div id="{{e_cid}}}" data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{name}} ({{e_cid}}})</h4>
+    <div style = "padding-top: 18px; padding-bottom:24px;"> 
+        <p><b>Name:</b> {{name}}</p>
+        <p><b>Name Space:</b> {{name_space}}</p> 
+        <p><b>Relationship:</b> {{relationship}}</p>
+        <p><b>Event Channel:</b> {{e_cid}}</p>
+        <p><b>Back Channel:</b> {{b_cid}}</p>
+        <p><b>Attributes:</b> {{attributes}}</p>
+         <p style="position:relative; top:-20px"><a style="float:right;" href="#un-subscribe-subscription?eventChannel={{e_cid}}}&name={{name}}" 
+         data-role="button" data-icon="un-subscribe" class="ui-btn ui-icon-delete ">Un-Subscribe</a></p>
+     </div>
+   </div>
+</div>
+<div id="confirm-reject-subscription-template" style="display:none;">
+  <li data-role="list-divider" >Reject Subscription</li>
+  <li>
+  <p>
+  <h3>Name: {{name}} 
+  </br> Event Channel ID: {{e_cid}}</h3>
+    <a id="reject-subscription-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Reject</a>
+    <a href="#page-subscription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+  </p>
+  </li>
+</div>
+<div id="confirm-un-subscription-template" style="display:none;">
+  <li data-role="list-divider" >Un-Subscription</li>
+  <li>
+  <p>
+  <h3>Name: {{name}} 
+  </br> Event Channel ID: {{e_cid}}</h3>
+    <a id="un-subscription-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Un-Subscription</a>
+    <a href="#page-subscription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+  </p>
+  </li>
+</div>
+<div id="confirm-cancel-subscription-template" style="display:none;">
+  <li data-role="list-divider" >Cancel Subscription</li>
+  <li>
+  <p>
+  <h3>Name: {{name}} 
+  </br> Event Channel ID: {{e_cid}}</h3>
+    <a id="cancel-subscription-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Cancel Subscription</a>
+    <a href="#page-subscription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+  </p>
+  </li>
+</div>
+
+  <!-- -------------------- <End oF> subscriptions Templates---------------------- -->
 
 
 {% endraw %}

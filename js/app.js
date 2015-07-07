@@ -88,12 +88,15 @@
       {"#schedule-event": {handler: "schedule_event",
 					events: "s", // do page before show
 					argsre: true
-			} }         
+			} },
+			{"#page-subscription-management": {handler: "subscriptions",
+					events: "s", // do page before show
+					argsre: true
+			} }            
 		],
 
 		{
  
-			 // <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
 				console.log("authChecked");
@@ -801,7 +804,98 @@
 				});
 				$('#install-ruleset-confirm-button').off('tap').on('tap', submitInstall);
 			},
+//--------------------------------Subscriptions---------------------------------
+			subscriptions: function(type, match, ui, page) {
+				console.log("subscriptions page");
+				loadSpinner("#page-subscription-management", "subscriptions");
 
+
+				function populate_subscriptions() {
+					Devtools.showSubscriptions(function(subscriptions){
+						//use teplate to format 
+						$("#Subcriptions" ).empty();
+						var subscriptions = subscriptions["subscriptions"];
+
+						dynamic_subscriptions_items = "";
+						dynamic_subscriptions_items2 = "";
+						
+						$.each(subscriptions, function(key, object) {
+								dynamic_subscriptions_items2 +=
+								 snippets.subscription_template(
+									{"name": object["name"],
+									"name_space": object["namespace"],
+									"relationship": object["relationship"],
+									"e_cid": object["eventChannel"],
+									"b_cid": object["backChannel"],
+									"attributes":JSON.stringify(object["attrs"])}
+									);
+						  });
+						  //outter div
+							dynamic_subscriptions_items += 
+								snippets.subscription_tab_template(
+									{"Type": "subscriptions"}//,
+									);
+					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+
+							});
+					Devtools.showIncoming(function(subscriptions){
+						$("#Subcriptions" ).empty();
+						var subscriptions = subscriptions["subscriptions"];
+
+						dynamic_subscriptions_items = "";
+						dynamic_subscriptions_items2 = "";
+						
+						$.each(subscriptions, function(key, object) {
+								dynamic_subscriptions_items2 +=
+								 snippets.subscription_incoming_template(
+									{"name": object["name"],
+									"name_space": object["namespace"],
+									"relationship": object["relationship"],
+									"e_cid": object["eventChannel"],
+									"attributes":JSON.stringify(object["attrs"])}
+									);
+						  });
+						  //outter div
+							dynamic_subscriptions_items += 
+								snippets.subscription_tab_template(
+									{"Type": "Incomeing"}//,
+									);
+					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							});
+					Devtools.showOutGoing(function(subscriptions){
+						$("#Subcriptions" ).empty();
+						var subscriptions = subscriptions["subscriptions"];
+
+						dynamic_subscriptions_items = "";
+						dynamic_subscriptions_items2 = "";
+						
+						$.each(subscriptions, function(key, object) {
+								dynamic_subscriptions_items2 +=
+								 snippets.subscription_out_going_template(
+									{"name": object["name"],
+									"name_space": object["namespace"],
+									"relationship": object["relationship"],
+									"b_cid": object["backChannel"],
+									"attributes":JSON.stringify(object["attrs"])}
+									);
+						  });
+						  //outter div
+							dynamic_subscriptions_items += 
+								snippets.subscription_tab_template(
+									{"Type": "Out Going"}//,
+									);
+					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							});
+					  $.mobile.loading("hide");
+				}
+				populate_subscriptions();
+			},
+
+
+//--------------------------------End oF Subscriptions---------------------------------
 
 			 //<!-- -------------------- Scheduled Templates---------------------- -->
 				schedule_event: function(type, match, ui, page) {
@@ -885,6 +979,7 @@
 				populate_schedule_events();
 			},
 		},
+	// <!-- -------------------- <End oF> Scheduled ---------------------- -->
 
 		{ 
 			defaultHandler: function(type, ui, page) {
@@ -909,7 +1004,12 @@
 			about_account: Handlebars.compile($("#about-account-template").html() || ""),
       authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
       confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
-			scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || "")
+			scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || ""),
+			//subscriptions
+			subscription_tab_template: Handlebars.compile($("#subscription-tab-template").html() || ""),
+			subscription_incoming_template: Handlebars.compile($("#subscription-incoming-template").html() || ""),
+			subscription_out_going_template: Handlebars.compile($("#subscription-out-going-template").html() || ""),
+			subscription_template: Handlebars.compile($("#subscription-template").html() || "")
 	};
 
 	function plant_authorize_button()
