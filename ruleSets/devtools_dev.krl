@@ -22,24 +22,6 @@ ruleset devtools {
 	}
 	global {
 		
-	rulesetList = function(eci) {// ------ from cloudOS
-      userToken = eci || ent:userToken || "none";
-
-      // Retrieve list of RIDs installed for userToken
-      r = pci:list_ruleset(userToken).klog(">>>>>>>>> pci:list_ruleset >>>>>>>>>>");
-
-      // Harvest the list of RIDs if list_ruleset request was valid
-      // rids = (r) => r{'rids'} | [];
-
-      rids = (r) => ((r{'rids'}.length() != 0) => r{'rids'} | []) | [];
-
-      status = (r) => true | false;
-
-      {
-        'rids'     : rids,
-        'status'   : status
-      }
-    };
         showRulesets = function(){
             rulesets = rsm:list_rulesets(meta:eci()).sort().klog(">>>>>> rsm:list_rulesets result vs.15>>>>>>>");
 
@@ -312,10 +294,14 @@ ruleset devtools {
 
 	      bootstrapRids = appDataPassed{"bootstrapRids"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 
-	      application_eci_result = (pci:new_eci(meta:eci(), {
-	        'name' : 'Oauth Developer ECI',
-	        'eci_type' : 'OAUTH'
-	      }) || {}).klog(">>>>>>>>>> eci results >>>>>>>>>>");
+	      options = {
+	      	'name' :	'Oauth Developer ECI',
+	      	'eci_type'	:	'CLIENT OAUTH'//, /*'OAUTH'*/
+	      	//'attributes'	:	attributes,	
+	      	//'policy'	:	policy
+	      };
+	      //creates new eci 
+	      application_eci_result = (pci:new_eci(meta:eci(), options ) || {}).klog(">>>>>>>>>> eci results >>>>>>>>>>");
 
 	      application_eci = application_eci_result{"cid"};
 
@@ -332,13 +318,16 @@ ruleset devtools {
 	      apps = (ent:apps || {}).put([application_eci], appData);
 
 	    }
-	    if (// redundant???
+	   /* if (// redundant???
 	      appData &&
 	      appData{"appName"} &&
 	      appData{"appImageURL"} &&
 	      appData{"appCallbackURL"} &&
 	      appData{"appDeclinedURL"}
-	    ) then{
+	    )*/
+	    if (application_eci_result.typeof() eq "hash" && // pci returns null on failure
+	    	developer_secret neq ""	// check to see if you have secrets 
+	    	) then{
 	      pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
 	      pci:add_callback(application_eci, appCallbackURL);
 	      addPCIbootstraps(application_eci,bootstrapRids);
@@ -349,11 +338,15 @@ ruleset devtools {
          	"description": appDataPassed{"appDescription"},
          	"info_page": appDataPassed{"info_page"}
         	});
+    	  //pci:add_client(application_eci, appData); <- this is not in pci yet........
 	    }
 	    fired {
 	      log appCallbackURL;//???????????
 	      set app:appRegistry registery;
 	      set ent:apps apps;
+	    }
+	    else {
+	    	log( " failure");
 	    }
     }
 
