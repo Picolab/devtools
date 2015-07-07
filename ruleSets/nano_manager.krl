@@ -526,7 +526,7 @@ ruleset b507199x5 {
         "relationship" : myRole,
         "backChannel"  : backChannel_b,
         "attrs"     : subAttrs.encode()
-      }; 
+      }.klog("pending subscription"); 
     }
     if(targetChannel neq "NoTargetChannel" &&
      user neq "" &&
