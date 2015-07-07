@@ -814,8 +814,6 @@
 					Devtools.showSubscriptions(function(subscriptions){
 						//use teplate to format 
 						$("#Subcriptions" ).empty();
-						var subscriptions = subscriptions["subscriptions"];
-
 						dynamic_subscriptions_items = "";
 						dynamic_subscriptions_items2 = "";
 						
@@ -841,8 +839,6 @@
 							});
 					Devtools.showIncoming(function(subscriptions){
 						$("#Subcriptions" ).empty();
-						var subscriptions = subscriptions["subscriptions"];
-
 						dynamic_subscriptions_items = "";
 						dynamic_subscriptions_items2 = "";
 						
@@ -862,12 +858,10 @@
 									{"Type": "Incomeing"}//,
 									);
 					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+					  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							});
 					Devtools.showOutGoing(function(subscriptions){
 						$("#Subcriptions" ).empty();
-						var subscriptions = subscriptions["subscriptions"];
-
 						dynamic_subscriptions_items = "";
 						dynamic_subscriptions_items2 = "";
 						
@@ -881,13 +875,15 @@
 									"attributes":JSON.stringify(object["attrs"])}
 									);
 						  });
+						console.log(dynamic_subscriptions_items2);
+						console.log("dynamic_subscriptions_items2");
 						  //outter div
 							dynamic_subscriptions_items += 
 								snippets.subscription_tab_template(
-									{"Type": "Out Going"}//,
+									{"Type": "OutGoing"}//,
 									);
 					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+					  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							});
 					  $.mobile.loading("hide");
 				}
