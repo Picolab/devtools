@@ -87,8 +87,7 @@ ruleset NanoTester {
         };
         showOutGoing = function() {
           subscriptions = NanoManager:OutGoing().klog(standardOut("NanoManager:OutGoing()"));
-          //subscriptions{'subscriptions'};
-          subscriptions;
+          subscriptions{'subscriptions'};
         };
         // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 
 
