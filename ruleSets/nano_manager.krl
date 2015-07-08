@@ -692,7 +692,7 @@ ruleset b507199x5 {
     }
   } 
     rule UnSubscribe {
-    select when nano_manager UnSubscribed
+    select when nano_manager unsubscribed
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
 
@@ -710,7 +710,7 @@ ruleset b507199x5 {
     }
   } 
   rule INITUnSubscribe {
-    select when nano_manager UnSubscribed
+    select when nano_manager init_unsubscribed
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
       subscription_map = {
@@ -719,14 +719,14 @@ ruleset b507199x5 {
     }
     if(eventChannel neq "No eventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "UnSubscribed") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_manager", "unsubscribed") // can we change system to something else ?// send request
         with attrs = {
           "eventChannel"  : eventChannel
         };
 
     }
     fired {
-      raise nano_manager event UnSubscribed with eventChannel = eventChannel; //????????????? may not work with this domain.........
+      raise nano_manager event unsubscribed with eventChannel = eventChannel; //????????????? may not work with this domain.........
       log(">> successfull>>");
           } 
     else {

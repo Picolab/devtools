@@ -92,7 +92,11 @@
 			{"#page-subscription-management": {handler: "subscriptions",
 					events: "s", // do page before show
 					argsre: true
-			} }            
+			} },
+			{"#approve-subscription": {handler: "approve_subscription",
+					events: "s", // do page before show
+					argsre: true
+			} }             
 		],
 
 		{
@@ -887,7 +891,18 @@
 				}
 				populate_subscriptions();
 			},
-
+			approve_subscription: function(type, match, ui, page) {
+				console.log("approve subscription page");
+				loadSpinner("#approve-subscription", "subscriptions");
+				var eventChannel = router.getParams(match[1])["eventChannel"];
+				//var name = router.getParams(match[1])["name"];
+				Devtools.ApproveSubscription(eventChannel, function(directives) {
+									console.log("approving ", eventChannel, directives);
+									$.mobile.changePage("#page-subscription-management", {
+										transition: 'slide'
+									});
+								}); 
+			},
 
 //--------------------------------End oF Subscriptions---------------------------------
 

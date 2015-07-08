@@ -466,6 +466,65 @@ ruleset NanoTester {
             clear app:appRegistry;
             }
     }
+ // <!-- -------------------- Subscription ---------------------- -->
+  rule addSubscriptionRequest {
+        select when devtools subscribe
+        pre {
+            targetChannel = event:attr("targetChannel").defaultsTo("", ">> missing event attr targetChannel >> ");
+        }
+        if(targetChannel neq "" ) then
+        {
+          noop();
+        }
+        fired {
+            raise nano_manager event "subscribe"
+              attributes event:attrs();
+        }
+    }
+  rule ApproveInComeingRequest {
+        select when devtools incoming_request_approved
+        pre {
+            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
+        }
+        if(eventChannel neq "" ) then
+        {
+          noop();
+        }
+        fired {
+            raise nano_manager event "incoming_request_approved"
+              attributes event:attrs();
+        }
+    }
+  rule RejectIncomingRequest {
+        select when devtools incoming_request_rejected
+        pre {
+            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
+        }
+        if(eventChannel neq "" ) then
+        {
+          noop();
+        }
+        fired {
+            raise nano_manager event "incoming_request_rejected"
+              attributes event:attrs();
+        }
+    }
+  rule INITUnSubscribe {
+        select when devtools init_unsubscribed
+        pre {
+            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
+        }
+        if(eventChannel neq "" ) then
+        {
+          noop();
+        }
+        fired {
+            raise nano_manager event "init_unsubscribed"
+              attributes event:attrs();
+        }
+    }
+
+ // <!-- --------------------<End oF> Subscription ---------------------- -->
  // <!-- -------------------- Scheduled ---------------------- -->
       rule ScheduleEvent {
         select when devtools event_scheduled
