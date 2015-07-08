@@ -37,7 +37,7 @@ ruleset NanoTester {
         };
         showInstalledRulesets = function() {
             rulesets = NanoManager:Installed().klog(standardOut("NanoManager:Installed()"));
-            rulesets{'rulesets'};
+            rulesets{'rids'};
         }; 
         //------------------------------- <End oF>  Rulesets -------------------
 
