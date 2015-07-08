@@ -816,6 +816,7 @@
 
 				function populate_subscriptions() {
 					Devtools.showSubscriptions(function(subscriptions){
+						$("#Subscriptions").empty();
 						//use teplate to format 
 						$("#Subcriptions" ).empty();
 						dynamic_subscriptions_items = "";
@@ -896,7 +897,7 @@
 				loadSpinner("#approve-subscription", "subscriptions");
 				var eventChannel = router.getParams(match[1])["eventChannel"];
 				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription(eventChannel, function(directives) {
+				Devtools.ApproveSubscription({"eventChannel" : eventChannel}, function(directives) {
 									console.log("approving ", eventChannel, directives);
 									$.mobile.changePage("#page-subscription-management", {
 										transition: 'slide'

@@ -49,7 +49,7 @@ ruleset b507199x5 {
   global {
     //functions
   //-------------------- Rulesets --------------------
-    Registered = function() {
+    registered = function() {
       eci = meta:eci();
         rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
         rulesetGallery = rulesets.map( function(rid){
@@ -80,7 +80,7 @@ ruleset b507199x5 {
         'rids'     : rids
       };
     }
-    DescribeRules = function(rids) {//takes an array of rids as parameter // can we write this better???????
+    describeRules = function(rids) {//takes an array of rids as parameter // can we write this better???????
       rids_string = rids.join(";");
       describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
       resp = http:get(describe_url);
@@ -470,11 +470,12 @@ ruleset b507199x5 {
   // ent:subscriptions {
   //     backChannel : {
   //      "name" : 
-  //      "namespace"   : ,
-  //      "relationship"   : ,
   //      "eventChannel"  : ,
-  //      "backChannel"   : ,
-  //      "attrs"  :
+  //      "backChannel"{"attrs"} : [
+  //                <namespace>,
+  //                <relationship>,
+  //                <attrs>:
+  //       ],
   //    }
   //  }
   //
@@ -519,9 +520,10 @@ ruleset b507199x5 {
       };
 
       options = {
-        'name' : "#{name}",
-        'eci_type' : "Subscription",
-        'attributes' : "#{namespace}:#{myRole}"//,
+        'name' : name,// generate name and check if its uniqe
+        'eci_type' : namespace,
+        'attributes' : {"namespace":namespace,
+                          "role" : myRole }
         //'policy' : ,
       };
 
@@ -600,13 +602,21 @@ ruleset b507199x5 {
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
       pendingsubscription = ent:pending_in_coming{eventChannel};
+      subscriptions = ent:subscriptions;
+      options = {
+        'name' : pendingsubscription{'name'},
+        'eci_type' : pendingsubscription{'namespace'},
+        'attributes' : {"namespace":namespace,
+                          "role" : myRole }
+        //'policy' : ,
+      };
 
       user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); 
       backChannel = pci:new_eci(user, options);
-      backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed")); 
+      backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci new_eci failed")); 
       // build subscription entry
-      subscription = ((pendingsubscription).put(["backChannel"],backChannel_b));
-
+      subscription = ((pendingsubscription).put(["backChannel"],backChannel_b)).klog("subscription"); /// needs standard output
+      new_subscriptions = subscriptions.put([backChannel_b],subscription);
       subscription_map = {
             "cid" : eventChannel
       };
@@ -618,10 +628,10 @@ ruleset b507199x5 {
           "eventChannel"  : backChannel_b
         };
     }
-    fired {// can I do all this in the postlude??????????????????????
+    fired {
       log(">> successfull>>");
-      set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending after delete");
-      set ent:subscriptions subscriptions.put([backChannel_b],subscription);
+      set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
+      set ent:subscriptions new_subscriptions;
           } 
     else {
       log(">> falure >>");
@@ -733,7 +743,7 @@ ruleset b507199x5 {
       log(">> falure >>");
     }
   } 
-
+// unsubscribed all, check event from parent 
 
   ///-------------------- Scheduled ----------------------
   rule DeleteScheduled {
