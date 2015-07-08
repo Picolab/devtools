@@ -360,7 +360,17 @@
             cb(json);
         }, {"eci":eci});  
     },
-
+    ApproveSubscription: function(event_channel, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("approve subscription");
+       return CloudOS.raiseEvent("devtools", "incoming_request_approved", event_channel,{}, function(json) {
+           Devtools.log("Directive from ApproveSubscription", json);
+           cb(json);
+       }, {"eci":eci});
+    },
 
 
    //TESTING CODE WRITTEN IN NANO MANAGER
