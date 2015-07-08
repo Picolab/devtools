@@ -38,7 +38,7 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides Registered, Ruleset, Installed, Channels,Attributes, Policy, Clients,Picos,Schedules,History,Subscriptions,OutGoing,Incoming
+    provides Registered, Ruleset, Installed,DescribeRules, Channels,Attributes, Policy, Clients,Picos,Schedules,History,Subscriptions,OutGoing,Incoming
     sharing on
 
   }
@@ -78,6 +78,16 @@ ruleset b507199x5 {
       {
        'status'   : (rids neq "wrong"),
         'rids'     : rids
+      };
+    }
+    DescribeRules = function(rids) {//takes an array of rids as parameter // can we write this better???????
+      rids_string = rids.join(";");
+      describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
+      resp = http:get(describe_url);
+      results = resp{"content"}.decode().defaultsTo("",standardError("content failed to return"));
+      {
+       'status'   : (resp{"status_code"} eq "200"),
+       'description'     : results
       };
     }
   //-------------------- Channels --------------------
