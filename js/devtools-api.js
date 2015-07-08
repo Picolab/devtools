@@ -304,7 +304,7 @@
         }, {"eci":eci});
     },
 
-    showScheduleEvents: function(cb, options)
+    showScheduledEvents: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};

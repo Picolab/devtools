@@ -875,8 +875,6 @@
 									"attributes":JSON.stringify(object["attrs"])}
 									);
 						  });
-						console.log(dynamic_subscriptions_items2);
-						console.log("dynamic_subscriptions_items2");
 						  //outter div
 							dynamic_subscriptions_items += 
 								snippets.subscription_tab_template(
