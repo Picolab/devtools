@@ -73,13 +73,12 @@ ruleset b507199x5 {
     }
     Installed = function() {
       eci = meta:eci().klog(">> meta:eci results: >>");
-      results = pci:list_ruleset(eci).defaultsTo("wrong",standardError("pci list_ruleset failed"));  // list of RIDs installed for userToken
-      results;
-   //   rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
-   //   {
-   //    'status'   : (rids neq "wrong"),// is this valid krl? // do we need status
-   //     'rids'     : rids
-   //   };
+      results = pci:list_ruleset(eci).defaultsTo("wrong",standardError("pci list_ruleset failed"));  
+      rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
+      {
+       'status'   : (rids neq "wrong"),
+        'rids'     : rids
+      };
     }
   //-------------------- Channels --------------------
     Channels = function() { 

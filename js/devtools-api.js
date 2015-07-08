@@ -327,7 +327,7 @@
        }, {"eci":eci});
     },
     //-------------------Subscriptions--------------------
-    showSubscriptions: function(Data, cb, options)
+    showSubscriptions: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -338,7 +338,7 @@
             cb(json);
         }, {"eci":eci});  
     },
-    showIncoming: function(Data, cb, options)
+    showIncoming: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -349,7 +349,7 @@
             cb(json);
         }, {"eci":eci});  
     },
-    showOutGoing: function(Data, cb, options)
+    showOutGoing: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};
