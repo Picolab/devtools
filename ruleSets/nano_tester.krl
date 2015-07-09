@@ -18,8 +18,8 @@ ruleset NanoTester {
         use module b507199x5 alias NanoManager 
         //use module a169x625 alias PicoInspector
 
-        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, showClients,
-        showSubscriptions, showIncoming, showOutGoing
+        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, 
+        showClients, showSubscriptions, showIncoming, showOutGoing
         sharing on
     }
     global {
@@ -38,7 +38,7 @@ ruleset NanoTester {
         showInstalledRulesets = function() {
             rulesets = NanoManager:Installed().klog(standardOut("NanoManager:Installed()"));
             rids = rulesets{'rids'};
-            description = NanoManager:DescribeRules(rids).klog(standardOut("NanoManager:DescribeRules()"));
+            description = NanoManager:describeRules(rids).klog(standardOut("NanoManager:DescribeRules()"));
             description{'description'};
         }; 
         //------------------------------- <End oF>  Rulesets -------------------
@@ -56,6 +56,7 @@ ruleset NanoTester {
             clients{'clients'};
         };
         //------------------------------- <End oF> Authorize clients-------------------
+
         //------------------------------- Picos -------------------
         showPicos = function() {
             picos = NanoManager:Clients().klog(standardOut("NanoManager:Picos()"));
@@ -68,6 +69,7 @@ ruleset NanoTester {
           account_profile 
         };
         //------------------------------- <End of> Picos -------------------
+        
         // -------------------- Scheduled ---------------------- 
         showScheduledEvents = function() {
           events = NanoManager:Schedules().klog(standardOut("NanoManager:Schedules()"));
@@ -106,8 +108,13 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("Registering Success: #{rulesetURL}"));
             raise nano_manager event "ruleset_registered"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
+
         }
     }
     rule deleteRulesets {
@@ -120,12 +127,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
-            log ">>>> flushed #{rid} <<<<";
-            raise nano_manager event "ruleset_deleted"
+          log (standardOut("delete Success: #{rid}"));
+          raise nano_manager event "ruleset_deleted"
               attributes event:attrs();
         }
         else{
-          log (standardOut("flush failure: #{rid}"));
+          log (standardOut("delete failure: #{rid}"));
         }
         
     }
@@ -146,6 +153,9 @@ ruleset NanoTester {
               with rid = rulesetID
               and url = newURL;
         }
+        else{
+          log (standardOut("update failure: #{rulesetID}"));
+        }
     }
 
     rule flushRuleset {
@@ -158,10 +168,14 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
           log (">>>> flushed #{rid} <<<<");
           raise nano_manager event "ruleset_flushed"
               attributes event:attrs();
         } 
+        else {
+          log (standardOut("failure"));
+        }
     }
 
     // ---------- ruleset installation ----------
@@ -174,12 +188,13 @@ ruleset NanoTester {
         noop();
           }
       fired {
-        log(">> successfully installed rids #{rids} >>");
+        log (standardOut("successfully installed rids #{rids}"));
         raise nano_manager event "ruleset_installed"
               attributes event:attrs();
-          } else {
-        log(">> could not install rids #{rids} >>");
-          }
+      } 
+      else {
+        log (standardOut("failure"));
+      }
         }
 
     rule uninstallRulesets {
@@ -194,10 +209,11 @@ ruleset NanoTester {
         log(">> successfully uninstalled rids #{rids} >>");
         raise nano_manager event "ruleset_uninstalled"
               attributes event:attrs();
-          } else {
+      } 
+      else {
         log(">> could not uninstall rids #{rids} >>");
-          }
-        }
+      }
+    }
 
 
     //---------------- channel manager ---------------
@@ -205,53 +221,72 @@ ruleset NanoTester {
     rule CreateChannel {
       select when devtools create_channel
       pre {
-        channels = CloudOS:channelList(meta:eci()).defaultsTo({}, ">> list of installed channels undefined >>")
-        .klog(">>>>> list of channel. ");
         channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
-            result = channelName.match(re/\w[\w\d_-]*/) => CloudOS:channelCreate(channelName).klog(">> result of creating #{channels} >> ")
-                                     | {"status": false};
           }
-      if(result{"status"}) then {
+      if(channelName.match(re/\w[\w\d_-]*/)) then {
         send_directive("Created #{channelName}");
           }
       fired {
         log(">> successfully created channels #{channelName} >>");
-          } else {
+        raise nano_manager event "channel_created"
+              attributes event:attrs();
+      } 
+      else {
         log(">> could not create channels #{channelName} >>");
-          }
-        }
+      }
+    }
 
     rule DestroyChannel {
       select when devtools channel_destroy
       pre {
-        channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
-        result = CloudOS:channelDestroy(channelID).klog(">> result of creating #{channels} >> ");
+        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
           }
-      if(result{"status"}) then {
-        send_directive("deleted #{channelID}");
+      if(channelID neq "") then {
+        send_directive("deleteing #{channelID}");
           }
       fired {
-        log(">> successfully deleted channel #{channelID} >>");
-          } else {
+        log(">> success, raising delete channel #{channelID} event >>");
+        raise nano_manager event "channel_deleted"
+              attributes event:attrs();
+      } 
+      else {
         log(">> could not delete channel #{channelID} >>");
-          }
-        }
-        //----------------- not a CloudOS function yet (update channel) ----------------
-    rule UpdateChannel {
-      select when devtools update_channel
+      }
+    }
+    rule UpdateChannelAttributes {
+      select when devtools channel_attributes_updated
       pre {
-        channelID = event:attr("channelID").defaultsTo("", ">> missing event attr channels >> ");
-        result = CloudOS:channelUpdate(channelID, meta:eci()).klog(">> result of updating #{channels} >> ");
+        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
           }
-      if(result{"status"}) then {
-        send_directive("update #{channelID}");
+      if(channelID neq "") then {
+        send_directive("updateing #{channelID} attrs");
           }
       fired {
-        log(">> successfully updated channel #{channelID} >>");
-          } else {
+        log(">> success, raiseing updated attrs channel #{channelID} event >>");
+        raise nano_manager event "channel_attributes_updated"
+              attributes event:attrs();
+      } 
+      else {
         log(">> could not update channel #{channelID} >>");
+      }
+    }
+    rule UpdateChannelPolicy {
+      select when devtools channel_policy_updated
+      pre {
+        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
           }
-        }
+      if(channelID neq "") then {
+        send_directive("updateing #{channelID} policy");
+          }
+      fired {
+        log(">> success, raiseing updated policy channel #{channelID} event >>");
+        raise nano_manager event "channel_policy_updated"
+              attributes event:attrs();
+      } 
+      else {
+        log(">> could not update channel #{channelID} >>");
+      }
+    }
     //-------------------OAuthRegistry---------------
 
     rule AuthorizeClient {
@@ -305,11 +340,11 @@ ruleset NanoTester {
         )*/
         if (application_eci_result.typeof() eq "hash" && // pci returns null on failure
             developer_secret neq "" // check to see if you have secrets 
-            ) then{
+            ) 
+        then{
           pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
           pci:add_callback(application_eci, appCallbackURL);
           addPCIbootstraps(application_eci,bootstrapRids);
-          // [FIXME, PJW] hack. a41x226/b507199x0 shouldn't be keeping this data, should be in PCI
           pci:add_appinfo(application_eci, 
             {"icon": appDataPassed{"appImageURL"},
             "name": appDataPassed{"appName"},
@@ -477,8 +512,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
             raise nano_manager event "subscribe"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
         }
     }
   rule ApproveInComeingRequest {
@@ -491,8 +530,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
             raise nano_manager event "incoming_request_approved"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
         }
     }
   rule RejectIncomingRequest {
@@ -505,8 +548,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
             raise nano_manager event "incoming_request_rejected"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
         }
     }
   rule INITUnSubscribe {
@@ -519,8 +566,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
             raise nano_manager event "init_unsubscribed"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
         }
     }
 
@@ -537,8 +588,12 @@ ruleset NanoTester {
           noop();
         }
         fired {
+          log (standardOut("success"));
             raise nano_manager event "scheduled_created"
               attributes event:attrs();
+        }
+        else {
+          log (standardOut("failure"));
         }
     }
   //<!-- -------------------- <End oF> Scheduled ---------------------- -->

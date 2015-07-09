@@ -371,7 +371,17 @@
            cb(json);
        }, {"eci":eci});
     },
-
+    AddSubscription: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("approve subscription");
+       return CloudOS.raiseEvent("devtools", "subscribe", data,{}, function(json) {
+           Devtools.log("Directive from AddSubscription", json);
+           cb(json);
+       }, {"eci":eci});
+    },
 
    //TESTING CODE WRITTEN IN NANO MANAGER
    scheduleEvent: function(data, cb, options) 

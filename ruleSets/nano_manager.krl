@@ -38,7 +38,8 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides Registered, Ruleset, Installed,DescribeRules, Channels,Attributes, Policy, Clients,Picos,Schedules,History,Subscriptions,OutGoing,Incoming
+    provides Registered, Ruleset, Installed,DescribeRules, Channels,Attributes, Policy, Clients, Picos, Schedules, History,
+    Subscriptions, OutGoing, Incoming
     sharing on
 
   }
@@ -114,29 +115,24 @@ ruleset b507199x5 {
         'Policy' : results
       };
     }
-   /* Type = function(channel_id) { 
+    Type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
       channels = Channels().defaultsTo("wrong",">> undefined >>");
 
-      GetType = function(channel_id,channels) {
-    //    channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
-    //    channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "wrong",standardError("undefined"));
-    //    channel = channel[0];
-    //    type = channel{"type"};
-    //    temp = (type.typeof() eq "str" ) => type | type.typeof() eq "array" => type[0] |  type.keys();
-    //    type = (temp.typeof() eq "array") => temp[0] | temp;   
-        type;
+      getType = function(channel_id,channels) {
+        channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
+        channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "wrong",standardError("undefined"));
+        channel = channel[0];
+        type = channel{"type"};
+        temp = (type.typeof() eq "str" ) => type | type.typeof() eq "array" => type[0] |  type.keys();
+        type2 = (temp.typeof() eq "array") => temp[0] | temp;   
+        type2;
       };
-      GetType();
-     // type = GetType(channel_id,channels);
-
-      //type = ((channels neq "wrong") && (channels neq {} )) => getType() | "wrong";
-
-      
+      type = ((channels neq "wrong") && (channels neq {} )) => getType() | "wrong";
       {
         'status'   : (type neq "wrong"),
         'channels' : channels
-      }
-    }*/
+      };
+    }
   //-------------------- Clients --------------------
     Clients = function() { 
       eci = meta:eci();
@@ -149,6 +145,43 @@ ruleset b507199x5 {
         'clients' : krl_struct
       }
     }
+    addPCIbootstraps = defaction(appECI,bootstrapRids){
+      boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
+      send_directive("pci bootstraps updated.")
+        with rulesets = list_bootstrap(appECI); // is this working?
+    };
+    removePCIbootstraps = defaction(appEC,IbootstrapRids){
+      boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
+      send_directive("pci bootstraps removed.")
+        with rulesets = list_bootstrap(appECI); 
+    };
+    removePCIcallback = defaction(appECI,PCIcallbacks){
+      PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
+      boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
+      send_directive("pci callback removed.")
+        with rulesets = pci:list_callback(appECI);
+    };
+        get_my_apps = function(){
+              ent:apps
+          };
+          get_registry = function(){
+            app:appRegistry;
+          };
+          get_app = function(appECI){
+            (app:appRegistry{appECI}).delete(["appSecret"])
+          };
+          get_secret = function(appECI){
+            app:appRegistry{[appECI, "appSecret"]}
+          };
+          list_bootstrap = function(appECI){
+            pci:list_bootstrap(appECI);
+          };
+          get_appinfo = function(appECI){
+            pci:get_appinfo(appECI);
+          };
+          list_callback = function(appECI){
+            pci:list_callback(appECI);
+          };
   //-------------------- Picos ----------------------
     Picos = function() {
       picos = ent:my_picos.defaultsTo("wrong",standardError("undefined"));
@@ -372,7 +405,7 @@ ruleset b507199x5 {
   rule DeleteChannel {
     select when nano_manager channel_deleted
     pre {
-      channelID = event:attr("channelID").defaultsTo("", standardError("missing event attr channels"));
+      channelID = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
     {
       pci:delete_eci(channelID);
@@ -387,7 +420,7 @@ ruleset b507199x5 {
   rule CreateChannel {
     select when nano_manager channel_created
     pre {
-      channels = Channels().defaultsTo({}, standardError("list of installed channels undefined"));
+     // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
       user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
       options = {
@@ -485,6 +518,7 @@ ruleset b507199x5 {
   //      "namespace"   : ,
   //      "relationship"   : ,
   //      "backChannel"   : ,
+  //      "Target" : , 
   //      "attrs"  :
   //    }
   //  }
@@ -536,7 +570,8 @@ ruleset b507199x5 {
         "namespace"    : namespace,
         "relationship" : myRole,
         "backChannel"  : backChannel_b,
-        "attrs"     : subAttrs.encode()
+        "targetChannel"  : targetChannel,
+        "attrs"     : subAttrs.decode()
       }.klog("pending subscription"); 
     }
     if(targetChannel neq "NoTargetChannel" &&
@@ -544,7 +579,7 @@ ruleset b507199x5 {
      backChannel_b neq "") 
     then
     {
-      event:send(subscription_map, "system", "subscription_requested") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_manager", "subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "namespace"    : namespace,
@@ -555,6 +590,7 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_out_going_pending;
       set ent:pending_out_going{backChannel_b} pendingEntry;
 
     } 
@@ -564,7 +600,7 @@ ruleset b507199x5 {
   }
 
   rule subscriptionRequestPending {
-    select when system subscription_requested
+    select when nano_manager subscription_requested
     pre {
       name  = event:attr("name").defaultsTo("orphan", standardError(""));
       namespace    = event:attr("namespace").defaultsTo("shared", standardError(""));
@@ -589,7 +625,7 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_request_pending;
+      raise nano_manager event subscription_in_coming_pending;
       set ent:pending_in_coming{eventChannel} pendingApprovalEntry;
           } 
     else {
@@ -623,13 +659,14 @@ ruleset b507199x5 {
     }
     if (subscription{"backChannel"} neq "") then
     {
-      event:send(subscription_map, "system", "out_going_request_approved") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_manager", "out_going_request_approved") // send request
         with attrs = {
           "eventChannel"  : backChannel_b
         };
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_added;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
       set ent:subscriptions new_subscriptions;
           } 
@@ -639,7 +676,7 @@ ruleset b507199x5 {
   }
 
   rule ApproveOutGoingRequest {
-    select when system out_going_request_approved
+    select when nano_manager out_going_request_approved
     pre{
       backChannel = meta:eci();
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
@@ -653,6 +690,7 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_added;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
       set ent:subscriptions subscriptions.put([eventChannel],subscription);
           } 
@@ -670,21 +708,64 @@ ruleset b507199x5 {
     }
     if(eventChannel neq "NoEventChannel") then
     {
-      event:send(subscription_map, "system", "out_going_request_rejected") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_manager", "out_going_request_rejected") // send request
         with attrs = {
           "backChannel"  : eventChannel
         };
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_in_coming_rejected;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
     } 
     else {
       log(">> falure >>");
     }
   }
-
-  rule RejectOutGoingRequest {
+  rule rejectOutGoingRequest {
+    select when nano_manager out_going_request_rejected_by_origin
+    pre{
+      backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
+      targetChannel = event:attr("targetChannel").defaultsTo( "No targetChannel", standardError(""));
+      subscription_map = {
+        "cid" : targetChannel
+      };
+    }
+    if(backChannel neq "No backChannel") then
+    {
+      event:send(subscription_map, "nano_manager", "incoming_request_rejected_by_origin") // send request
+        with attrs = {
+          "eventChannel"  : backChannel
+        };
+    }
+    fired {
+      log(">> successfull>>");
+      raise nano_manager event subscription_out_going_rejected;
+      set ent:pending_out_going pending_out_going.delete([backChannel]);
+    } 
+    else {
+      log(">> falure >>");
+    }
+  }
+  rule removeIncomingRequest {
+    select when system incoming_request_rejected_by_origin
+    pre{
+      eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
+    }
+    if(eventChannel neq "No eventChannel") then
+    {
+      noop();
+    }
+    fired {
+      log(">> successfull>>");
+      raise nano_manager event subscription_in_coming_rejected;
+      set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
+          } 
+    else {
+      log(">> falure >>");
+    }
+  }
+  rule removeOutGoingRequest {
     select when system out_going_request_rejected
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
@@ -695,6 +776,7 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_out_going_rejected;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
           } 
     else {
@@ -713,6 +795,7 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successfull>>");
+      raise nano_manager event subscription_unsubscribed;
       set ent:subscriptions subscriptions.delete([eventChannel]);
           } 
     else {
