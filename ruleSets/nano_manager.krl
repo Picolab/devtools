@@ -73,8 +73,8 @@ ruleset b507199x5 {
       };
     }
     Installed = function() {
-      eci = meta:eci().klog(">> meta:eci results: >>");
-      results = pci:list_ruleset(eci).defaultsTo("wrong",standardError("pci list_ruleset failed"));  
+      eci = meta:eci();
+      results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("wrong",standardError("pci list_ruleset failed"));  
       rids = results{'rids'}.defaultsTo([],standardError("no hash key rids"));
       {
        'status'   : (rids neq "wrong"),
