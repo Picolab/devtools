@@ -496,7 +496,6 @@ ruleset devtools {
     rule CreateScheduled {
 	    select when nano_manager scheduled_created
 	    pre{
-	    	log("create schedule running");
 	      eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
 	      //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	      do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
@@ -509,6 +508,7 @@ ruleset devtools {
 
 
 	    }
+	    log("create schedule running");
 	    /*if (type eq "single" && type neq "wrong" ) then
 	    {
 	      noop();
