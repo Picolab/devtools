@@ -38,7 +38,7 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides Registered, Ruleset, Installed,DescribeRules, Channels,Attributes, Policy, Clients, Picos, Schedules, History,
+    provides Registered, Ruleset, Installed, describeRules, Channels,Attributes, Policy, Clients, Picos, Schedules, History,
     Subscriptions, OutGoing, Incoming
     sharing on
 
