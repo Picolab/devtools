@@ -32,11 +32,11 @@ ruleset NanoTester {
 
         //------------------------------- Rulesets -------------------
         showRulesets = function(){
-            rulesets = NanoManager:Registered().klog(standardOut("NanoManager:Registered()"));
+            rulesets = NanoManager:registered().klog(standardOut("NanoManager:Registered()"));
             rulesets{'rulesets'};
         };
         showInstalledRulesets = function() {
-            rulesets = NanoManager:Installed().klog(standardOut("NanoManager:Installed()"));
+            rulesets = NanoManager:installed().klog(standardOut("NanoManager:Installed()"));
             rids = rulesets{'rids'};
             description = NanoManager:describeRules(rids).klog(standardOut("NanoManager:DescribeRules()"));
             description{'description'};
@@ -45,21 +45,21 @@ ruleset NanoTester {
 
         //------------------------------- Channnels -------------------
         showInstalledChannels = function() {
-            channels = NanoManager:Channels().klog(standardOut("NanoManager:Channels()"));
+            channels = NanoManager:channels().klog(standardOut("NanoManager:Channels()"));
             channels;
         };
         //------------------------------- <End oF>  Channnels -------------------
 
         //------------------------------- Authorize clients-------------------
         showClients = function() {
-            clients = NanoManager:Clients().klog(standardOut("NanoManager:Clients()"));
+            clients = NanoManager:clients().klog(standardOut("NanoManager:Clients()"));
             clients{'clients'};
         };
         //------------------------------- <End oF> Authorize clients-------------------
 
         //------------------------------- Picos -------------------
         showPicos = function() {
-            picos = NanoManager:Clients().klog(standardOut("NanoManager:Picos()"));
+            picos = NanoManager:picos().klog(standardOut("NanoManager:Picos()"));
             picos{'picos'};
         };
         aboutPico = function() { // not in cOSng yet
@@ -69,28 +69,28 @@ ruleset NanoTester {
           account_profile 
         };
         //------------------------------- <End of> Picos -------------------
-        
+
         // -------------------- Scheduled ---------------------- 
         showScheduledEvents = function() {
-          events = NanoManager:Schedules().klog(standardOut("NanoManager:Schedules()"));
+          events = NanoManager:schedules().klog(standardOut("NanoManager:Schedules()"));
           events{'schedules'};
         };
         showScheduleHistory = function(id) {
-          events = NanoManager:History(id).klog(standardOut("NanoManager:History()"));
+          events = NanoManager:scheduleHistory(id).klog(standardOut("NanoManager:History()"));
           events{'history'};
         };
         // -------------------- <End oF> Scheduled ---------------------- 
         // -------------------- SUBSCRIPTIONS ---------------------- 
         showSubscriptions = function() {
-          subscriptions = NanoManager:Subscriptions().klog(standardOut("NanoManager:Subscriptions()"));
+          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:Subscriptions()"));
           subscriptions{'subscriptions'};
         };
         showIncoming = function() {
-          subscriptions = NanoManager:Incoming().klog(standardOut("NanoManager:Incoming()"));
+          subscriptions = NanoManager:incoming().klog(standardOut("NanoManager:Incoming()"));
           subscriptions{'subscriptions'};
         };
         showOutGoing = function() {
-          subscriptions = NanoManager:OutGoing().klog(standardOut("NanoManager:OutGoing()"));
+          subscriptions = NanoManager:outGoing().klog(standardOut("NanoManager:OutGoing()"));
           subscriptions{'subscriptions'};
         };
         // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 

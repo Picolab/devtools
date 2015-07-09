@@ -38,8 +38,8 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides Registered, Ruleset, Installed, describeRules, Channels,Attributes, Policy, Clients, Picos, Schedules, History,
-    Subscriptions, OutGoing, Incoming
+    provides registered, singleRuleset, installed, describeRules, channels, attributes, policy, clients, picos, schedules, 
+    scheduleHistory, subscriptions, outGoing, incoming
     sharing on
 
   }
@@ -62,7 +62,7 @@ ruleset b507199x5 {
           'rulesets' : rulesetGallery          
         };
     }
-    Ruleset = function(rid) { 
+    singleRuleset = function(rid) { 
       eci = meta:eci();
       results = Registered().defaultsTo({},standardError("undefined"));
       results = results{"rulesets"}.defaultsTo({},standardError("undefined"));
@@ -72,7 +72,7 @@ ruleset b507199x5 {
         'ruleset' : result[0]
       };
     }
-    Installed = function() {
+    installed = function() {
       eci = meta:eci().klog("eci: ");
       results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("wrong",standardError("pci list_ruleset failed"));  
       rids = results{'rids'}.defaultsTo("wrong",standardError("no hash key rids"));
@@ -92,7 +92,7 @@ ruleset b507199x5 {
       };
     }
   //-------------------- Channels --------------------
-    Channels = function() { 
+    channels = function() { 
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
@@ -101,21 +101,21 @@ ruleset b507199x5 {
         'channels' : channels
       };
     }
-    Attributes = function(eci) {
+    attributes = function(eci) {
       results = pci:get_eci_attributes(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "wrong"),
         'Attributes' : results
       };
     }
-    Policy = function(eci) {
+    policy = function(eci) {
       results = pci:get_eci_policy(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "wrong"),
         'Policy' : results
       };
     }
-    Type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
+    type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
       channels = Channels().defaultsTo("wrong",">> undefined >>");
 
       getType = function(channel_id,channels) {
@@ -183,7 +183,7 @@ ruleset b507199x5 {
             pci:list_callback(appECI);
           };
   //-------------------- Picos ----------------------
-    Picos = function() {
+    picos = function() {
       picos = ent:my_picos.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (picos != "wrong"),
@@ -191,21 +191,21 @@ ruleset b507199x5 {
       }
      }
   //-------------------- Subscriptions ----------------------
-    Subscriptions = function(namespace, relationship) { 
+    subscriptions = function(namespace, relationship) { 
       subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (subscriptions != "wrong"),
         'subscriptions'  : subscriptions
       }
     }
-    OutGoing = function() { 
+    outGoing = function() { 
       pending = ent:pending_out_going.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
         'subscriptions'  : pending
       }
     }
-    Incoming = function() { 
+    incoming = function() { 
       pending = ent:pending_in_coming.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
@@ -213,7 +213,7 @@ ruleset b507199x5 {
       }
     }
   //-------------------- Scheduled ----------------------
-    Schedules = function() { 
+    schedules = function() { 
       sched_event_list = event:get_list().defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (sched_event_list != "wrong"),
@@ -221,7 +221,7 @@ ruleset b507199x5 {
       }
 
     }
-    History = function(id) { 
+    scheduleHistory = function(id) { 
       sched_event_history = event:get_history(id).defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (sched_event_history != "wrong"),
