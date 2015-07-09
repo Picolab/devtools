@@ -504,6 +504,9 @@ ruleset devtools {
 	      attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
 	      attr = attributes.decode();
 
+	      system = "system";
+
+
 	    }
 	    if (type eq "single" && type neq "wrong" ) then
 	    {
@@ -511,11 +514,13 @@ ruleset devtools {
 	    }
 	    fired {
 	      log(">> single >>");
-	      schedule do_main event eventype at date_time attributes attr ;
+	      //schedule do_main event eventype at date_time attributes attr ;
+	      schedule system event flush_rid at time:add(time:now(),{"seconds":30}) attributes event:attrs() ;
 	          } 
 	    else {
 	      log(">> multiple >>");
-	      schedule do_main event eventype repeat timespec attributes attr ;
+	      //schedule do_main event eventype repeat timespec attributes attr ;
+	      schedule system event flush_rid at time:add(time:now(),{"seconds":30}) attributes event:attrs() ;
 	    }
 	  }  
 
