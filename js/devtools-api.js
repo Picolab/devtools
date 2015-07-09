@@ -315,7 +315,7 @@
             cb(json);
         }, {"eci":eci});   
     },
-    scheduleEvent: function(Data, cb, options)
+    /*scheduleEvent: function(Data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -323,6 +323,19 @@
         Devtools.log("scheduling event");
        return CloudOS.raiseEvent("devtools", "event_scheduled", Data,{}, function(json) {
            Devtools.log("Directive from ScheduleEvent", json);
+           cb(json);
+       }, {"eci":eci});
+    },*/
+    //TESTING CODE WRITTEN IN NANO MANAGER
+   scheduleEvent: function(data, cb, options) 
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var parameters = {channelName:channel_name}; 
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Installing channels");
+       return CloudOS.raiseEvent("nano_manager", "scheduled_created", data,{}, function(json) {
+           Devtools.log("Creating a scheduled event", json);
            cb(json);
        }, {"eci":eci});
     },
@@ -381,21 +394,9 @@
            Devtools.log("Directive from AddSubscription", json);
            cb(json);
        }, {"eci":eci});
-    },
-
-   //TESTING CODE WRITTEN IN NANO MANAGER
-   scheduleEvent: function(data, cb, options) 
-    {
-        cb = cb || function(){};
-        options = options || {};
-        var parameters = {channelName:channel_name}; 
-        var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("Installing channels");
-       return CloudOS.raiseEvent("nano_manager", "scheduled_event", data,{}, function(json) {
-           Devtools.log("Creating a scheduled event", json);
-           cb(json);
-       }, {"eci":eci});
     }
+
+   
 //
 }; //closes the "window" inside the function DON'T DELETE
 
