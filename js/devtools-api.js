@@ -310,7 +310,7 @@
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("show scheduled events");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showScheduleEvents", {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
             Devtools.log("Displaying scheduled events", json);
             cb(json);
         }, {"eci":eci});   
