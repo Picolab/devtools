@@ -21,7 +21,6 @@ ruleset DevTools_bootstrap {
                    "b507199x5.dev",  // next gen CloudOS
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
-                   "b507199x0.prod", //DevTools
                    "b507199x0.dev", //DevTools
                    "b16x29.prod"     // logging
             ],
