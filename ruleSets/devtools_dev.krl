@@ -13,7 +13,6 @@ ruleset devtools {
 
         logging on
 
-        use module a169x625 alias CloudOS
         use module a41x226 alias OAuthRegistry //(appManager)
         use module b507199x5 alias NanoManager 
         //use module a169x625 alias PicoInspector
@@ -65,10 +64,8 @@ ruleset devtools {
             picos{'picos'};
         };
         aboutPico = function() { // not in cOSng yet
-              account_profile = CloudOS:accountProfile()
-                              .put( ["oauth_eci"], meta:eci() )
-                      ;
-          account_profile 
+            account_profile = NanoManager:accountProfile().klog(standardOut("NanoManager:Picos()"));
+          account_profile {'profile'};
         };
         //------------------------------- <End of> Picos -------------------
 

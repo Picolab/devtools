@@ -38,8 +38,12 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides registered, singleRuleset, installed, describeRules, channels, attributes, policy, clients, picos, schedules, 
-    scheduleHistory, subscriptions, outGoing, incoming
+    provides registered, singleRuleset, installed, describeRules, //ruleset
+    channels, attributes, policy, type, //channel
+    clients, //client
+    picos, accountProfile, //pico
+    schedules, scheduleHistory, // schedule
+    subscriptions, outGoing, incoming //subscription
     sharing on
 
   }
@@ -190,6 +194,16 @@ ruleset b507199x5 {
         'picos'  : picos
       }
      }
+    accountProfile = function() {
+      profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"));
+      {
+        'status' : (profile != "wrong"),
+        'profile'  : profile
+      }
+    }
+    currentSession = function() {
+      pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+    };
   //-------------------- Subscriptions ----------------------
     subscriptions = function(namespace, relationship) { 
       subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
@@ -422,7 +436,7 @@ ruleset b507199x5 {
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
-      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+      user = currentSession();
       options = {
         'name' : channelName//,
         //'eci_type' : ,
@@ -561,7 +575,7 @@ ruleset b507199x5 {
         //'policy' : ,
       };
 
-      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); 
+      user = currentSession();
       backChannel = pci:new_eci(user, options);
       backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
       // build pending subscription entry
@@ -647,7 +661,7 @@ ruleset b507199x5 {
         //'policy' : ,
       };
 
-      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); 
+      user = currentSession();
       backChannel = pci:new_eci(user, options);
       backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci new_eci failed")); 
       // build subscription entry
