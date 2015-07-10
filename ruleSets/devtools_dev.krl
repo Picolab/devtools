@@ -229,7 +229,7 @@ ruleset devtools {
         send_directive("Created #{channelName}");
           }
       fired {
-        log(">> successfully created channels #{channelName} >>");
+        log(">> successfully raised create channel #{channelName} event >>");
         raise nano_manager event "channel_created"
               attributes event:attrs();
       } 
