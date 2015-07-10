@@ -598,7 +598,7 @@ ruleset devtools {
           log (standardOut("failure"));
         }
     }
-    
+
     //TESTING NEW CODE WHICH IS FROM NANO MANAGER
 
     rule CreateScheduled {
@@ -623,12 +623,12 @@ ruleset devtools {
       fired {
         log(">> single >>");
         //schedule do_main event eventype at date_time attributes attr ;
-        schedule notification event status at time:add(time:now(),{"seconds":30}) attributes event:attrs();
+        schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
             } 
       else {
         log(">> multiple >>");
         //schedule do_main event eventype repeat timespec attributes attr ;
-        schedule notification event status at time:add(time:now(),{"seconds":30}) attributes event:attrs();
+        schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
       }
     }  
 
