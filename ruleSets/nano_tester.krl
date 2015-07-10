@@ -18,7 +18,9 @@ ruleset NanoTester {
         use module b507199x5 alias NanoManager 
         //use module a169x625 alias PicoInspector
 
-        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, showInstalledChannels, 
+        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
+         showScheduledEvents,showScheduleHistory,
+         showInstalledChannels,
         showClients, showSubscriptions, showIncoming, showOutGoing
         sharing on
     }
