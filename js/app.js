@@ -1078,7 +1078,7 @@
 		function persistant_bootstrap(){
 			Devtools.status(function(rid_list){
 				var rids = rid_list["rids"];
-				if ($.inArray('b507199x0.prod', rids) > -1) {
+				if ($.inArray('b507199x0.prod', rids) > -1 || $.inArray('b507199x5.prod', rids) > -1 ) {
 					console.log("true , Bootstrapped");
 					return true;
 				}
