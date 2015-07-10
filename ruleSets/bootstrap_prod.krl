@@ -45,17 +45,17 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(v){v eq "b507199x0.prod"})
+                         .filter(function(v){v eq "b507199x0.prod" || v eq "b507199x5.dev"})
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
                          ;// check if installed_rids includes b507199x0.prod --- use a filter and check if length is > 0.
       
       }
-      if (bootstrapped > 0 ) then
+      if (bootstrapped > 1 ) then
       {
-        send_directive("found_b507199x0.prod_for_developer") 
-	         with eci = eci;
+        send_directive("found_b507199x0.prod_and_b507199x5.dev_for_developer") 
+           with eci = eci;
       }
       fired {
 	      log ">>>> pico already bootstraped, saw : " + installed_rids;
