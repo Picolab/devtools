@@ -343,7 +343,8 @@
 									if(type === "wrong"){
 										for (var i = 0; i < logobj.log_items.length; i++) {
 										eventtype = logobj.log_items[i].match(/eventtype:.*$/);
-  										if (eventtype!== null) {
+										event_attrs = logobj.log_items[i].match(/event_attrs:.*$/);
+  										if (eventtype!== null && event_attrs === null) {
 												type = eventtype[0].substring(eventtype[0].indexOf(':')+1);
 												break;
 											}
