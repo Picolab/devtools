@@ -53,6 +53,8 @@ ruleset b507199x5 {
   //}
   global {
     //functions
+	
+	
   //-------------------- Rulesets --------------------
     registered = function() {
       eci = meta:eci();
@@ -186,24 +188,38 @@ ruleset b507199x5 {
           list_callback = function(appECI){
             pci:list_callback(appECI);
           };
-  //-------------------- Picos ----------------------
-    picos = function() {
-      picos = ent:my_picos.defaultsTo("wrong",standardError("undefined"));
-      {
-        'status' : (picos != "wrong"),
-        'picos'  : picos
-      }
-     }
-    accountProfile = function() {
-      profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"));
-      {
-        'status' : (profile != "wrong"),
-        'profile'  : profile
-      }
-    }
-    currentSession = function() {
-      pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
-    };
+		  
+	//-------------------- Picos --------------------
+	children = function() {
+		{
+			'status' : true,
+			'children' : ent:children
+		}
+	}
+	parent = function() {
+		{
+			'status' : true,
+			'parent' : ent:parent
+		}
+	}
+	attributes = function() {
+		{
+			'status' : true,
+			'attributes' : ent:attributes.put( {'picoName' : ent:name} )
+		}
+	}
+	prototypes = {
+		"core": [
+			"b507199x5.dev"
+		]
+	};
+	picoFactory = function(myEci, protos) {
+		newPico = pci:new_cloud(myEci);
+		a = pci:new_ruleset(newPico, prototypes{"core"});
+		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypes{x});});
+		newPico;
+	}
+
   //-------------------- Subscriptions ----------------------
     subscriptions = function(namespace, relationship) { 
       subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
@@ -471,45 +487,104 @@ ruleset b507199x5 {
     select when nano_manager client_updated
 
   }
-  /*
-  //-------------------- Picos ----------------------
-  rule DeletePico {
-    select when nano_manager pico_deleted
-
-  }
-  rule CreatePicoChild {
-    select when nano_manager pico_created_child
-
-  }
-  rule DeletePicoChild {
-    select when nano_manager pico_child_deleted
-
-  }
-  rule SetPicoAttributes { // assign vs set ??
-    select when nano_manager pico_attributes_set
-
-  }
-  rule ClearPicoAttributes {// why ??
-    select when nano_manager pico_attributes_cleared
-    pre {
-      picoChannel = event:attr("picoChannel");
-    }
-    {
-      send_directive("picoAttrClear") with picoResults = "ok";
-    }
-    fired {
-      clear ent:myPicos{picoChannel};
-    }
-  }
-  rule SetPicoParent {
-    select when nano_manager pico_parent_set
-
-  }
-  rule DeletePicoParent {
-    select when nano_manager pico_parent_deleted
-
-  }
   */
+  //-------------------- Picos ----------------------
+	rule createChild {
+		select when nano_manager child_creation_requested
+		
+		pre {
+			childName = event:attr("name").defaultsTo("", standardError("No name for new pico"));
+			childAttrs = event:attr("attributes").defaultsTo("{}"); //string representation of a hash, will be decoded in child
+			childProtos = event:attr("prototypes").defaultsTo([]);
+			
+			myName = ent:name;
+			myEci = meta:eci();
+			myInfo = {"#{myName}" : myEci};
+			
+			newPico = (childName neq "") => picoFactory(myEci, childProtos) | "";
+			
+			myChildren = ent:children.put({"#{childName}" : newPico});
+		}
+		
+		if (childName neq "") then
+		{
+			event:send({"cid":newPico}, "nano_manager", "child_created")
+				with attrs = {"parent": myInfo,
+								"name": childName,
+								"attributes": childAttrs
+							};
+		}
+		
+		fired {
+			set ent:children myChildren;
+		}
+	}
+	
+	rule initializeChild {
+		select when nano_manager child_created
+		
+		pre {
+			parentInfo = event:attr("parent");
+			name = event:attr("name");
+			attrs = event:attr("attributes").decode();
+		}
+		
+		{
+			noop();
+		}
+		
+		fired {
+			set ent:parent parentInfo;
+			set ent:children {};
+			set ent:name name;
+			set ent:attributes attrs;
+		}
+	}
+
+	rule setPicoAttributes {
+		select when nano_manager set_attributes_requested
+		pre {
+			newAttrs = event:attr("attributes").decode().defaultsTo("", standardError("no attributes passed"));
+		}
+		if(newAttrs neq "") then
+		{
+			noop();
+		}
+		fired {
+			set ent:attributes newAttrs;
+		}
+		else {
+			log "no attributes passed to set pico rule";
+		}
+	}
+	
+	rule clearPicoAttributes {
+		select when nano_manager clear_attributes_requested
+		pre {
+		}
+		{
+			noop();
+		}
+		fired {
+			clear ent:attributes;
+		}
+	}
+	
+	rule deleteChild {
+		select when nano_manager child_deletion_requested
+		pre {
+			picoDeleted = event:attr("picoName").defaultsTo("", standardError("missing pico name for deletion"));
+			eciDeleted = (picoDeleted neq "") => ent:children{picoDeleted} | "none";
+		}
+		if(picoDeleted neq "" || ent:children{picoDeleted}.isnull()) then
+		{
+			pci:delete_cloud(eciDeleted);
+		}
+		notfired {
+			log "deletion failed because no child name was specified";
+		}
+	}
+
   //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+CloudOS+Service
    // ========================================================================
   // Persistent Variables:
