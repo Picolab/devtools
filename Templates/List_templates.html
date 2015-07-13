@@ -20,7 +20,7 @@
 
 <div id="logitem-template" style="display:none;">
    <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b">
-   <h4>{{formatDate timestamp}} ({{eid}})</h4>
+   <h4>{{type}} -> {{formatDate timestamp}} ({{eid}}) </h4>
         {{#each log_items}}
 	 {{#ifDivider this }}
 	   <span style="color:blue">{{this}}</span> 

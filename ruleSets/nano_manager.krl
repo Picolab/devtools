@@ -398,7 +398,7 @@ ruleset b507199x5 {
   }
 
   rule UpdateChannelPolicy {
-    select when nano_manager channel_policy_updated
+    select when nano_manager channel_policy_updated // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("", standardError("undefined"));

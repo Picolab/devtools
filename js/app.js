@@ -326,6 +326,30 @@
 									var eid_re = RegExp("\\s+" + logobj.eid);
 									logobj.log_items = logobj.log_items.map(function(i){ return i.replace(eid_re, ''); 
 									});
+									var type="wrong";
+									for (var i = 0; i < logobj.log_items.length; i++) {
+										eventtype = logobj.log_items[i].match(/eventtype:hello/);
+  										if (eventtype !== null) {
+												for (var i = 0; i < logobj.log_items.length; i++) {
+													var eventtype = logobj.log_items[i].match(/function_name:.*$/);
+													if (eventtype!== null) {
+														type = eventtype[0].substring(eventtype[0].indexOf(':')+1);
+														break;
+													}
+												}
+												break;
+  										}
+									}
+									if(type === "wrong"){
+										for (var i = 0; i < logobj.log_items.length; i++) {
+										eventtype = logobj.log_items[i].match(/eventtype:.*$/);
+  										if (eventtype!== null) {
+												type = eventtype[0].substring(eventtype[0].indexOf(':')+1);
+												break;
+											}
+										}
+									}
+									logobj["type"] = type;
 									dynamicLogItems += snippets.logitem_template(logobj)
 
 								 });

@@ -1,32 +1,32 @@
 ; (function()
 {
-    window.CloudOS = {};
+    window.nano_manager = {};
 
     // ------------------------------------------------------------------------
 
-    CloudOS.defaultECI = "none";
-    CloudOS.access_token = "none";
+    nano_manager.defaultECI = "none";
+    nano_manager.access_token = "none";
 
     var mkEci = function(cid) {
-	var res = cid || CloudOS.defaultECI;
+	var res = cid || nano_manager.defaultECI;
         if (res === "none") {
-	    throw "No CloudOS event channel identifier (ECI) defined";
+	    throw "No nano_manager event channel identifier (ECI) defined";
         }
 	return res;
     };
 
     var mkEsl = function(parts) {
-        if (CloudOS.host === "none") {
-            throw "No CloudOS host defined";
+        if (nano_manager.host === "none") {
+            throw "No nano_manager host defined";
         }
-	parts.unshift(CloudOS.host);
+	parts.unshift(nano_manager.host);
 	var res = 'https://'+ parts.join("/");
 	return res;
     };
 
     // ------------------------------------------------------------------------
     // Raise Sky Event
-    CloudOS.raiseEvent = function(eventDomain, eventType, eventAttributes, eventParameters, postFunction, options)
+    nano_manager.raiseEvent = function(eventDomain, eventType, eventAttributes, eventParameters, postFunction, options)
     {
 	try {
 
@@ -52,7 +52,7 @@
 		   }
                }
 
-            console.log("CloudOS.raise ESL: ", esl);
+            console.log("nano_manager.raise ESL: ", esl);
             console.log("event attributes: ", eventAttributes);
 
             return $.ajax({
@@ -70,7 +70,7 @@
 	}
     };
 
-    CloudOS.skyCloud = function(module, func_name, parameters, getSuccess, options)
+    nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
     {
 	try {
 
@@ -122,7 +122,7 @@
 			var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
 			options.repeats = repeat_num;
 			// I don't think this will support promises; not sure how to fix
-			CloudOS.skyCloud(module, func_name, parameters, getSuccess, options);
+			nano_manager.skyCloud(module, func_name, parameters, getSuccess, options);
                     }
 		}
             };
@@ -149,24 +149,24 @@
 
 
     // ------------------------------------------------------------------------
-    CloudOS.createChannel = function(postFunction)
+    nano_manager.createChannel = function(postFunction)
     {
-        return CloudOS.raiseEvent('cloudos', 'api_Create_Channel', {}, {}, postFunction);
+        return nano_manager.raiseEvent('nano_manager', 'api_Create_Channel', {}, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.destroyChannel = function(myToken, postFunction)
+    nano_manager.destroyChannel = function(myToken, postFunction)
     {
-        return CloudOS.raiseEvent('cloudos', 'api_Destroy_Channel',
+        return nano_manager.raiseEvent('nano_manager', 'api_Destroy_Channel',
 			{ "token": myToken }, {}, postFunction);
     };
 
     // ========================================================================
     // Profile Management
 
-    CloudOS.getMyProfile = function(getSuccess)
+    nano_manager.getMyProfile = function(getSuccess)
     {
-        return CloudOS.skyCloud("a169x676", "get_all_me", {}, function(res) {
+        return nano_manager.skyCloud("a169x676", "get_all_me", {}, function(res) {
 	    clean(res);
 	    if(typeof getSuccess !== "undefined"){
 		getSuccess(res);
@@ -174,23 +174,23 @@
 	});
     };
 
-    CloudOS.updateMyProfile = function(eventAttributes, postFunction)
+    nano_manager.updateMyProfile = function(eventAttributes, postFunction)
     {
         var eventParameters = { "element": "profileUpdate.post" };
-        return CloudOS.raiseEvent('web', 'submit', eventAttributes, eventParameters, postFunction);
+        return nano_manager.raiseEvent('web', 'submit', eventAttributes, eventParameters, postFunction);
     };
 
-    CloudOS.getFriendProfile = function(friendToken, getSuccess)
+    nano_manager.getFriendProfile = function(friendToken, getSuccess)
     {
         var parameters = { "myToken": friendToken };
-        return CloudOS.skyCloud("a169x727", "getFriendProfile", parameters, getSuccess);
+        return nano_manager.skyCloud("a169x727", "getFriendProfile", parameters, getSuccess);
     };
 
     // ========================================================================
     // PDS Management
 
     // ------------------------------------------------------------------------
-    CloudOS.PDSAdd = function(namespace, pdsKey, pdsValue, postFunction)
+    nano_manager.PDSAdd = function(namespace, pdsKey, pdsValue, postFunction)
     {
         var eventAttributes = {
             "namespace": namespace,
@@ -198,34 +198,34 @@
             "pdsValue": JSON.stringify(pdsValue)
         };
 
-        return CloudOS.raiseEvent('cloudos', 'api_pds_add', eventAttributes, {}, postFunction);
+        return nano_manager.raiseEvent('nano_manager', 'api_pds_add', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.PDSDelete = function(namespace, pdsKey, postFunction)
+    nano_manager.PDSDelete = function(namespace, pdsKey, postFunction)
     {
         var eventAttributes = {
             "namespace": namespace,
             "pdsKey": pdsKey
         };
 
-        return CloudOS.raiseEvent('cloudos', 'api_pds_delete', eventAttributes, {}, postFunction);
+        return nano_manager.raiseEvent('nano_manager', 'api_pds_delete', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.PDSUpdate = function()
+    nano_manager.PDSUpdate = function()
     {
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.PDSList = function(namespace, getSuccess)
+    nano_manager.PDSList = function(namespace, getSuccess)
     {
         var callParmeters = { "namespace": namespace };
-        return CloudOS.skyCloud("pds", "get_items", callParmeters, getSuccess);
+        return nano_manager.skyCloud("pds", "get_items", callParmeters, getSuccess);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.sendEmail = function(ename, email, subject, body, postFunction)
+    nano_manager.sendEmail = function(ename, email, subject, body, postFunction)
     {
         var eventAttributes = {
             "ename": ename,
@@ -233,11 +233,11 @@
             "subject": subject,
             "body": body
         };
-        return CloudOS.raiseEvent('cloudos', 'api_send_email', eventAttributes, {}, postFunction);
+        return nano_manager.raiseEvent('nano_manager', 'api_send_email', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.sendNotification = function(application, subject, body, priority, token, postFunction)
+    nano_manager.sendNotification = function(application, subject, body, priority, token, postFunction)
     {
         var eventAttributes = {
             "application": application,
@@ -246,30 +246,30 @@
             "priority": priority,
             "token": token
         };
-        return CloudOS.raiseEvent('cloudos', 'api_send_notification', eventAttributes, {}, postFunction);
+        return nano_manager.raiseEvent('nano_manager', 'api_send_notification', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.subscriptionList = function(callParmeters, getSuccess)
+    nano_manager.subscriptionList = function(callParmeters, getSuccess)
     {
-        return CloudOS.skyCloud("cloudos", "subscriptionList", callParmeters, getSuccess);
+        return nano_manager.skyCloud("nano_manager", "subscriptionList", callParmeters, getSuccess);
     };
 
 
     // ========================================================================
     // Login functions
     // ========================================================================
-    CloudOS.login = function(username, password, success, failure) {
+    nano_manager.login = function(username, password, success, failure) {
 
 
 	var parameters = {"email": username, "pass": password};
 
-        if (typeof CloudOS.anonECI === "undefined") {
-	    console.error("CloudOS.anonECI undefined. Configure CloudOS.js in CloudOS-config.js; failing...");
+        if (typeof nano_manager.anonECI === "undefined") {
+	    console.error("nano_manager.anonECI undefined. Configure nano_manager.js in nano_manager-config.js; failing...");
 	    return null;
         }
 
-	return CloudOS.skyCloud("cloudos",
+	return nano_manager.skyCloud("nano_manager",
 				"cloudAuth", 
 				parameters, 
 				function(res){
@@ -278,7 +278,7 @@
 					var tokens = {"access_token": "none",
 						      "OAUTH_ECI": res.token
 						     };
-					CloudOS.saveSession(tokens); 
+					nano_manager.saveSession(tokens); 
 					if(typeof success == "function") {
 					    success(tokens);
 					}
@@ -289,7 +289,7 @@
 					}
 				    }
 				},
-				{eci: CloudOS.anonECI,
+				{eci: nano_manager.anonECI,
 				 errorFunc: failure
 				}
 			       );
@@ -304,43 +304,43 @@
     // ========================================================================
 
     // ------------------------------------------------------------------------
-    CloudOS.getOAuthURL = function(fragment)
+    nano_manager.getOAuthURL = function(fragment)
     {
-        if (typeof CloudOS.login_server === "undefined") {
-            CloudOS.login_server = CloudOS.host;
+        if (typeof nano_manager.login_server === "undefined") {
+            nano_manager.login_server = nano_manager.host;
         }
 
 
         var client_state = Math.floor(Math.random() * 9999999);
-        var current_client_state = window.localStorage.getItem("CloudOS_CLIENT_STATE");
+        var current_client_state = window.localStorage.getItem("nano_manager_CLIENT_STATE");
         if (!current_client_state) {
-            window.localStorage.setItem("CloudOS_CLIENT_STATE", client_state.toString());
+            window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
         }
-        var url = 'https://' + CloudOS.login_server +
+        var url = 'https://' + nano_manager.login_server +
 			'/oauth/authorize?response_type=code' +
-			'&redirect_uri=' + encodeURIComponent(CloudOS.callbackURL + (fragment || "")) +
-			'&client_id=' + CloudOS.appKey +
+			'&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
+			'&client_id=' + nano_manager.appKey +
 			'&state=' + client_state;
 
         return (url)
     };
 
-    CloudOS.getOAuthNewAccountURL = function(fragment)
+    nano_manager.getOAuthNewAccountURL = function(fragment)
     {
-        if (typeof CloudOS.login_server === "undefined") {
-            CloudOS.login_server = CloudOS.host;
+        if (typeof nano_manager.login_server === "undefined") {
+            nano_manager.login_server = nano_manager.host;
         }
 
 
         var client_state = Math.floor(Math.random() * 9999999);
-        var current_client_state = window.localStorage.getItem("CloudOS_CLIENT_STATE");
+        var current_client_state = window.localStorage.getItem("nano_manager_CLIENT_STATE");
         if (!current_client_state) {
-            window.localStorage.setItem("CloudOS_CLIENT_STATE", client_state.toString());
+            window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
         }
-        var url = 'https://' + CloudOS.login_server +
+        var url = 'https://' + nano_manager.login_server +
 			'/oauth/authorize/newuser?response_type=code' +
-			'&redirect_uri=' + encodeURIComponent(CloudOS.callbackURL + (fragment || "")) +
-			'&client_id=' + CloudOS.appKey +
+			'&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
+			'&client_id=' + nano_manager.appKey +
 			'&state=' + client_state;
 
         return (url)
@@ -350,22 +350,22 @@
 
 
     // ------------------------------------------------------------------------
-    CloudOS.getOAuthAccessToken = function(code, callback, error_func)
+    nano_manager.getOAuthAccessToken = function(code, callback, error_func)
     {
         var returned_state = parseInt(getQueryVariable("state"));
-        var expected_state = parseInt(window.localStorage.getItem("CloudOS_CLIENT_STATE"));
+        var expected_state = parseInt(window.localStorage.getItem("nano_manager_CLIENT_STATE"));
         if (returned_state !== expected_state) {
-            console.warn("OAuth Security Warning. Client state's do not match. (Expected %d but got %d)", CloudOS.client_state, returned_state);
+            console.warn("OAuth Security Warning. Client state's do not match. (Expected %d but got %d)", nano_manager.client_state, returned_state);
         }
         console.log("getting access token with code: ", code);
         if (typeof (callback) !== 'function') {
             callback = function() { };
         }
-        var url = 'https://' + CloudOS.login_server + '/oauth/access_token';
+        var url = 'https://' + nano_manager.login_server + '/oauth/access_token';
         var data = {
             "grant_type": "authorization_code",
-            "redirect_uri": CloudOS.callbackURL,
-            "client_id": CloudOS.appKey,
+            "redirect_uri": nano_manager.callbackURL,
+            "client_id": nano_manager.appKey,
             "code": code
         };
 
@@ -382,8 +382,8 @@
                     callback(json);
                     return;
                 };
-                CloudOS.saveSession(json);
-                window.localStorage.removeItem("CloudOS_CLIENT_STATE");
+                nano_manager.saveSession(json);
+                window.localStorage.removeItem("nano_manager_CLIENT_STATE");
                 callback(json);
             },
             error: function(json)
@@ -399,54 +399,54 @@
     // Session Management
 
     // ------------------------------------------------------------------------
-    CloudOS.retrieveSession = function()
+    nano_manager.retrieveSession = function()
     {
         var SessionCookie = kookie_retrieve();
 
         console.log("Retrieving session ", SessionCookie);
         if (SessionCookie != "undefined") {
-            CloudOS.defaultECI = SessionCookie;
+            nano_manager.defaultECI = SessionCookie;
         } else {
-            CloudOS.defaultECI = "none";
+            nano_manager.defaultECI = "none";
         }
-	return CloudOS.defaultECI;
+	return nano_manager.defaultECI;
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.saveSession = function(token_json)
+    nano_manager.saveSession = function(token_json)
     {
 	var Session_ECI = token_json.OAUTH_ECI;
 	var access_token = token_json.access_token;
         console.log("Saving session for ", Session_ECI);
-        CloudOS.defaultECI = Session_ECI;
-	CloudOS.access_token = access_token;
+        nano_manager.defaultECI = Session_ECI;
+	nano_manager.access_token = access_token;
         kookie_create(Session_ECI);
     };
     // ------------------------------------------------------------------------
-    CloudOS.removeSession = function(hard_reset)
+    nano_manager.removeSession = function(hard_reset)
     {
-        console.log("Removing session ", CloudOS.defaultECI);
+        console.log("Removing session ", nano_manager.defaultECI);
         if (hard_reset) {
             var cache_breaker = Math.floor(Math.random() * 9999999);
-            var reset_url = 'https://' + CloudOS.login_server + "/login/logout?" + cache_breaker;
+            var reset_url = 'https://' + nano_manager.login_server + "/login/logout?" + cache_breaker;
             $.ajax({
                 type: 'POST',
                 url: reset_url,
-                headers: { 'Kobj-Session': CloudOS.defaultECI },
+                headers: { 'Kobj-Session': nano_manager.defaultECI },
                 success: function(json)
                 {
-                    console.log("Hard reset on " + CloudOS.login_server + " complete");
+                    console.log("Hard reset on " + nano_manager.login_server + " complete");
                 }
             });
         }
-        CloudOS.defaultECI = "none";
+        nano_manager.defaultECI = "none";
         kookie_delete();
     };
 
     // ------------------------------------------------------------------------
-    CloudOS.authenticatedSession = function()
+    nano_manager.authenticatedSession = function()
     {
-        var authd = CloudOS.defaultECI != "none";
+        var authd = nano_manager.defaultECI != "none";
         if (authd) {
             console.log("Authenicated session");
         } else {
@@ -457,7 +457,7 @@
 
     // exchange OAuth code for token
     // updated this to not need a query to be passed as it wasnt used in the first place.
-    CloudOS.retrieveOAuthCode = function()
+    nano_manager.retrieveOAuthCode = function()
     {
         var code = getQueryVariable("code");
         return (code) ? code : "NO_OAUTH_CODE";
@@ -477,7 +477,7 @@
         return false;
     };
 
-    CloudOS.clean = function(obj) {
+    nano_manager.clean = function(obj) {
 	delete obj._type;
 	delete obj._domain;
 	delete obj._async;
