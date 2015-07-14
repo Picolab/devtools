@@ -740,7 +740,6 @@ ruleset b507199x5 {
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
       pendingsubscription = ent:pending_in_coming{eventChannel};
-      subscriptions = ent:subscriptions;
       options = {
         'name' : pendingsubscription{'name'},
         'eci_type' : pendingsubscription{'namespace'},
@@ -754,7 +753,6 @@ ruleset b507199x5 {
       backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci new_eci failed")); 
       // build subscription entry
       subscription = ((pendingsubscription).put(["backChannel"],backChannel_b)).klog("subscription"); /// needs standard output
-      new_subscriptions = subscriptions.put([backChannel_b],subscription).klog("new subscriptions");
       subscription_map = {
             "cid" : eventChannel
       };
@@ -770,7 +768,7 @@ ruleset b507199x5 {
       log(">> successfull>>");
       raise nano_manager event subscription_added;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
-      set ent:subscriptions new_subscriptions;
+      set ent:subscriptions{backChannel_b}  subscription;
           } 
     else {
       log(">> falure >>");
@@ -794,7 +792,7 @@ ruleset b507199x5 {
       log(">> successfull>>");
       raise nano_manager event subscription_added;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
-      set ent:subscriptions subscriptions.put([eventChannel],subscription);
+      set ent:subscriptions{backChannel}  subscription;
           } 
     else {
       log(">> falure >>");
