@@ -246,7 +246,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {channelID:ECI}; 
+    var json = {channel_id:ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Destroy channels");
         return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
