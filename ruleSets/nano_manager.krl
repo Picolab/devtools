@@ -463,7 +463,9 @@ ruleset b507199x5 {
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
-      user = currentSession();
+     // user = currentSession();
+      user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+      
       options = {
         'name' : channelName//,
         //'eci_type' : ,
