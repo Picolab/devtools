@@ -767,7 +767,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_added;
-      set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
+      clear ent:pending_in_coming{eventChannel};
       set ent:subscriptions{backChannel_b}  subscription;
           } 
     else {
@@ -791,7 +791,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_added;
-      set ent:pending_out_going pending_out_going.delete([backChannel]);
+      clear ent:pending_out_going{backChannel};
       set ent:subscriptions{backChannel}  subscription;
           } 
     else {
@@ -816,7 +816,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_in_coming_rejected;
-      set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
+      clear ent:pending_in_coming{eventChannel};
     } 
     else {
       log(">> falure >>");
@@ -841,7 +841,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_out_going_rejected;
-      set ent:pending_out_going pending_out_going.delete([backChannel]);
+      clear ent:pending_out_going{backChannel};
     } 
     else {
       log(">> falure >>");
@@ -859,7 +859,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_in_coming_rejected;
-      set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
+      clear ent:pending_in_coming{eventChannel};
           } 
     else {
       log(">> falure >>");
@@ -877,7 +877,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_out_going_rejected;
-      set ent:pending_out_going pending_out_going.delete([backChannel]);
+      clear ent:pending_out_going{backChannel};
           } 
     else {
       log(">> falure >>");
@@ -896,7 +896,7 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_unsubscribed;
-      set ent:subscriptions subscriptions.delete([eventChannel]);
+      clear ent:subscriptions{eventChannel};
           } 
     else {
       log(">> falure >>");
