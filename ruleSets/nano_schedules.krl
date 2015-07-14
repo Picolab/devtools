@@ -38,7 +38,7 @@ ruleset b507199x10 {
   }
   //Rules
   rule DeleteScheduled {
-    select when nano_schedules scheduled_deleted
+    select when nano_manager scheduled_deleted
     pre{
       sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
     }
@@ -54,7 +54,7 @@ ruleset b507199x10 {
     }
   }  
   rule CreateScheduled {
-    select when nano_schedules scheduled_created
+    select when nano_manager scheduled_created
     pre{
       eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
       time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));

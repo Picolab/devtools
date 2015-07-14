@@ -73,16 +73,16 @@ ruleset b507199x7 {
  
  /* //-------------------- Clients --------------------
   rule AuthorizeClient {
-    select when nano_clients client_authorized
+    select when nano_manager client_authorized
 
 
   }
   rule CRemovelient {
-    select when nano_clients client_removed
+    select when nano_manager client_removed
 
   }
   rule UpdateClient {
-    select when nano_clients client_updated
+    select when nano_manager client_updated
 
   }
   */

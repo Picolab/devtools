@@ -65,7 +65,7 @@ ruleset b507199x6 {
   }
   //Rules
   rule CreateChannel {
-    select when nano_channels channel_created
+    select when nano_manager channel_created
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
@@ -90,7 +90,7 @@ ruleset b507199x6 {
           }
     }
   rule UpdateChannelAttributes {
-    select when nano_channels channel_attributes_updated
+    select when nano_manager channel_attributes_updated
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("", standardError("undefined"));
@@ -109,7 +109,7 @@ ruleset b507199x6 {
   }
 
   rule UpdateChannelPolicy {
-    select when nano_channels channel_policy_updated // channel_policy_update_requested
+    select when nano_manager channel_policy_updated // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("", standardError("undefined"));
@@ -128,7 +128,7 @@ ruleset b507199x6 {
 
   }
   rule DeleteChannel {
-    select when nano_channels channel_deleted
+    select when nano_manager channel_deleted
     pre {
       channelID = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
