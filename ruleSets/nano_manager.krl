@@ -915,6 +915,19 @@ ruleset b507199x5 {
       log(">> falure >>");
     }
   } 
+  rule SubscribeReset {
+      select when nano_manager subscriptionsReset
+      pre{
+      }
+      {
+        noop();
+      }
+      always{
+        clear ent:subscriptions;
+        clear ent:pending_out_going;
+        clear ent:pending_in_coming;
+      }
+    } 
 // unsubscribed all, check event from parent 
 
   ///-------------------- Scheduled ----------------------
