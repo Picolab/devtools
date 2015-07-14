@@ -93,6 +93,10 @@
 					events: "s", // do page before show
 					argsre: true
 			} },
+			{"#Subscribe": {handler: "subscribe",
+					events: "s", // do page before show
+					argsre: true
+			} },
 			{"#approve-subscription": {handler: "approve_subscription",
 					events: "s", // do page before show
 					argsre: true
@@ -916,6 +920,53 @@
 					  $.mobile.loading("hide");
 				}
 				populate_subscriptions();
+			},
+			subscribe: function(type, match, ui, page) {
+				console.log("Subscribe page");
+				$.mobile.loading("hide");
+			 	var frm = "#form-subscribe";
+					$(frm)[0].reset(); // clear the fields in the form
+					
+					subscribeForm = function(){
+					 	{
+							$.mobile.loading("show", {
+								text: "subscribing...",
+								textVisible: true
+							});
+							var subscribe_form_data = process_form(frm);
+							console.log(">>>>>>>>> Subcription ", subscribe_form_data);
+							var subscription_Data={
+								"channelName": subscribe_form_data.Subcription_name,
+								"namespace": subscribe_form_data.Subcription_name_space,
+								"targetChannel": subscribe_form_data.Subcription_target,
+								"relationship" : subscribe_form_data.Subcription_relationship,
+								"attrs": subscribe_form_data.Subcription_attrs,
+							};
+							if( true 	) {
+								Devtools.RequestSubscription(subscription_Data, function(directives) {
+									console.log("subscribe ", subscription_Data, directives);
+									$.mobile.changePage("#page-subscription-management", {
+										transition: 'slide'
+									});
+								}); 
+							} else {// dead code
+									console.log("Invalid subscriptions ", subscription_Data);
+									$.mobile.loading("hide");
+									$.mobile.changePage("#page-subscription-management", {
+										transition: 'slide'
+									});
+							}
+						}
+					}
+					
+					$(frm).off('keypress').on('keypress', function(event) {
+						if (event.which == 13) {
+							event.preventDefault();
+							subscribeForm();
+						}
+					});
+					
+					$('#Subscribe-confirm-button').off('tap').on('tap', subscribeForm);
 			},
 			approve_subscription: function(type, match, ui, page) {
 				console.log("approve subscription page");
