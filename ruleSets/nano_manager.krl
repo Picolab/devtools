@@ -741,7 +741,7 @@ ruleset b507199x5 {
       backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci new_eci failed")); 
       // build subscription entry
       subscription = ((pendingsubscription).put(["backChannel"],backChannel_b)).klog("subscription"); /// needs standard output
-      new_subscriptions = subscriptions.put([backChannel_b],subscription);
+      new_subscriptions = subscriptions.put([backChannel_b],subscription).klog("new subscriptions");
       subscription_map = {
             "cid" : eventChannel
       };

@@ -10,7 +10,7 @@
      <ul id="Subcriptions-control" data-role="listview" data-inset="true"> 
        <li data-role="list-divider" >Subcription Manager</li>
        <li>
-         <a id="install-Subcription-button" href="#install-Subcription" class="ui-btn ui-icon-edit ui-btn-icon-right">New Subcription</a>
+         <a id="Subscribe-button" href="#Subscribe" class="ui-btn ui-icon-edit ui-btn-icon-right">New Subcription</a>
        </li>
      </ul>
 
@@ -22,32 +22,34 @@
    {% include footer.html %}
 </div><!-- /page -->
 
-<div data-role="page" id="install-Subcription" data-title="Install Subcription">
+<div data-role="page" id="Subscribe" data-title="Subscribe">
   {% include header.html title="Create a Subcription" %}
 
-	<div data-role="main" class="ui-content">
-	  <ul id="install-Subcription" data-role="listview" data-inset="true"> 
-       	    <li data-role="list-divider" >Create Subcription</li>
-	    <li>
-	      <form id="form-install-Subcription">
-	        <div data-role="fieldcontain">
-   	          <label for="Subcription_name">Name:</label>
-		  <input type="text" name="Subcription_name" id="Subcription_name" value="" placeholder="KRL Rocks" />
-      <label for="Subcription_name_spce">Name Space:</label>
-      <input type="text" name="Subcription_name_spce" id="Subcription_name_spce" value="" placeholder="KRL Rocks" />
-      <label for="Subcription_target">Target:</label>
-      <input type="text" name="Subcription_target" id="Subcription_target" value="" placeholder="KRL Rocks" />
-      <label for="Subcription_attrs">Attrs:</label>
-      <input type="text" name="Subcription_attrs" id="Subcription_attrs" value="" placeholder="KRL Rocks" />
-		</div>
-	      </form>
-	      <div>
-                <a id="install-Subcription-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Install</a>
-                <a href="#page-Subcription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
-	      </div>
-	    </li>
-     	  </ul>
-	</div>
+  <div data-role="main" class="ui-content">
+   <ul id="install-Subcription" data-role="listview" data-inset="true"> 
+    <li data-role="list-divider" >Create Subcription</li>
+    <li>
+     <form id="form-subscribe">
+       <div data-role="fieldcontain">
+        <label for="Subcription_name">Name:</label>
+        <input type="text" name="Subcription_name" id="Subcription_name" value="" placeholder="KRL Rocks" />
+        <label for="Subcription_name_space">Name Space:</label>
+        <input type="text" name="Subcription_name_space" id="Subcription_name_space" value="" placeholder="KRL Rocks" />
+        <label for="Subcription_relationship">Relationship:</label>
+        <input type="text" name="Subcription_relationship" id="Subcription_relationship" value="" placeholder="KRL Rocks" />
+        <label for="Subcription_target">Target:</label>
+        <input type="text" name="Subcription_target" id="Subcription_target" value="" placeholder="KRL Rocks" />
+        <label for="Subcription_attrs">Attrs:</label>
+        <input type="text" name="Subcription_attrs" id="Subcription_attrs" value="" placeholder="KRL Rocks" />
+      </div>
+    </form>
+    <div>
+      <a id="Subscribe-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Install</a>
+      <a href="#page-Subcription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+    </div>
+  </li>
+</ul>
+</div>
 
   {% include footer.html %}
 

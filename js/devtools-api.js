@@ -384,14 +384,14 @@
            cb(json);
        }, {"eci":eci});
     },
-    AddSubscription: function(data, cb, options)
+    RequestSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("approve subscription");
+        Devtools.log("Request subscription");
        return CloudOS.raiseEvent("devtools", "subscribe", data,{}, function(json) {
-           Devtools.log("Directive from AddSubscription", json);
+           Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        }, {"eci":eci});
     }
