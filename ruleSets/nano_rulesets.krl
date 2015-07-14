@@ -63,7 +63,7 @@ ruleset b507199x9 {
   }
   //Rules
   rule RegisterRuleset {
-    select when nano_manager ruleset_registered
+    select when nano_rulesets ruleset_registered
     pre {
       rulesetURL= event:attr("rulesetURL").defaultsTo("", standardError("missing event attr rids"));
       //description = event:attr("description")defaultsTo("", ">>  >> ");
@@ -89,7 +89,7 @@ ruleset b507199x9 {
     }
   }
   rule DeleteRuleset {
-    select when nano_manager ruleset_deleted
+    select when nano_rulesets ruleset_deleted
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
     }
@@ -105,7 +105,7 @@ ruleset b507199x9 {
     }
   }
   rule FlushRulesets {
-    select when nano_manager ruleset_flushed
+    select when nano_rulesets ruleset_flushed
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
@@ -122,7 +122,7 @@ ruleset b507199x9 {
     } 
   }
   rule RelinkRuleset {
-    select when nano_manager ruleset_relinked
+    select when nano_rulesets ruleset_relinked
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
       newURL = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
@@ -146,7 +146,7 @@ ruleset b507199x9 {
     }
   }  
   rule InstallRuleset {// should this handle multiple rulesets or a single one
-    select when nano_manager ruleset_installed
+    select when nano_rulesets ruleset_installed
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
@@ -164,7 +164,7 @@ ruleset b507199x9 {
     }
   }
   rule UninstallRuleset { // should this handle multiple uninstalls ??? 
-    select when nano_manager ruleset_uninstalled
+    select when nano_rulesets ruleset_uninstalled
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");

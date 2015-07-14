@@ -57,7 +57,7 @@ ruleset b507199x8 {
   //Rules
 
 	rule createChild {
-		select when nano_manager child_creation_requested
+		select when nano_picos child_creation_requested
 		
 		pre {
 			childName = event:attr("name").defaultsTo("", standardError("No name for new pico"));
@@ -75,7 +75,7 @@ ruleset b507199x8 {
 		
 		if (childName neq "") then
 		{
-			event:send({"cid":newPico}, "nano_manager", "child_created")
+			event:send({"cid":newPico}, "nano_clients", "child_created")
 				with attrs = {"parent": myInfo,
 								"name": childName,
 								"attributes": childAttrs
@@ -88,7 +88,7 @@ ruleset b507199x8 {
 	}
 	
 	rule initializeChild {
-		select when nano_manager child_created
+		select when nano_clients child_created
 		
 		pre {
 			parentInfo = event:attr("parent");
@@ -109,7 +109,7 @@ ruleset b507199x8 {
 	}
 
 	rule setPicoAttributes {
-		select when nano_manager set_attributes_requested
+		select when nano_clients set_attributes_requested
 		pre {
 			newAttrs = event:attr("attributes").decode().defaultsTo("", standardError("no attributes passed"));
 		}
@@ -126,7 +126,7 @@ ruleset b507199x8 {
 	}
 	
 	rule clearPicoAttributes {
-		select when nano_manager clear_attributes_requested
+		select when nano_clients clear_attributes_requested
 		pre {
 		}
 		{
@@ -138,7 +138,7 @@ ruleset b507199x8 {
 	}
 	
 	rule deleteChild {
-		select when nano_manager child_deletion_requested
+		select when nano_clients child_deletion_requested
 		pre {
 			picoDeleted = event:attr("picoName").defaultsTo("", standardError("missing pico name for deletion"));
 			eciDeleted = (picoDeleted neq "") => ent:children{picoDeleted} | "none";

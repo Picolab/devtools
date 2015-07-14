@@ -19,7 +19,7 @@ ruleset b507199x11 {
 
   global {
     //functions
-    subscriptions = function(namespace, relationship) { 
+    subscriptions = function() { 
       subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (subscriptions != "wrong"),
@@ -83,7 +83,7 @@ ruleset b507199x11 {
   //
   // ========================================================================
   rule addSubscriptionRequest {// need to change varibles to snake case.
-    select when nano_manager subscribe
+    select when nano_subscriptions subscribe
    pre {
       name   = event:attr("channelName").defaultsTo("orphan", standardError(""));
       namespace     = event:attr("namespace").defaultsTo("shared", standardError(""));
@@ -127,7 +127,7 @@ ruleset b507199x11 {
      backChannel_b neq "") 
     then
     {
-      event:send(subscription_map, "nano_manager", "subscription_requested") // send request
+      event:send(subscription_map, "nano_subscriptions", "subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "namespace"    : namespace,
@@ -138,7 +138,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_out_going_pending;
+      raise nano_subscriptions event subscription_out_going_pending;
       set ent:pending_out_going{backChannel_b} pendingEntry;
 
     } 
@@ -148,7 +148,7 @@ ruleset b507199x11 {
   }
 
   rule subscriptionRequestPending {
-    select when nano_manager subscription_requested
+    select when nano_subscriptions subscription_requested
     pre {
       name  = event:attr("name").defaultsTo("orphan", standardError(""));
       namespace    = event:attr("namespace").defaultsTo("shared", standardError(""));
@@ -173,7 +173,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_in_coming_pending;
+      raise nano_subscriptions event subscription_in_coming_pending;
       set ent:pending_in_coming{eventChannel} pendingApprovalEntry;
           } 
     else {
@@ -182,7 +182,7 @@ ruleset b507199x11 {
   }
 
   rule ApproveInComeingRequest {
-    select when nano_manager incoming_request_approved
+    select when nano_subscriptions incoming_request_approved
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
       pendingsubscription = ent:pending_in_coming{eventChannel};
@@ -207,14 +207,14 @@ ruleset b507199x11 {
     }
     if (subscription{"backChannel"} neq "") then
     {
-      event:send(subscription_map, "nano_manager", "out_going_request_approved") // send request
+      event:send(subscription_map, "nano_subscriptions", "out_going_request_approved") // send request
         with attrs = {
           "eventChannel"  : backChannel_b
         };
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_added;
+      raise nano_subscriptions event subscription_added;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
       set ent:subscriptions new_subscriptions;
           } 
@@ -224,7 +224,7 @@ ruleset b507199x11 {
   }
 
   rule ApproveOutGoingRequest {
-    select when nano_manager out_going_request_approved
+    select when nano_subscriptions out_going_request_approved
     pre{
       backChannel = meta:eci();
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
@@ -238,7 +238,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_added;
+      raise nano_subscriptions event subscription_added;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
       set ent:subscriptions subscriptions.put([eventChannel],subscription);
           } 
@@ -247,7 +247,7 @@ ruleset b507199x11 {
     }
   }
   rule RejectIncomingRequest {
-    select when nano_manager incoming_request_rejected
+    select when nano_subscriptions incoming_request_rejected
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
       subscription_map = {
@@ -256,14 +256,14 @@ ruleset b507199x11 {
     }
     if(eventChannel neq "NoEventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "out_going_request_rejected") // send request
+      event:send(subscription_map, "nano_subscriptions", "out_going_request_rejected") // send request
         with attrs = {
           "backChannel"  : eventChannel
         };
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_in_coming_rejected;
+      raise nano_subscriptions event subscription_in_coming_rejected;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
     } 
     else {
@@ -271,7 +271,7 @@ ruleset b507199x11 {
     }
   }
   rule rejectOutGoingRequest {
-    select when nano_manager out_going_request_rejected_by_origin
+    select when nano_subscriptions out_going_request_rejected_by_origin
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
       targetChannel = event:attr("targetChannel").defaultsTo( "No targetChannel", standardError(""));
@@ -281,14 +281,14 @@ ruleset b507199x11 {
     }
     if(backChannel neq "No backChannel") then
     {
-      event:send(subscription_map, "nano_manager", "incoming_request_rejected_by_origin") // send request
+      event:send(subscription_map, "nano_subscriptions", "incoming_request_rejected_by_origin") // send request
         with attrs = {
           "eventChannel"  : backChannel
         };
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_out_going_rejected;
+      raise nano_subscriptions event subscription_out_going_rejected;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
     } 
     else {
@@ -306,7 +306,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_in_coming_rejected;
+      raise nano_subscriptions event subscription_in_coming_rejected;
       set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
           } 
     else {
@@ -324,7 +324,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_out_going_rejected;
+      raise nano_subscriptions event subscription_out_going_rejected;
       set ent:pending_out_going pending_out_going.delete([backChannel]);
           } 
     else {
@@ -332,7 +332,7 @@ ruleset b507199x11 {
     }
   } 
     rule UnSubscribe {
-    select when nano_manager unsubscribed
+    select when nano_subscriptions unsubscribed
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
 
@@ -343,7 +343,7 @@ ruleset b507199x11 {
     }
     fired {
       log(">> successfull>>");
-      raise nano_manager event subscription_unsubscribed;
+      raise nano_subscriptions event subscription_unsubscribed;
       set ent:subscriptions subscriptions.delete([eventChannel]);
           } 
     else {
@@ -351,7 +351,7 @@ ruleset b507199x11 {
     }
   } 
   rule INITUnSubscribe {
-    select when nano_manager init_unsubscribed
+    select when nano_subscriptions init_unsubscribed
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
       subscription_map = {
@@ -360,14 +360,14 @@ ruleset b507199x11 {
     }
     if(eventChannel neq "No eventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "unsubscribed") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_subscriptions", "unsubscribed") // can we change system to something else ?// send request
         with attrs = {
           "eventChannel"  : eventChannel
         };
 
     }
     fired {
-      raise nano_manager event unsubscribed with eventChannel = eventChannel; //????????????? may not work with this domain.........
+      raise nano_subscriptions event unsubscribed with eventChannel = eventChannel; //????????????? may not work with this domain.........
       log(">> successfull>>");
           } 
     else {
