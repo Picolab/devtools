@@ -190,6 +190,17 @@ ruleset b507199x5 {
           };
 		  
 	//-------------------- Picos --------------------
+  accountProfile = function() {
+    profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"));
+    {
+     'status' : (profile != "wrong"),
+     'profile'  : profile
+    }
+  }
+  currentSession = function() {
+    pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+  };
+
 	children = function() {
 		{
 			'status' : true,
