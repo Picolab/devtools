@@ -1,5 +1,5 @@
 
-ruleset b507199x5 {
+ruleset b507199x11 {
   meta {
     name "nano_subscriptions"
     description <<

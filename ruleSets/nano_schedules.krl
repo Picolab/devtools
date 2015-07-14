@@ -1,4 +1,4 @@
-ruleset b507199x5 {
+ruleset b507199x10 {
   meta {
     name "nano_schedules"
     description <<

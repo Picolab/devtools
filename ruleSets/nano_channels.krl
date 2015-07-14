@@ -1,6 +1,6 @@
 
 
-ruleset b507199x5 {
+ruleset b507199x6 {
   meta {
     name "nano_channels"
     description <<
