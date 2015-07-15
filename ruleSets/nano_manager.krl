@@ -886,8 +886,7 @@ ruleset b507199x5 {
     rule UnSubscribe {
     select when nano_manager unsubscribed
     pre{
-      eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
-      backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
+      backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError("no backChannel"));
 
     }
     if(backChannel neq "No backChannel") then
@@ -916,13 +915,12 @@ ruleset b507199x5 {
     {
       event:send(subscription_map, "nano_manager", "unsubscribed") // can we change system to something else ?// send request
         with attrs = {
-          "eventChannel"  : eventChannel,
-          "backChannel" : backChannel
+          "backChannel"  : eventChannel
         };
 
     }
     fired {
-      raise nano_manager event unsubscribed with eventChannel = eventChannel; 
+      raise nano_manager event unsubscribed with backChannel = backChannel; 
       log(">> successfull>>");
           } 
     else {
