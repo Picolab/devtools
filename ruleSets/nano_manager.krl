@@ -841,6 +841,8 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_out_going_rejected;
+      // clean up your channels buddie, no loose ends....
+      raise nano_manager event channel_deleted with channel_id = backChannel;  
       clear ent:pending_out_going{backChannel};
     } 
     else {
@@ -877,6 +879,8 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_out_going_rejected;
+      // clean up..
+      raise nano_manager event channel_deleted with channel_id = backChannel;  
       clear ent:pending_out_going{backChannel};
           } 
     else {
