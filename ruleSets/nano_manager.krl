@@ -896,6 +896,8 @@ ruleset b507199x5 {
     fired {
       log(">> successfull>>");
       raise nano_manager event subscription_unsubscribed;
+      // clean up
+      raise nano_manager event channel_deleted with channel_id = backChannel;  
       clear ent:subscriptions{backChannel};
           } 
     else {
