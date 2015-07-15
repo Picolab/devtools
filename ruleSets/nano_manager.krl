@@ -848,7 +848,7 @@ ruleset b507199x5 {
     }
   }
   rule removeIncomingRequest {
-    select when system incoming_request_rejected_by_origin
+    select when nano_manager incoming_request_rejected_by_origin
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
     }
@@ -866,7 +866,7 @@ ruleset b507199x5 {
     }
   }
   rule removeOutGoingRequest {
-    select when system out_going_request_rejected
+    select when nano_manager out_going_request_rejected
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
     }
@@ -913,7 +913,7 @@ ruleset b507199x5 {
     }
     if(eventChannel neq "No eventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "unsubscribed") // can we change system to something else ?// send request
+      event:send(subscription_map, "nano_manager", "unsubscribed")
         with attrs = {
           "backChannel"  : eventChannel
         };
