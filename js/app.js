@@ -97,6 +97,14 @@
 					events: "s", // do page before show
 					argsre: true
 			} },
+			{"#approve-incoming-subscription": {handler: "approve_incoming_subscription",
+					events: "s", // do page before show
+					argsre: true
+			} },
+			{"#reject-incoming-subscription": {handler: "reject_incoming_subscription",
+					events: "s", // do page before show
+					argsre: true
+			} },
 			{"#approve-subscription": {handler: "approve_subscription",
 					events: "s", // do page before show
 					argsre: true
@@ -920,6 +928,19 @@
 					  $.mobile.loading("hide");
 				}
 				populate_subscriptions();
+				function approve_incoming() {
+				loadSpinner("#approve-incoming-subscription", "subscriptions");
+				var eventChannel = router.getParams(match[1])["eventChannel"];
+				//var name = router.getParams(match[1])["name"];
+				Devtools.ApproveSubscription({"eventChannel" : eventChannel}, function(directives) {
+									console.log("approving ", eventChannel, directives);
+									$.mobile.changePage("#page-subscription-management", {
+										transition: 'slide'
+									});
+								}); 
+				}
+				$('#approve-incoming-subscription').off('tap').on('tap', approve_incoming);
+
 			},
 			subscribe: function(type, match, ui, page) {
 				console.log("Subscribe page");
@@ -968,9 +989,9 @@
 					
 					$('#Subscribe-confirm-button').off('tap').on('tap', subscribeForm);
 			},
-			approve_subscription: function(type, match, ui, page) {
+			approve_incoming_subscription: function(type, match, ui, page) {
 				console.log("approve subscription page");
-				loadSpinner("#approve-subscription", "subscriptions");
+				loadSpinner("#approve-incoming-subscription", "subscriptions");
 				var eventChannel = router.getParams(match[1])["eventChannel"];
 				//var name = router.getParams(match[1])["name"];
 				Devtools.ApproveSubscription({"eventChannel" : eventChannel}, function(directives) {

@@ -394,9 +394,40 @@
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        }, {"eci":eci});
+    },
+    RejectInComingSubscription: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("reject in coming subscription");
+       return CloudOS.raiseEvent("devtools", "incoming_request_rejected", data,{}, function(json) {
+           Devtools.log("Directive from incoming_request_rejected", json);
+           cb(json);
+       }, {"eci":eci});
+    },
+    UnSubscription: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("unsubscription");
+       return CloudOS.raiseEvent("devtools", "init_unsubscribed", data,{}, function(json) {
+           Devtools.log("Directive from init_unsubscribed", json);
+           cb(json);
+       }, {"eci":eci});
+    },
+   RejectOutGoingSubscription: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("cancel subscription request");
+       return CloudOS.raiseEvent("devtools", "out_going_request_rejected_by_origin", data,{}, function(json) {
+           Devtools.log("Directive from out_going_request_rejected_by_origin", json);
+           cb(json);
+       }, {"eci":eci});
     }
-
-   
 //
 }; //closes the "window" inside the function DON'T DELETE
 
