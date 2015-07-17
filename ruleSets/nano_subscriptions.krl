@@ -12,7 +12,7 @@ ruleset b507199x11 {
     use module b16x24 alias system_credentials
 
     provides 
-    subscriptions, outGoing, incoming 
+    subscriptions, outgoing, incoming 
     sharing on
 
   }
@@ -26,15 +26,15 @@ ruleset b507199x11 {
         'subscriptions'  : subscriptions
       }
     }
-    outGoing = function() { 
-      pending = ent:pending_out_going.defaultsTo("wrong",standardError("undefined"));
+    outgoing = function() { 
+      pending = ent:pending_outgoing.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
         'subscriptions'  : pending
       }
     }
     incoming = function() { 
-      pending = ent:pending_in_coming.defaultsTo("wrong",standardError("undefined"));
+      pending = ent:pending_incoming.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
         'subscriptions'  : pending
@@ -47,7 +47,7 @@ ruleset b507199x11 {
   //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+CloudOS+Service
    // ========================================================================
   // Persistent Variables:
-  // new way, not implamented yet...
+  // new way, not implemented yet...
   // ent:subscriptions {
   //     backChannel : {
   //      "name" : 
@@ -60,7 +60,7 @@ ruleset b507199x11 {
   //    }
   //  }
   //
-  // ent:pending_out_going {
+  // ent:pending_outgoing {
   //     backChannel: {
   //      "name" : ,
   //      "namespace"   : ,
@@ -71,7 +71,7 @@ ruleset b507199x11 {
   //    }
   //  }
   //
-  // ent:pending_in_coming {
+  // ent:pending_incoming {
   //     eventChannel: {
   //      "name" : 
   //      "namespace"   : ,
@@ -111,7 +111,7 @@ ruleset b507199x11 {
 
       user = currentSession();
       backChannel = pci:new_eci(user, options);
-      backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
+      backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // can't find a way to move this out of pre and still capture backChannel
       // build pending subscription entry
       pendingEntry = {
         "name"  : name,
@@ -137,13 +137,13 @@ ruleset b507199x11 {
         };
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_out_going_pending;
-        set ent:pending_out_going{backChannel_b} pendingEntry;
+        log(">> successful>>");
+        raise nano_manager event subscription_outgoing_pending;
+        set ent:pending_outgoing{backChannel_b} pendingEntry;
 
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
 
@@ -172,20 +172,20 @@ ruleset b507199x11 {
         noop();
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_in_coming_pending;
-        set ent:pending_in_coming{eventChannel} pendingApprovalEntry;
+        log(">> successful>>");
+        raise nano_manager event subscription_incoming_pending;
+        set ent:pending_incoming{eventChannel} pendingApprovalEntry;
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
 
-    rule ApproveInComeingRequest {
+    rule ApproveIncomingRequest {
       select when nano_manager incoming_request_approved
       pre{
         eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-        pendingsubscription = ent:pending_in_coming{eventChannel};
+        pendingsubscription = ent:pending_incoming{eventChannel};
         subscriptions = ent:subscriptions;
         options = {
           'name' : pendingsubscription{'name'},
@@ -207,43 +207,43 @@ ruleset b507199x11 {
       }
       if (subscription{"backChannel"} neq "") then
       {
-        event:send(subscription_map, "nano_manager", "out_going_request_approved") // send request
+        event:send(subscription_map, "nano_manager", "outgoing_request_approved") // send request
         with attrs = {
           "eventChannel"  : backChannel_b
         };
       }
       fired {
-        log(">> successfull>>");
+        log(">> successful>>");
         raise nano_manager event subscription_added;
-        set ent:pending_in_coming pending_in_coming.delete([eventChannel]).klog("pending_in_coming after delete");
+        set ent:pending_incoming pending_incoming.delete([eventChannel]).klog("pending_incoming after delete");
         set ent:subscriptions new_subscriptions;
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
 
     rule ApproveOutGoingRequest {
-      select when nano_manager out_going_request_approved
+      select when nano_manager outgoing_request_approved
       pre{
         backChannel = meta:eci();
         eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-        pendingout_going = ent:pending_out_going{backChannel}.defaultsTo( "No pending", standardError(""));
+        pending_outgoing = ent:pending_outgoing{backChannel}.defaultsTo( "No pending", standardError(""));
         // build subscription entry
-        subscription = ((pendingout_going).put(["eventChannel"],eventChannel));
+        subscription = ((pending_outgoing).put(["eventChannel"],eventChannel));
       }
-      if (pendingout_going neq "No pending") then 
+      if (pending_outgoing neq "No pending") then 
       {
         noop();
       }
       fired {
-        log(">> successfull>>");
+        log(">> successful>>");
         raise nano_manager event subscription_added;
-        set ent:pending_out_going pending_out_going.delete([backChannel]);
+        set ent:pending_outgoing pending_outgoing.delete([backChannel]);
         set ent:subscriptions subscriptions.put([eventChannel],subscription);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
     rule RejectIncomingRequest {
@@ -256,22 +256,22 @@ ruleset b507199x11 {
       }
       if(eventChannel neq "NoEventChannel") then
       {
-        event:send(subscription_map, "nano_manager", "out_going_request_rejected") // send request
+        event:send(subscription_map, "nano_manager", "outgoing_request_rejected") // send request
         with attrs = {
           "backChannel"  : eventChannel
         };
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_in_coming_rejected;
-        set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
+        log(">> successful>>");
+        raise nano_manager event subscription_incoming_rejected;
+        set ent:pending_incoming pending_incoming.delete([eventChannel]);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
-    rule rejectOutGoingRequest {
-      select when nano_manager out_going_request_rejected_by_origin
+    rule rejectOutgoingRequest {
+      select when nano_manager outgoing_request_rejected_by_origin
       pre{
         backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
         targetChannel = event:attr("targetChannel").defaultsTo( "No targetChannel", standardError(""));
@@ -287,12 +287,12 @@ ruleset b507199x11 {
         };
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_out_going_rejected;
-        set ent:pending_out_going pending_out_going.delete([backChannel]);
+        log(">> successful>>");
+        raise nano_manager event subscription_outgoing_rejected;
+        set ent:pending_outgoing pending_outgoing.delete([backChannel]);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
     rule removeIncomingRequest {
@@ -305,16 +305,16 @@ ruleset b507199x11 {
         noop();
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_in_coming_rejected;
-        set ent:pending_in_coming pending_in_coming.delete([eventChannel]);
+        log(">> successful>>");
+        raise nano_manager event subscription_incoming_rejected;
+        set ent:pending_incoming pending_incoming.delete([eventChannel]);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     }
     rule removeOutGoingRequest {
-      select when system out_going_request_rejected
+      select when system outgoing_request_rejected
       pre{
         backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
       }
@@ -323,12 +323,12 @@ ruleset b507199x11 {
         noop();
       }
       fired {
-        log(">> successfull>>");
-        raise nano_manager event subscription_out_going_rejected;
-        set ent:pending_out_going pending_out_going.delete([backChannel]);
+        log(">> successful>>");
+        raise nano_manager event subscription_outgoing_rejected;
+        set ent:pending_outgoing pending_outgoing.delete([backChannel]);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     } 
     rule UnSubscribe {
@@ -342,12 +342,12 @@ ruleset b507199x11 {
         noop();
       }
       fired {
-        log(">> successfull>>");
+        log(">> successful>>");
         raise nano_manager event subscription_unsubscribed;
         set ent:subscriptions subscriptions.delete([eventChannel]);
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     } 
     rule INITUnSubscribe {
@@ -368,10 +368,10 @@ ruleset b507199x11 {
       }
       fired {
         raise nano_manager event unsubscribed with eventChannel = eventChannel; //????????????? may not work with this domain.........
-        log(">> successfull>>");
+        log(">> successful>>");
       } 
       else {
-        log(">> falure >>");
+        log(">> failure >>");
       }
     } 
     // unsubscribed all, check event from parent 

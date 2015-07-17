@@ -20,7 +20,7 @@ ruleset devtools {
         provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
          showScheduledEvents,showScheduleHistory,
          showInstalledChannels,
-        showClients, showSubscriptions, showIncoming, showOutGoing
+        showClients, showSubscriptions, showIncoming, showOutgoing
         sharing on
     }
     global {
@@ -89,8 +89,8 @@ ruleset devtools {
 	          subscriptions = NanoManager:incoming().klog(standardOut("NanoManager:Incoming()"));
 	          subscriptions{'subscriptions'};
 	        };
-	        showOutGoing = function() {
-	          subscriptions = NanoManager:outGoing().klog(standardOut("NanoManager:OutGoing()"));
+	        showOutgoing = function() {
+	          subscriptions = NanoManager:outgoing().klog(standardOut("NanoManager:Outgoing()"));
 	          subscriptions{'subscriptions'};
 	        };
         // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 
@@ -521,7 +521,7 @@ ruleset devtools {
 	          log (standardOut("failure"));
 	        }
 	    }
-	  rule ApproveInComeingRequest {
+	  rule ApproveIncomingRequest {
 	        select when devtools incoming_request_approved
 	        pre {
 	            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
@@ -557,7 +557,7 @@ ruleset devtools {
 	          log (standardOut("failure"));
 	        }
 	    }
-	  rule INITUnSubscribe {
+	  rule INITUnsubscribe {
 	        select when devtools init_unsubscribed
 	        pre {
 	            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");

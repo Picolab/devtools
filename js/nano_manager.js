@@ -355,7 +355,7 @@
         var returned_state = parseInt(getQueryVariable("state"));
         var expected_state = parseInt(window.localStorage.getItem("nano_manager_CLIENT_STATE"));
         if (returned_state !== expected_state) {
-            console.warn("OAuth Security Warning. Client state's do not match. (Expected %d but got %d)", nano_manager.client_state, returned_state);
+            console.warn("OAuth Security Warning. Client states do not match. (Expected %d but got %d)", nano_manager.client_state, returned_state);
         }
         console.log("getting access token with code: ", code);
         if (typeof (callback) !== 'function') {

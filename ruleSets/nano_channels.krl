@@ -96,7 +96,7 @@ ruleset b507199x6 {
       attributes = event:attr("attributes").defaultsTo("", standardError("undefined"));
       channels = Channels();
     }
-    if(channels{"channel_id"} && attributes != "") then { // check??redundent????
+    if(channels{"channel_id"} && attributes != "") then { // check?? redundant????
       pci:set_eci_attributes(channel_id, attributes);// attributes need to be an array, do we need to cast type?
       send_directive("updated #{channelID} attributes");
     }
@@ -115,7 +115,7 @@ ruleset b507199x6 {
       policy = event:attr("policy").defaultsTo("", standardError("undefined"));
       channels = Channels();
     }
-    if(channels{"channelID"} && policy != "") then { // check??redundent??whats better??
+    if(channels{"channelID"} && policy != "") then { // check?? redundant?? what's better??
       pci:set_eci_policy(channel_id, policy); // policy needs to be a map, do we need to cast types?
       send_directive("updated #{channel_id} policy");
     }

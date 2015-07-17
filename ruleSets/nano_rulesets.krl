@@ -72,8 +72,8 @@ ruleset b507199x9 {
       //username = event:attr("username")defaultsTo("", ">>  >> ");
       //password = event:attr("password")defaultsTo("", ">>  >> ");
     }
-    if( rulesetURL neq "" ) then// is this check redundent??
-    {// do we nee to check for a url or is it done on a different level?? like if (rulesetURL != "")
+    if( rulesetURL neq "" ) then // is this check redundant??
+    {// do we need to check for a url or is it done on a different level?? like if (rulesetURL != "")
       rsm:register(rulesetURL) setting (rid);// rid is empty? is it just created by default
        // (description != "") => description = description |  //ummm .....
        // flush_code = 
@@ -93,7 +93,7 @@ ruleset b507199x9 {
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
     }
-    //if(Ruleset(){"status"} != "null" ) then// is this check redundent??
+    //if(Ruleset(){"status"} != "null" ) then// is this check redundant??
     {
       rsm:delete(rid); 
     }
@@ -109,7 +109,7 @@ ruleset b507199x9 {
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
-    if(rid.length() > 0 ) then // redundent??
+    if(rid.length() > 0 ) then // redundant??
     {
       rsm:flush(rid); 
     }
@@ -127,8 +127,8 @@ ruleset b507199x9 {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
       newURL = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
     }
-    if(rid neq "") then // redundent??
-    {// do we nee to check for a url or is it done on a different level?? like if (rulesetURL != "") or should we check for the rid 
+    if(rid neq "") then // redundant??
+    {// do we need to check for a url or is it done on a different level?? like if (rulesetURL != "") or should we check for the rid 
       rsm:update(rid) setting(updatedSuccessfully)
       with 
         uri = newURL;

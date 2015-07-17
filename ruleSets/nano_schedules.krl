@@ -47,10 +47,10 @@ ruleset b507199x10 {
       event:delete(sid);
     }
     fired {
-      log(">> successfull>>");
+      log(">> successful>>");
           } 
     else {
-      log(">> falure >>");
+      log(">> failure >>");
     }
   }  
   rule CreateScheduled {

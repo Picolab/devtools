@@ -22,7 +22,7 @@ ruleset b507199x7 {
     Clients = function() { 
       eci = meta:eci();
       clients = pci:get_authorized(eci).defaultsTo("wrong",standardError("undefined")); // pci does not have this function yet........
-      //krl_struct = clients.decode() // I dont know if we needs decode
+      //krl_struct = clients.decode() // I dont know if we need to decode
      // .klog(">>>>krl_struct")
      // ;
       {
@@ -77,7 +77,7 @@ ruleset b507199x7 {
 
 
   }
-  rule CRemovelient {
+  rule RemoveClient {
     select when nano_manager client_removed
 
   }

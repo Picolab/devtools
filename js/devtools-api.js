@@ -68,7 +68,6 @@
 
     getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {
-        
         cb = cb || function(){};
         options = options || {};
         //var rid = "rulesets";
@@ -267,7 +266,7 @@
            cb(json);
        }, {"eci":eci});
     },
-	showAthorizedClients: function(cb, options)
+	showAuthorizedClients: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -362,7 +361,7 @@
             cb(json);
         }, {"eci":eci});  
     },
-    showOutGoing: function(cb, options)
+    showOutgoing: function(cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -395,7 +394,7 @@
            cb(json);
        }, {"eci":eci});
     },
-    RejectInComingSubscription: function(data, cb, options)
+    RejectIncomingSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -406,7 +405,7 @@
            cb(json);
        }, {"eci":eci});
     },
-    UnSubscription: function(data, cb, options)
+    Unsubscribe: function(data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
@@ -417,7 +416,7 @@
            cb(json);
        }, {"eci":eci});
     },
-   RejectOutGoingSubscription: function(data, cb, options)
+   RejectOutgoingSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
         options = options || {};
