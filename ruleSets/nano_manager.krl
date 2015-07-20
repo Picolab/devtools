@@ -191,7 +191,8 @@ ruleset b507199x5 {
 		  
 	//-------------------- Picos --------------------
   accountProfile = function() {
-    profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"));
+    profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"))
+    .put( ["oauth_eci"], meta:eci() );
     {
      'status' : (profile != "wrong"),
      'profile'  : profile
