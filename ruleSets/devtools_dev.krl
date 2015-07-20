@@ -52,10 +52,66 @@ ruleset devtools {
         //------------------------------- <End oF>  Channnels -------------------
 
         //------------------------------- Authorize clients-------------------
+			Clients = function() { // do I need to remove oauth secrets??
+			  	eci = meta:eci();
+			  	clients = pci:list_apps(eci).defaultsTo("wrong",standardError("undefined"));
+				{
+			    	'status' : (clients != "wrong"),
+			    	'clients' : clients
+				}
+			}
 	        showClients = function() {
-	            clients = NanoManager:clients().klog(standardOut("NanoManager:Clients()"));
+	         //   clients = NanoManager:clients().klog(standardOut("NanoManager:Clients()"));
+	         	clients = Clients();
 	            clients{'clients'};
 	        };
+	        get_app = function(appECI){
+            	clients = Clients();
+            	(clients{appECI});
+            	//(clients{appECI}).delete(["appSecret"])
+          	};
+          	list_bootstrap = function(appECI){
+            	pci:list_bootstrap(appECI);
+          	};
+          	get_appinfo = function(appECI){
+            	pci:get_appinfo(appECI);
+          	};
+          	list_callback = function(appECI){
+            	pci:list_callback(appECI);
+          	};
+	        removePCIcallback = defaction(appECI){
+		      	callback = pci:list_callback(appECI);
+		     	 boot = callback.map(function(url) { pci:remove_callback(appECI, url); });
+		      	send_directive("pci callback removed.")
+		        	with rulesets = pci:list_callback(appECI);
+		    };
+		    removePCIbootstraps = defaction(appEC){
+		      	straps = pci:list_bootstrap(appECI);
+		     	 boot = straps.map(function(rid) { pci:remove_bootstrap(appECI, rid); });
+		    	  send_directive("pci bootstraps removed.")
+		    	    with rulesets = list_bootstrap(appECI); 
+		    };
+		    addPCIbootstraps = defaction(appECI,bootstrapRids){
+		    	  boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); });
+		    	  send_directive("pci bootstraps updated.")
+		    	    with rulesets = pci:list_bootstrap(appECI);
+		    };
+		    update_app = defaction(appECI,appData,bootstrapRids){
+	            //remove all 
+	            removeDefact = removePCIcallback(appECI);
+	            remove_appinfo = pci:remove_appinfo(appECI);
+	            removeDefact = removePCIbootstraps(appECI);
+	            // add new 
+	            addcallback = pci:add_callback(appECI, appData{"appCallbackURL"}); 
+	            addinfo = pci:add_appinfo(appECI,{
+	            	"icon": appData{"appImageURL"},
+	                 "name": appData{"appName"},
+	                 "description": appData{"appDescription"},
+	                 "info_url": appData{"info_page"},
+	                 "declined_url": appData{"appDeclinedURL"}
+	                });
+	            addPCIbootstraps(appECI,bootstrapRids);
+		    };
         //------------------------------- <End oF> Authorize clients-------------------
 
         //------------------------------- Picos -------------------
@@ -292,214 +348,117 @@ ruleset devtools {
 	    rule AuthorizeClient {
 	        select when devtools authorize_client
 	        pre {
-	            appData={
-	            "info_page": event:attr("info_page"),
-	            "bootstrapRids": event:attr("bootstrapRids"),
-	            "appName": event:attr("appName"),
-	            "appDescription": event:attr("appDescription"),
-	            "appImageURL": event:attr("appImageURL"),
-	            "appCallbackURL": event:attr("appCallbackURL"),
-	            "appDeclinedURL": event:attr("appDeclinedURL")
-	          };
-	          appDataPassed = appData;
-	          //appDataPassed = event:attr("appData").klog(">>>>>> attr appData >>>>>>>");
-	          appCallbackURL = appDataPassed{"appCallbackURL"}.klog(">>>>>> app callback >>>>>>>");
-
-	          bootstrapRids = appDataPassed{"bootstrapRids"}.klog(">>>>>> bootstrap >>>>>>>").split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
-
-	          options = {
-	            'name' :    'Oauth Developer ECI',
-	            'eci_type'  :   'CLIENT OAUTH'//, /*'OAUTH'*/
-	            //'attributes'  :   attributes, 
-	            //'policy'  :   policy
-	          };
-	          //creates new eci 
-	          application_eci_result = (pci:new_eci(meta:eci(), options ) || {}).klog(">>>>>>>>>> eci results >>>>>>>>>>");
-
-	          application_eci = application_eci_result{"cid"};
-
-	          developer_secret = pci:create_developer_key().klog(">>>>>> developer secret >>>>>>>");
-	          //bs = bootstrapRids.map(function(rid) { pci:add_bootstrap(application_eci, rid) }).klog(">>>>>> bootstrap add result >>>>>>>");
-	          
-	          appData = (
-	            ((appDataPassed
-	            ).put(["appSecret"], developer_secret)
-	            ).put(["appECI"], application_eci)
-	          );
-
-	          registery = (app:appRegistry || {}).put([application_eci], appData);
-	          apps = (ent:apps || {}).put([application_eci], appData);
-
+	            info_page = event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page"));
+	            bootstrapRids = event:attr("bootstrapRids").defaultsTo("", standardOut("missing event attr bootstrapRids"));
+	            appName = event:attr("appName").defaultsTo("error", standardOut("missing event attr appName"));
+	            appDescription = event:attr("appDescription").defaultsTo("", standardOut("missing event attr appDescription"));
+	            appImageURL = event:attr("appImageURL").defaultsTo("", standardOut("missing event attr appImageURL"));
+	            appCallbackURL = event:attr("appCallbackURL").defaultsTo("error", standardOut("missing event attr appCallbackURL"));
+	            appCallBackUrl = appCallbackURL.split(re/;/).defaultsTo("error", standardOut("split callback failure"));
+	            appDeclinedURL = event:attr("appDeclinedURL").defaultsTo("", standardOut("missing event attr appDeclinedURL"));
+	            bootstrap = bootstrapRids.split(re/;/).defaultsTo("", standardOut("split bootstraps failure"));
+	            picoId = meta:eci();
 	        }
-	       /* if (// redundant???
-	          appData &&
-	          appData{"appName"} &&
-	          appData{"appImageURL"} &&
-	          appData{"appCallbackURL"} &&
-	          appData{"appDeclinedURL"}
-	        )*/
-	        if (application_eci_result.typeof() eq "hash" && // pci returns null on failure
-	            developer_secret neq "" // check to see if you have secrets 
-	            ) 
+	        if (
+	          appName neq "error" &&
+	          appCallBackUrl neq "error"
+	        ) 
 	        then{
-	          pci:set_permissions(application_eci, developer_secret, ['oauth','access_token']);
-	          pci:add_callback(application_eci, appCallbackURL);
-	          addPCIbootstraps(application_eci,bootstrapRids);
-	          pci:add_appinfo(application_eci, 
-	            {"icon": appDataPassed{"appImageURL"},
-	            "name": appDataPassed{"appName"},
-	            "description": appDataPassed{"appDescription"},
-	            "info_page": appDataPassed{"info_page"}
-	            });
-	          //pci:add_client(application_eci, appData); <- this is not in pci yet........
+	        	pci:register_app(picoId) setting(token, secret)
+   				with name = appName and
+        			icon = appImageURL and
+        			description = appDescription and
+        			info_url = info_page and
+        			declined_url = appDeclinedURL and
+        			callbacks = appCallBackUrl and 
+        			bootstrap = bootstrap;
 	        }
 	        fired {
-	          log appCallbackURL;//???????????
-	          set app:appRegistry registery;
-	          set ent:apps apps;
+	            log( "success");
 	        }
 	        else {
-	            log( " failure");
+	            log( "failure");
 	        }
 	    }
 
-	    rule RemoveClient {//pci may not be working how I think.
+	    rule RemoveClient {
 	        select when devtools remove_client
 	        pre {
-	            appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
-	            registery = app:appRegistry;
-	            apps = ent:apps;
+	            token = event:attr("appECI").defaultsTo("", standardOut("missing event attr appECI").klog(">>>>>> appECI >>>>>>>"));
 	        }
-	        if (registery{appECI} != {}) then {
-	            //undo all of pci pemissions
-	            pci:clear_permissions(appECI,get_secret(appECI), ['oauth','access_token']); // do I need to do anything else then clear_permissions??
-	            pci:remove_appinfo(appECI);
-	            pci:remove_callback(appECI,pci:list_callback(appECI));
-	            //removePCIcallback(appECI,pci:list_callback(appECI));//not working
-	            removePCIbootstraps(appECI,pci:list_bootstrap(appECI));
+	        if (token != "") then {
+	        	pci:delete_app(token);
 	        }
-	        fired { 
-	            set app:appRegistry registery.delete([appECI]).klog(">>>>>> app >>>>>>>");
-	            set ent:apps apps.delete([appECI]).klog(">>>>>> app >>>>>>>");
+	        fired {
+	            log( "success");
+	        }
+	        else {
+	            log( "failure");
 	        }
 	    }
+
 	    rule UpdateClient {
 	      select when devtools update_client
 	        pre {
 	            app_Data={
-	                "info_page": event:attr("info_page"),
-	                "bootstrapRids": event:attr("bootstrapRids"),
-	                "appName": event:attr("appName"),
-	                "appDescription": event:attr("appDescription"),
-	                "appImageURL": event:attr("appImageURL"),
-	                "appCallbackURL": event:attr("appCallbackURL"),
-	                "appDeclinedURL": event:attr("appDeclinedURL")
+	                "info_page": event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page")),
+	                "bootstrapRids": event:attr("bootstrapRids").defaultsTo("", standardOut("missing event attr bootstrapRids")),
+	                "appName": event:attr("appName").defaultsTo("", standardOut("missing event attr appName")),
+	                "appDescription": event:attr("appDescription").defaultsTo("", standardOut("missing event attr appDescription")),
+	                "appImageURL": event:attr("appImageURL").defaultsTo("", standardOut("missing event attr appImageURL")),
+	                "appCallbackURL": event:attr("appCallbackURL").defaultsTo("", standardOut("missing event attr appCallbackURL")),
+	                "appDeclinedURL": event:attr("appDeclinedURL").defaultsTo("", standardOut("missing event attr appDeclinedURL"))
 	            };
-	          appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
-	          oldApp = app:appRegistry{appECI}.klog(">>>>>> oldApp >>>>>>>");
-	          appData = ( // keep app secrets for update
-	            ((app_Data
-	            ).put(["appSecret"], oldApp{"appSecret"})
-	            ).put(["appECI"], oldApp{"appECI"})
-	          );
+	          token = event:attr("appECI").klog(">>>>>> token >>>>>>>");
+	         // oldApp = pci:list_apps(meta:eci()){token}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> oldApp >>>>>>>");
+	          appData = (app_Data)// keep app secrets for update
+	            		.put(["appSecret"], oldApp{"appSecret"}.defaultsTo("error", standardOut("no secret found")))
+	            		.put(["appECI"], oldApp{"appECI"}) //------------------------------------------------/ whats this used for????????????
+	          			;
 	          bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
-	          registery = (app:appRegistry || {}).put([appECI], appData);
-	          apps = (ent:apps || {}).put([appECI], appData);
 	        }
-	            if ( // valid input for update... is it checked one level down? do we need this check?
-	          oldApp &&
-	          appData &&
-	          appData{"appName"} &&
-	          appData{"appImageURL"} &&
-	          appData{"appCallbackURL"} &&
-	          appData{"appDeclinedURL"}
+	        if ( 
+	          oldApp neq "error" &&
+	          appData{"appName"} neq "error" &&
+	          appData{"appSecret"} neq "error" &&
+	          appData{"appCallbackURL"} neq "error" 
 	        ) then{
-	            send_directive("Updating clients");
-	            //remove all 
-	            //removePCIcallback(appECI,pci:list_callback(appECI)); //not working
-	            pci:remove_callback(appECI,pci:list_callback(appECI));
-	            pci:remove_appinfo(appECI);
-	            removePCIbootstraps(appECI,list_bootstrap(appECI));
-	            // add new 
-	            pci:add_callback(appECI, appData{"appCallbackURL"}); // update callback. should this be in pre block(it mutates).
-	            pci:add_appinfo(appECI, 
-	                {"icon": appData{"appImageURL"},
-	                 "name": appData {"appName"},
-	                 "description": appData {"appDescription"},
-	                 "info_page": appData {"appInfoURL"}
-	                });
-	            addPCIbootstraps(appECI,bootstrapRids);// hack.. is there a better way?
+				update_app(appECI,appData,bootstrapRids);
 	        }
 	        fired {
-	          set app:appRegistry registery;
-	          set ent:apps apps;
+	            log("success");
+	        }
+	        else {
+	            log("failure");
 	        }
 	    }
 	      rule ImportClientDataBase {// only call once before you create any clients.
 	      select when devtools ImportClientDataBase
-	     // foreach ent:apps setting (n,v)
 	          pre {
-	                apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");// does this get the secrets too?
-	           //   newapp = ent:apps;
-	            //  newregistery = app:appRegistry;
-	            //  apps = apps.keys().map(function(k,v) {v+2}); 
-	                //  { newapp = newapp.put([eci],apps{eci}); newregistery = newregistery.put([eci],apps{eci}); });
+	                apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");
 	                registery = (app:appRegistry || {}).put(apps);
 	                apps = (ent:apps || {}).put(apps);
-
+	                token = meta:eci();
+	              	value = apps.values().klog("apps values: ");
 	              }
 	              {
-	                noop();
+	              	noop();
+	              	//apps.map(function(apptoken,appData) { 
+	              //		pci:register_app(token) setting(token, secret)
+				//		   with name = "Oauth App 2" and
+				//		        icon = "http://example.com/default.png" and
+				//		        description = "Second Oauth App for Testing" and
+				//		        info_url = "http://example.com/info" and
+				//		        declined_url = "http://example.com/declined" and
+				//		        callbacks = ["http://example.com/callbacks"] and
+				//		        bootstrap = ["b16x876.prod"]})
 	              }
-	          always {
-	            set ent:apps apps;
-	            set app:appRegistry registery;
-	            }
-	    }
-	  /*  rule AddClient { // to local persistance...
-	      select when explicit add
-	          pre {
-	                app_Data={
-	                "info_page": event:attr("info_page"),
-	                "bootstrapRids": event:attr("bootstrapRids"),
-	                "appName": event:attr("appName"),
-	                "appDescription": event:attr("appDescription"),
-	                "appImageURL": event:attr("appImageURL"),
-	                "appCallbackURL": event:attr("appCallbackURL"),
-	                "appDeclinedURL": event:attr("appDeclinedURL")
-	                    };
-	                appECI = event:attr("appECI").klog(">>>>>> appECI >>>>>>>");
-
-	                registery = (app:appRegistry || {}).put([appECI], appData);
-	                apps = (ent:apps || {}).put([appECI], appData);
-	              }
-	              if ( // valid input for update... is it checked one level down? do we need this check?
-	                  oldApp &&
-	                  appData &&
-	                  appData{"appName"} &&
-	                  appData{"appImageURL"} &&
-	                  appData{"appCallbackURL"} &&
-	                  appData{"appDeclinedURL"}
-	                ) then{
-	                noop();
-	              }
-	          always {
-	            set ent:apps apps;
-	            set app:appRegistry registery;
-	            }
-	    }*/
-	        rule clear_registery {
-	      select when devtools clear_registery
-	          pre {
-
-	              }
-	              {
-	                noop();
-	              }
-	          always {
-	            clear ent:apps;
-	            clear app:appRegistry;
-	            }
+	        fired {
+	            log("success");
+	        }
+	        else {
+	            log("failure");
+	        }
 	    }
  
  	// <!-- -------------------- Subscription ---------------------- -->
