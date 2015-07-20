@@ -97,6 +97,14 @@ ruleset b507199x5 {
        'description'     : results
       };
     }
+    install = defaction(eci, ridlist){
+      new_ruleset = pci:new_ruleset(eci, ridlist);
+      send_directive("installed #{ridlist}");
+    }
+    uninstall = defaction(eci, ridlist){
+      deleted = pci:delete_ruleset(eci, ridlist);
+      send_directive("uninstalled #{ridlist}");
+    }
   //-------------------- Channels --------------------
     channels = function() { 
       eci = meta:eci();
@@ -138,6 +146,21 @@ ruleset b507199x5 {
         'status'   : (type neq "wrong"),
         'channels' : channels
       };
+    }
+    updateAttrs = defaction(channel_id, attributes){
+      set_eci = pci:set_eci_attributes(channel_id, attributes);
+      send_directive("updated #{channel_id} attributes");
+    }
+    updatePolicy = defaction(channel_id, policy){
+      set_polcy = pci:set_eci_policy(channel_id, policy); // policy needs to be a map, do we need to cast types?
+      send_directive("updated #{channel_id} policy");
+    }
+    deleteEci = defaction(channelID) {
+      deleteeci =pci:delete_eci(channelID);
+      send_directive("deleted #{channelID}");
+    }
+    createEci = defaction(user, options){
+      pci:new_eci(user, options);
     }
   //-------------------- Clients --------------------
     Clients = function() { 
@@ -375,8 +398,7 @@ ruleset b507199x5 {
       ridlist = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
     if(rids neq "") then { // should we be valid checking?
-      pci:new_ruleset(eci, ridlist);
-      send_directive("installed #{rids}");
+      install(eci, ridlist);
     }
     fired {
       log(">> successfully installed rids #{rids} >>");
@@ -393,8 +415,7 @@ ruleset b507199x5 {
       ridlist = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
     { 
-      pci:delete_ruleset(eci, ridlist);
-      send_directive("uninstalled #{rids}");
+      uninstall(eci,ridlist);
     }
     fired {
       log(">> successfully uninstalled rids #{rids} >>");
@@ -410,12 +431,13 @@ ruleset b507199x5 {
     select when nano_manager channel_attributes_updated
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
-      attributes = event:attr("attributes").defaultsTo("", standardError("undefined"));
+      attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
+      attrs = attributes.split(re/;/);
+      //attrs = attributes.decode();
       channels = Channels();
     }
-    if(channels{"channel_id"} && attributes != "") then { // check?? redundant????
-      pci:set_eci_attributes(channel_id, attributes);// attributes need to be an array, do we need to cast type?
-      send_directive("updated #{channelID} attributes");
+    if(channels{"channel_id"} neq "" && attributes neq "error") then { // check?? redundant????
+      updateAttrs(channel_id,attributes);
     }
     fired {
       log(">> successfully updated channel #{channel_id} attributes >>");
@@ -429,12 +451,11 @@ ruleset b507199x5 {
     select when nano_manager channel_policy_updated // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
-      policy = event:attr("policy").defaultsTo("", standardError("undefined"));
+      policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
       channels = Channels();
     }
-    if(channels{"channelID"} && policy != "") then { // check?? redundant?? whats better??
-      pci:set_eci_policy(channel_id, policy); // policy needs to be a map, do we need to cast types?
-      send_directive("updated #{channel_id} policy");
+    if(channels{"channelID"} neq "" && policy neq "error") then { // check?? redundant?? whats better??
+      updatePolicy(channel_id, policy);
     }
     fired {
       log(">> successfully updated channel #{channel_id} policy >>");
@@ -450,8 +471,7 @@ ruleset b507199x5 {
       channelID = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
     {
-      pci:delete_eci(channelID);
-      send_directive("deleted #{channelID}");
+      deleteEci(channelID);
     }
     fired {
       log(">> successfully deleted channel #{channelID} >>");
@@ -474,8 +494,8 @@ ruleset b507199x5 {
         //'policy' : ,
       };
           }
-    if(channelName.match(re/\w[\w\d_-]*/) && user != "") then {
-      pci:new_eci(user, options);
+    if(channelName.match(re/\w[\w\d_-]*/) && user neq "") then {
+      createEci(user, options);
       send_directive("Created #{channelName}");
       //with status= true; // should we send directives??
           }

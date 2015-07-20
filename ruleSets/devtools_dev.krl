@@ -54,9 +54,9 @@ ruleset devtools {
         //------------------------------- Authorize clients-------------------
 			Clients = function() { // do I need to remove oauth secrets??
 			  	eci = meta:eci();
-			  	clients = pci:list_apps(eci).defaultsTo("wrong",standardError("undefined"));
+			  	clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
 				{
-			    	'status' : (clients != "wrong"),
+			    	'status' : (clients != "error"),
 			    	'clients' : clients
 				}
 			}
@@ -436,8 +436,6 @@ ruleset devtools {
 	      select when devtools ImportClientDataBase
 	          pre {
 	                apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");
-	                registery = (app:appRegistry || {}).put(apps);
-	                apps = (ent:apps || {}).put(apps);
 	                token = meta:eci();
 	              	value = apps.values().klog("apps values: ");
 	              }

@@ -928,19 +928,6 @@
 					  $.mobile.loading("hide");
 				}
 				populate_subscriptions();
-				function approve_incoming() {
-				loadSpinner("#approve-incoming-subscription", "subscriptions");
-				var eventChannel = router.getParams(match[1])["eventChannel"];
-				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription({"eventChannel" : eventChannel}, function(directives) {
-									console.log("approving ", eventChannel, directives);
-									$.mobile.changePage("#page-subscription-management", {
-										transition: 'slide'
-									});
-								}); 
-				}
-				$('#approve-incoming-subscription').off('tap').on('tap', approve_incoming);
-
 			},
 			subscribe: function(type, match, ui, page) {
 				console.log("Subscribe page");
