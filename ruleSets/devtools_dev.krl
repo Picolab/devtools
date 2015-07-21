@@ -30,6 +30,10 @@ ruleset devtools {
 	            msg = ">> " + message + " results: >>";
 	            msg
 	        };
+	        standardError = function(message) {
+      			error = ">> error: " + message + " >>";
+      			error
+   		 	};
         //------------------------------- <End oF> Utilities -------------------
 
         //------------------------------- Rulesets -------------------
