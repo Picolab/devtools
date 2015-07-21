@@ -111,7 +111,7 @@ ruleset b507199x5 {
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
       channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
       {
-        'status'   : (results neq "wrong"),
+        'status'   : (channels neq "wrong"),
         'channels' : channels
       };
     }
