@@ -160,7 +160,8 @@ ruleset b507199x5 {
       send_directive("deleted #{channelID}");
     }
     createEci = defaction(user, options){
-      pci:new_eci(user, options);
+      new_eci = pci:new_eci(user, options);
+      send_directive("created new eci");
     }
   //-------------------- Clients --------------------
     Clients = function() { 
