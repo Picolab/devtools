@@ -61,7 +61,7 @@
 					argsre: true
 			
 			} },
-      {"#oAuth-client-registration": {handler: "authorized_clients",
+      {"#page-client-authorize": {handler: "authorized_clients",
           events: "s", // do page before show
           argsre: true
       
@@ -629,7 +629,7 @@
         loadSpinner("#authorized client", "authorized client");
 
         function populate_Authorized_clients() {
-          Devtools.showAthorizedClients(function(client_list){
+          Devtools.showAuthorizedClients(function(client_list){
 
             $("#authorized-clients" ).empty();
 

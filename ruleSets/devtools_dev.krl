@@ -20,7 +20,8 @@ ruleset devtools {
         provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
          showScheduledEvents,showScheduleHistory,
          showInstalledChannels,
-        showClients, showSubscriptions, showIncoming, showOutgoing
+        showClients, Clients, get_app,list_bootstrap, get_appinfo, list_callback,
+        showSubscriptions, showIncoming, showOutgoing 
         sharing on
     }
     global {
