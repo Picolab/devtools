@@ -53,9 +53,9 @@ ruleset devtools {
         //------------------------------- <End oF>  Channnels -------------------
 
         //------------------------------- Authorize clients-------------------
-			Clients = function() { // do I need to remove oauth secrets??
+			Clients = function() { 
 			  	eci = meta:eci();
-			  	clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
+			  	clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined")).klog(standardOut("pci:list_apps "));
 				{
 			    	'status' : (clients != "error"),
 			    	'clients' : clients
