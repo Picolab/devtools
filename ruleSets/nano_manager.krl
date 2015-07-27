@@ -278,7 +278,7 @@ ruleset b507199x5 {
         'subscriptions'  : pending
       }
     }
-    createBackChannel = function(name,namespace,attrs){
+    createBackChannel = function(name,namespace,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
           'name' : name, // generate name and check if its unique
           'eci_type' : namespace,
@@ -690,7 +690,7 @@ ruleset b507199x5 {
             "cid" : targetChannel
       };
 
-      backChannel = createBackChannel(name,namespace,{"namespace":namespace,"role" : myRole });
+      backChannel = createBackChannelsc(name,namespace,{"namespace":namespace,"role" : myRole });
             // build pending subscription entry
       pendingEntry = {
         "name"  : name,
@@ -731,7 +731,7 @@ ruleset b507199x5 {
     }
   }
 
-  rule addPending {
+  rule addPending { // depends on wether or not a backChannel is being passed as an attribute
     select when nano_manager add_pending
    pre {
       pendingEntry = {
@@ -764,70 +764,7 @@ ruleset b507199x5 {
     }
   }
 
-  rule addPendingOut {
-    select when nano_manager add_pending_out
-   pre {
-      backChannel = pendingEntry{"backChannel"};
-      pendingEntry = {
-        "name"  : event:attr("name").defaultsTo("", standardError("")),
-        "namespace"    : event:attr("namespace").defaultsTo("", standardError("")),
-        "relationship" : event:attr("myRole").defaultsTo("", standardError("")),
-        "backChannel"  : event:attr("backChannel_b").defaultsTo("", standardError("")),
-        "targetChannel"  : event:attr("targetChannel").defaultsTo("", standardError("")),
-        "attrs"     : event:attr("subAttrs").defaultsTo("", standardError(""))
-      }.klog("pending subscription"); 
-
-    }
-    if(pendingEntry neq "" &&
-     backChannel_b neq "") 
-    then
-    {
-     noop();
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_outgoing_pending;
-      set ent:pending_outgoing{backChannel_b} pendingEntry;
-    } 
-    else {
-      log(">> failure >>");
-    }
-  }
-
-  rule addPendingIn {
-    select when nano_manager add_pending_in
-    pre {
-      name  = event:attr("name").defaultsTo("orphan", standardError(""));
-      namespace    = event:attr("namespace").defaultsTo("shared", standardError(""));
-      relationship = event:attr("relationship").defaultsTo("peer-peer", standardError(""));
-      eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-      attrs     = event:attr("attrs").defaultsTo("", standardError(""));
-
-      // --------------------------------------------
-      // build pending pending approval entry
-
-      pendingApprovalEntry = {
-        "name"  : name,
-        "namespace"    : namespace,
-        "relationship" : relationship,
-        "eventChannel" : eventChannel,
-        "attrs"     : attrs
-      };
-    }
-    if(eventChannel neq "NoEventChannel") then
-    {
-      noop();
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_incoming_pending;
-      set ent:pending_incoming{eventChannel} pendingApprovalEntry;
-          } 
-    else {
-      log(">> failure >>");
-    }
-  }
-
+  
   rule accept {
     select when nano_manager incoming_request_approved
     pre{
@@ -951,8 +888,8 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   }
-    rule Unsubscribe {
-    select when nano_manager unsubscribed
+    rule removeSubscription {
+    select when nano_manager remove_subscription
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError("no backChannel"));
     }
@@ -971,8 +908,8 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   } 
-  rule INITUnsubscribe {
-    select when nano_manager init_unsubscribed
+  rule unsubscribe {
+    select when nano_manager unsubscribed
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
@@ -982,14 +919,14 @@ ruleset b507199x5 {
     }
     if(eventChannel neq "No eventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "unsubscribed")
+      event:send(subscription_map, "nano_manager", "remove_subscription")
         with attrs = {
           "backChannel"  : eventChannel
         };
 
     }
     fired {
-      raise nano_manager event unsubscribed with backChannel = backChannel; 
+      raise nano_manager event remove_subscription with backChannel = backChannel; 
       log(">> successful >>");
           } 
     else {
