@@ -476,7 +476,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "subscribe"
+	            raise nano_manager event "request_subscrition"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -503,10 +503,9 @@ ruleset devtools {
 	    }
 	  rule RejectIncomingRequest {
 	        select when devtools incoming_request_rejected
+	        or out_going_request_rejected
 	        pre {
-	            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
 	        }
-	        if(eventChannel neq "" ) then
 	        {
 	          noop();
 	        }

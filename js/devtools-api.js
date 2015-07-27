@@ -422,7 +422,7 @@
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("cancel subscription request");
-       return CloudOS.raiseEvent("devtools", "out_going_request_rejected_by_origin", data,{}, function(json) {
+       return CloudOS.raiseEvent("devtools", "out_going_request_rejected", data,{}, function(json) {
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
        }, {"eci":eci});
