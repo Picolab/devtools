@@ -257,14 +257,14 @@ ruleset b507199x5 {
 	}
 
   //-------------------- Subscriptions ----------------------
-    subscriptions = function(namespace, relationship) { 
+    subscriptions = function() { 
       subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (subscriptions != "wrong"),
         'subscriptions'  : subscriptions
       }
     }
-    outgoing = function() { 
+    outGoing = function() { 
       pending = ent:pending_out_going.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),

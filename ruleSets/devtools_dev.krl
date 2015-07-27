@@ -151,7 +151,7 @@ ruleset devtools {
 	          subscriptions{'subscriptions'};
 	        };
 	        showOutgoing = function() {
-	          subscriptions = NanoManager:outgoing().klog(standardOut("NanoManager:Outgoing()"));
+	          subscriptions = NanoManager:outGoing().klog(standardOut("NanoManager:Outgoing()"));
 	          subscriptions{'subscriptions'};
 	        };
         // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 
