@@ -265,14 +265,14 @@ ruleset b507199x5 {
       }
     }
     outGoing = function() { 
-      pending = ent:pending_out_going.defaultsTo("wrong",standardError("undefined"));
+      pending = ent:pending_outgoing.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
         'subscriptions'  : pending
       }
     }
     incoming = function() { 
-      pending = ent:pending_in_coming.defaultsTo("wrong",standardError("undefined"));
+      pending = ent:pending_incoming.defaultsTo("wrong",standardError("undefined"));
       {
         'status' : (pending != "wrong"),
         'subscriptions'  : pending
@@ -752,7 +752,7 @@ ruleset b507199x5 {
     }
     fired { //can i put multiple lines in a single guard?????????????????
       log(">> successful pending incoming >>");
-       raise nano_manager event subscription_incoming_pending;
+      raise nano_manager event subscription_incoming_pending;
       set ent:pending_incoming{eventChannel} pendingEntry;
       log(">> failure >>") if (eventChannel eq "");
     } 
