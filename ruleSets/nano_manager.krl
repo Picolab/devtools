@@ -674,11 +674,11 @@ ruleset b507199x5 {
   rule request {// need to change varibles to snake case.
     select when nano_manager request_subscrition
    pre {
-      name   = event:attr("channelName").defaultsTo("orphan", standardError(""));
-      namespace     = event:attr("namespace").defaultsTo("shared", standardError(""));
-      relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError(""));
-      targetChannel = event:attr("targetChannel").defaultsTo("NoTargetChannel", standardError(""));
-      attrs      = event:attr("attrs").defaultsTo({}, standardError(""));
+      name   = event:attr("channelName").defaultsTo("orphan", standardError("channelName"));
+      namespace     = event:attr("namespace").defaultsTo("shared", standardError("namespace"));
+      relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
+      targetChannel = event:attr("targetChannel").defaultsTo("NoTargetChannel", standardError("targetChannel"));
+      attrs      = event:attr("attrs").defaultsTo({}, standardError("attrs"));
       //attrs_b = attrs.decode();
       // --------------------------------------------
       // extract roles of the relationship
@@ -690,7 +690,7 @@ ruleset b507199x5 {
             "cid" : targetChannel
       };
 
-      backChannel = createBackChannels(name,namespace,{"namespace":namespace,"role" : myRole });
+      backChannel = createBackChannel(name,namespace,{"namespace":namespace,"role" : myRole });
             // build pending subscription entry
       pendingEntry = {
         "name"  : name,
