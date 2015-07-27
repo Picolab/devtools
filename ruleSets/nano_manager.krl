@@ -798,11 +798,11 @@ ruleset b507199x5 {
     select when nano_manager incoming_request_approved
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-      pendingsubscription = ent:pending_incoming{eventChannel};
       
       backChannel_b = createBackChannel(pendingsubscription{'name'},
         pendingsubscription{'namespace'},
         {"namespace":namespace,"role" : myRole });
+
       pendingsubscription = ent:pending_incoming{eventChannel};
       // create subscription for both picos
       mySubscription = ((pendingsubscription).put(["backChannel"],backChannel_b)).klog("subscription"); /// needs standard output
@@ -812,16 +812,16 @@ ruleset b507199x5 {
             "cid" : eventChannel
       };
     }
-    if (subscription{"backChannel"} neq "") then
+    if (mySubscription{"backChannel"} neq "") then
     {
-      event:send(subscription_map, "nano_manager", "remove_pending_out"); 
+      event:send(subscription_map, "nano_manager", "remove_pending"); 
       event:send(subscription_map, "nano_manager", "add_subscription")
        with attrs = yourSubscriptionB;
     }
     fired 
     {
       log(">> successful> >");
-      raise nano_manager event remove_pending_in
+      raise nano_manager event remove_pending
       with eventChannel = eventChannel;
       raise nano_manager event add_subscription
       with backChannel = backChannel_b
@@ -895,42 +895,22 @@ ruleset b507199x5 {
       log(">> failure subscription request not found >>") if (pending_incoming eq "No pending incoming");
     }
   }
-  rule removeInComingRequest {
-    select when nano_manager remove_pending_in
+ rule reject {
+    select when nano_manager incoming_request_rejected
+           or   nano_manager outgoing_request_canceled
+
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-      pendingsubscription = ent:pending_incoming{eventChannel};
     }
-    if (eventChannel neq "NoEventChannel") then
     {
-      noop();
+      event:send(subscription_map, "nano_manager", "remove_pending_out")
+        with attrs = event:attrs(); 
     }
-    fired 
+    always // do we need to raise a rejected event for outsiders to see? i dont think so......
     {
-      log(">> successful> >");
-      raise nano_manager event removed_pending_in;
-      clear ent:pending_incoming{eventChannel};
-    } 
-    else 
-    {
-      log(">> failure >>");
-    }
-  }
-  rule removeOutgoingRequest {
-    select when nano_manager remove_pending_out
-    pre{
-      backChannel = meta:eci();
-      pending_outgoing = ent:pending_outgoing{backChannel}.defaultsTo( "No pending", standardError(""));
-    }
-    if (pending_outgoing neq "No pending") then 
-    {
-      noop();
-    }
-    fired 
-    {
-      log(">> successful >>");
-      raise nano_manager event removed_pending_out;
-      clear ent:pending_outgoing{backChannel};
+      log(">> successful reject, raising remove pending >>");
+      raise nano_manager event remove_pending
+        attributes event:attrs();
     } 
     else 
     {
