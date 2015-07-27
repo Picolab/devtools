@@ -794,8 +794,7 @@ ruleset b507199x5 {
       raise nano_manager event remove_pending
       with eventChannel = eventChannel;
       raise nano_manager event add_subscription
-      with backChannel = backChannel_b
-      and eventChannel = eventChannel;
+      attributes mySubscription;
     } 
     else 
     {
