@@ -147,7 +147,7 @@ ruleset devtools {
 	          subscriptions{'subscriptions'};
 	        };
 	        showIncoming = function() {
-	          subscriptions = NanoManager:incoming().klog(standardOut("NanoManager:Incoming()"));
+	          subscriptions = NanoManager:incoming().klog(standardOut("NanoManager:incoming()"));
 	          subscriptions{'subscriptions'};
 	        };
 	        showOutgoing = function() {
@@ -529,7 +529,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "init_unsubscribed"
+	            raise nano_manager event "unsubscribed"
 	              attributes event:attrs();
 	        }
 	        else {
