@@ -690,7 +690,7 @@ ruleset b507199x5 {
             "cid" : targetChannel
       };
 
-      backChannel = createBackChannelsc(name,namespace,{"namespace":namespace,"role" : myRole });
+      backChannel = createBackChannels(name,namespace,{"namespace":namespace,"role" : myRole });
             // build pending subscription entry
       pendingEntry = {
         "name"  : name,
