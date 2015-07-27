@@ -367,7 +367,7 @@
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("show OutGoing");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOutGoing", {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOutgoing", {}, function(json) {
             Devtools.log("Displaying showOutGoing", json);
             cb(json);
         }, {"eci":eci});  

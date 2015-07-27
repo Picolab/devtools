@@ -902,7 +902,7 @@
 					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 					  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							});
-					Devtools.showOutGoing(function(subscriptions){
+					Devtools.showOutgoing(function(subscriptions){
 						$("#Subcriptions" ).empty();
 						dynamic_subscriptions_items = "";
 						dynamic_subscriptions_items2 = "";
