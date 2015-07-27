@@ -665,6 +665,7 @@ ruleset b507199x5 {
   //      "namespace"   : ,
   //      "relationship"   : ,
   //      "eventChannel"  : ,
+  //      "backChannel"  :"" ,
   //      "attrs"  :
   //    }
   //  }
@@ -678,7 +679,7 @@ ruleset b507199x5 {
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError(""));
       targetChannel = event:attr("targetChannel").defaultsTo("NoTargetChannel", standardError(""));
       attrs      = event:attr("attrs").defaultsTo({}, standardError(""));
-
+      //attrs_b = attrs.decode();
       // --------------------------------------------
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
@@ -689,23 +690,23 @@ ruleset b507199x5 {
             "cid" : targetChannel
       };
 
-      backChannel_b = createBackChannel(name,namespace,{"namespace":namespace,"role" : myRole });
+      backChannel = createBackChannel(name,namespace,{"namespace":namespace,"role" : myRole });
             // build pending subscription entry
       pendingEntry = {
         "name"  : name,
         "namespace"    : namespace,
         "relationship" : myRole,
-        "backChannel"  : backChannel_b,
+        "backChannel"  : backChannel,
         "targetChannel"  : targetChannel,
-        "attrs"     : subAttrs.decode()
+        "attrs"     : attrs
       }.klog("pending subscription"); 
     }
     if(targetChannel neq "NoTargetChannel" &&
      user neq "" &&
-     backChannel_b neq "") 
+     backChannel neq "") 
     then
     {
-      event:send(subscription_map, "nano_manager", "add_pending_in") // send request
+      event:send(subscription_map, "nano_manager", "add_pending") // send request
         with attrs = {
           "name"  : name,
           "namespace"    : namespace,
@@ -716,17 +717,50 @@ ruleset b507199x5 {
     }
     fired {
       log(">> successful >>");
-      raise nano_manager event add_pending_out
+      raise nano_manager event add_pending
         with 
         name = name
         and namespace = namespace
         and relationship = myRole
-        and backChannel = backChannel_b
-        and targetChannel = targetChannel
+        and backChannel = backChannel
+        and eventChannel = targetChannel
         and attrs = subAttrs.decode();
     } 
     else {
       log(">> failure >>");
+    }
+  }
+
+  rule addPending {
+    select when nano_manager add_pending
+   pre {
+      pendingEntry = {
+        "name"  : event:attr("name").defaultsTo("", standardError("")),
+        "namespace"    : event:attr("namespace").defaultsTo("", standardError("")),
+        "relationship" : event:attr("relationship").defaultsTo("", standardError("")),
+        "backChannel"  : event:attr("backChannel").defaultsTo("", standardError("")),
+        "eventChannel"  : event:attr("eventChannel").defaultsTo("", standardError("")),
+        "attrs"     : event:attr("attrs").defaultsTo("", standardError(""))
+      }.klog("pending subscription"); 
+      
+      backChannel = pendingEntry{"backChannel"}.defaultsTo("", standardError("no backChannel"));
+      eventChannel = pendingEntry{"eventChannel"}.defaultsTo("", standardError("no eventChannel"));
+    }
+    if(backChannel eq "") // no backChannel means its incoming
+    then
+    {
+     noop();
+    }
+    fired { //can i put multiple lines in a single guard?????????????????
+      log(">> successful pending incoming >>");
+       raise nano_manager event subscription_incoming_pending;
+      set ent:pending_incoming{eventChannel} pendingEntry;
+      log(">> failure >>") if (eventChannel eq "");
+    } 
+    else { 
+      log(">> successful pending outgoing >>");
+      raise nano_manager event subscription_outgoing_pending;
+      set ent:pending_outgoing{backChannel} pendingEntry;
     }
   }
 
@@ -917,100 +951,10 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   }
-  rule RejectIncomingRequest {
-    select when nano_manager incoming_request_rejected
-    pre{
-      eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
-      subscription_map = {
-        "cid" : eventChannel
-      };
-    }
-    if(eventChannel neq "NoEventChannel") then
-    {
-      event:send(subscription_map, "nano_manager", "outgoing_request_rejected") // send request
-        with attrs = {
-          "backChannel"  : eventChannel
-        };
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_incoming_rejected;
-      clear ent:pending_incoming{eventChannel};
-    } 
-    else {
-      log(">> failure >>");
-    }
-  }
-  rule rejectOutgoingRequest {
-    select when nano_manager outgoing_request_rejected_by_origin
-    pre{
-      backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
-      targetChannel = event:attr("targetChannel").defaultsTo( "No targetChannel", standardError(""));
-      subscription_map = {
-        "cid" : targetChannel
-      };
-    }
-    if(backChannel neq "No backChannel") then
-    {
-      event:send(subscription_map, "nano_manager", "incoming_request_rejected_by_origin") // send request
-        with attrs = {
-          "eventChannel"  : backChannel
-        };
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_outgoing_rejected;
-      // clean up your channels buddie, no loose ends....
-      raise nano_manager event channel_deleted with channel_id = backChannel;  
-      clear ent:pending_outgoing{backChannel};
-    } 
-    else {
-      log(">> failure >>");
-    }
-  }
-  rule removeIncomingRequest {
-    select when nano_manager incoming_request_rejected_by_origin
-    pre{
-      eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
-    }
-    if(eventChannel neq "No eventChannel") then
-    {
-      noop();
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_incoming_rejected;
-      clear ent:pending_incoming{eventChannel};
-          } 
-    else {
-      log(">> failure >>");
-    }
-  }
-  rule removeOutgoingRequest {
-    select when nano_manager outgoing_request_rejected
-    pre{
-      backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
-    }
-    if(backChannel neq "No backChannel") then
-    {
-      noop();
-    }
-    fired {
-      log(">> successful >>");
-      raise nano_manager event subscription_outgoing_rejected;
-      // clean up..
-      raise nano_manager event channel_deleted with channel_id = backChannel;  
-      clear ent:pending_outgoing{backChannel};
-          } 
-    else {
-      log(">> failure >>");
-    }
-  } 
     rule Unsubscribe {
     select when nano_manager unsubscribed
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError("no backChannel"));
-
     }
     if(backChannel neq "No backChannel") then
     {
