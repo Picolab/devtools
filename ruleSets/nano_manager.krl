@@ -710,7 +710,7 @@ ruleset b507199x5 {
           "name"  : name,
           "namespace"    : namespace,
           "relationship" : youRole,
-          "eventChannel"  : backChannel_b,
+          "eventChannel"  : backChannel,
           "attrs"     : attrs
         };
     }
