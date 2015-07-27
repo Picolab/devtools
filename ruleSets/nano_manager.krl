@@ -702,7 +702,6 @@ ruleset b507199x5 {
       }.klog("pending subscription"); 
     }
     if(targetChannel neq "NoTargetChannel" &&
-     user neq "" &&
      backChannel neq "") 
     then
     {
