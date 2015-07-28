@@ -59,31 +59,31 @@ ruleset b507199x5 {
     registered = function() {
       eci = meta:eci();
         rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
-        rulesetGallery = rulesets.map( function(rid){
-          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
+        ruleset_gallery = rulesets.map( function(rid){
+          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));//whats this for?? dead code????
           ridInfo
-        }).defaultsTo("wrong",standardError("undefined"));
+        }).defaultsTo("error",standardError("undefined"));
         {
-          'status' : (rulesetGallery neq "wrong"),
-          'rulesets' : rulesetGallery          
+          'status' : (ruleset_gallery neq "error"),
+          'rulesets' : ruleset_gallery          
         };
     }
     singleRuleset = function(rid) { 
       eci = meta:eci();
-      results = Registered().defaultsTo({},standardError("undefined"));
-      results = results{"rulesets"}.defaultsTo({},standardError("undefined"));
-      result = results.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( "wrong",standardError("undefined"));
+      results = registered().defaultsTo({},standardError("undefined"));
+      rulesets = results{"rulesets"}.defaultsTo({},standardError("undefined"));
+      result = rulesets.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( "error",standardError("undefined"));
       {
-        'status' : (result neq "wrong"),
+        'status' : (result neq "error"),
         'ruleset' : result[0]
       };
     }
     installed = function() {
       eci = meta:eci().klog("eci: ");
-      results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("wrong",standardError("pci list_ruleset failed"));  
-      rids = results{'rids'}.defaultsTo("wrong",standardError("no hash key rids"));
+      results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("error",standardError("pci list_ruleset failed"));  
+      rids = results{'rids'}.defaultsTo("error",standardError("no hash key rids"));
       {
-       'status'   : (rids neq "wrong"),
+       'status'   : (rids neq "error"),
         'rids'     : rids
       };
     }
@@ -109,41 +109,41 @@ ruleset b507199x5 {
     channels = function() { 
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
-      channels = results{'channels'}.defaultsTo("wrong",standardError("undefined")); // list of channels if list_eci request was valid
+      channels = results{'channels'}.defaultsTo("error",standardError("undefined")); // list of channels if list_eci request was valid
       {
-        'status'   : (channels neq "wrong"),
+        'status'   : (channels neq "error"),
         'channels' : channels
       };
     }
     attributes = function(eci) {
-      results = pci:get_eci_attributes(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
+      results = pci:get_eci_attributes(eci).defaultsTo("error",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq "wrong"),
+        'status'   : (results neq "error"),
         'Attributes' : results
       };
     }
     policy = function(eci) {
-      results = pci:get_eci_policy(eci).defaultsTo("wrong",standardError("undefined")); // list of ECIs assigned to userid
+      results = pci:get_eci_policy(eci).defaultsTo("error",standardError("undefined")); // list of ECIs assigned to userid
       {
-        'status'   : (results neq "wrong"),
+        'status'   : (results neq "error"),
         'Policy' : results
       };
     }
     type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
-      channels = Channels().defaultsTo("wrong",">> undefined >>");
+      channels = Channels().defaultsTo("error",">> undefined >>");
 
       getType = function(channel_id,channels) {
         channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
-        channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "wrong",standardError("undefined"));
+        channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "error",standardError("undefined"));
         channel = channel[0];
         type = channel{"type"};
         temp = (type.typeof() eq "str" ) => type | type.typeof() eq "array" => type[0] |  type.keys();
         type2 = (temp.typeof() eq "array") => temp[0] | temp;   
         type2;
       };
-      type = ((channels neq "wrong") && (channels neq {} )) => getType() | "wrong";
+      type = ((channels neq "error") && (channels neq {} )) => getType() | "error";
       {
-        'status'   : (type neq "wrong"),
+        'status'   : (type neq "error"),
         'channels' : channels
       };
     }
@@ -166,12 +166,12 @@ ruleset b507199x5 {
   //-------------------- Clients --------------------
     Clients = function() { 
       eci = meta:eci();
-      clients = pci:get_authorized(eci).defaultsTo("wrong",standardError("undefined")); // pci does not have this function yet........
+      clients = pci:get_authorized(eci).defaultsTo("error",standardError("undefined")); // pci does not have this function yet........
       //krl_struct = clients.decode() // I dont know if we needs decode
      // .klog(">>>>krl_struct")
      // ;
       {
-        'status' : (clients != "wrong"),
+        'status' : (clients != "error"),
         'clients' : krl_struct
       }
     }
@@ -215,10 +215,10 @@ ruleset b507199x5 {
 		  
 	//-------------------- Picos --------------------
   accountProfile = function() {
-    profile = pci:get_profile(currentSession()).defaultsTo("wrong",standardError("undefined"))
+    profile = pci:get_profile(currentSession()).defaultsTo("error",standardError("undefined"))
     .put( ["oauth_eci"], meta:eci() );
     {
-     'status' : (profile != "wrong"),
+     'status' : (profile != "error"),
      'profile'  : profile
     }
   }
@@ -258,23 +258,23 @@ ruleset b507199x5 {
 
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { 
-      subscriptions = ent:subscriptions.defaultsTo("wrong",standardError("undefined"));
+      subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (subscriptions != "wrong"),
+        'status' : (subscriptions != "error"),
         'subscriptions'  : subscriptions
       }
     }
     outGoing = function() { 
-      pending = ent:pending_outgoing.defaultsTo("wrong",standardError("undefined"));
+      pending = ent:pending_outgoing.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (pending != "wrong"),
+        'status' : (pending != "error"),
         'subscriptions'  : pending
       }
     }
     incoming = function() { 
-      pending = ent:pending_incoming.defaultsTo("wrong",standardError("undefined"));
+      pending = ent:pending_incoming.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (pending != "wrong"),
+        'status' : (pending != "error"),
         'subscriptions'  : pending
       }
     }
@@ -293,30 +293,32 @@ ruleset b507199x5 {
     }
   //-------------------- Scheduled ----------------------
     schedules = function() { 
-      sched_event_list = event:get_list().defaultsTo("wrong",standardError("undefined"));
+      sched_event_list = event:get_list().defaultsTo("error",standardError("undefined"));
       {
-        'status' : (sched_event_list != "wrong"),
+        'status' : (sched_event_list != "error"),
         'schedules'  : sched_event_list
       }
 
     }
     scheduleHistory = function(id) { 
-      sched_event_history = event:get_history(id).defaultsTo("wrong",standardError("undefined"));
+      sched_event_history = event:get_history(id).defaultsTo("error",standardError("undefined"));
       {
-        'status' : (sched_event_history != "wrong"),
+        'status' : (sched_event_history != "error"),
         'history'  : sched_event_history
       }
     
     }
   
   //-------------------- error handling ----------------------
-
+    standardOut = function(message) {
+      msg = ">> " + message + " results: >>";
+      msg
+    }
 
     standardError = function(message) {
       error = ">> error: " + message + " >>";
       error
     }
-
   }
   //defactions
   //Rules
@@ -341,7 +343,7 @@ ruleset b507199x5 {
        // password = //??
     }
     fired {
-      log ">>>> <<<<";
+      log (standardOut("success"));
     }
     else{
       log""
@@ -357,7 +359,8 @@ ruleset b507199x5 {
       rsm:delete(rid); 
     }
     fired {
-      log ">>>> Deleted #{rid} <<<<";
+      log (standardOut("success Deleted #{rid}"));
+      log ">>>>  <<<<";
     }
     else{
       log ">>>> #{rid} not found "; 
@@ -373,7 +376,8 @@ ruleset b507199x5 {
       rsm:flush(rid); 
     }
     fired {
-      log ">>>> flushed #{rid} <<<<"
+      log (standardOut("success flushed #{rid}"));
+      log ">>>>  <<<<"
     }
     else {
       log ">>>> failed to flush #{rid} <<<<"
@@ -398,6 +402,7 @@ ruleset b507199x5 {
         //password = //??
     }
     fired {
+      log (standardOut("success"));
       log ""
     }
     else{
@@ -415,7 +420,8 @@ ruleset b507199x5 {
       install(eci, ridlist);
     }
     fired {
-      log(">> successfully installed rids #{rids} >>");
+      log (standardOut("success installed rids #{rids}"));
+      log(">> successfully  >>");
           } 
     else {
       log(">> could not install rids #{rids} >>");
@@ -432,7 +438,8 @@ ruleset b507199x5 {
       uninstall(eci,ridlist);
     }
     fired {
-      log(">> successfully uninstalled rids #{rids} >>");
+      log (standardOut("success uninstalled rids #{rids}"));
+      log(">> successfully  >>");
           } 
     else {
       log(">> could not uninstall rids #{rids} >>");
@@ -454,7 +461,8 @@ ruleset b507199x5 {
       updateAttrs(channel_id,attributes);
     }
     fired {
-      log(">> successfully updated channel #{channel_id} attributes >>");
+      log (standardOut("success updated channel #{channel_id} attributes"));
+      log(">> successfully >>");
     } 
     else {
       log(">> could not update channel #{channel_id} attributes >>");
@@ -472,7 +480,8 @@ ruleset b507199x5 {
       updatePolicy(channel_id, policy);
     }
     fired {
-      log(">> successfully updated channel #{channel_id} policy >>");
+      log (standardOut("success updated channel #{channel_id} policy"));
+      log(">> successfully  >>");
     }
     else {
       log(">> could not update channel #{channel_id} policy >>");
@@ -488,7 +497,8 @@ ruleset b507199x5 {
       deleteEci(channelID);
     }
     fired {
-      log(">> successfully deleted channel #{channelID} >>");
+      log (standardOut("success deleted channel #{channelID}"));
+      log(">> successfully  >>");
           } else {
       log(">> could not delete channel #{channelID} >>");
           }
@@ -514,7 +524,8 @@ ruleset b507199x5 {
       //with status= true; // should we send directives??
           }
     fired {
-      log(">> successfully created channels #{channelName} >>");
+      log (standardOut("success created channels #{channelName}"));
+      log(">> successfully  >>");
           } 
     else {
       log(">> could not create channels #{channelName} >>");
@@ -705,7 +716,7 @@ ruleset b507199x5 {
      backChannel neq "") 
     then
     {
-      event:send(subscription_map, "nano_manager", "add_pending") // send request
+      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "namespace"    : namespace,
@@ -715,8 +726,9 @@ ruleset b507199x5 {
         };
     }
     fired {
+      log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event add_pending
+      raise nano_manager event add_pending_subscription_requested
         with 
         name = name
         and namespace = namespace
@@ -757,7 +769,7 @@ ruleset b507199x5 {
       log(">> failure >>") if (eventChannel eq "");
     } 
     else { 
-      log(">> successful pending outgoing >>");
+      log (standardOut("success pending outgoing >>"));
       raise nano_manager event subscription_outgoing_pending;
       set ent:pending_outgoing{backChannel} pendingEntry;
     }
@@ -784,16 +796,16 @@ ruleset b507199x5 {
     }
     if (mySubscription{"backChannel"} neq "") then
     {
-      event:send(subscription_map, "nano_manager", "remove_pending"); 
-      event:send(subscription_map, "nano_manager", "add_subscription")
+      event:send(subscription_map, "nano_manager", "remove_pending_subscription_requested"); 
+      event:send(subscription_map, "nano_manager", "add_subscription_requested")
        with attrs = yourSubscriptionB;
     }
     fired 
     {
-      log(">> successful> >");
-      raise nano_manager event remove_pending
+      log (standardOut("success"));
+      raise nano_manager event remove_pending_subscription_requested 
       with eventChannel = eventChannel;
-      raise nano_manager event add_subscription
+      raise nano_manager event add_subscription_requested
       attributes mySubscription;
     } 
     else 
@@ -802,7 +814,7 @@ ruleset b507199x5 {
     }
   }
   rule addSubscription {
-    select when nano_manager add_subscription
+    select when nano_manager add_subscription_requested
     pre{
       subscription=
         {  "name"  : event:attr("name").defaultsTo( "Noname", standardError("")),
@@ -819,7 +831,7 @@ ruleset b507199x5 {
      noop();
     }
     fired {
-      log(">> successful> >");
+      log (standardOut("success"));
       raise nano_manager event subscription_added
       with backChannel = subscription{"backChannel"};
       set ent:subscriptions{subscription{"backChannel"}}  subscription;
@@ -845,7 +857,7 @@ ruleset b507199x5 {
     }
     fired 
     {
-      log(">>successful removing outgoing>>");
+      log (standardOut("success removing outgoing"));
       raise nano_manager event removed_pending_out;
       clear ent:pending_outgoing{backChannel};
     } 
@@ -858,7 +870,7 @@ ruleset b507199x5 {
    //     ent:pending_out_incoming;
    //   };
     //  removeIncoming() if (pending_incoming neq "No pending incoming");
-      log(">>successful removing incoming>>") if (pending_incoming neq "No pending incoming");
+      log (standardOut("success removing incoming")) if (pending_incoming neq "No pending incoming");
       raise nano_manager event removed_pending_in if (pending_incoming neq "No pending incoming");
       clear ent:pending_incoming{eventChannel} if (pending_incoming neq "No pending incoming");
       log(">> failure subscription request not found >>") if (pending_incoming eq "No pending incoming");
@@ -872,13 +884,13 @@ ruleset b507199x5 {
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
     }
     {
-      event:send(subscription_map, "nano_manager", "remove_pending_out")
+      event:send(subscription_map, "nano_manager", "remove_pending_subscription_requested")
         with attrs = event:attrs(); 
     }
     always // do we need to raise a rejected event for outsiders to see? i dont think so......
     {
-      log(">> successful reject, raising remove pending >>");
-      raise nano_manager event remove_pending
+      log (standardOut("success raising remove pending"));
+      raise nano_manager event remove_pending_subscription_requested
         attributes event:attrs();
     } 
     else 
@@ -896,10 +908,10 @@ ruleset b507199x5 {
       noop();
     }
     fired {
-      log(">> successful >>");
+      log (standardOut("success"));
       raise nano_manager event subscription_unsubscribed;
       // clean up
-      raise nano_manager event channel_deleted with channel_id = backChannel;  
+      raise nano_manager event channel_delete_requested with channel_id = backChannel;  
       clear ent:subscriptions{backChannel};
           } 
     else {
@@ -917,15 +929,15 @@ ruleset b507199x5 {
     }
     if(eventChannel neq "No eventChannel") then
     {
-      event:send(subscription_map, "nano_manager", "remove_subscription")
+      event:send(subscription_map, "nano_manager", "remove_subscription_requested")
         with attrs = {
           "backChannel"  : eventChannel
         };
 
     }
     fired {
-      raise nano_manager event remove_subscription with backChannel = backChannel; 
-      log(">> successful >>");
+      raise nano_manager event remove_subscription_requested with backChannel = backChannel; 
+      log (standardOut("success"));
           } 
     else {
       log(">> failure >>");
@@ -957,7 +969,7 @@ ruleset b507199x5 {
       event:delete(sid);
     }
     fired {
-      log(">> successful >>");
+      log (standardOut("success"));
           } 
     else {
       log(">> failure >>");
@@ -966,25 +978,25 @@ ruleset b507199x5 {
   rule ScheduleEvent {
     select when nano_manager schedule_event_requested
     pre{
-      eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
-      time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
-      do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
+      eventtype = event:attr("eventtype").defaultsTo("error", standardError("missing event attr eventtype"));
+      time = event:attr("time").defaultsTo("error", standardError("missing event attr type"));
+      do_main = event:attr("do_main").defaultsTo("error", standardError("missing event attr type"));
       timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
-      date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
+      date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
       attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
       attr = attributes.decode();
 
     }
-    if (type eq "single" && type neq "wrong" ) then
+    if (type eq "single" && type neq "error" ) then
     {
       noop();
     }
     fired {
-      log(">> single >>");
+      log (standardOut("success single"));
       schedule do_main event eventype at date_time attributes attr ;
           } 
     else {
-      log(">> multiple >>");
+      log (standardOut("success multiple"));
       schedule do_main event eventype repeat timespec attributes attr ;
     }
   }  
