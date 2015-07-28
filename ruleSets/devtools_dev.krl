@@ -181,14 +181,14 @@ ruleset devtools {
 	    rule deleteRulesets {
 	        select when devtools delete_rid//subm form-update-url
 	        pre {
-	            rid = event:attr("rid").defaultsTo("", ">> missing event attr rids >> ");
+	            rid = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
 	        }
 	        if(rid.length() > 0 ) then
 	        {
 	          noop();
 	        }
 	        fired {
-	          log (standardOut("delete Success: #{rid}"));
+	          log (standardOut("Success raising delete #{rid} event"));
 	          raise nano_manager event "ruleset_deleted"
 	              attributes event:attrs();
 	        }

@@ -157,7 +157,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rid: rid}; 
+        var json = {rids: rid}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Deleting RID " + rid);
         return CloudOS.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
