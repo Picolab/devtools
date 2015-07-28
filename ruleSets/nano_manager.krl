@@ -381,7 +381,7 @@ ruleset b507199x5 {
     } 
   }
   rule RelinkRuleset {
-    select when nano_manager ruleset_relinked
+    select when nano_manager ruleset_relink_requested
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
       newURL = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
@@ -405,7 +405,7 @@ ruleset b507199x5 {
     }
   }  
   rule InstallRuleset {// should this handle multiple rulesets or a single one
-    select when nano_manager ruleset_installed
+    select when nano_manager ruleset_install_requested
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
@@ -422,7 +422,7 @@ ruleset b507199x5 {
     }
   }
   rule UninstallRuleset { // should this handle multiple uninstalls ??? 
-    select when nano_manager ruleset_uninstalled
+    select when nano_manager ruleset_uninstall_requested
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
@@ -442,7 +442,7 @@ ruleset b507199x5 {
  //-------------------- Channels --------------------
 
   rule UpdateChannelAttributes {
-    select when nano_manager channel_attributes_updated
+    select when nano_manager channel_attributes_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
@@ -462,7 +462,7 @@ ruleset b507199x5 {
   }
 
   rule UpdateChannelPolicy {
-    select when nano_manager channel_policy_updated // channel_policy_update_requested
+    select when nano_manager channel_policy_updat_requested // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
@@ -480,7 +480,7 @@ ruleset b507199x5 {
 
   }
   rule DeleteChannel {
-    select when nano_manager channel_deleted
+    select when nano_manager channel_delete_requested
     pre {
       channelID = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
@@ -494,7 +494,7 @@ ruleset b507199x5 {
           }
         }
   rule CreateChannel {
-    select when nano_manager channel_created
+    select when nano_manager channel_create_requested
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channelName = event:attr("channelName").defaultsTo("", standardError("missing event attr channels"));
@@ -671,8 +671,8 @@ ruleset b507199x5 {
   //  }
   //
   // ========================================================================
-  rule request {// need to change varibles to snake case.
-    select when nano_manager request_subscrition
+  rule requestSubscription {// need to change varibles to snake case.
+    select when nano_manager subscription_requested
    pre {
       name   = event:attr("channelName").defaultsTo("orphan", standardError("channelName"));
       namespace     = event:attr("namespace").defaultsTo("shared", standardError("namespace"));
@@ -730,8 +730,8 @@ ruleset b507199x5 {
     }
   }
 
-  rule addPending { // depends on wether or not a backChannel is being passed as an attribute
-    select when nano_manager add_pending
+  rule addPendingSubscription { // depends on wether or not a backChannel is being passed as an attribute
+    select when nano_manager add_pending_subscription_requested
    pre {
       pendingEntry = {
         "name"  : event:attr("name").defaultsTo("", standardError("")),
@@ -764,8 +764,8 @@ ruleset b507199x5 {
   }
 
   
-  rule accept {
-    select when nano_manager incoming_request_approved
+  rule approvePendingSubscription {
+    select when nano_manager approve_pending_subscription_requested
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
       
@@ -828,8 +828,8 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   }
-  rule remove{// ugly attempt to combine two rules.
-    select when nano_manager remove_pending
+  rule removePendingSubscription{// ugly attempt to combine two rules.
+    select when nano_manager remove_pending_subscription_requested
     pre{
       out = event:attr("type_of_subscription").defaultsTo( "No_type_of_subscription", standardError("type_of_subscription"));
       backChannel = meta:eci();
@@ -864,9 +864,9 @@ ruleset b507199x5 {
       log(">> failure subscription request not found >>") if (pending_incoming eq "No pending incoming");
     }
   }
- rule reject {
-    select when nano_manager incoming_request_rejected
-           or   nano_manager outgoing_request_canceled
+ rule rejectPendingSubscription {
+    select when nano_manager reject_incoming_subscription_requested
+           or   nano_manager cancel_outgoing_subscription_requested
 
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "NoEventChannel", standardError(""));
@@ -887,7 +887,7 @@ ruleset b507199x5 {
     }
   }
     rule removeSubscription {
-    select when nano_manager remove_subscription
+    select when nano_manager remove_subscription_requested
     pre{
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError("no backChannel"));
     }
@@ -906,8 +906,8 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   } 
-  rule unsubscribe {
-    select when nano_manager unsubscribed
+  rule cancelSubscription {
+    select when nano_manager cancel_subscription__requested
     pre{
       eventChannel = event:attr("eventChannel").defaultsTo( "No eventChannel", standardError(""));
       backChannel = event:attr("backChannel").defaultsTo( "No backChannel", standardError(""));
@@ -931,7 +931,7 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   } 
-  rule SubscribeReset {
+  rule SubscribeReset {// for testing purpose, will not be in production 
       select when nano_manager subscriptionsReset
       pre{
       }
@@ -947,8 +947,8 @@ ruleset b507199x5 {
 // unsubscribed all, check event from parent 
 
   ///-------------------- Scheduled ----------------------
-  rule DeleteScheduled {
-    select when nano_manager scheduled_deleted
+  rule DeleteScheduledEvent {
+    select when nano_manager delete_scheduled_event_requested
     pre{
       sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
     }
@@ -963,8 +963,8 @@ ruleset b507199x5 {
       log(">> failure >>");
     }
   }  
-  rule CreateScheduled {
-    select when nano_manager scheduled_created
+  rule ScheduleEvent {
+    select when nano_manager schedule_event_requested
     pre{
       eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
       time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
