@@ -322,7 +322,7 @@ ruleset b507199x5 {
   //Rules
   //-------------------- Rulesets --------------------
   rule RegisterRuleset {
-    select when nano_manager ruleset_registered
+    select when nano_manager ruleset_registration_requested
     pre {
       rulesetURL= event:attr("rulesetURL").defaultsTo("", standardError("missing event attr rids"));
       //description = event:attr("description")defaultsTo("", ">>  >> ");
@@ -348,7 +348,7 @@ ruleset b507199x5 {
     }
   }
   rule DeleteRuleset {
-    select when nano_manager ruleset_deleted
+    select when nano_manager ruleset_deletion_requested
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
     }
@@ -364,7 +364,7 @@ ruleset b507199x5 {
     }
   }
   rule FlushRulesets {
-    select when nano_manager ruleset_flushed
+    select when nano_manager ruleset_flush_requested
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
