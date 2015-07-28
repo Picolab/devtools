@@ -181,7 +181,7 @@ ruleset devtools {
 	    rule deleteRulesets {
 	        select when devtools delete_rid//subm form-update-url
 	        pre {
-	            rid = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
+	            rid = event:attr("rid").defaultsTo("", ">> missing event attr rids >> ");
 	        }
 	        if(rid.length() > 0 ) then
 	        {

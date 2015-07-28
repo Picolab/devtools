@@ -183,7 +183,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-	var json = {rids: ridlist}; 
+	var json = {rid: ridlist}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing rulesets");
         return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
