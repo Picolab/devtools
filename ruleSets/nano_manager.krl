@@ -60,7 +60,7 @@ ruleset b507199x5 {
       eci = meta:eci();
         rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
         ruleset_gallery = rulesets.map( function(rid){
-          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));//whats this for?? dead code????
+          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
           ridInfo
         }).defaultsTo("error",standardError("undefined"));
         {
