@@ -43,7 +43,8 @@ ruleset b507199x5 {
     clients, //client
     picos, accountProfile, //pico
     schedules, scheduleHistory, // schedule
-    subscriptions, outGoing, incoming //subscription
+    subscriptions, outGoing, incoming, //subscription
+	newPico, deletePico, listChildren, listParent, setParent //testing pci pico functions
     sharing on
 
   }
@@ -53,6 +54,46 @@ ruleset b507199x5 {
   //}
   global {
     //functions
+	
+	
+	//----------------------testing PCI pico functions-------------------
+	
+	newPico = function(eci) {
+		newEci = pci:new_pico(eci);
+		{ 
+			'newEci' : newEci
+		}
+	}
+	
+	deletePico = function(eci, cascade) {
+		pci:delete_cloud(eci, {"cascade" : cascade});
+	}
+	
+	listChildren = function(eci) {
+		children = pci:list_children(eci);
+		{
+			'children' : children
+		}
+	}
+	
+	listParent = function(eci) {
+		parent = pci:list_parent(eci);
+		{
+			'parent' : parent
+		}
+	}
+	
+	setParent = function(child, newParent) {
+		target = pci:set_parent(child, newParent);
+		{
+			'newParent' : target
+		}
+	}
+	
+	
+	
+	
+	
 	
 	
   //-------------------- Rulesets --------------------
