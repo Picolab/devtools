@@ -489,7 +489,7 @@ ruleset b507199x5 {
     }
   }
   rule uninstallRuleset { // should this handle multiple uninstalls ??? 
-    select when nano_manager ruleset_uninstall_requested
+    select when nano_manager uninstall_rulesets_requested
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");

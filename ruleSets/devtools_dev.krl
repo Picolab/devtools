@@ -212,7 +212,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log(">> successfully uninstalled rids #{rids} >>");
-	        raise nano_manager event "uninstall_rulesets_re"
+	        raise nano_manager event "uninstall_rulesets_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
