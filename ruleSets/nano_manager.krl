@@ -510,7 +510,7 @@ ruleset b507199x5 {
  //-------------------- Channels --------------------
 
   rule updateChannelAttributes {
-    select when nano_manager channel_attributes_update_requested
+    select when nano_manager update_channel_attributes_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
@@ -531,7 +531,7 @@ ruleset b507199x5 {
   }
 
   rule updateChannelPolicy {
-    select when nano_manager channel_policy_updat_requested // channel_policy_update_requested
+    select when nano_manager update_channel_policy_requested // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
@@ -550,7 +550,7 @@ ruleset b507199x5 {
 
   }
   rule deleteChannel {
-    select when nano_manager channel_delete_requested
+    select when nano_manager channel_deletion_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
@@ -565,7 +565,7 @@ ruleset b507199x5 {
           }
         }
   rule createChannel {
-    select when nano_manager channel_create_requested
+    select when nano_manager channel_creation_requested
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
@@ -594,8 +594,8 @@ ruleset b507199x5 {
     }
   
   //-------------------- Apps --------------------
-      rule authorizeClient {
-          select when nano_manager authorize_client_requested
+      rule authorizeApp {
+          select when nano_manager authorize_app_requested
           pre {
               info_page = event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page"));
               bootstrap_rids = event:attr("bootstrap_rids").defaultsTo("", standardOut("missing event attr bootstrap_rids"));
@@ -631,7 +631,7 @@ ruleset b507199x5 {
       }
 
       rule removeClient {
-          select when nano_manager remove_client_requested
+          select when nano_manager remove_app_requested
           pre {
               token = event:attr("app_eci").defaultsTo("", standardOut("missing event attr app_eci").klog(">>>>>> app_eci >>>>>>>"));
           }
@@ -647,7 +647,7 @@ ruleset b507199x5 {
       }
 
       rule updateClient {
-        select when nano_manager update_client_requested
+        select when nano_manager update_app_requested
           pre {
               app_data_attrs={
                   "info_page": event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page")),

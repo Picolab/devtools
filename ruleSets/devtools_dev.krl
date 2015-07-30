@@ -232,7 +232,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log(">> successfully raised create channel #{channelName} event >>");
-	        raise nano_manager event "channel_created"
+	        raise nano_manager event "channel_creation_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
@@ -250,7 +250,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log(">> success, raising delete channel #{channelID} event >>");
-	        raise nano_manager event "channel_deleted"
+	        raise nano_manager event "channel_deletion_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
@@ -266,8 +266,8 @@ ruleset devtools {
 	        send_directive("updateing #{channelID} attrs");
 	          }
 	      fired {
-	        log(">> success, raiseing updated attrs channel #{channelID} event >>");
-	        raise nano_manager event "channel_attributes_updated"
+	        log(">> success, raiseing updated channel attrs  #{channelID} event >>");
+	        raise nano_manager event "update_channel_attributes_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
@@ -284,7 +284,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log(">> success, raiseing updated policy channel #{channelID} event >>");
-	        raise nano_manager event "channel_policy_updated"
+	        raise nano_manager event "update_channel_policy_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
@@ -297,33 +297,21 @@ ruleset devtools {
 	    rule AuthorizeClient {
 	        select when devtools authorize_client
 	        pre {
-	            info_page = event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page"));
-	            bootstrapRids = event:attr("bootstrapRids").defaultsTo("", standardOut("missing event attr bootstrapRids"));
-	            appName = event:attr("appName").defaultsTo("error", standardOut("missing event attr appName"));
-	            appDescription = event:attr("appDescription").defaultsTo("", standardOut("missing event attr appDescription"));
-	            appImageURL = event:attr("appImageURL").defaultsTo("", standardOut("missing event attr appImageURL"));
+	            appName = event:attr("app-name").defaultsTo("error", standardOut("missing event attr appName"));
 	            appCallbackURL = event:attr("appCallbackURL").defaultsTo("error", standardOut("missing event attr appCallbackURL"));
 	            appCallBackUrl = appCallbackURL.split(re/;/).defaultsTo("error", standardOut("split callback failure"));
-	            appDeclinedURL = event:attr("appDeclinedURL").defaultsTo("", standardOut("missing event attr appDeclinedURL"));
-	            bootstrap = bootstrapRids.split(re/;/).defaultsTo("", standardOut("split bootstraps failure"));
-	            picoId = meta:eci();
 	        }
 	        if (
 	          appName neq "error" &&
 	          appCallBackUrl neq "error"
 	        ) 
 	        then{
-	        	pci:register_app(picoId) setting(token, secret)
-   				with name = appName and
-        			icon = appImageURL and
-        			description = appDescription and
-        			info_url = info_page and
-        			declined_url = appDeclinedURL and
-        			callbacks = appCallBackUrl and 
-        			bootstrap = bootstrap;
+				noop();
 	        }
 	        fired {
 	            log( "success");
+	            raise nano_manager event "authorize_app_requested"
+	              attributes event:attrs();
 	        }
 	        else {
 	            log( "failure");
@@ -336,10 +324,12 @@ ruleset devtools {
 	            token = event:attr("appECI").defaultsTo("", standardOut("missing event attr appECI").klog(">>>>>> appECI >>>>>>>"));
 	        }
 	        if (token != "") then {
-	        	pci:delete_app(token);
+	        	noop();
 	        }
 	        fired {
 	            log( "success");
+	            raise nano_manager event "remove_app_requested"
+	            attributes event:attrs();
 	        }
 	        else {
 	            log( "failure");
@@ -350,77 +340,37 @@ ruleset devtools {
 	      select when devtools update_client
 	        pre {
 	            app_Data={
-	                "info_page": event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page")),
-	                "bootstrapRids": event:attr("bootstrapRids").defaultsTo("", standardOut("missing event attr bootstrapRids")),
-	                "appName": event:attr("appName").defaultsTo("", standardOut("missing event attr appName")),
-	                "appDescription": event:attr("appDescription").defaultsTo("", standardOut("missing event attr appDescription")),
-	                "appImageURL": event:attr("appImageURL").defaultsTo("", standardOut("missing event attr appImageURL")),
-	                "appCallbackURL": event:attr("appCallbackURL").defaultsTo("", standardOut("missing event attr appCallbackURL")),
-	                "appDeclinedURL": event:attr("appDeclinedURL").defaultsTo("", standardOut("missing event attr appDeclinedURL"))
+	                "app_name": event:attr("app_name").defaultsTo("error", standardOut("missing event attr appName"))
 	            };
-	          token = event:attr("appECI").klog(">>>>>> token >>>>>>>");
-	         // oldApp = pci:list_apps(meta:eci()){token}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> oldApp >>>>>>>");
-	          appData = (app_Data)// keep app secrets for update
-	            		.put(["appSecret"], oldApp{"appSecret"}.defaultsTo("error", standardOut("no secret found")))
-	            		.put(["appECI"], oldApp{"appECI"}) //------------------------------------------------/ whats this used for????????????
-	          			;
-	          bootstrapRids = appData{"bootstrapRids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
+
 	        }
 	        if ( 
-	          oldApp neq "error" &&
-	          appData{"appName"} neq "error" &&
-	          appData{"appSecret"} neq "error" &&
-	          appData{"appCallbackURL"} neq "error" 
+	          appData{"app_name"} neq "error"
 	        ) then{
-				update_app(appECI,appData,bootstrapRids);
+	        	noop();
 	        }
 	        fired {
 	            log("success");
+	            raise nano_manager event "update_app_requested"
+	            attributes event:attrs();
 	        }
 	        else {
 	            log("failure");
 	        }
 	    }
-	      rule ImportClientDataBase {// only call once before you create any clients.
-	      select when devtools ImportClientDataBase
-	          pre {
-	                apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");
-	                token = meta:eci();
-	              	value = apps.values().klog("apps values: ");
-	              }
-	              {
-	              	noop();
-	              	//apps.map(function(apptoken,appData) { 
-	              //		pci:register_app(token) setting(token, secret)
-				//		   with name = "Oauth App 2" and
-				//		        icon = "http://example.com/default.png" and
-				//		        description = "Second Oauth App for Testing" and
-				//		        info_url = "http://example.com/info" and
-				//		        declined_url = "http://example.com/declined" and
-				//		        callbacks = ["http://example.com/callbacks"] and
-				//		        bootstrap = ["b16x876.prod"]})
-	              }
-	        fired {
-	            log("success");
-	        }
-	        else {
-	            log("failure");
-	        }
-	    }
- 
  	// <!-- -------------------- Subscription ---------------------- -->
 	  rule addSubscriptionRequest {
 	        select when devtools subscribe
 	        pre {
-	            targetChannel = event:attr("targetChannel").defaultsTo("", ">> missing event attr targetChannel >> ");
+	            target_channel = event:attr("target_channel").defaultsTo("", ">> missing event attr targetChannel >> ");
 	        }
-	        if(targetChannel neq "" ) then
+	        if(target_channel neq "" ) then
 	        {
 	          noop();
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "request_subscrition"
+	            raise nano_manager event "subscription_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -430,15 +380,15 @@ ruleset devtools {
 	  rule ApproveIncomingRequest {
 	        select when devtools incoming_request_approved
 	        pre {
-	            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
+	            event_channel= event:attr("event_channel").defaultsTo("", ">> missing event attr eventChannel >> ");
 	        }
-	        if(eventChannel neq "" ) then
+	        if(event_channel neq "" ) then
 	        {
 	          noop();
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "incoming_request_approved"
+	            raise nano_manager event "approve_pending_subscription_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -455,7 +405,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "incoming_request_rejected"
+	            raise nano_manager event "reject_incoming_subscription_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -465,15 +415,15 @@ ruleset devtools {
 	  rule INITUnsubscribe {
 	        select when devtools init_unsubscribed
 	        pre {
-	            eventChannel= event:attr("eventChannel").defaultsTo("", ">> missing event attr eventChannel >> ");
+	            event_channel= event:attr("event_channel").defaultsTo("", ">> missing event attr eventChannel >> ");
 	        }
-	        if(eventChannel neq "" ) then
+	        if(event_channel neq "" ) then
 	        {
 	          noop();
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "unsubscribed"
+	            raise nano_manager event "cancelSubscription"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -487,16 +437,16 @@ ruleset devtools {
       	rule ScheduleEvent {
 	        select when devtools event_scheduled
 	        pre {
-	          eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
+	          event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
 	          time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        }
-	        if( eventtype neq "wrong" || time neq "wrong" ) then
+	        if( event_type neq "wrong" || time neq "wrong" ) then
 	        {
 	          noop();
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "scheduled_created"
+	            raise nano_manager event "schedule_event_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -509,7 +459,7 @@ ruleset devtools {
 	    rule CreateScheduled {
 	      select when nano_manager scheduled_created
 	      pre {
-	      	eventtype = event:attr("eventtype").defaultsTo("wrong", standardError("missing event attr eventtype"));
+	      	event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
@@ -529,13 +479,13 @@ ruleset devtools {
 	      fired {
 	        log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
-	        schedule do_main event eventtype at date_time attributes event:attrs();
+	        schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
 	            } 
 	      else {
 	        log(">> multiple >>");
 	        //schedule do_main event eventype repeat timespec attributes attr ;
-	        schedule do_main event eventtype at date_time attributes event:attrs();
+	        schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
 	      }
 	    }  
