@@ -217,7 +217,7 @@ ruleset b507199x5 {
       eci = meta:eci();
       apps = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
       {
-        'status' : (clients != "error"),
+        'status' : (apps != "error"),
         'apps' : apps
       }
     }    
