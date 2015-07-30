@@ -297,8 +297,8 @@ ruleset devtools {
 	    rule AuthorizeClient {
 	        select when devtools authorize_client
 	        pre {
-	            appName = event:attr("app-name").defaultsTo("error", standardOut("missing event attr appName"));
-	            appCallbackURL = event:attr("appCallbackURL").defaultsTo("error", standardOut("missing event attr appCallbackURL"));
+	            appName = event:attr("app_name").defaultsTo("error", standardOut("missing event attr appName"));
+	            appCallbackURL = event:attr("app_callback_url").defaultsTo("error", standardOut("missing event attr appCallbackURL"));
 	            appCallBackUrl = appCallbackURL.split(re/;/).defaultsTo("error", standardOut("split callback failure"));
 	        }
 	        if (
