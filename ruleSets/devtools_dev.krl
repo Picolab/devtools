@@ -57,73 +57,17 @@ ruleset devtools {
         //------------------------------- <End oF>  Channnels -------------------
 
         //------------------------------- Authorize clients-------------------
-			Clients = function() { 
-			  	eci = meta:eci();
-			  	clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined")).klog(standardOut("pci:list_apps "));
-				{
-			    	'status' : (clients != "error"),
-			    	'clients' : clients
-				}
-			}
 	        showClients = function() {
-	         //   clients = NanoManager:clients().klog(standardOut("NanoManager:Clients()"));
-	         	clients = Clients();
+	            clients = NanoManager:clients().klog(standardOut("NanoManager:clients()"));
 	            clients{'clients'};
 	        };
 	        get_app = function(appECI){
-            	clients = Clients();
-            	(clients{appECI});
-            	//(clients{appECI}).delete(["appSecret"])
+	            clients = NanoManager:get_app().klog(standardOut("NanoManager:clients()"));
+	            clients{'app'};
           	};
-          	list_bootstrap = function(appECI){
-            	pci:list_bootstrap(appECI);
-          	};
-          	get_appinfo = function(appECI){
-            	pci:get_appinfo(appECI);
-          	};
-          	list_callback = function(appECI){
-            	pci:list_callback(appECI);
-          	};
-	        removePCIcallback = defaction(appECI){
-		      	callback = pci:list_callback(appECI);
-		     	 boot = callback.map(function(url) { pci:remove_callback(appECI, url); });
-		      	send_directive("pci callback removed.")
-		        	with rulesets = pci:list_callback(appECI);
-		    };
-		    removePCIbootstraps = defaction(appEC){
-		      	straps = pci:list_bootstrap(appECI);
-		     	 boot = straps.map(function(rid) { pci:remove_bootstrap(appECI, rid); });
-		    	  send_directive("pci bootstraps removed.")
-		    	    with rulesets = list_bootstrap(appECI); 
-		    };
-		    addPCIbootstraps = defaction(appECI,bootstrapRids){
-		    	  boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); });
-		    	  send_directive("pci bootstraps updated.")
-		    	    with rulesets = pci:list_bootstrap(appECI);
-		    };
-		    update_app = defaction(appECI,appData,bootstrapRids){
-	            //remove all 
-	            removeDefact = removePCIcallback(appECI);
-	            remove_appinfo = pci:remove_appinfo(appECI);
-	            removeDefact = removePCIbootstraps(appECI);
-	            // add new 
-	            addcallback = pci:add_callback(appECI, appData{"appCallbackURL"}); 
-	            addinfo = pci:add_appinfo(appECI,{
-	            	"icon": appData{"appImageURL"},
-	                 "name": appData{"appName"},
-	                 "description": appData{"appDescription"},
-	                 "info_url": appData{"info_page"},
-	                 "declined_url": appData{"appDeclinedURL"}
-	                });
-	            addPCIbootstraps(appECI,bootstrapRids);
-		    };
         //------------------------------- <End oF> Authorize clients-------------------
 
         //------------------------------- Picos -------------------
-	        showPicos = function() {
-	            picos = NanoManager:picos().klog(standardOut("NanoManager:Picos()"));
-	            picos{'picos'};
-	        };
 	        aboutPico = function() { // not in cOSng yet
 	            account_profile = NanoManager:accountProfile().klog(standardOut("NanoManager:Picos()"));
 	          account_profile {'profile'};
@@ -162,15 +106,15 @@ ruleset devtools {
 	    rule registerRuleset {
 	        select when devtools register_ruleset
 	        pre {
-	            rulesetURL= event:attr("rulesetURL").defaultsTo("", ">> missing event attr rulesetURL >> ");
+	            ruleset_url= event:attr("ruleset_url").defaultsTo("", ">> missing event attr rulesetURL >> ");
 	        }
-	        if(rulesetURL neq "" ) then
+	        if(ruleset_url neq "" ) then
 	        {
 	          noop();
 	        }
 	        fired {
-	          log (standardOut("Registering Success: #{rulesetURL}"));
-	            raise nano_manager event "ruleset_registered"
+	          log (standardOut("Registering Success: #{ruleset_url}"));
+	            raise nano_manager event "ruleset_registration_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -189,7 +133,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("Success raising delete #{rid} event"));
-	          raise nano_manager event "ruleset_deleted"
+	          raise nano_manager event "ruleset_deletion_requested"
 	              attributes event:attrs();
 	        }
 	        else{
@@ -199,8 +143,8 @@ ruleset devtools {
 	    }
 
 	    
-	    rule updateRuleset {
-	        select when web submit "#formUpdateRuleset"
+	    rule updateRuleset { // whats this for ????
+	        select when web submit "#formUpdateRuleset" // is this current ?
 	        pre {
 	            rulesetID = event:attr("rulesetID").defaultsTo("", ">> missing event attr rulesetID >> ");
 	            newURL = event:attr("appURL").defaultsTo("", ">> missing event attr appURL >> ");
@@ -210,7 +154,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "ruleset_relinked"
+	            raise nano_manager event "ruleset_relink_requested"
 	              with rid = rulesetID
 	              and url = newURL;
 	        }
@@ -231,7 +175,7 @@ ruleset devtools {
 	        fired {
 	          log (standardOut("success"));
 	          log (">>>> flushed #{rid} <<<<");
-	          raise nano_manager event "ruleset_flushed"
+	          raise nano_manager event "ruleset_flush_requested"
 	              attributes event:attrs();
 	        } 
 	        else {
@@ -250,7 +194,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log (standardOut("successfully installed rids #{rids}"));
-	        raise nano_manager event "ruleset_installed"
+	        raise nano_manager event "install_rulesets_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
@@ -268,7 +212,7 @@ ruleset devtools {
 	          }
 	      fired {
 	        log(">> successfully uninstalled rids #{rids} >>");
-	        raise nano_manager event "ruleset_uninstalled"
+	        raise nano_manager event "uninstall_rulesets_re"
 	              attributes event:attrs();
 	      } 
 	      else {

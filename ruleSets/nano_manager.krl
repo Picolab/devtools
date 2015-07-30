@@ -40,8 +40,8 @@ ruleset b507199x5 {
       //none
     provides registered, singleRuleset, installed, describeRules, //ruleset
     channels, attributes, policy, type, //channel
-    clients, //client
-    picos, accountProfile, //pico
+    apps, get_app,type,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
+    accountProfile, //pico
     schedules, scheduleHistory, // schedule
     subscriptions, outGoing, incoming, //subscription
     newPico, newCloud, fixPico, deletePico, listChildren, listParent, setParent //testing pci pico functions
@@ -103,12 +103,6 @@ ruleset b507199x5 {
 			'newParent' : target
 		}
 	}
-	
-	
-	
-	
-	
-	
 	
   //-------------------- Rulesets --------------------
     registered = function() {
@@ -187,7 +181,7 @@ ruleset b507199x5 {
     type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
       channels = Channels().defaultsTo("error",">> undefined >>");
 
-      getType = function(channel_id,channels) {
+    getType = function(channel_id,channels) {
         channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
         channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "error",standardError("undefined"));
         chan = channel[0];
@@ -218,55 +212,66 @@ ruleset b507199x5 {
       new_eci = pci:new_eci(user, options);
       send_directive("created new eci");
     }
-  //-------------------- Clients --------------------
-    Clients = function() { 
+  //-------------------- Apps --------------------
+    apps = function() { 
       eci = meta:eci();
-      clients = pci:get_authorized(eci).defaultsTo("error",standardError("undefined")); // pci does not have this function yet........
-      //krl_struct = clients.decode() // I dont know if we needs decode
-     // .klog(">>>>krl_struct")
-     // ;
+      clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
       {
         'status' : (clients != "error"),
-        'clients' : krl_struct
+        'clients' : clients
       }
+    }    
+    get_app = function(appECI){
+      apps = apps().defaultsTo("error",standardError("apps"));
+      app = apps{appECI}.defaultsTo("error",standardError("app"));
+     // app = (apps{appECI}).delete(["appSecret"]).defaultsTo("error",standardError("app"))
+      {
+        'status' : (app != "error"),
+        'app' : app
+      }
+    }
+    list_bootstrap = function(appECI){
+      pci:list_bootstrap(appECI);
+    }
+    get_appinfo = function(appECI){
+      pci:get_appinfo(appECI);
+    }
+    list_callback = function(appECI){
+      pci:list_callback(appECI);
     }
     addPCIbootstraps = defaction(appECI,bootstrapRids){
       boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
       send_directive("pci bootstraps updated.")
         with rulesets = list_bootstrap(appECI); // is this working?
-    };
+    }
     removePCIbootstraps = defaction(appEC,IbootstrapRids){
       boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
       send_directive("pci bootstraps removed.")
         with rulesets = list_bootstrap(appECI); 
-    };
+    }
     removePCIcallback = defaction(appECI,PCIcallbacks){
       PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
       boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
       send_directive("pci callback removed.")
         with rulesets = pci:list_callback(appECI);
+    }
+    update_app = defaction(app_eci,app_data,bootstrap_rids){
+      //remove all 
+      remove_defact = removePCIcallback(app_eci);
+      remove_appinfo = pci:remove_appinfo(app_eci);
+      remove_defact = removePCIbootstraps(app_eci);
+      // add new 
+      add_callback = pci:add_callback(app_eci, app_data{"appCallbackURL"}); 
+      add_info = pci:add_appinfo(app_eci,{
+        "icon": app_data{"appImageURL"},
+        "name": app_data{"appName"},
+        "description": app_data{"appDescription"},
+        "info_url": app_data{"info_page"},
+        "declined_url": app_data{"appDeclinedURL"}
+      });
+      addPCIbootstraps(app_eci,bootstrap_rids);
     };
-        get_my_apps = function(){
-              ent:apps
-          };
-          get_registry = function(){
-            app:appRegistry;
-          };
-          get_app = function(appECI){
-            (app:appRegistry{appECI}).delete(["appSecret"])
-          };
-          get_secret = function(appECI){
-            app:appRegistry{[appECI, "appSecret"]}
-          };
-          list_bootstrap = function(appECI){
-            pci:list_bootstrap(appECI);
-          };
-          get_appinfo = function(appECI){
-            pci:get_appinfo(appECI);
-          };
-          list_callback = function(appECI){
-            pci:list_callback(appECI);
-          };
+
 		  
 	//-------------------- Picos --------------------
   accountProfile = function() {
@@ -333,6 +338,7 @@ ruleset b507199x5 {
         'subscriptions'  : pending
       }
     }
+    //has to be a function, but breaks methodaligy 
     createBackChannel = function(name,namespace,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
           'name' : name, // generate name and check if its unique
@@ -465,7 +471,7 @@ ruleset b507199x5 {
     }
   }  
   rule installRuleset {// should this handle multiple rulesets or a single one
-    select when nano_manager ruleset_install_requested
+    select when nano_manager install_rulesets_requested
     pre {
       eci = meta:eci().defaultsTo({},standardError("undefined"));
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
@@ -587,7 +593,7 @@ ruleset b507199x5 {
           }
     }
   
-  //-------------------- Clients --------------------
+  //-------------------- Apps --------------------
       rule authorizeClient {
           select when nano_manager authorize_client_requested
           pre {
