@@ -59,7 +59,7 @@
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || CloudOS.defaultECI;
-        Devtools.log("bootstrapped ??");
+        Devtools.log("bootstrapped?");
         return CloudOS.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
             Devtools.log("Displaying testingReturns", json);
             cb(json);
@@ -131,7 +131,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: rid,url: url}; //not sure what this does
+        var json = {rid: rid,url: url}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating the URL");
         return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
@@ -157,7 +157,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: rid}; 
+        var json = {rid: rid}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Deleting RID " + rid);
         return CloudOS.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
@@ -208,7 +208,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {rulesetURL: url}; // json for attribute thats passed to the ruleset as eventattribute 
+    var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Registering rulesets");
         return CloudOS.raiseEvent("devtools", "register_ruleset", json, {}, function(json) {
@@ -233,7 +233,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-    var parameters = {channelName:channel_name}; 
+    var parameters = {channel_name:channel_name}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Installing channels");
        return CloudOS.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
@@ -254,7 +254,7 @@
         }, {"eci":eci});
 
     },
-    //---------------------------------Authorize Client mannagement----------------
+    //---------------------------------(Apps) Authorize Client mannagement----------------
     authorizeClient: function(app_Data, cb, options)
     {
         cb = cb || function(){};
@@ -281,7 +281,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {"appECI":app_ECI}; 
+        var json = {"app_eci":app_ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("remove client");
         console.log("attributes",json);
@@ -294,7 +294,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        app_Data["appECI"]=app_ECI;
+        app_Data["app_eci"]=app_ECI;
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating client");
         return CloudOS.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {

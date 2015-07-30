@@ -413,7 +413,7 @@ ruleset b507199x5 {
   rule deleteRuleset {
     select when nano_manager ruleset_deletion_requested
     pre {
-      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
+      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
     //if(Ruleset(){"status"} != "null" ) then// is this check redundant??
     {
@@ -849,7 +849,7 @@ ruleset b507199x5 {
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
-      name   = event:attr("channel_name").defaultsTo("standard", standardError("channel_name"));
+      name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
@@ -945,12 +945,12 @@ ruleset b507199x5 {
     select when nano_manager approve_pending_subscription_requested
     pre{
       event_channel = event:attr("event_channel").defaultsTo( "no_event_channel", standardError("event_channel"));
+      pending_subscription = ent:pending_incoming{event_channel};
       
       back_channel = createBackChannel(pendingsubscription{'name'},
         pendingsubscription{'name_space'},
         {"name_space":name_space,"role" : pendingsubscription{'my_role'} });
 
-      pending_subscription = ent:pending_incoming{event_channel};
       // create subscription for both picos
       my_subscription = ((pending_subscription).put(["backChannel"],back_channel)).klog("subscription"); /// needs standard output
       subscription = ((my_subscription).put(["backChannel"],my_subscription{"event_channel"})).klog(" subscription A"); /// needs standard output

@@ -146,8 +146,8 @@ ruleset devtools {
 	    rule updateRuleset { // whats this for ????
 	        select when web submit "#formUpdateRuleset" // is this current ?
 	        pre {
-	            rulesetID = event:attr("rulesetID").defaultsTo("", ">> missing event attr rulesetID >> ");
-	            newURL = event:attr("appURL").defaultsTo("", ">> missing event attr appURL >> ");
+	            rulesetID = event:attr("rid").defaultsTo("", ">> missing event attr rulesetID >> ");
+	            newURL = event:attr("url").defaultsTo("", ">> missing event attr appURL >> ");
 	        } if(rulesetID neq "" && newURL neq "") then
 	        {
 	           noop();

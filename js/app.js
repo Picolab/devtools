@@ -598,13 +598,13 @@
           var appData={
 
          		"info_page": client_info_page_url,
-         		"bootstrapRids": client_bootstrapRids,
+         		"bootstrap_rids": client_bootstrapRids,
 
-            "appName": client_name,
-            "appDescription": client_Description,
-            "appImageURL": client_image_url,
-            "appCallbackURL": client_callback_url,
-            "appDeclinedURL": client_declined_url
+            "app_name": client_name,
+            "app_description": client_Description,
+            "app_image_url": client_image_url,
+            "app_callback_url": client_callback_url,
+            "app_declined_url": client_declined_url
 
           };
             Devtools.authorizeClient(appData, function(directives) {
@@ -701,16 +701,14 @@
             //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
           ) {
           var appData={
-
          		"info_page": client_info_page_url,
-         		"bootstrapRids": client_bootstrapRids,
+         		"bootstrap_rids": client_bootstrapRids,
 
-            "appName": client_name,
-            "appDescription": client_Description,
-            "appImageURL": client_image_url,
-            "appCallbackURL": client_callback_url,
-            "appDeclinedURL": client_declined_url
-
+            "app_name": client_name,
+            "app_description": client_Description,
+            "app_image_url": client_image_url,
+            "app_callback_url": client_callback_url,
+            "app_declined_url": client_declined_url
           };
             Devtools.updateClient(client,appData, function(directives) {
               console.log("update ", client_name, directives);
@@ -944,9 +942,9 @@
 							var subscribe_form_data = process_form(frm);
 							console.log(">>>>>>>>> Subcription ", subscribe_form_data);
 							var subscription_Data={
-								"channelName": subscribe_form_data.Subcription_name,
-								"namespace": subscribe_form_data.Subcription_name_space,
-								"targetChannel": subscribe_form_data.Subcription_target,
+								"name": subscribe_form_data.Subcription_name,
+								"name_space": subscribe_form_data.Subcription_name_space,
+								"target_channel": subscribe_form_data.Subcription_target,
 								"relationship" : subscribe_form_data.Subcription_relationship,
 								"attrs": subscribe_form_data.Subcription_attrs,
 							};
@@ -981,7 +979,7 @@
 				loadSpinner("#approve-incoming-subscription", "subscriptions");
 				var eventChannel = router.getParams(match[1])["eventChannel"];
 				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription({"eventChannel" : eventChannel}, function(directives) {
+				Devtools.ApproveSubscription({"event_channel" : eventChannel}, function(directives) {
 									console.log("approving ", eventChannel, directives);
 									$.mobile.changePage("#page-subscription-management", {
 										transition: 'slide'
@@ -1011,7 +1009,7 @@
 							var	date_time 	 = schedule_form_data.date_time;
 							var event_attributes	 = schedule_form_data.event_attributes;
 							var sch_data ={
-								"eventtype": event_type,
+								"event_type": event_type,
 								"time" : date_time,
 								"do_main": event_domain,
 								//"timespec": ,
