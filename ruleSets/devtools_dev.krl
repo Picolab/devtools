@@ -225,18 +225,18 @@ ruleset devtools {
 	    rule CreateChannel {
 	      select when devtools create_channel
 	      pre {
-	        channelName = event:attr("channelName").defaultsTo("", ">> missing event attr channels >> ");
+	        channel_name = event:attr("channel_name").defaultsTo("", ">> missing event attr channels >> ");
 	          }
-	      if(channelName.match(re/\w[\w\d_-]*/)) then {
-	        send_directive("Created #{channelName}");
+	      if(channel_name.match(re/\w[\w\d_-]*/)) then {
+	        send_directive("Created #{channel_name}");
 	          }
 	      fired {
-	        log(">> successfully raised create channel #{channelName} event >>");
+	        log(">> successfully raised create channel #{channel_name} event >>");
 	        raise nano_manager event "channel_creation_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
-	        log(">> could not create channels #{channelName} >>");
+	        log(">> could not create channels #{channel_name} >>");
 	      }
 	    }
 
