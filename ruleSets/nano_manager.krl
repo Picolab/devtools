@@ -69,7 +69,8 @@ ruleset b507199x5 {
 		newEci = pci:new_cloud(eci);
 		a = pci:new_ruleset(newEci, "507199x5");
 		{
-			'newEci' : newEci
+			'newEci' : newEci,
+			'rulesetRes' : a
 		}
 	}
 	
