@@ -58,8 +58,8 @@ ruleset devtools {
 
         //------------------------------- Authorize clients-------------------
 	        showClients = function() {
-	            clients = NanoManager:clients().klog(standardOut("NanoManager:clients()"));
-	            clients{'clients'};
+	            clients = NanoManager:apps().klog(standardOut("NanoManager:clients()"));
+	            clients{'apps'};
 	        };
 	        get_app = function(appECI){
 	            clients = NanoManager:get_app().klog(standardOut("NanoManager:clients()"));

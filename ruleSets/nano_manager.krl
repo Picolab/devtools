@@ -215,10 +215,10 @@ ruleset b507199x5 {
   //-------------------- Apps --------------------
     apps = function() { 
       eci = meta:eci();
-      clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
+      apps = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
       {
         'status' : (clients != "error"),
-        'clients' : clients
+        'apps' : apps
       }
     }    
     get_app = function(appECI){
