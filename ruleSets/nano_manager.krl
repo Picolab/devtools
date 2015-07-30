@@ -865,7 +865,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       //create call back for subscriber
-      back_channel = createBackChannel(name,name_space,{"namespace":name_space,"role" : my_role });
+      back_channel = createBackChannel(name,name_space,{"name_space":name_space,"role" : my_role });
       
       // build pending subscription entry
       pending_entry = {
