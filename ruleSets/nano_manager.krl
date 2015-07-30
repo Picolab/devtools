@@ -44,7 +44,7 @@ ruleset b507199x5 {
     picos, accountProfile, //pico
     schedules, scheduleHistory, // schedule
     subscriptions, outGoing, incoming, //subscription
-	newPico, deletePico, listChildren, listParent, setParent //testing pci pico functions
+    newPico, newCloud, deletePico, listChildren, listParent, setParent //testing pci pico functions
     sharing on
 
   }
@@ -61,6 +61,13 @@ ruleset b507199x5 {
 	newPico = function(eci) {
 		newEci = pci:new_pico(eci);
 		{ 
+			'newEci' : newEci
+		}
+	}
+
+	newCloud = function(eci) {
+		newEci = pci:new_cloud(eci);
+		{
 			'newEci' : newEci
 		}
 	}
