@@ -73,7 +73,7 @@ ruleset b507199x5 {
 	}
 	
 	fixPico = function(eci) {
-		a = pci:new_ruleset(eci, ["a169x625.prod","b507199x1.dev","b507199x5.dev","a169x676.prod","a16x129.dev","b507199x0.dev","b16x29.prod","507199x5.dev","b16x24"]);
+		a = pci:new_ruleset(eci, ["a169x625.prod","b507199x1.dev","b507199x5.dev","a169x676.prod","a16x129.dev","b507199x0.dev","b16x29.prod","b16x24"]);
 		{
 			'nanoAdded?' : a
 		}
