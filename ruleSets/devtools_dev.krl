@@ -332,7 +332,7 @@ ruleset devtools {
 	            attributes event:attrs();
 	        }
 	        else {
-	            log( "failure");
+	            log( "failure , #{token} not removed");
 	        }
 	    }
 
