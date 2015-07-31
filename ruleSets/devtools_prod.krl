@@ -353,7 +353,7 @@ ruleset devtools {
     rule RemoveClient {//pci may not be working how I think.
 	  	select when devtools remove_client
 	  	pre {
-	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ").klog(">>>>>> appECI >>>>>>>");
+	    	appECI = event:attr("appECI").defaultsTo("", ">> missing event attr channels >> ");
 	    	registery = app:appRegistry;
 	    	apps = ent:apps;
 		}
