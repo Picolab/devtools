@@ -323,7 +323,7 @@ ruleset devtools {
 	        pre {
 	            token = event:attr("app_id").defaultsTo("", standardOut("missing event attr app_id"));
 	        }
-	        if (token != "") then {
+	        if (token neq "") then {
 	        	noop();
 	        }
 	        fired {
