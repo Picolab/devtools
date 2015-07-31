@@ -659,6 +659,7 @@
 	                "appECI": index//,
 	                //"appImageURL":client["app_info"]["icon"]
 	              }
+
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
 	            }
