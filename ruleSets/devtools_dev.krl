@@ -321,7 +321,7 @@ ruleset devtools {
 	    rule RemoveClient {
 	        select when devtools remove_client
 	        pre {
-	            token = event:attr("app_token").defaultsTo("", standardOut("missing event attr app_token").klog(">>>>>> appECI >>>>>>>"));
+	            token = event:attr("app_identifier").defaultsTo("", standardOut("missing event attr app_token").klog(">>>>>> app_token >>>>>>>"));
 	        }
 	        if (token != "") then {
 	        	noop();

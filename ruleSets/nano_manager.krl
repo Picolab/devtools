@@ -633,13 +633,13 @@ ruleset b507199x5 {
       rule removeApp {
           select when nano_manager remove_app_requested
           pre {
-              token = event:attr("app_token").defaultsTo("", standardOut("missing event attr app_token").klog(">>>>>> app_eci >>>>>>>"));
+              identifier = event:attr("app_identifier").defaultsTo("", standardOut("missing event attr app_identifier").klog(">>>>>> app_identifier >>>>>>>"));
           }
-          if (token != "") then {
-            pci:delete_app(token);
+          if (identifier != "") then {
+            pci:delete_app(identifier);
           }
           fired {
-          log (standardOut("success deauthenticated app with token #{token}"));
+          log (standardOut("success deauthenticated app with token #{identifier}"));
           }
           else {
               log( "failure");
@@ -658,9 +658,9 @@ ruleset b507199x5 {
                   "app_call_back_url": event:attr("app_call_back_url").defaultsTo("", standardOut("missing event attr app_call_back_url")),
                   "app_declined_url": event:attr("app_declined_url").defaultsTo("", standardOut("missing event attr app_declined_url"))
               };
-            token = event:attr("app_token").klog(">>>>>> token >>>>>>>");
+            identifier = event:attr("app_identifier").klog(">>>>>> token >>>>>>>");
             old_apps = pci:list_apps(meta:eci());
-            old_app = old_apps{token}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> old_app >>>>>>>");
+            old_app = old_apps{app_identifier}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> old_app >>>>>>>");
             app_data = (app_data_attrs)// keep app secrets for update// need to see what the real varibles are named........
                   .put(["appSecret"], old_app{"appSecret"}.defaultsTo("error", standardOut("no secret found")))
                   .put(["appECI"], old_app{"appECI"}) //------------------------------------------------/ whats this used for????????????
@@ -673,41 +673,13 @@ ruleset b507199x5 {
             app_data{"appSecret"} neq "error" &&
             app_data{"app_call_back_url"} neq "error" 
           ) then{
-        update_app(token,app_data,bootstrap_rids);
+        update_app(identifier,app_data,bootstrap_rids);
           }
           fired {
           log (standardOut("success update app with #{app_data}"));
           }
           else {
           log (standardOut("failure"));
-          }
-      }
-      // unfinished----------------------------------------------------------------
-        rule importClientDataBase {// only call once before you create any clients.
-        select when nano_manager import_client_data_base_requested
-            pre {
-                  apps = OAuthRegistry:get_my_apps().klog(">>>>>> apps >>>>>>>");
-                  token = meta:eci();
-                  value = apps.values().klog("apps values: ");
-                }
-                {
-                  noop();
-                  //apps.map(function(apptoken,appData) { 
-                //    pci:register_app(token) setting(token, secret)
-        //       with name = "Oauth App 2" and
-        //            icon = "http://example.com/default.png" and
-        //            description = "Second Oauth App for Testing" and
-        //            info_url = "http://example.com/info" and
-        //            declined_url = "http://example.com/declined" and
-        //            callbacks = ["http://example.com/callbacks"] and
-        //            bootstrap = ["b16x876.prod"]})
-                }
-          fired {
-          log (standardOut("success imported app with from old system."));
-              log("success");
-          }
-          else {
-              log("failure");
           }
       }
   //-------------------- Picos ----------------------
