@@ -882,10 +882,10 @@
 								dynamic_subscriptions_items2 +=
 								 snippets.subscription_template(
 									{"name": object["name"],
-									"name_space": object["namespace"],
+									"name_space": object["name_space"],
 									"relationship": object["relationship"],
-									"e_cid": object["eventChannel"],
-									"b_cid": object["backChannel"],
+									"e_cid": object["event_channel"],
+									"b_cid": object["back_channel"],
 									"attributes":JSON.stringify(object["attrs"])}
 									);
 						  });
@@ -907,9 +907,9 @@
 								dynamic_subscriptions_items2 +=
 								 snippets.subscription_incoming_template(
 									{"name": object["name"],
-									"name_space": object["namespace"],
+									"name_space": object["name_space"],
 									"relationship": object["relationship"],
-									"e_cid": object["eventChannel"],
+									"e_cid": object["event_channel"],
 									"attributes":JSON.stringify(object["attrs"])}
 									);
 						  });
@@ -930,9 +930,9 @@
 								dynamic_subscriptions_items2 +=
 								 snippets.subscription_out_going_template(
 									{"name": object["name"],
-									"name_space": object["namespace"],
+									"name_space": object["name_space"],
 									"relationship": object["relationship"],
-									"b_cid": object["backChannel"],
+									"b_cid": object["back_channel"],
 									"attributes":JSON.stringify(object["attrs"])}
 									);
 						  });
