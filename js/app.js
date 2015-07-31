@@ -630,18 +630,20 @@
 
         function populate_Authorized_clients() {
           Devtools.showAuthorizedClients(function(client_list){
-
+          	console.log("apps: ", client_list);
             $("#authorized-clients" ).empty();
 
             $.each(client_list, function(index, client) {
-              $("#authorized-clients" ).append(
-               snippets.authorized_clients_template(
-                {"appName": client["appName"],
-                "appECI": client["appECI"],
-                "appImageURL":client["appImageURL"]}
-                )
-               ).collapsibleset().collapsibleset( "refresh" );
-              //$("#installed-rulesets").listview("refresh");
+            	if (typeof client["app_info"] !== 'undefined') {
+	              $("#authorized-clients" ).append(
+	               snippets.authorized_clients_template(
+	                {"appName": client["app_info"]["name"],
+	                "appECI": index,
+	                "appImageURL":client["app_info"]["icon"]}
+	                )
+	               ).collapsibleset().collapsibleset( "refresh" );
+	              //$("#installed-rulesets").listview("refresh");
+            }
             });
 
             $.mobile.loading("hide");
