@@ -217,7 +217,7 @@ ruleset b507199x5 {
       eci = meta:eci();
       apps = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
       {
-        'status' : (apps != "error"),
+        'status' : (apps neq "error"),
         'apps' : apps
       }
     }    
@@ -226,7 +226,7 @@ ruleset b507199x5 {
       app = apps{appECI}.defaultsTo("error",standardError("app"));
      // app = (apps{appECI}).delete(["appSecret"]).defaultsTo("error",standardError("app"))
       {
-        'status' : (app != "error"),
+        'status' : (app neq "error"),
         'app' : app
       }
     }
@@ -278,7 +278,7 @@ ruleset b507199x5 {
     profile = pci:get_profile(currentSession()).defaultsTo("error",standardError("undefined"))
     .put( ["oauth_eci"], meta:eci() );
     {
-     'status' : (profile != "error"),
+     'status' : (profile neq "error"),
      'profile'  : profile
     }
   }
@@ -320,21 +320,21 @@ ruleset b507199x5 {
     subscriptions = function() { 
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (subscriptions != "error"),
+        'status' : (subscriptions neq "error"),
         'subscriptions'  : subscriptions
       }
     }
     outGoing = function() { 
       pending = ent:pending_outgoing.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (pending != "error"),
+        'status' : (pending neq "error"),
         'subscriptions'  : pending
       }
     }
     incoming = function() { 
       pending = ent:pending_incoming.defaultsTo("error",standardError("undefined"));
       {
-        'status' : (pending != "error"),
+        'status' : (pending neq "error"),
         'subscriptions'  : pending
       }
     }
@@ -356,7 +356,7 @@ ruleset b507199x5 {
     schedules = function() { 
       sched_event_list = event:get_list().defaultsTo("error",standardError("undefined"));
       {
-        'status' : (sched_event_list != "error"),
+        'status' : (sched_event_list neq "error"),
         'schedules'  : sched_event_list
       }
 
@@ -364,7 +364,7 @@ ruleset b507199x5 {
     scheduleHistory = function(id) { 
       sched_event_history = event:get_history(id).defaultsTo("error",standardError("undefined"));
       {
-        'status' : (sched_event_history != "error"),
+        'status' : (sched_event_history neq "error"),
         'history'  : sched_event_history
       }
     
@@ -395,9 +395,9 @@ ruleset b507199x5 {
       //password = event:attr("password")defaultsTo("", ">>  >> ");
     }
     if( ruleset_url neq "" ) then// is this check redundant??
-    {// do we need to check for a url or is it done on a different level?? like if (rulesetURL != "")
+    {// do we need to check for a url or is it done on a different level?? like if (rulesetURL neq "")
       rsm:register(ruleset_url) setting (rid);// rid is empty? is it just created by default
-       // (description != "") => description = description |  //ummm .....
+       // (description neq "") => description = description |  //ummm .....
        // flush_code = 
        // version = //alias ? 
        // username = //??
@@ -415,7 +415,7 @@ ruleset b507199x5 {
     pre {
       rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
-    //if(Ruleset(){"status"} != "null" ) then// is this check redundant??
+    //if(Ruleset(){"status"} neq "null" ) then// is this check redundant??
     {
       rsm:delete(rid); 
     }
@@ -635,7 +635,7 @@ ruleset b507199x5 {
           pre {
               identifier = event:attr("app_id").defaultsTo("", standardOut("missing event attr app_id"));
           }
-          if (identifier != "") then {
+          if (identifier neq "") then {
             pci:delete_app(identifier);
           }
           fired {
