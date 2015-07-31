@@ -633,7 +633,7 @@ ruleset b507199x5 {
       rule removeApp {
           select when nano_manager remove_app_requested
           pre {
-              identifier = event:attr("app_identifier").defaultsTo("", standardOut("missing event attr app_identifier").klog(">>>>>> app_identifier >>>>>>>"));
+              identifier = event:attr("app_id").defaultsTo("", standardOut("missing event attr app_id").klog(">>>>>> app_id >>>>>>>"));
           }
           if (identifier != "") then {
             pci:delete_app(identifier);
@@ -658,7 +658,7 @@ ruleset b507199x5 {
                   "app_call_back_url": event:attr("app_call_back_url").defaultsTo("", standardOut("missing event attr app_call_back_url")),
                   "app_declined_url": event:attr("app_declined_url").defaultsTo("", standardOut("missing event attr app_declined_url"))
               };
-            identifier = event:attr("app_identifier").klog(">>>>>> token >>>>>>>");
+            identifier = event:attr("app_id").klog(">>>>>> token >>>>>>>");
             old_apps = pci:list_apps(meta:eci());
             old_app = old_apps{app_identifier}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> old_app >>>>>>>");
             app_data = (app_data_attrs)// keep app secrets for update// need to see what the real varibles are named........
