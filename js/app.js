@@ -657,7 +657,8 @@
 	               snippets.authorized_clients_template(
 	                {"appName": client["bootstrap"],
 	                "appECI": index//,
-	                //"appImageURL":client["app_info"]["icon"]}
+	                //"appImageURL":client["app_info"]["icon"]
+	              }
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
 	            }
