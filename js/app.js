@@ -643,7 +643,24 @@
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
 	              //$("#installed-rulesets").listview("refresh");
-            }
+	            }else if (typeof client["callbacks"] !== 'undefined'){
+	            	$("#authorized-clients" ).append(
+	               snippets.authorized_clients_template(
+	                {"appName": client["callbacks"],
+	                "appECI": index//,
+	                //"appImageURL":client["app_info"]["icon"] // need a default..
+	              	}
+	                )
+	               ).collapsibleset().collapsibleset( "refresh" );
+	            }else if (typeof client["bootstrap"] !== 'undefined'){
+	            	$("#authorized-clients" ).append(
+	               snippets.authorized_clients_template(
+	                {"appName": client["bootstrap"],
+	                "appECI": index//,
+	                //"appImageURL":client["app_info"]["icon"]}
+	                )
+	               ).collapsibleset().collapsibleset( "refresh" );
+	            }
             });
 
             $.mobile.loading("hide");
