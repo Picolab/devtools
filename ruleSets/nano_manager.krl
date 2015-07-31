@@ -73,7 +73,7 @@ ruleset b507199x5 {
 	}
 	
 	fixPico = function(eci) {
-		a = pci:new_ruleset(eci, ["507199x5.dev","b16x24"]);
+		a = pci:new_ruleset(eci, "507199x5.dev");
 		{
 			'nanoAdded?' : a
 		}
@@ -215,10 +215,10 @@ ruleset b507199x5 {
   //-------------------- Apps --------------------
     apps = function() { 
       eci = meta:eci();
-      clients = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
+      apps = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
       {
-        'status' : (clients != "error"),
-        'clients' : clients
+        'status' : (apps != "error"),
+        'apps' : apps
       }
     }    
     get_app = function(appECI){
@@ -413,7 +413,7 @@ ruleset b507199x5 {
   rule deleteRuleset {
     select when nano_manager ruleset_deletion_requested
     pre {
-      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rids"));
+      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
     }
     //if(Ruleset(){"status"} != "null" ) then// is this check redundant??
     {
@@ -510,7 +510,7 @@ ruleset b507199x5 {
  //-------------------- Channels --------------------
 
   rule updateChannelAttributes {
-    select when nano_manager channel_attributes_update_requested
+    select when nano_manager update_channel_attributes_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
@@ -531,7 +531,7 @@ ruleset b507199x5 {
   }
 
   rule updateChannelPolicy {
-    select when nano_manager channel_policy_updat_requested // channel_policy_update_requested
+    select when nano_manager update_channel_policy_requested // channel_policy_update_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
@@ -550,7 +550,7 @@ ruleset b507199x5 {
 
   }
   rule deleteChannel {
-    select when nano_manager channel_delete_requested
+    select when nano_manager channel_deletion_requested
     pre {
       channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
     }
@@ -565,7 +565,7 @@ ruleset b507199x5 {
           }
         }
   rule createChannel {
-    select when nano_manager channel_create_requested
+    select when nano_manager channel_creation_requested
     pre {
      // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
@@ -594,8 +594,8 @@ ruleset b507199x5 {
     }
   
   //-------------------- Apps --------------------
-      rule authorizeClient {
-          select when nano_manager authorize_client_requested
+      rule authorizeApp {
+          select when nano_manager authorize_app_requested
           pre {
               info_page = event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page"));
               bootstrap_rids = event:attr("bootstrap_rids").defaultsTo("", standardOut("missing event attr bootstrap_rids"));
@@ -631,7 +631,7 @@ ruleset b507199x5 {
       }
 
       rule removeClient {
-          select when nano_manager remove_client_requested
+          select when nano_manager remove_app_requested
           pre {
               token = event:attr("app_eci").defaultsTo("", standardOut("missing event attr app_eci").klog(">>>>>> app_eci >>>>>>>"));
           }
@@ -647,7 +647,7 @@ ruleset b507199x5 {
       }
 
       rule updateClient {
-        select when nano_manager update_client_requested
+        select when nano_manager update_app_requested
           pre {
               app_data_attrs={
                   "info_page": event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page")),
@@ -849,7 +849,7 @@ ruleset b507199x5 {
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
-      name   = event:attr("channel_name").defaultsTo("standard", standardError("channel_name"));
+      name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
@@ -865,7 +865,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       //create call back for subscriber
-      back_channel = createBackChannel(name,name_space,{"namespace":name_space,"role" : my_role });
+      back_channel = createBackChannel(name,name_space,{"name_space":name_space,"role" : my_role });
       
       // build pending subscription entry
       pending_entry = {
@@ -945,12 +945,12 @@ ruleset b507199x5 {
     select when nano_manager approve_pending_subscription_requested
     pre{
       event_channel = event:attr("event_channel").defaultsTo( "no_event_channel", standardError("event_channel"));
+      pending_subscription = ent:pending_incoming{event_channel};
       
       back_channel = createBackChannel(pendingsubscription{'name'},
         pendingsubscription{'name_space'},
         {"name_space":name_space,"role" : pendingsubscription{'my_role'} });
 
-      pending_subscription = ent:pending_incoming{event_channel};
       // create subscription for both picos
       my_subscription = ((pending_subscription).put(["backChannel"],back_channel)).klog("subscription"); /// needs standard output
       subscription = ((my_subscription).put(["backChannel"],my_subscription{"event_channel"})).klog(" subscription A"); /// needs standard output
