@@ -633,7 +633,7 @@ ruleset b507199x5 {
       rule removeApp {
           select when nano_manager remove_app_requested
           pre {
-              token = event:attr("app_token").defaultsTo("", standardOut("missing event attr app_eci").klog(">>>>>> app_eci >>>>>>>"));
+              token = event:attr("app_token").defaultsTo("", standardOut("missing event attr app_token").klog(">>>>>> app_eci >>>>>>>"));
           }
           if (token != "") then {
             pci:delete_app(token);
