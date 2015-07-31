@@ -281,7 +281,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {"app_eci":app_ECI}; 
+        var json = {"app_token":app_ECI}; 
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("remove client");
         console.log("attributes",json);
@@ -294,7 +294,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-        app_Data["app_eci"]=app_ECI;
+        app_Data["app_token"]=app_ECI;
         var eci = options.eci || CloudOS.defaultECI;
         Devtools.log("Updating client");
         return CloudOS.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {

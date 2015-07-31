@@ -243,7 +243,7 @@ ruleset devtools {
 	    rule DestroyChannel {
 	      select when devtools channel_destroy
 	      pre {
-	        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
+	        channelID = event:attr("app_eci").defaultsTo("", ">> missing event attr channelID >> ");
 	          }
 	      if(channelID neq "") then {
 	        send_directive("deleteing #{channelID}");
@@ -321,7 +321,7 @@ ruleset devtools {
 	    rule RemoveClient {
 	        select when devtools remove_client
 	        pre {
-	            token = event:attr("appECI").defaultsTo("", standardOut("missing event attr appECI").klog(">>>>>> appECI >>>>>>>"));
+	            token = event:attr("app_token").defaultsTo("", standardOut("missing event attr appECI").klog(">>>>>> appECI >>>>>>>"));
 	        }
 	        if (token != "") then {
 	        	noop();
