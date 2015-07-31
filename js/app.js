@@ -616,7 +616,7 @@
           } else {//never comes here, we dont check for valid name.........
               console.log("Invalid client_name ", client_name);
               $.mobile.loading("hide");
-              $.mobile.changePage("#oAuth-client-registration", {
+              $.mobile.changePage("#page-client-authorize", {
                 transition: 'slide'
               });
           }
@@ -689,7 +689,7 @@
           if(typeof client !== "undefined") {
             Devtools.removeClient(client, function(directives) {
               console.log("uninstalled ", client, directives);
-              $.mobile.changePage("#oAuth-client-registration", {
+              $.mobile.changePage("#page-client-authorize", {
                transition: 'slide'
              });
             }); 
@@ -740,7 +740,7 @@
           } else {//never comes here, we dont check for valid name.........
               console.log("Invalid client_name ", client_name);
               $.mobile.loading("hide");
-              $.mobile.changePage("#oAuth-client-registration", {
+              $.mobile.changePage("#page-client-authorize", {
                 transition: 'slide'
               });
           }
