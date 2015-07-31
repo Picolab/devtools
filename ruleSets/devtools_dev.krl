@@ -321,7 +321,7 @@ ruleset devtools {
 	    rule RemoveClient {
 	        select when devtools remove_client
 	        pre {
-	            token = event:attr("app_identifier").defaultsTo("", standardOut("missing event attr app_token").klog(">>>>>> app_token >>>>>>>"));
+	            token = event:attr("app_id").defaultsTo("", standardOut("missing event attr app_id").klog(">>>>>> app_id >>>>>>>"));
 	        }
 	        if (token != "") then {
 	        	noop();
@@ -340,7 +340,7 @@ ruleset devtools {
 	      select when devtools update_client
 	        pre {
 	            app_Data={
-	                "app_name": event:attr("app_name").defaultsTo("error", standardOut("missing event attr appName"))
+	                "app_name": event:attr("app_name").defaultsTo("error", standardOut("missing event attr app_name"))
 	            };
 
 	        }
