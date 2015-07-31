@@ -243,18 +243,18 @@ ruleset devtools {
 	    rule DestroyChannel {
 	      select when devtools channel_destroy
 	      pre {
-	        channelID = event:attr("app_eci").defaultsTo("", ">> missing event attr channelID >> ");
+	        channel_id = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
 	          }
-	      if(channelID neq "") then {
-	        send_directive("deleteing #{channelID}");
+	      if(channel_id neq "") then {
+	        send_directive("deleteing #{channel_id}");
 	          }
 	      fired {
-	        log(">> success, raising delete channel #{channelID} event >>");
+	        log(">> success, raising delete channel #{channel_id} event >>");
 	        raise nano_manager event "channel_deletion_requested"
 	              attributes event:attrs();
 	      } 
 	      else {
-	        log(">> could not delete channel #{channelID} >>");
+	        log(">> could not delete channel #{channel_id} >>");
 	      }
 	    }
 	    rule UpdateChannelAttributes {
