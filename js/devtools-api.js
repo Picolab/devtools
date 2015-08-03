@@ -22,9 +22,6 @@
             },
             "cloud_os":{"prod": "a169x625.prod", 
                           "dev": "a169x625.prod"
-            },
-            "new_cloud_os": {"prod": "b507199x5.prod",
-                                "dev": "b507199x5.dev"
             }
         };
 

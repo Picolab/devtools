@@ -1178,11 +1178,6 @@
 
 		var timeToWait = 0;
 		var timeStep = 500;
-		var requiredDevtoolsRids = [
-			Devtools.get_rid("bootstrap"),
-			Devtools.get_rid("rulesets"),
-			Devtools.get_rid("new_cloud_os")
-		].join(";");
 		function persistant_bootstrap(){
 			Devtools.status(function(rid_list){
 				var rids = rid_list["rids"];
@@ -1197,15 +1192,10 @@
 					}
 					else {
 						setTimeout(function() {
-							// This is a little brute force but installRulesets() is idempotent.
-							// Should also add a .catch() handler for the promise perhaps?
-							Devtools.installRulesets(requiredDevtoolsRids).then(function() {
-								CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
-									timeToWait += timeStep;
-									persistant_bootstrap();
-								});
-							});
-						}, timeToWait);
+							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+								timeToWait += timeStep;
+								persistant_bootstrap();
+						})}, timeToWait);
 					}
 					return false;
 				}
