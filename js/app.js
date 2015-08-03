@@ -1180,7 +1180,7 @@
 		var timeStep = 500;
 		var requiredDevtoolsRids = [
 			Devtools.get_rid("bootstrap"),
-			Devtools.get_rid("rulsets"),
+			Devtools.get_rid("rulesets"),
 			Devtools.get_rid("new_cloud_os")
 		].join(";");
 		function persistant_bootstrap(){
