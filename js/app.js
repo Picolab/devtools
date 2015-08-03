@@ -1192,10 +1192,16 @@
 					}
 					else {
 						setTimeout(function() {
-							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
-								timeToWait += timeStep;
-								persistant_bootstrap();
-						})}, timeToWait);
+							// Install the bootstrap ruleset if it's not installed.
+							// This is a little brute force but installRulesets() is idempotent.
+							// Should also add a .catch() handler for the promise perhaps?
+							Devtools.installRulesets(Devtools.get_rid("bootstrap")).then(function() {
+								CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+									timeToWait += timeStep;
+									persistant_bootstrap();
+								});
+							});
+						}, timeToWait);
 					}
 					return false;
 				}
