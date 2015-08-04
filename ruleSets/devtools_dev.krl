@@ -72,6 +72,11 @@ ruleset devtools {
 	            account_profile = NanoManager:accountProfile().klog(standardOut("NanoManager:Picos()"));
 	          account_profile {'profile'};
 	        };
+			
+			childPicos = function() {
+				children = NanoManager:children();
+				children;
+			}
         //------------------------------- <End of> Picos -------------------
 
         // -------------------- Scheduled ---------------------- 
