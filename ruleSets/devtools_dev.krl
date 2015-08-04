@@ -17,7 +17,7 @@ ruleset devtools {
         use module b507199x5 alias NanoManager 
         //use module a169x625 alias PicoInspector
 
-        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
+        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico, childPicos
          showScheduledEvents,showScheduleHistory,
          showInstalledChannels,
         showClients, Clients, get_app,list_bootstrap, get_appinfo, list_callback,
