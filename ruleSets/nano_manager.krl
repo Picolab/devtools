@@ -242,7 +242,7 @@ ruleset b507199x5 {
 		children = pci:list_children(eci).defaultsTo("error", standardError("pci children list failed"));
 		{
 			'status' : (children neq "error"),
-			'children' : eci
+			'children' : children
 		}
 	}
 	parent = function() {
