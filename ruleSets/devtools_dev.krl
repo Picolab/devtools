@@ -76,7 +76,7 @@ ruleset devtools {
 			childPicos = function() {
 				children = NanoManager:children();
 				children;
-			}
+			};
         //------------------------------- <End of> Picos -------------------
 
         // -------------------- Scheduled ---------------------- 
