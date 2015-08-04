@@ -3,7 +3,7 @@ ruleset DevTools_bootstrap {
     meta {
         name "DevTools Bootstrap"
         description <<
-            Bootstrap ruleset for DevTools produciton (picolabs)
+            Bootstrap ruleset for DevTools developing website
         >>
 
         use module a169x625 alias CloudOS
@@ -24,7 +24,7 @@ ruleset DevTools_bootstrap {
                    "b507199x0.dev", //DevTools
                    "b16x29.prod"     // logging
             ],
-	    "unwanted": []
+      "unwanted": []
         };
 
         testingReturns = function(){
@@ -39,7 +39,7 @@ ruleset DevTools_bootstrap {
         installed_rids = CloudOS:rulesetList(meta:eci())
                             .klog(">> the ruleset list >>  ")
                             .defaultsTo({}, ">> list of installed rulesets undefined >>");
-	   //   rids = rulesets{"rids"};
+     //   rids = rulesets{"rids"};
         rids_string = installed_rids{"rids"}.join(";");
 
         bootstrapped = installed_rids{"rids"}
@@ -53,18 +53,18 @@ ruleset DevTools_bootstrap {
       }
       if (bootstrapped > 1 ) then
       {
-        send_directive("found_b507199x0.prod_and_b507199x5.dev_for_developer") 
+        send_directive("found_b507199x0.dev_and_b507199x5.dev_for_developer") 
            with eci = eci;
       }
       fired {
-	      log ">>>> pico already bootstraped, saw : " + installed_rids;
+        log ">>>> pico already bootstraped, saw : " + installed_rids;
       } else {
         
         log ">>>> pico needs a bootstrap >>>> ";
         log ">>>> pico installed_rids, saw : " + rids.encode();
         log ">>>> pico installed_rids, saw : " + rids_string;
-        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.prod"}).encode();
-        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.prod"}).length();
+        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.dev}), saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.dev"}).encode();
+        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.dev}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.dev"}).length();
         raise explicit event devtools_bootstrap_needed ;  // don't bootstrap everything
         
       }
@@ -74,10 +74,10 @@ ruleset DevTools_bootstrap {
         select when explicit devtools_bootstrap_needed
         pre {
           installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
-	                                      meta:eci())
-                           .klog(">> installed rulesets >>");
+                                        meta:eci())
+                           .defaultsTo("error","add child");
         }
-        if (installed) then {
+        if (installed neq "error") then {
             send_directive("New DevTools user bootstrapped") //with
         }
         fired {
