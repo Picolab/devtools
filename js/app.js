@@ -152,9 +152,16 @@
 					$('#about-list').listview('refresh');
 				});
 				
-				Devtools.childPicos(function(json){
+				Devtools.childPicos(function(children_result){
 					console.log("Children");
-					console.log(json);
+					dynamicChildrenList = "";
+					$.each(children_result["children"], function(id, child){
+						dynamicChildrenList += 
+							snippets.child_pico_template(
+								{"eci": child[0]}
+							);
+					});
+					$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 				});
 			},
 
