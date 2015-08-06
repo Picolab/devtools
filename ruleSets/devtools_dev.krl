@@ -18,7 +18,7 @@ ruleset devtools {
         use module b507199x7 alias Account
         //use module a169x625 alias PicoInspector
 
-        provides showRulesets,showRuleset, showInstalledRulesets, aboutPico,
+        provides showRulesets,showRuleset, showInstalledRulesets, aboutPico, childPicos,
          showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, // schedule
          showInstalledChannels,
         showClients, showClient,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
@@ -148,6 +148,11 @@ ruleset devtools {
 	            account_profile = Account:accountProfile().klog(standardOut("NanoManager:Picos()"));
 	          account_profile {'profile'};
 	        };
+			
+			childPicos = function() {
+				children = NanoManager:children();
+				children;
+			};
         //------------------------------- <End of> Picos -------------------
 
         // -------------------- Scheduled ---------------------- 

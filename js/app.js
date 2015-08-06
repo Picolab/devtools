@@ -136,20 +136,32 @@
 
 			about: function(type, match, ui, page) {
 				console.log("About Page Handler");
-        $("#about-account" ).empty();
-        $("#about-eci" ).empty();
+				$("#about-account" ).empty();
+				$("#about-eci" ).empty();
 				$.mobile.loading("show", {
-          text: "Loading about page...",
-          textVisible: true
-        });
+					text: "Loading about page...",
+					textVisible: true
+				});
 				//place in a better method for loading on this page
 				
 				Devtools.about(function(json){ 
 					console.log("About informtion ");
-          $.mobile.loading("hide");
+					$.mobile.loading("hide");
 					$("#about-account").html(snippets.about_account(json));
 					$("#about-eci").html(json.oauth_eci);
 					$('#about-list').listview('refresh');
+				});
+				
+				Devtools.childPicos(function(children_result){
+					console.log("Children");
+					dynamicChildrenList = "";
+					$.each(children_result["children"], function(id, child){
+						dynamicChildrenList += 
+							snippets.child_pico_template(
+								{"eci": child[0]}
+							);
+					});
+					$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 				});
 			},
 
@@ -1107,22 +1119,23 @@
 	// templates are included to index.html from Templates directory.
 	//confirm_channel_remove
 	window['snippets'] = {
-			list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
-			logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
-			installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
-			installed_channels_template2: Handlebars.compile($("#installed-channels-template2").html() || ""),
-			installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
-			confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
-			confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
-			about_account: Handlebars.compile($("#about-account-template").html() || ""),
-      authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
-      confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
-			scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || ""),
-			//subscriptions
-			subscription_tab_template: Handlebars.compile($("#subscription-tab-template").html() || ""),
-			subscription_incoming_template: Handlebars.compile($("#subscription-incoming-template").html() || ""),
-			subscription_out_going_template: Handlebars.compile($("#subscription-out-going-template").html() || ""),
-			subscription_template: Handlebars.compile($("#subscription-template").html() || "")
+		list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
+		logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
+		installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
+		installed_channels_template2: Handlebars.compile($("#installed-channels-template2").html() || ""),
+		installed_ruleset_template: Handlebars.compile($("#installed-ruleset-template").html() || ""),
+		confirm_ruleset_remove: Handlebars.compile($("#confirm-ruleset-remove-template").html() || ""),
+		confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
+		about_account: Handlebars.compile($("#about-account-template").html() || ""),
+		child_pico_template: Handlebars.compile($("#child-pico-template").html() || ""),
+		authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
+		confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
+		scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || ""),
+		//subscriptions
+		subscription_tab_template: Handlebars.compile($("#subscription-tab-template").html() || ""),
+		subscription_incoming_template: Handlebars.compile($("#subscription-incoming-template").html() || ""),
+		subscription_out_going_template: Handlebars.compile($("#subscription-out-going-template").html() || ""),
+		subscription_template: Handlebars.compile($("#subscription-template").html() || "")
 	};
 
 	function plant_authorize_button()

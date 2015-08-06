@@ -124,6 +124,19 @@
             cb(json);
         }, {"eci":eci});
     },
+	
+	childPicos: function(cb, options)
+	{
+		cb = cb || function(){};
+		options = options || {};
+		var json = {rids: rid, url: url};
+		var eci = options.eci || CloudOS.defaultECI;
+		Devtools.log("Getting child picos ");
+		return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+			Devtools.log("Children: ", json);
+			cb(json);
+		});	
+	},
 
 //---------the functions for updating rulesets
 

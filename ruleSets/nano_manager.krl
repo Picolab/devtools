@@ -41,8 +41,7 @@ ruleset b507199x5 {
       //none
     provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
-    //pico
-    
+    children, parent, attributes, //pico
     subscriptions, outgoing, incoming, //subscription
     currentSession,standardError
     sharing on
@@ -55,54 +54,6 @@ ruleset b507199x5 {
   global {
     //functions
 	
-	
-	//----------------------testing PCI pico functions-------------------
-	
-	newPico = function(eci) {
-		newEci = pci:new_pico(eci);
-		{ 
-			'newEci' : newEci
-		}
-	}
-
-	newCloud = function(eci) {
-		newEci = pci:new_cloud(eci);
-		{
-			'newEci' : newEci
-		}
-	}
-	
-	fixPico = function(eci) {
-		a = pci:new_ruleset(eci, ["a169x625.prod","b507199x1.dev","b507199x5.dev","a169x676.prod","a16x129.dev","b507199x0.dev","b16x29.prod","b16x24"]);
-		{
-			'nanoAdded?' : a
-		}
-	}
-	
-	deletePico = function(eci, cascade) {
-		pci:delete_cloud(eci, {"cascade" : cascade});
-	}
-	
-	listChildren = function(eci) {
-		children = pci:list_children(eci);
-		{
-			'children' : children
-		}
-	}
-	
-	listParent = function(eci) {
-		parent = pci:list_parent(eci);
-		{
-			'parent' : parent
-		}
-	}
-	
-	setParent = function(child, newParent) {
-		target = pci:set_parent(child, newParent);
-		{
-			'newParent' : target
-		}
-	}
 	
   //-------------------- Rulesets --------------------
     installedRulesets = function() {
@@ -198,15 +149,19 @@ ruleset b507199x5 {
   };
 
 	children = function() {
+		eci = meta:eci();
+		children = pci:list_children(eci).defaultsTo("error", standardError("pci children list failed"));
 		{
-			'status' : true,
-			'children' : ent:children
+			'status' : (children neq "error"),
+			'children' : children
 		}
 	}
 	parent = function() {
+		eci = meta:eci();
+		parent = pci:list_parent(eci).defaultsTo("error", standardError("pci parent retrival failed"));
 		{
-			'status' : true,
-			'parent' : ent:parent
+			'status' : (parent neq "error"),
+			'parent' : parent
 		}
 	}
 	attributes = function() {
@@ -215,13 +170,17 @@ ruleset b507199x5 {
 			'attributes' : ent:attributes.put( {'picoName' : ent:name} )
 		}
 	}
+	
+	
 	prototypes = {
 		"core": [
-			"b507199x5.dev"
+			"b507199x1.dev",
+			"a169x625"
 		]
 	};
 	picoFactory = function(myEci, protos) {
-		newPico = pci:new_cloud(myEci);
+		newPicoInfo = pci:new_cloud(myEci);
+		newPico = newPicoInfo{"cid"};
 		a = pci:new_ruleset(newPico, prototypes{"core"});
 		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypes{x});});
 		newPico;
