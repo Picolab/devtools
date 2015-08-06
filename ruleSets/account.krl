@@ -1,16 +1,10 @@
 
 
-ruleset b507199x5 {
+ruleset b507199x7 { // this is not registered yet
   meta {
-    name "nano_manager"
+    name "nano_manager:account"
     description <<
-      Nano Manager ( ) Module
-
-      use module a169x625 alias nano_manager
-
-      This Ruleset/Module provides a developer interface to the PICO (persistent computer object).
-      When a PICO is created or authenticated this ruleset
-      will be installed into the Personal Cloud to provide an Event layer.
+    nano_manager account mannagement.
     >>
     author "BYUPICOLab"
     
