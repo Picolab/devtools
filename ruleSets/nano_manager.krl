@@ -39,10 +39,10 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides installed, describeRules, //ruleset
-    channels, attributes, policy, type, //channel
+    provides installedRulesets, describeRulesets, //ruleset
+    channels, channelAttributes, channelPolicy, channelType, //channel
     //pico
-    schedules, scheduleHistory, // schedule
+    
     subscriptions, outgoing, incoming, //subscription
     currentSession,standardError
     sharing on
@@ -253,8 +253,8 @@ ruleset b507199x5 {
     randomName = function(namespace,attempt){
         n = 5;
         array = (0).range(n).map(function(n){
-          random:word());
-          })
+          (random:word());
+          });
         names= array.collect(function(name){
           (checkName(namespace +':'+ name)) => "unique" | "taken";
           });
@@ -290,24 +290,6 @@ ruleset b507199x5 {
                                         ;
     vehicle_ecis_by_backchannel{bc} || {}
      };*/
-  //-------------------- Scheduled ----------------------
-    schedules = function() { 
-      sched_event_list = event:get_list().defaultsTo("error",standardError("undefined"));
-      {
-        'status' : (sched_event_list neq "error"),
-        'schedules'  : sched_event_list
-      }
-
-    }
-    scheduleHistory = function(id) { 
-      sched_event_history = event:get_history(id).defaultsTo("error",standardError("undefined"));
-      {
-        'status' : (sched_event_history neq "error"),
-        'history'  : sched_event_history
-      }
-    
-    }
-  
   //-------------------- error handling ----------------------
     standardOut = function(message) {
       msg = ">> " + message + " results: >>";
@@ -375,7 +357,7 @@ ruleset b507199x5 {
       channels = Channels();
     }
     if(channels{"eci"} neq "" && attributes neq "error") then { // check?? redundant????
-      updateAttrs(eci,attributes);
+      updateAttributes(eci,attributes);
     }
     fired {
       log (standardOut("success updated channel #{eci} attributes"));
@@ -411,7 +393,7 @@ ruleset b507199x5 {
       eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
     }
     {
-      deleteEci(eci);
+      deleteChannel(eci);
     }
     fired {
       log (standardOut("success deleted channel #{eci}"));
@@ -438,9 +420,7 @@ ruleset b507199x5 {
       };
           }
     if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
-      createEci(user, options);
-      send_directive("Created #{channel_name}"); // do we need a directiv e?
-      //with status= true; // should we send directives??
+      createChannel(user, options);
           }
     fired {
       log (standardOut("success created channels #{channel_name}"));
@@ -866,46 +846,4 @@ ruleset b507199x5 {
     } 
 // unsubscribed all, check event from parent 
 
-  ///-------------------- Scheduled ----------------------
-  rule DeleteScheduledEvent {
-    select when nano_manager delete_scheduled_event_requested
-    pre{
-      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
-    }
-    if (sid neq "") then
-    {
-      event:delete(sid);
-    }
-    fired {
-      log (standardOut("success"));
-          } 
-    else {
-      log(">> failure >>");
-    }
-  }  
-  rule ScheduleEvent {
-    select when nano_manager schedule_event_requested
-    pre{
-      event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr event_type"));
-      time = event:attr("time").defaultsTo("error", standardError("missing event attr type"));
-      do_main = event:attr("do_main").defaultsTo("error", standardError("missing event attr type"));
-      time_spec = event:attr("time_spec").defaultsTo("{}", standardError("missing event attr time_spec"));
-      date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
-      attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
-      attr = attributes.decode();
-
-    }
-    if (type eq "single" && type neq "error" ) then
-    {
-      noop();
-    }
-    fired {
-      log (standardOut("success single"));
-      schedule do_main event eventype at date_time attributes attr ;
-          } 
-    else {
-      log (standardOut("success multiple"));
-      schedule do_main event eventype repeat timespec attributes attr ;
-    }
-  }  
 }

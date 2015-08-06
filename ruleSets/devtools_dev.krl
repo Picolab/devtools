@@ -19,7 +19,7 @@ ruleset devtools {
         //use module a169x625 alias PicoInspector
 
         provides showRulesets,showRuleset, showInstalledRulesets, aboutPico,
-         showScheduledEvents,showScheduleHistory,
+         showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, // schedule
          showInstalledChannels,
         showClients, showClient,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
         showSubscriptions, showIncoming, showOutgoing 
@@ -55,8 +55,8 @@ ruleset devtools {
 		        }).defaultsTo("error",standardError("undefined"));
 		        single = function(rulesets){
 		          rulesets_array = rulesets.filter( function(rule_set){rule_set{"rid"} eq rid } );
-		          (rulesets_array[0]);
-		        }
+		          rulesets_array[0];
+		        };
 		        result = (rid.isnull()) => ruleset_gallery | single(ruleset_gallery);
 		        {
 		          'status' : (ruleset_gallery neq "error"),
@@ -64,9 +64,9 @@ ruleset devtools {
 		        };
 		    }
 	        showInstalledRulesets = function() {
-	            rulesets = NanoManager:installed().klog(standardOut("NanoManager:Installed()"));
+	            rulesets = NanoManager:installedRulesets().klog(standardOut("NanoManager:Installed()"));
 	            rids = rulesets{'rids'};
-	            description = NanoManager:describeRules(rids).klog(standardOut("NanoManager:DescribeRules()"));
+	            description = NanoManager:describeRulesets(rids).klog(standardOut("NanoManager:DescribeRules()"));
 	            description{'description'};
 	        }; 
         //------------------------------- <End oF>  Rulesets -------------------
@@ -152,13 +152,29 @@ ruleset devtools {
 
         // -------------------- Scheduled ---------------------- 
 	        showScheduledEvents = function() {
-	          events = NanoManager:schedules().klog(standardOut("NanoManager:Schedules()"));
+	          events = schedules().klog(standardOut("NanoManager:Schedules()"));
 	          events{'schedules'};
 	        };
 	        showScheduleHistory = function(id) {
-	          events = NanoManager:scheduleHistory(id).klog(standardOut("NanoManager:History()"));
+	          events = scheduleHistory(id).klog(standardOut("NanoManager:History()"));
 	          events{'history'};
 	        };
+		    schedules = function() { 
+		      sched_event_list = event:get_list().defaultsTo("error",standardError("undefined"));
+		      {
+		        'status' : (sched_event_list neq "error"),
+		        'schedules'  : sched_event_list
+		      }
+
+		    }
+		    scheduleHistory = function(id) { 
+		      sched_event_history = event:get_history(id).defaultsTo("error",standardError("undefined"));
+		      {
+		        'status' : (sched_event_history neq "error"),
+		        'history'  : sched_event_history
+		      }
+		    
+		    }
         // -------------------- <End oF> Scheduled ---------------------- 
 
         // -------------------- SUBSCRIPTIONS ---------------------- 
@@ -285,7 +301,7 @@ ruleset devtools {
 		    }
 		  }
 		  rule deleteRuleset {
-		    select when nano_manager ruleset_deletion_requested
+	        select when devtools delete_rid
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
 		    }
@@ -684,7 +700,48 @@ ruleset devtools {
  	// <!-- --------------------<End oF> Subscription ---------------------- -->
 
  	// <!-- -------------------- Scheduled ---------------------- -->
-      	rule ScheduleEvent {
+      rule DeleteScheduledEvent {
+	    select when nano_manager delete_scheduled_event_requested
+	    pre{
+	      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
+	    }
+	    if (sid neq "") then
+	    {
+	      event:delete(sid);
+	    }
+	    fired {
+	      log (standardOut("success"));
+	          } 
+	    else {
+	      log(">> failure >>");
+	    }
+	  }  
+	  rule ScheduleEvent {
+	    select when nano_manager schedule_event_requested
+	    pre{
+	      event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr event_type"));
+	      time = event:attr("time").defaultsTo("error", standardError("missing event attr type"));
+	      do_main = event:attr("do_main").defaultsTo("error", standardError("missing event attr type"));
+	      time_spec = event:attr("time_spec").defaultsTo("{}", standardError("missing event attr time_spec"));
+	      date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
+	      attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
+	      attr = attributes.decode();
+
+	    }
+	    if (type eq "single" && type neq "error" ) then
+	    {
+	      noop();
+	    }
+	    fired {
+	      log (standardOut("success single"));
+	      schedule do_main event eventype at date_time attributes attr ;
+	          } 
+	    else {
+	      log (standardOut("success multiple"));
+	      schedule do_main event eventype repeat timespec attributes attr ;
+	    }
+	  }  
+  		rule ScheduleEvent {
 	        select when devtools event_scheduled
 	        pre {
 	          event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
