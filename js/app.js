@@ -154,6 +154,7 @@
 				
 				Devtools.childPicos(function(children_result){
 					console.log("Children");
+					$("#child-picos").empty();
 					dynamicChildrenList = "";
 					$.each(children_result["children"], function(id, child){
 						dynamicChildrenList += 
