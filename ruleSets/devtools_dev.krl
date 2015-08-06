@@ -20,7 +20,7 @@ ruleset devtools {
         provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
          showScheduledEvents,showScheduleHistory,
          showInstalledChannels,
-        showClients, Clients, get_app,list_bootstrap, get_appinfo, list_callback,
+        showClients, showClient,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
         showSubscriptions, showIncoming, showOutgoing 
         sharing on
     }
@@ -58,13 +58,67 @@ ruleset devtools {
 
         //------------------------------- Authorize clients-------------------
 	        showClients = function() {
-	            clients = NanoManager:apps().klog(standardOut("NanoManager:clients()"));
+	            clients = apps().klog(standardOut("NanoManager:clients()"));
 	            clients{'apps'};
 	        };
-	        get_app = function(appECI){
-	            clients = NanoManager:get_app().klog(standardOut("NanoManager:clients()"));
+	        showClient = function(appECI){
+	            clients = apps(appECI).klog(standardOut("NanoManager:clients()"));
 	            clients{'app'};
           	};
+
+		    apps = function(app_eci) { 
+		      eci = meta:eci();
+		      apps = pci:list_apps(eci); 
+		      // check for parameter and return acordingly 
+		      results = (app_eci.isnull()) => 
+		          apps |
+		          apps{app_eci};
+		      {
+		        'status' : (true),
+		        'apps' : apps
+		      }
+		    }    
+		    list_bootstrap = function(appECI){
+		      pci:list_bootstrap(appECI);
+		    }
+		    get_appinfo = function(appECI){
+		      pci:get_appinfo(appECI);
+		    }
+		    list_callback = function(appECI){
+		      pci:list_callback(appECI);
+		    }
+		    addPCIbootstraps = defaction(appECI,bootstrapRids){
+		      boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
+		      send_directive("pci bootstraps updated.")
+		        with rulesets = list_bootstrap(appECI); // is this working?
+		    }
+		    removePCIbootstraps = defaction(appEC,IbootstrapRids){
+		      boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
+		      send_directive("pci bootstraps removed.")
+		        with rulesets = list_bootstrap(appECI); 
+		    }
+		    removePCIcallback = defaction(appECI,PCIcallbacks){
+		      PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
+		      boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
+		      send_directive("pci callback removed.")
+		        with rulesets = pci:list_callback(appECI);
+		    }
+		    update_app = defaction(app_eci,app_data,bootstrap_rids){
+		      //remove all 
+		      remove_defact = removePCIcallback(app_eci);
+		      remove_appinfo = pci:remove_appinfo(app_eci);
+		      remove_defact = removePCIbootstraps(app_eci);
+		      // add new 
+		      add_callback = pci:add_callback(app_eci, app_data{"appCallbackURL"}); 
+		      add_info = pci:add_appinfo(app_eci,{
+		        "icon": app_data{"appImageURL"},
+		        "name": app_data{"appName"},
+		        "description": app_data{"appDescription"},
+		        "info_url": app_data{"info_page"},
+		        "declined_url": app_data{"appDeclinedURL"}
+		      });
+		      addPCIbootstraps(app_eci,bootstrap_rids);
+		    };
         //------------------------------- <End oF> Authorize clients-------------------
 
         //------------------------------- Picos -------------------

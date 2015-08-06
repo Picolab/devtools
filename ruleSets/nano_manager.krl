@@ -41,8 +41,6 @@ ruleset b507199x5 {
       //none
     provides registered, singleRuleset, installed, describeRules, //ruleset
     channels, attributes, policy, type, //channel
-    apps, get_app,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
-    accountProfile, //acounts // needs to be moved into an acount mannagement ruleset.
     //pico
     schedules, scheduleHistory, // schedule
     subscriptions, outgoing, incoming, //subscription
@@ -211,74 +209,7 @@ ruleset b507199x5 {
       new_eci = pci:new_eci(eci, options);
       send_directive("created channel #{new_eci}");
     }
-  //-------------------- Apps --------------------
-/*note b || "hello" is differet than defaultsto("hello")
-*/
-    apps = function(app_eci) { 
-      eci = meta:eci();
-      apps = pci:list_apps(eci); 
-      // check for parameter and return acordingly 
-      results = (app_token.isnull()) => 
-          apps |
-          apps{app_eci};
-      {
-        'status' : (true),
-        'apps' : apps
-      }
-    }    
-    list_bootstrap = function(appECI){
-      pci:list_bootstrap(appECI);
-    }
-    get_appinfo = function(appECI){
-      pci:get_appinfo(appECI);
-    }
-    list_callback = function(appECI){
-      pci:list_callback(appECI);
-    }
-    // move rules and actions to devtools.krl 
-    addPCIbootstraps = defaction(appECI,bootstrapRids){
-      boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
-      send_directive("pci bootstraps updated.")
-        with rulesets = list_bootstrap(appECI); // is this working?
-    }
-    removePCIbootstraps = defaction(appEC,IbootstrapRids){
-      boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
-      send_directive("pci bootstraps removed.")
-        with rulesets = list_bootstrap(appECI); 
-    }
-    removePCIcallback = defaction(appECI,PCIcallbacks){
-      PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
-      boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
-      send_directive("pci callback removed.")
-        with rulesets = pci:list_callback(appECI);
-    }
-    update_app = defaction(app_eci,app_data,bootstrap_rids){
-      //remove all 
-      remove_defact = removePCIcallback(app_eci);
-      remove_appinfo = pci:remove_appinfo(app_eci);
-      remove_defact = removePCIbootstraps(app_eci);
-      // add new 
-      add_callback = pci:add_callback(app_eci, app_data{"appCallbackURL"}); 
-      add_info = pci:add_appinfo(app_eci,{
-        "icon": app_data{"appImageURL"},
-        "name": app_data{"appName"},
-        "description": app_data{"appDescription"},
-        "info_url": app_data{"info_page"},
-        "declined_url": app_data{"appDeclinedURL"}
-      });
-      addPCIbootstraps(app_eci,bootstrap_rids);
-    };
 
-		  
-	//-------------------- Acounts --------------------
-  accountProfile = function() { // move to account mannagement rulesets
-    profile = pci:get_profile(currentSession()).defaultsTo("error",standardError("undefined"))
-    .put( ["oauth_eci"], meta:eci() );
-    {
-     'status' : (profile neq "error"),
-     'profile'  : profile
-    }
-  }
   //-------------------- Picos --------------------
   currentSession = function() {
     pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
