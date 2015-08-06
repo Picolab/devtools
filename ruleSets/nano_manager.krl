@@ -1,6 +1,7 @@
 
 // varibles 
 // ent:my_picos
+// ent:picos_attributes
 
 
 // operators are camel case, variables are snake case.
@@ -40,11 +41,12 @@ ruleset b507199x5 {
       //none
     provides registered, singleRuleset, installed, describeRules, //ruleset
     channels, attributes, policy, type, //channel
-    apps, get_app,type,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
-    accountProfile, //pico
+    apps, get_app,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
+    accountProfile, //acounts // needs to be moved into an acount mannagement ruleset.
+    //pico
     schedules, scheduleHistory, // schedule
-    subscriptions, outGoing, incoming, //subscription
-    newPico, newCloud, fixPico, deletePico, listChildren, listParent, setParent //testing pci pico functions
+    subscriptions, outgoing, incoming, //subscription
+    currentSession,standardError
     sharing on
 
   }
@@ -105,29 +107,25 @@ ruleset b507199x5 {
 	}
 	
   //-------------------- Rulesets --------------------
-    registered = function() {
+    registeredRulesets = function(rid) { // move to devtools
+
       eci = meta:eci();
-        rulesets = rsm:list_rulesets(eci).defaultsTo({},standardError("undefined"));
+        rulesets = rsm:list_rulesets(eci).defaultsTo([],standardError("undefined"));
         ruleset_gallery = rulesets.map( function(rid){
           ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
           ridInfo
         }).defaultsTo("error",standardError("undefined"));
+        single = function(rulesets){
+          rulesets_array = rulesets.filter( function(rule_set){rule_set{"rid"} eq rid } );
+          (rulesets_array[0]);
+        }
+        result = (rid.isnull()) => ruleset_gallery | single(ruleset_gallery);
         {
           'status' : (ruleset_gallery neq "error"),
-          'rulesets' : ruleset_gallery          
+          'rulesets' : result          
         };
     }
-    singleRuleset = function(rid) { 
-      eci = meta:eci();
-      results = registered().defaultsTo({},standardError("undefined"));
-      rulesets = results{"rulesets"}.defaultsTo({},standardError("undefined"));
-      result = rulesets.filter( function(rule_set){rule_set{"rid"} eq rid } ).defaultsTo( "error",standardError("undefined"));
-      {
-        'status' : (result neq "error"),
-        'ruleset' : result[0]
-      };
-    }
-    installed = function() {
+    installedRulesets = function() {
       eci = meta:eci().klog("eci: ");
       results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("error",standardError("pci list_ruleset failed"));  
       rids = results{'rids'}.defaultsTo("error",standardError("no hash key rids"));
@@ -136,7 +134,8 @@ ruleset b507199x5 {
         'rids'     : rids
       };
     }
-    describeRules = function(rids) {//takes an array of rids as parameter // can we write this better???????
+    describeRulesets = function(rids) {//takes an array of rids as parameter // can we write this better???????
+      //check if its an array vs string, to make this more robust.
       rids_string = rids.join(";");
       describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
       resp = http:get(describe_url);
@@ -146,13 +145,13 @@ ruleset b507199x5 {
        'description'     : results
       };
     }
-    install = defaction(eci, ridlist){
-      new_ruleset = pci:new_ruleset(eci, ridlist);
-      send_directive("installed #{ridlist}");
+    installRulesets = defaction(eci, rids){
+      new_ruleset = pci:new_ruleset(eci, rids);
+      send_directive("installed #{rids}");
     }
-    uninstall = defaction(eci, ridlist){
-      deleted = pci:delete_ruleset(eci, ridlist);
-      send_directive("uninstalled #{ridlist}");
+    uninstallRulesets = defaction(eci, rids){
+      deleted = pci:delete_ruleset(eci, rids);
+      send_directive("uninstalled #{rids}");
     }
   //-------------------- Channels --------------------
     channels = function() { 
@@ -164,72 +163,69 @@ ruleset b507199x5 {
         'channels' : channels
       };
     }
-    attributes = function(eci) {
+    channelAttributes = function(eci) {
       results = pci:get_eci_attributes(eci).defaultsTo("error",standardError("undefined")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "error"),
         'Attributes' : results
       };
     }
-    policy = function(eci) {
+    channelPolicy = function(eci) {
       results = pci:get_eci_policy(eci).defaultsTo("error",standardError("undefined")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "error"),
         'Policy' : results
       };
     }
-    type = function(channel_id) { // untested!!!!!!!!!!!!!!!!!!!
-      channels = Channels().defaultsTo("error",">> undefined >>");
+    channelType = function(eci) { // put this as an issue in kre engine for pci function. old accounts may have different structure as there types, "type : types"
+      my_channels = channels().defaultsTo("error",">> undefined >>");
 
-    getType = function(channel_id,channels) {
+      getType = function(eci,my_channels) { // change varible names
         channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
-        channel = channels.filter( function(channel){channel{"cid"} eq channel_id } ).defaultsTo( "error",standardError("undefined"));
+        channel = channels.filter( function(channel){channel{"cid"} eq eci } ).defaultsTo( "error",standardError("undefined"));
         chan = channel[0];
         type = chan{"type"};
         temp = (type.typeof() eq "str" ) => type | type.typeof() eq "array" => type[0] |  type.keys();
         type2 = (temp.typeof() eq "array") => temp[0] | temp;   
         type2;
       };
-      type = ((channels neq "error") && (channels neq {} )) => getType() | "error";
+      type = ((my_channels{'status'}) && (channels neq {} )) => getType() | "error";
       {
         'status'   : (type neq "error"),
         'channels' : channels
       };
     }
-    updateAttrs = defaction(channel_id, attributes){
-      set_eci = pci:set_eci_attributes(channel_id, attributes);
-      send_directive("updated #{channel_id} attributes");
+    updateAttributes = defaction(eci, attributes){
+      set_eci = pci:set_eci_attributes(eci, attributes);
+      send_directive("updated channel attributes for #{eci}");
     }
-    updatePolicy = defaction(channel_id, policy){
-      set_polcy = pci:set_eci_policy(channel_id, policy); // policy needs to be a map, do we need to cast types?
-      send_directive("updated #{channel_id} policy");
+    updatePolicy = defaction(eci, policy){
+      set_polcy = pci:set_eci_policy(eci, policy); // policy needs to be a map, do we need to cast types?
+      send_directive("updated channel policy for #{eci}");
     }
-    deleteEci = defaction(channelID) {
-      deleteeci =pci:delete_eci(channelID);
-      send_directive("deleted #{channelID}");
+    deleteChannel = defaction(eci) {
+      deleteeci =pci:delete_eci(eci);
+      send_directive("deleted channel #{eci}");
     }
-    createEci = defaction(user, options){
-      new_eci = pci:new_eci(user, options);
-      send_directive("created new eci");
+    createChannel = defaction(eci, options){
+      new_eci = pci:new_eci(eci, options);
+      send_directive("created channel #{new_eci}");
     }
   //-------------------- Apps --------------------
-    apps = function() { 
+/*note b || "hello" is differet than defaultsto("hello")
+*/
+    apps = function(app_eci) { 
       eci = meta:eci();
-      apps = pci:list_apps(eci).defaultsTo("error",standardError("undefined"));
+      apps = pci:list_apps(eci); 
+      // check for parameter and return acordingly 
+      results = (app_token.isnull()) => 
+          apps |
+          apps{app_eci};
       {
-        'status' : (apps neq "error"),
+        'status' : (true),
         'apps' : apps
       }
     }    
-    get_app = function(appECI){
-      apps = apps().defaultsTo("error",standardError("apps"));
-      app = apps{appECI}.defaultsTo("error",standardError("app"));
-     // app = (apps{appECI}).delete(["appSecret"]).defaultsTo("error",standardError("app"))
-      {
-        'status' : (app neq "error"),
-        'app' : app
-      }
-    }
     list_bootstrap = function(appECI){
       pci:list_bootstrap(appECI);
     }
@@ -239,6 +235,7 @@ ruleset b507199x5 {
     list_callback = function(appECI){
       pci:list_callback(appECI);
     }
+    // move rules and actions to devtools.krl 
     addPCIbootstraps = defaction(appECI,bootstrapRids){
       boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
       send_directive("pci bootstraps updated.")
@@ -273,8 +270,8 @@ ruleset b507199x5 {
     };
 
 		  
-	//-------------------- Picos --------------------
-  accountProfile = function() {
+	//-------------------- Acounts --------------------
+  accountProfile = function() { // move to account mannagement rulesets
     profile = pci:get_profile(currentSession()).defaultsTo("error",standardError("undefined"))
     .put( ["oauth_eci"], meta:eci() );
     {
@@ -282,6 +279,7 @@ ruleset b507199x5 {
      'profile'  : profile
     }
   }
+  //-------------------- Picos --------------------
   currentSession = function() {
     pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
   };
@@ -324,7 +322,7 @@ ruleset b507199x5 {
         'subscriptions'  : subscriptions
       }
     }
-    outGoing = function() { 
+    outgoing = function() { 
       pending = ent:pending_outgoing.defaultsTo("error",standardError("undefined"));
       {
         'status' : (pending neq "error"),
@@ -338,20 +336,47 @@ ruleset b507199x5 {
         'subscriptions'  : pending
       }
     }
-    //has to be a function, but breaks methodaligy 
-    createBackChannel = function(name,namespace,attrs){ // should this be a function? we use this block of code a few times but its a mutator
+    
+    randomName = function(namespace,attempt){
+        n = 5;
+        array = (0).range(n).map(function(n){
+          random:word());
+          })
+        names= array.collect(function(name){
+          (checkName(namespace +':'+ name)) => "unique" | "taken";
+          });
+        name = names{"unique"} || [];
+        unique_name = name.head().defaultsTo("",standardError("unique name failed"));
+        unique_name;
+    }
+    checkName = function(name){
+      // use filter
+      // check namespace as well
+          channels = channels();
+          channel = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found for channel name #{name}"));
+          (channel eq "no Channel"); // if true channel is unique
+    }//has to be a function, but breaks methodaligy 
+    createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
-          'name' : name, // generate name and check if its unique
-          'eci_type' : namespace,
+          'name' : name, 
+          'eci_type' : type,
           'attributes' : attrs
           //'policy' : ,
         };
-
         user = currentSession();
         backChannel = pci:new_eci(user, options);
         backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
         backChannel_b;
     }
+    /*findVehicleByBackchannel = function (bc) {
+       garbage = bc.klog(">>>> back channel <<<<<");
+       vehicle_ecis = CloudOS:subscriptionList(common:namespace(),"Vehicle");
+        vehicle_ecis_by_backchannel = vehicle_ecis
+                                        .collect(function(x){x{"backChannel"}})
+                                     .map(function(k,v){v.head()})
+                                        ;
+    vehicle_ecis_by_backchannel{bc} || {}
+     };*/
   //-------------------- Scheduled ----------------------
     schedules = function() { 
       sched_event_list = event:get_list().defaultsTo("error",standardError("undefined"));
@@ -381,8 +406,11 @@ ruleset b507199x5 {
       error
     }
   }
-  //defactions
-  //Rules
+  // string or array return array 
+  // string or array return string
+
+
+  //------------------------------------------------------------------------------------Rules
   //-------------------- Rulesets --------------------
   rule registerRuleset {
     select when nano_manager ruleset_registration_requested
@@ -512,76 +540,78 @@ ruleset b507199x5 {
   rule updateChannelAttributes {
     select when nano_manager update_channel_attributes_requested
     pre {
-      channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
       attrs = attributes.split(re/;/);
       //attrs = attributes.decode();
       channels = Channels();
     }
-    if(channels{"channel_id"} neq "" && attributes neq "error") then { // check?? redundant????
-      updateAttrs(channel_id,attributes);
+    if(channels{"eci"} neq "" && attributes neq "error") then { // check?? redundant????
+      updateAttrs(eci,attributes);
     }
     fired {
-      log (standardOut("success updated channel #{channel_id} attributes"));
+      log (standardOut("success updated channel #{eci} attributes"));
       log(">> successfully >>");
     } 
     else {
-      log(">> could not update channel #{channel_id} attributes >>");
+      log(">> could not update channel #{eci} attributes >>");
     }
   }
 
   rule updateChannelPolicy {
     select when nano_manager update_channel_policy_requested // channel_policy_update_requested
     pre {
-      channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
       policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
       channels = Channels();
     }
     if(channels{"channelID"} neq "" && policy neq "error") then { // check?? redundant?? whats better??
-      updatePolicy(channel_id, policy);
+      updatePolicy(eci, policy);
     }
     fired {
-      log (standardOut("success updated channel #{channel_id} policy"));
+      log (standardOut("success updated channel #{eci} policy"));
       log(">> successfully  >>");
     }
     else {
-      log(">> could not update channel #{channel_id} policy >>");
+      log(">> could not update channel #{eci} policy >>");
     }
 
   }
   rule deleteChannel {
     select when nano_manager channel_deletion_requested
     pre {
-      channel_id = event:attr("channel_id").defaultsTo("", standardError("missing event attr channels"));
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
     }
     {
-      deleteEci(channel_id);
+      deleteEci(eci);
     }
     fired {
-      log (standardOut("success deleted channel #{channel_id}"));
+      log (standardOut("success deleted channel #{eci}"));
       log(">> successfully  >>");
           } else {
-      log(">> could not delete channel #{channel_id} >>");
+      log(">> could not delete channel #{eci} >>");
           }
         }
   rule createChannel {
     select when nano_manager channel_creation_requested
     pre {
-     // channels = Channels().defaultsTo({}, standardError("list of installed channels undefined")); // why do we do this ????
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
+      //type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
+      //attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
+      //attrs = attributes.decode();
       user = currentSession();
       //user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
       
       options = {
         'name' : channel_name//,
-        //'eci_type' : ,
-        //'attributes' : ,
+     //   'eci_type' : type,
+      //  'attributes' : attrs//,
         //'policy' : ,
       };
           }
     if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
       createEci(user, options);
-      send_directive("Created #{channel_name}"); // do we need a directive?
+      send_directive("Created #{channel_name}"); // do we need a directiv e?
       //with status= true; // should we send directives??
           }
     fired {
@@ -785,13 +815,18 @@ ruleset b507199x5 {
   //
   // ent:subscriptions {
   //     backChannel : {
-  //      "name" : 
+  //      type: 
+  //       
+  //       
+  //       
+  //       attrs: {
   //      "eventChannel"  : ,
   //      "backChannel"{"attrs"} : [
   //                <namespace>,
   //                <relationship>,
   //                <attrs>:
   //       ],
+  //      }
   //    }
   //  }
   //
@@ -825,29 +860,26 @@ ruleset b507199x5 {
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      attrs      = event:attr("attrs").defaultsTo({}, standardError("attrs"));
-      //attrs_b = attrs.decode();
+      type      = event:attr("type").defaultsTo("", standardError("type"));
 
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
       my_role  = roles[0];
       your_role = roles[1];
-      
+      // destination for external event
       subscription_map = {
             "cid" : target_channel
       };
-      //create call back for subscriber
-      back_channel = createBackChannel(name,name_space,{"name_space":name_space,"role" : my_role });
-      
-      // build pending subscription entry
+      unique_name = randomName(name_space);
+       // build pending subscription entry
       pending_entry = {
         "name"  : name,
         "name_space"    : name_space,
         "relationship" : my_role,
-        "back_channel"  : back_channel,
-        "target_channel"  : target_channel,
-        "attrs"     : attrs
+        "target_channel"  : target_channel
       }.klog("pending subscription"); 
+      //create call back for subscriber
+      back_channel = createBackChannel(unique_name,name_space,pending_entry); // needs to be created here so we can send it in the event to other pico.
     }
     if(target_channel neq "no_target_channel" &&
      back_channel neq "") 
@@ -858,8 +890,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : back_channel,
-          "attrs"     : attrs
+          "event_channel"  : back_channel
         };
     }
     fired {
@@ -868,11 +899,11 @@ ruleset b507199x5 {
       raise nano_manager event add_pending_subscription_requested
         with 
         name = name
+        and channel_name = unique_name
         and name_space = name_space
         and relationship = my_role
         and back_channel = back_channel
-        and event_channel = target_channel
-        and attrs = attrs;
+        and event_channel = target_channel;
     } 
     else {
       log(">> failure >>");
@@ -885,14 +916,16 @@ ruleset b507199x5 {
       pending_entry = {
         "name"  : event:attr("name").defaultsTo("", standardError("")),
         "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
+        "channel_name" : event:attr("channel_name").defaultsTo("", standardError("channel_name")),
         "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
         "back_channel"  : event:attr("back_channel").defaultsTo("incoming", standardError("back_channel")),
-        "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
-        "attrs"     : event:attr("attrs").defaultsTo("", standardError(""))
+        "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel"))
       }.klog("pending subscription"); 
       
       back_channel = pending_entry{"back_channel"}.defaultsTo("", standardError("no back_channel"));
       event_channel = pending_entry{"event_channel"}.defaultsTo("", standardError("no event_channel"));
+      unique_name = random_name(pending_entry{"name_space"});
+      new_back_channel = createBackChannel(unique_name,name_space,pending_entry); 
     }
     if(back_channel eq "incoming") // no backChannel means its incoming
     then
@@ -958,8 +991,7 @@ ruleset b507199x5 {
           "name_space"    : event:attr("namespace").defaultsTo( "no_namespace", standardError("")),
           "relationship" : event:attr("relationship").defaultsTo( "no_relationship", standardError("")),
           "event_channel" : event:attr("event_channel").defaultsTo( "no_event_channel", standardError("")),
-          "back_channel" : event:attr("back_channel").defaultsTo( "no_back_channel", standardError("")),
-          "attrs"     : attrs
+          "back_channel" : event:attr("back_channel").defaultsTo( "no_back_channel", standardError(""))
         }
      
     }
@@ -1047,7 +1079,7 @@ ruleset b507199x5 {
       log (standardOut("success"));
       raise nano_manager event subscription_unsubscribed;
       // clean up
-      raise nano_manager event channel_delete_requested with channel_id = back_channel;  
+      raise nano_manager event channel_delete_requested with eci = back_channel;  
       clear ent:subscriptions{back_channel};
           } 
     else {
