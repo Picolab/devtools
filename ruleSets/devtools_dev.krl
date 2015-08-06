@@ -15,9 +15,10 @@ ruleset devtools {
 
         use module a41x226 alias OAuthRegistry //(appManager)
         use module b507199x5 alias NanoManager 
+        use module b507199x7 alias Account
         //use module a169x625 alias PicoInspector
 
-        provides rulesetList, showRulesets, showInstalledRulesets, aboutPico,
+        provides showRulesets,showRuleset, showInstalledRulesets, aboutPico,
          showScheduledEvents,showScheduleHistory,
          showInstalledChannels,
         showClients, showClient,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
@@ -38,9 +39,30 @@ ruleset devtools {
 
         //------------------------------- Rulesets -------------------
 	        showRulesets = function(){
-	            rulesets = NanoManager:registered().klog(standardOut("NanoManager:Registered()"));
+	            rulesets = registeredRulesets().klog(standardOut("NanoManager:Registered()"));
 	            rulesets{'rulesets'};
 	        };
+	        showRuleset = function(rid){
+	            rulesets = registeredRulesets(rid).klog(standardOut("NanoManager:Registered()"));
+	            rulesets{'rulesets'};
+	        };
+			registeredRulesets = function(rid) { // move to devtools
+		      eci = meta:eci();
+		        rulesets = rsm:list_rulesets(eci).defaultsTo([],standardError("undefined"));
+		        ruleset_gallery = rulesets.map( function(rid){
+		          ridInfo = rsm:get_ruleset( rid ).defaultsTo({},standardError("undefined"));
+		          ridInfo
+		        }).defaultsTo("error",standardError("undefined"));
+		        single = function(rulesets){
+		          rulesets_array = rulesets.filter( function(rule_set){rule_set{"rid"} eq rid } );
+		          (rulesets_array[0]);
+		        }
+		        result = (rid.isnull()) => ruleset_gallery | single(ruleset_gallery);
+		        {
+		          'status' : (ruleset_gallery neq "error"),
+		          'rulesets' : result          
+		        };
+		    }
 	        showInstalledRulesets = function() {
 	            rulesets = NanoManager:installed().klog(standardOut("NanoManager:Installed()"));
 	            rids = rulesets{'rids'};
@@ -123,7 +145,7 @@ ruleset devtools {
 
         //------------------------------- Picos -------------------
 	        aboutPico = function() { // not in cOSng yet
-	            account_profile = NanoManager:accountProfile().klog(standardOut("NanoManager:Picos()"));
+	            account_profile = Account:accountProfile().klog(standardOut("NanoManager:Picos()"));
 	          account_profile {'profile'};
 	        };
         //------------------------------- <End of> Picos -------------------
@@ -236,7 +258,92 @@ ruleset devtools {
 	          log (standardOut("failure"));
 	        }
 	    }
+		rule registerRuleset {
+		    select when nano_manager ruleset_registration_requested
+		    pre {
+		      ruleset_url= event:attr("ruleset_url").defaultsTo("", standardError("missing event attr rids"));
+		      //description = event:attr("description")defaultsTo("", ">>  >> ");
+		      //flush_code = event:attr("flush_code")defaultsTo("", ">>  >> ");
+		      //version = event:attr("version")defaultsTo("", ">>  >> ");
+		      //username = event:attr("username")defaultsTo("", ">>  >> ");
+		      //password = event:attr("password")defaultsTo("", ">>  >> ");
+		    }
+		    if( ruleset_url neq "" ) then// is this check redundant??
+		    {// do we need to check for a url or is it done on a different level?? like if (rulesetURL neq "")
+		      rsm:register(ruleset_url) setting (rid);// rid is empty? is it just created by default
+		       // (description neq "") => description = description |  //ummm .....
+		       // flush_code = 
+		       // version = //alias ? 
+		       // username = //??
+		       // password = //??
+		    }
+		    fired {
+		      log (standardOut("success"));
+		    }
+		    else{
+		      log""
+		    }
+		  }
+		  rule deleteRuleset {
+		    select when nano_manager ruleset_deletion_requested
+		    pre {
+		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
+		    }
+		    //if(Ruleset(){"status"} neq "null" ) then// is this check redundant??
+		    {
+		      rsm:delete(rid); 
+		    }
+		    fired {
+		      log (standardOut("success Deleted #{rid}"));
+		      log ">>>>  <<<<";
+		    }
+		    else{
+		      log ">>>> #{rid} not found "; 
+		    }
+		  }
+		  rule flushRulesets {
+		    select when nano_manager ruleset_flush_requested
+		    pre {
+		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
+		    }
+		    if(rid.length() > 0 ) then // redundant??
+		    {
+		      rsm:flush(rid); 
+		    }
+		    fired {
+		      log (standardOut("success flushed #{rid}"));
+		      log ">>>>  <<<<"
+		    }
+		    else {
+		      log ">>>> failed to flush #{rid} <<<<"
 
+		    } 
+		  }
+		  rule relinkRuleset {
+		    select when nano_manager ruleset_relink_requested
+		    pre {
+		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
+		      new_url = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
+		    }
+		    if(rid neq "") then // redundent??
+		    {// do we nee to check for a url or is it done on a different level?? like if (rulesetURL != "") or should we check for the rid 
+		      rsm:update(rid) setting(updatedSuccessfully)// we can change varible name?
+		      with 
+		        uri = new_url;
+		        //description = 
+		        //flush_code = 
+		        //version = //alias ? 
+		        //username = //??
+		        //password = //??
+		    }
+		    fired {
+		      log (standardOut("success"));
+		      log ""
+		    }
+		    else{
+		      log ""
+		    }
+		  }  
     // ---------- ruleset installation ----------
 	    rule installRulesets {
 	      select when devtools install_rulesets
