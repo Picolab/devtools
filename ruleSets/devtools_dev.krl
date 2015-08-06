@@ -145,7 +145,7 @@ ruleset devtools {
 
         //------------------------------- Picos -------------------
 	        aboutPico = function() { // not in cOSng yet
-	            account_profile = Account:accountProfile().klog(standardOut("NanoManager:Picos()"));
+	            account_profile = Account:accountProfile().klog(standardOut("Account:Picos()"));
 	          account_profile {'profile'};
 	        };
 			

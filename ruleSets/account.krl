@@ -1,6 +1,6 @@
 
 
-ruleset b507199x6 { // this is not registered yet
+ruleset b507199x6 { 
   meta {
     name "nano_manager:account"
     description <<
@@ -8,7 +8,7 @@ ruleset b507199x6 { // this is not registered yet
     >>
     author "BYUPICOLab"
     
-    logging off
+    logging on
 
     use module b16x24 alias system_credentials
     use module b507199x5 alias nano_manager
@@ -17,8 +17,7 @@ ruleset b507199x6 { // this is not registered yet
 
     // Accounting keys
       //none
-    provides 
-    accountProfile
+    provides accountProfile
     sharing on
 
   }
