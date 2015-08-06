@@ -1,6 +1,6 @@
 
 
-ruleset b507199x7 { // this is not registered yet
+ruleset b507199x6 { // this is not registered yet
   meta {
     name "nano_manager:account"
     description <<

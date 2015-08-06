@@ -15,7 +15,7 @@ ruleset devtools {
 
         use module a41x226 alias OAuthRegistry //(appManager)
         use module b507199x5 alias NanoManager 
-        use module b507199x7 alias Account
+        use module b507199x6 alias Account
         //use module a169x625 alias PicoInspector
 
         provides showRulesets,showRuleset, showInstalledRulesets, aboutPico, childPicos,
