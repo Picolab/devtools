@@ -195,47 +195,7 @@ ruleset devtools {
     }
 
     //------------------------------- Rulesets -------------------
-	    rule registerRuleset {
-	        select when devtools register_ruleset
-	        pre {
-	            ruleset_url= event:attr("ruleset_url").defaultsTo("", ">> missing event attr rulesetURL >> ");
-	        }
-	        if(ruleset_url neq "" ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("Registering Success: #{ruleset_url}"));
-	            raise nano_manager event "ruleset_registration_requested"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-
-	        }
-	    }
-	    rule deleteRulesets {
-	        select when devtools delete_rid//subm form-update-url
-	        pre {
-	            rid = event:attr("rid").defaultsTo("", ">> missing event attr rids >> ");
-	        }
-	        if(rid.length() > 0 ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("Success raising delete #{rid} event"));
-	          raise nano_manager event "ruleset_deletion_requested"
-	              attributes event:attrs();
-	        }
-	        else{
-	          log (standardOut("delete failure: #{rid}"));
-	        }
-	        
-	    }
-
-	    
-	    rule updateRuleset { // whats this for ????
+	    rule devtoolsUpdateRuleset { // whats this for ????
 	        select when web submit "#formUpdateRuleset" // is this current ?
 	        pre {
 	            rulesetID = event:attr("rid").defaultsTo("", ">> missing event attr rulesetID >> ");
@@ -255,27 +215,8 @@ ruleset devtools {
 	        }
 	    }
 
-	    rule flushRuleset {
-	        select when devtools flush_rid
-	        pre {
-	            rid = event:attr("rid").defaultsTo("", ">> missing event attr rid >> ");
-	        }
-	        if(rid.length() > 0 ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	          log (">>>> flushed #{rid} <<<<");
-	          raise nano_manager event "ruleset_flush_requested"
-	              attributes event:attrs();
-	        } 
-	        else {
-	          log (standardOut("failure"));
-	        }
-	    }
 		rule registerRuleset {
-		    select when nano_manager ruleset_registration_requested
+	        select when devtools register_ruleset
 		    pre {
 		      ruleset_url= event:attr("ruleset_url").defaultsTo("", standardError("missing event attr rids"));
 		      //description = event:attr("description")defaultsTo("", ">>  >> ");
@@ -318,7 +259,7 @@ ruleset devtools {
 		    }
 		  }
 		  rule flushRulesets {
-		    select when nano_manager ruleset_flush_requested
+	        select when devtools flush_rid
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
 		    }
@@ -717,7 +658,7 @@ ruleset devtools {
 	    }
 	  }  
 	  rule ScheduleEvent {
-	    select when nano_manager schedule_event_requested
+	    select when devtools event_scheduled
 	    pre{
 	      event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr event_type"));
 	      time = event:attr("time").defaultsTo("error", standardError("missing event attr type"));
@@ -741,26 +682,6 @@ ruleset devtools {
 	      schedule do_main event eventype repeat timespec attributes attr ;
 	    }
 	  }  
-  		rule ScheduleEvent {
-	        select when devtools event_scheduled
-	        pre {
-	          event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
-	          time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
-	        }
-	        if( event_type neq "wrong" || time neq "wrong" ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	            raise nano_manager event "schedule_event_requested"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-	        }
-    	}	
-
 	    //TESTING NEW CODE WHICH IS FROM NANO MANAGER
 
 	    rule CreateScheduled {
@@ -774,9 +695,6 @@ ruleset devtools {
 	        date_time = time:add(time:now(),{"seconds":120});
 	        attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
 	        attr = attributes.decode();
-
-
-
 	      }
 	//      log("create schedule running");
 	      //if (type eq "single" && type neq "wrong" ) then
