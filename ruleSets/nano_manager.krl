@@ -396,30 +396,17 @@ ruleset b507199x5 {
 		select when nano_manager child_creation_requested
 		
 		pre {
-			childName = event:attr("name").defaultsTo("", standardError("No name for new pico"));
-			childAttrs = event:attr("attributes").defaultsTo("{}"); //string representation of a hash, will be decoded in child
-			childProtos = event:attr("prototypes").defaultsTo([]);
-			
-			myName = ent:name;
 			myEci = meta:eci();
-			myInfo = {"#{myName}" : myEci};
 			
-			newPico = (childName neq "") => picoFactory(myEci, childProtos) | "";
-			
-			myChildren = ent:children.put({"#{childName}" : newPico});
+			newPico = picoFactory(myEci, []);
 		}
-		
-		if (childName neq "") then
+
 		{
-			event:send({"cid":newPico}, "nano_manager", "child_created")
-				with attrs = {"parent": myInfo,
-								"name": childName,
-								"attributes": childAttrs
-							};
+			noop();
 		}
 		
 		fired {
-			set ent:children myChildren;
+			log(standardOut("pico created"));
 		}
 	}
 	

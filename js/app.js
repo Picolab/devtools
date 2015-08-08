@@ -20,6 +20,10 @@
 					events: "s", // do when we create the page
 					argsre: true
 			} },
+			{"#pico-creation": {handler: "pico_creation",
+					events: "s",
+					argsre: true
+			}},
 			{"#listing": {handler: "listing",
 					events: "s", // do when we create the page
 					argsre: true
@@ -108,7 +112,7 @@
 			{"#approve-subscription": {handler: "approve_subscription",
 					events: "s", // do page before show
 					argsre: true
-			} }             
+			} }
 		],
 
 		{
@@ -164,6 +168,41 @@
 					});
 					$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 				});
+			},
+			
+			pico_creation: function(type, match, ui, page) {
+				console.log("creating a Pico");
+				var frm = "#form-new-pico";
+				$(frm)[0].reset(); // clear the fields in the form
+					
+				createThePico = function(){
+					$.mobile.loading("show", {
+						text: "creating pico...",
+						textVisible: true
+					});
+					var create_pico_form_data = process_form(frm);
+					console.log(">>>>>>>>> Pico ", create_pico_form_data);
+					var pico_Data={
+						"name": create_pico_form_data.Pico_name,
+						"prototypes": create_pico_form_data.Pico_prototypes
+					};
+					
+					Devtools.createPico(pico_Data, function(directives) {
+						console.log("create pico ", pico_Data, directives);
+						$.mobile.changePage("#about", {
+							transition: 'slide'
+						});
+					});
+				}
+					
+				$(frm).off('keypress').on('keypress', function(event) {
+					if (event.which == 13) {
+						event.preventDefault();
+						createThePico();
+					}
+				});
+					
+				$('#Create-pico-confirm-button').off('tap').on('tap', createThePico);
 			},
 
 			listing: function(type, match, ui, page) {

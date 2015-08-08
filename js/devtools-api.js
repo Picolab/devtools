@@ -125,6 +125,18 @@
         }, {"eci":eci});
     },
 	
+    createPico: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || CloudOS.defaultECI;
+        Devtools.log("Creating pico");
+       return CloudOS.raiseEvent("devtools", "createChild", data,{}, function(json) {
+           Devtools.log("Directive from createPico", json);
+           cb(json);
+       }, {"eci":eci});
+    },
+	
 	childPicos: function(cb, options)
 	{
 		cb = cb || function(){};
@@ -135,7 +147,7 @@
 		return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
 			Devtools.log("Children: ", json);
 			cb(json);
-		});	
+		}, {"eci":eci});	
 	},
 
 //---------the functions for updating rulesets

@@ -30,14 +30,46 @@
 		
 		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Children</li>
+	        <li>
+	          <a id="Create-pico-button" href="#pico-creation" class="ui-btn ui-icon-edit ui-btn-icon-right">New Child Pico</a>
+	        </li>
 		</ul>
 		
-		<div data-role="collapsible-set" data-content-theme="a" data-iconpos="right" id="child-picos">
+		<div data-role="collapsible-set" data-content-theme="a" data-filter="true" data-iconpos="right" id="child-picos">
 		</div>
 
 
 	</div>
 	
 	{% include footer.html %}
+
+</div>
+
+
+
+<div data-role="page" id="pico-creation" data-title="Create Child Pico">
+  {% include header.html title="Create a Pico" %}
+
+  <div data-role="main" class="ui-content">
+   <ul id="pico-information" data-role="listview" data-inset="true"> 
+    <li data-role="list-divider" >Create Pico</li>
+    <li>
+     <form id="form-new-pico">
+       <div data-role="fieldcontain">
+        <label for="Subcription_name">Name:</label>
+        <input type="text" name="Pico_name" id="Pico_name" value="" placeholder="KRL Rocks" />
+        <label for="Subcription_attrs">Prototypes:</label>
+        <input type="text" name="Pico_prototypes" id="Pico_prototypes" value="" placeholder="KRL Rocks" />
+      </div>
+    </form>
+    <div>
+    <a id="Create-pico-confirm-button" class="ui-btn ui-btn-b ui-btn-inline">Create</a>
+      <a href="#about" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+    </div>
+  </li>
+</ul>
+</div>
+
+  {% include footer.html %}
 
 </div>
