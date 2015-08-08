@@ -130,6 +130,7 @@
 			
 			pageAuthorize: function(type, match, ui, page) {
 				console.log("manage fuse: authorize page");
+				PicoNavigator.clear();
 				$.mobile.loading("hide");
 			}, 
 			
@@ -167,6 +168,16 @@
 							);
 					});
 					$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+					
+					$(".openPicoButton").click( function() {
+					    console.log(this.id);
+					    picoToOpen = this.id;
+						PicoNavigator.navigateTo(picoToOpen);
+						$.mobile.changePage("#about", {
+							transition: 'slide',
+							allowSamePageTransition : true,
+						});
+					});
 				});
 			},
 			
@@ -1248,7 +1259,7 @@
 							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
 								timeToWait += timeStep;
 								persistant_bootstrap();
-						})}, timeToWait);
+						}, {"eci":PicoNavigator.currentPico || CloudOS.defaultECI})}, timeToWait);
 					}
 					return false;
 				}
