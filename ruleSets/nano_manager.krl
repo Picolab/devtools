@@ -42,7 +42,7 @@ ruleset b507199x5 {
     provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
-    subscriptions, outgoing, incoming, //subscription
+    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
     currentSession,standardError
     sharing on
 
@@ -187,28 +187,21 @@ ruleset b507199x5 {
 	}
 
   //-------------------- Subscriptions ----------------------
-    subscriptions = function() { 
+    subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
+      subscription = subscriptions.collect(function(name){
+        attributes = subscriptionsAttributesName(name);
+        (attributes{"status"});
+        });
+   //   pending =  subscription.collect(function(name){
+  //      (subscriptionsAttributesName(name){"status"} eq "pending_incoming") => "pending_incoming"| "pending_outgoing";
+  //      });
+  //    subscriptions = subscription.put(['pending_subcriptions'],pending); // will this over write ...
       {
         'status' : (subscriptions neq "error"),
-        'subscriptions'  : subscriptions
+        'subscriptions'  : subscription
       }
     }
-    outgoing = function() { 
-      pending = ent:pending_outgoing.defaultsTo("error",standardError("undefined"));
-      {
-        'status' : (pending neq "error"),
-        'subscriptions'  : pending
-      }
-    }
-    incoming = function() { 
-      pending = ent:pending_incoming.defaultsTo("error",standardError("undefined"));
-      {
-        'status' : (pending neq "error"),
-        'subscriptions'  : pending
-      }
-    }
-    
     randomName = function(namespace,attempt){
         n = 5;
         array = (0).range(n).map(function(n){
@@ -240,6 +233,43 @@ ruleset b507199x5 {
         backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
         backChannel_b;
     }
+    subscriptionsAttributesName = function (channel_name){
+      channel = getChannelByName(channel_name);
+      eci = channel{'cid'};
+      attributes = channelAttributes(eci);
+      attributes{'Attributes'};
+    } 
+    subscriptionsAttributesEci = function (eci){
+      channel = getChannelByEci(eci);
+      eci = channel{'cid'};
+      attributes = channelAttributes(eci);
+      attributes{'Attributes'};
+    }
+    //I can join these two functions if I can tell the differents between a name and eci....
+    channelByName = function (name) {
+      my_channels = channels();
+      channels_collections = my_channels.collect(function(channel){
+        (channel{'name'} eq name) => "match" | "noMatch"});
+      channels = channels_collections{'match'};
+      channels.head();
+    }
+    channelByEci = function (eci) {
+      my_channels = channels();
+      channels_collections = my_channels.collect(function(channel){
+        (channel{'cid'} eq eci) => "match" | "noMatch"});
+      channels = channels_collections{'match'};
+      channels.head();
+    }
+      nameFromEci = function(){ // not used
+        eci = meta:eci();
+        channel = channelByEci(back_channel_eci);
+        channel{'name'};
+      } 
+
+      eciFromName = function(name){
+        channel = channelByName;
+        channel{'cid'};
+      }
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
        vehicle_ecis = CloudOS:subscriptionList(common:namespace(),"Vehicle");
@@ -479,46 +509,29 @@ ruleset b507199x5 {
    // ========================================================================
   // Persistent Variables:
   //
-  // ent:subscriptions {
+  // ent:subscriptions = [ uniqe_channel_name,uniqe_channel_name2,..]
+  //
+  //
+  //{
   //     backChannel : {
   //      type: 
-  //       
+  //      name: 
   //       
   //       
   //       attrs: {
-  //      "eventChannel"  : ,
-  //      "backChannel"{"attrs"} : [
-  //                <namespace>,
-  //                <relationship>,
-  //                <attrs>:
+  //      ""
+  //      (Subscription) "name"  : ,
+  //      "name_space": ,
+  //       "relationship" : ,
+  //        "target_channel"/"event_channel" : ,
+  //        "status": 
   //       ],
   //      }
   //    }
   //  }
   //
-  // ent:pending_out_going {
-  //     backChannel: {
-  //      "name" : ,
-  //      "namespace"   : ,
-  //      "relationship"   : ,
-  //      "backChannel"   : ,
-  //      "Target" : , 
-  //      "attrs"  :
-  //    }
-  //  }
-  //
-  // ent:pending_in_coming {
-  //     eventChannel: {
-  //      "name" : 
-  //      "namespace"   : ,
-  //      "relationship"   : ,
-  //      "eventChannel"  : ,
-  //      "backChannel"  :"" ,
-  //      "attrs"  :
-  //    }
-  //  }
-  //
-  // ========================================================================
+   // ========================================================================
+   // creates back_channel and sends event for other pico to create back_channel.
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
@@ -527,7 +540,7 @@ ruleset b507199x5 {
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
       type      = event:attr("type").defaultsTo("", standardError("type"));
-
+      // attributes
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
       my_role  = roles[0];
@@ -542,7 +555,8 @@ ruleset b507199x5 {
         "name"  : name,
         "name_space"    : name_space,
         "relationship" : my_role,
-        "target_channel"  : target_channel
+        "target_channel"  : target_channel,
+        "status" : "pending_outgoing"
       }.klog("pending subscription"); 
       //create call back for subscriber
       back_channel = createBackChannel(unique_name,name_space,pending_entry); // needs to be created here so we can send it in the event to other pico.
@@ -556,197 +570,159 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : back_channel
+          "event_channel"  : back_channel, // is this a channel or a eci?
+          "status" : "pending_incoming"
         };
     }
     fired {
       log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event add_pending_subscription_requested
+      raise nano_manager event 'add_pending_subscription_requested'
         with 
-        name = name
-        and channel_name = unique_name
-        and name_space = name_space
-        and relationship = my_role
-        and back_channel = back_channel
-        and event_channel = target_channel;
+        channel_name = unique_name;
+      log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
     }
   }
+  // creates back channel if needed, then it adds pending subscription to list of subscriptions.
   // can we put all this in a map and pass it as a attr? the rules internal.
-  rule addPendingSubscription { // depends on wether or not a backChannel is being passed as an attribute
+  rule addPendingSubscription { // depends on wether or not a channel_name is being passed as an attribute
     select when nano_manager add_pending_subscription_requested
    pre {
-      pending_entry = {
-        "name"  : event:attr("name").defaultsTo("", standardError("")),
-        "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
-        "channel_name" : event:attr("channel_name").defaultsTo("", standardError("channel_name")),
-        "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
-        "back_channel"  : event:attr("back_channel").defaultsTo("incoming", standardError("back_channel")),
-        "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel"))
-      }.klog("pending subscription"); 
+        channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
+
+        createIncoming = function(){
+          pending_entry = {
+            "name"  : event:attr("name").defaultsTo("", standardError("")),
+            "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
+            "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
+            "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
+            "status"  : event:attr("status").defaultsTo("", standardError("status"))
+          }.klog("incoming pending subscription"); 
+          unique_name = random_name(name_space);
+          back_channel = createBackChannel(unique_name,name_space,pending_entry); 
+          unique_name;
+        };
       
-      back_channel = pending_entry{"back_channel"}.defaultsTo("", standardError("no back_channel"));
-      event_channel = pending_entry{"event_channel"}.defaultsTo("", standardError("no event_channel"));
-      unique_name = random_name(pending_entry{"name_space"});
-      new_back_channel = createBackChannel(unique_name,name_space,pending_entry); 
+     pending_sub_channel_name = (channel_name eq "") => // no channel name means its incoming.
+            createIncoming() |
+            channel_name;
+      new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
     }
-    if(back_channel eq "incoming") // no backChannel means its incoming
+    if(channel_name eq "") 
     then
     {
      noop();
     }
     fired { //can i put multiple lines in a single guard?????????????????
-      log(">> successful pending incoming >>");
-      raise nano_manager event subscription_incoming_pending;
-      set ent:pending_incoming{event_channel} pending_entry;
-      log(">> failure >>") if (event_channel eq "");
+      log(standardOut("successful pending incoming"));
+      raise nano_manager event 'incoming_subscription_pending';
+      set ent:subscriptions new_subscriptions; 
+      log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
-      raise nano_manager event subscription_outgoing_pending;
-      set ent:pending_outgoing{back_channel} pending_entry;
+      raise nano_manager event 'outgoing_subscription_pending';
+      set ent:subscriptions new_subscriptions;
     }
   }
-
-  
-  rule approvePendingSubscription {
+  rule approvePendingSubscription { // used to notify both picos to add subscription request
     select when nano_manager approve_pending_subscription_requested
     pre{
-      event_channel = event:attr("event_channel").defaultsTo( "no_event_channel", standardError("event_channel"));
-      pending_subscription = ent:pending_incoming{event_channel};
-      
-      back_channel = createBackChannel(pendingsubscription{'name'},
-        pendingsubscription{'name_space'},
-        {"name_space":name_space,"role" : pendingsubscription{'my_role'} });
-
-      // create subscription for both picos
-      my_subscription = ((pending_subscription).put(["backChannel"],back_channel)).klog("subscription"); /// needs standard output
-      subscription = ((my_subscription).put(["backChannel"],my_subscription{"event_channel"})).klog(" subscription A"); /// needs standard output
-      yourSubscription = ((subscription).put(["event_channel"],back_channel)).klog("Your subscription B"); /// needs standard output
+      channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
+      back_channel = channelByName(channel_name);
+      event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
       subscription_map = {
             "cid" : event_channel
       };
     }
-    if (my_subscription{"back_channel"} neq "") then
+    if (back_channel neq "") then
     {
-      event:send(subscription_map, "nano_manager", "remove_pending_subscription_requested"); 
+      event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
       event:send(subscription_map, "nano_manager", "add_subscription_requested")
-       with attrs = yourSubscription;
+       with attrs = {"event_channel" : back_channel};
     }
     fired 
     {
       log (standardOut("success"));
-      raise nano_manager event remove_pending_subscription_requested 
-      with event_channel = event_channel;
-      raise nano_manager event add_subscription_requested
-      attributes my_subscription;
+      raise nano_manager event 'remove_pending_subscription' // event to nothing  
+      with channel_name = channel_name;
+      raise nano_manager event 'event add_subscription_requested'
+      with channel_name = channel_name;
     } 
     else 
     {
       log(">> failure >>");
     }
   }
-  rule addSubscription {
+  rule addSubscription { // changes attribute status value to subscribed
     select when nano_manager add_subscription_requested
     pre{
-      subscription=
-        {  "name"  : event:attr("name").defaultsTo( "Noname", standardError("")),
-          "name_space"    : event:attr("namespace").defaultsTo( "no_namespace", standardError("")),
-          "relationship" : event:attr("relationship").defaultsTo( "no_relationship", standardError("")),
-          "event_channel" : event:attr("event_channel").defaultsTo( "no_event_channel", standardError("")),
-          "back_channel" : event:attr("back_channel").defaultsTo( "no_back_channel", standardError(""))
-        }
-     
+      channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
+      event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+// can i get the eci at the same time as attributes?
+      createOutGoing = function(event_channel){
+        back_channel_eci = meta:eci();
+        attributes = subscriptionsAttributesEci(back_channel_eci);
+        attr = attributes.put(["status"],"subscribed");
+        attrs = attr.put(["event_channel"],event_channel);
+        attrs;
+      };
+
+      createIncoming = function(channel_name){
+        attributes = subscriptionsAttributesName(channel_name);
+        attr = attributes.put(["status"],"subscribed");
+        attr;
+      };
+      // if no name its outgoing accepted
+      // if name its incoming accepted
+      attributes = (channel_name eq "no channel name" ) => 
+            createOutGoing(event_channel) | 
+            createIncoming(channel_name);
+      
+      // get eci to raise change attributes event
+      eci = (channel_name eq "no channel name" ) => 
+            meta:eci() | 
+            eciFromName(channel_name);
     }
-    if (subscription{"back_channel"} neq "no_back_channel") then
+    if (channel_name eq "no channel name") then
     {
      noop();
     }
     fired {
       log (standardOut("success"));
-      raise nano_manager event subscription_added
-      with backChannel = subscription{"back_channel"};
-      set ent:subscriptions{subscription{"back_channel"}}  subscription;
+      raise nano_manager event 'subscription_added'
+      with channel_name = channel_name;
+      // set attributes to new values
+      raise nano_manager event 'update_channel_attributes_requested'
+      with attributes = attributes// need to be a array of attributes
+      and eci = eci;
           } 
     else {
-      log(">> failure >>");
-    }
-  }
-  rule removePendingSubscription{// ugly attempt to combine two rules.
-    select when nano_manager remove_pending_subscription_requested
-    pre{
-      back_channel = meta:eci();
-      event_channel = event:attr("event_channel").defaultsTo( "no_event_channel", standardError(""));
-      path = (eventChannel eq "no_event_channel");
-      pending = path =>
-             ( ent:pending_outgoing{back_channel}.defaultsTo( "No pending outgoing", standardError("")) )
-           | ( ent:pending_incoming{event_channel}.defaultsTo( "No pending incoming", standardError("")) );
-    }
-    if (path) then 
-    {
-      noop();
-    }
-    fired 
-    {
-      log (standardOut("success removing outgoing"));
-      raise nano_manager event removed_pending_out;
-      clear ent:pending_outgoing{back_channel};
-    } 
-    else 
-    {// My function does not work.............. all the checks should be put into one place 
-   //   removeIncoming = function(){
-   //     log(">>successful removing incoming>>");
-   //     raise nano_manager event removed_pending_in;
-   //     clear ent:pending_incoming{eventChannel};
-   //     ent:pending_out_incoming;
-   //   };
-    //  removeIncoming() if (pending_incoming neq "No pending incoming");
-      log (standardOut("success removing incoming")) if (pending_incoming neq "No pending incoming");
-      raise nano_manager event removed_pending_in if (pending_incoming neq "No pending incoming");
-      clear ent:pending_incoming{event_channel} if (pending_incoming neq "No pending incoming");
-      log(">> failure subscription request not found >>") if (pending_incoming eq "No pending incoming");
-    }
-  }
- rule rejectPendingSubscription {
-    select when nano_manager reject_incoming_subscription_requested
-           or   nano_manager cancel_outgoing_subscription_requested
-
-    pre{
-      event_channel = event:attr("event_channel").defaultsTo( "No Event Channel", standardError("event_channel"));
-    }
-    {
-      event:send(subscription_map, "nano_manager", "remove_pending_subscription_requested")
-        with attrs = event:attrs(); 
-    }
-    always // do we need to raise a rejected event for outsiders to see? i dont think so......
-    {
-      log (standardOut("success raising remove pending"));
-      raise nano_manager event remove_pending_subscription_requested
-        attributes event:attrs();
-    } 
-    else 
-    {
       log(">> failure >>");
     }
   }
     rule removeSubscription {
     select when nano_manager remove_subscription_requested
     pre{
-      back_channel = event:attr("back_channel").defaultsTo( "No back_channel", standardError("back_channel"));
+      // if i get a name i need to look up eci 
+      channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
+      eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
+      name = (channel_name eq 'No channel_name') => nameFromEci(eci) | channel_name;
     }
-    if(back_channel neq "No back_channel") then
+    if(channel_name neq "No channel_name") then
     {
       noop();
     }
     fired {
       log (standardOut("success"));
-      raise nano_manager event subscription_unsubscribed;
+      raise nano_manager event subscription_removed
+      with channel_name = channel_name;
       // clean up
-      raise nano_manager event channel_delete_requested with eci = back_channel;  
-      clear ent:subscriptions{back_channel};
+      raise nano_manager event channel_delete_requested with eci = eci;  
+      clear ent:subscriptions{channel_name}; // will this remove array value?
           } 
     else {
       log(">> failure >>");
@@ -754,23 +730,28 @@ ruleset b507199x5 {
   } 
   rule cancelSubscription {
     select when nano_manager cancel_subscription__requested
+            or  nano_manager reject_incoming_subscription_requested
+            or  nano_manager cancel_outgoing_subscription_requested
     pre{
       event_channel = event:attr("event_channel").defaultsTo( "No event_channel", standardError("event_channel"));
-      back_channel = event:attr("back_channel").defaultsTo( "No back_channel", standardError("back_channel"));
+      channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
       subscription_map = {
             "cid" : event_channel
       };
+      eci = eciFromName(channel_name);
     }
     if(event_channel neq "No event_channel") then
     {
       event:send(subscription_map, "nano_manager", "remove_subscription_requested")
         with attrs = {
-          "back_channel"  : event_channel
+          "eci"  : event_channel
         };
 
     }
     fired {
-      raise nano_manager event remove_subscription_requested with back_channel = back_channel; 
+      raise nano_manager event remove_subscription_requested 
+      with channel_name = channel_name
+      and eci = eci; 
       log (standardOut("success"));
           } 
     else {
