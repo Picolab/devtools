@@ -305,7 +305,7 @@ ruleset b507199x5 {
       rid_list = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
     if(rids neq "") then { // should we be valid checking?
-      install(eci, rid_list);
+      installRulesets(eci, rid_list);
     }
     fired {
       log (standardOut("success installed rids #{rids}"));
