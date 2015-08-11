@@ -414,7 +414,7 @@
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
         Devtools.log("Request subscription");
-       return CloudOS.raiseEvent("devtools", "subscribe", data,{}, function(json) {
+       return CloudOS.raiseEvent("nano_manager", "subscription_requested", data,{}, function(json) {
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        }, {"eci":eci});
