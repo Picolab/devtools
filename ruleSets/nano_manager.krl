@@ -539,7 +539,7 @@ ruleset b507199x5 {
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      type      = event:attr("type").defaultsTo("PCI_SUBSCRIPTION", standardError("type"));
+      type      = event:attr("type").defaultsTo("subs", standardError("type"));
       // attributes
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
