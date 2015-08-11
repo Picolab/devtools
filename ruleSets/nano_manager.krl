@@ -535,53 +535,55 @@ ruleset b507199x5 {
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
-      name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
-      name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
-      relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
-      target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      type      = event:attr("type").defaultsTo("PCI_SUBSCRIPTION", standardError("type"));
+    events = event:attrs().klog('attrs ');
+    //  name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
+   //   name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
+   //   relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
+   //   target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
+   //   type      = event:attr("type").defaultsTo("PCI_SUBSCRIPTION", standardError("type"));
       // attributes
       // extract roles of the relationship
-      roles   = relationship.split(re/\-/);
-      my_role  = roles[0];
-      your_role = roles[1];
-      // destination for external event
-      subscription_map = {
-            "cid" : target_channel
-      };
-      unique_name = randomName(name_space);
+    //  roles   = relationship.split(re/\-/);
+    //  my_role  = roles[0];
+   //   your_role = roles[1];
+  //    // destination for external event
+   //   subscription_map = {
+  //          "cid" : target_channel
+  //    };
+  //    unique_name = randomName(name_space);
        // build pending subscription entry
-      pending_entry = {
-        "name"  : name,
-        "name_space"    : name_space,
-        "relationship" : my_role,
-        "target_channel"  : target_channel,
-        "status" : "pending_outgoing"
-      }.klog("pending subscription"); 
+   //   pending_entry = {
+    //    "name"  : name,
+    //    "name_space"    : name_space,
+    //    "relationship" : my_role,
+    ///    "target_channel"  : target_channel,
+   //     "status" : "pending_outgoing"
+   //   }.klog("pending subscription"); 
       //create call back for subscriber
     //  back_channel = createBackChannel(unique_name,type,pending_entry); // needs to be created here so we can send it in the event to other pico.
     }
-    if(target_channel neq "no_target_channel" &&
-     back_channel neq "") 
-    then
+  //  if(target_channel neq "no_target_channel" &&
+  //   back_channel neq "") 
+  //  then
     {
-      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
-        with attrs = {
-          "name"  : name,
-          "name_space"    : name_space,
-          "relationship" : your_role,
+  //    event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+   //     with attrs = {
+   //       "name"  : name,
+   //       "name_space"    : name_space,
+   //       "relationship" : your_role,
        //   "event_channel"  : back_channel, // is this a channel or a eci?
-          "status" : "pending_incoming",
-          "type" : type
-        };
+   //       "status" : "pending_incoming",
+   //       "type" : type
+   noop();
+     //   };
     }
     fired {
-      log (standardOut("success"));
+   //   log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event 'add_pending_subscription_requested'
-        with 
-        channel_name = unique_name;
-      log(standardOut("failure")) if (unique_name eq "");
+    //  raise nano_manager event 'add_pending_subscription_requested';
+    //    with 
+   //     channel_name = unique_name;
+   //   log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
