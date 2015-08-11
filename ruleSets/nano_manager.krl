@@ -565,7 +565,7 @@ ruleset b507199x5 {
      back_channel neq "") 
     then
     {
-      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+      event:send(subscription_map, "nano_manager", add_pending_subscription_requested) // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
@@ -578,7 +578,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event 'add_pending_subscription_requested'
+      raise nano_manager event add_pending_subscription_requested
         with 
         channel_name = unique_name;
       log(standardOut("failure")) if (unique_name eq "");
@@ -620,13 +620,13 @@ ruleset b507199x5 {
     }
     fired { //can i put multiple lines in a single guard?????????????????
       log(standardOut("successful pending incoming"));
-      raise nano_manager event 'incoming_subscription_pending';
+      raise nano_manager event incoming_subscription_pending;
       set ent:subscriptions new_subscriptions; 
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
-      raise nano_manager event 'outgoing_subscription_pending';
+      raise nano_manager event outgoing_subscription_pending;
       set ent:subscriptions new_subscriptions;
     }
   }
