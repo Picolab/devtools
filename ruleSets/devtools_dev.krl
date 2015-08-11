@@ -391,7 +391,7 @@ ruleset devtools {
 	    rule DestroyChannel {
 	      select when devtools channel_destroy
 	      pre {
-	        channel_id = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
+	        channel_id = event:attr("eci").defaultsTo("", ">> missing event attr eci >> ");
 	          }
 	      if(channel_id neq "") then {
 	        send_directive("deleteing #{channel_id}");
