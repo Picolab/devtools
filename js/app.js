@@ -1029,7 +1029,7 @@
 								"name": subscribe_form_data.Subcription_name,
 								"name_space": subscribe_form_data.Subcription_name_space,
 								"target_channel": subscribe_form_data.Subcription_target,
-								"type": subscribe_form_data.Subcription_type,
+								"channel_type": subscribe_form_data.Subcription_type,
 								"relationship" : subscribe_form_data.Subcription_relationship,
 								"attrs": subscribe_form_data.Subcription_attrs,
 							};

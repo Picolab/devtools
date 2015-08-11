@@ -40,7 +40,7 @@ ruleset b507199x5 {
     // Accounting keys
       //none
     provides installedRulesets, describeRulesets, //ruleset
-    channels, channelAttributes, channelPolicy, channelType,createBackChannel, //channel
+    channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
     subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
     currentSession,standardError
@@ -539,7 +539,7 @@ ruleset b507199x5 {
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      type      = event:attr("type").defaultsTo("subs", standardError("type"));
+      type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
       // attributes
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
@@ -549,8 +549,7 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : target_channel
       };
-      //unique_name = randomName(name_space);
-      unique_name = "magneticRods";
+      unique_name = randomName(name_space);
        // build pending subscription entry
       pending_entry = {
         "name"  : name,
@@ -560,7 +559,7 @@ ruleset b507199x5 {
         "status" : "pending_outgoing"
       }.klog("pending subscription"); 
       //create call back for subscriber
-      back_channel = createBackChannel(unique_name,type,pending_entry.encode()); // needs to be created here so we can send it in the event to other pico.
+      back_channel = createBackChannel(unique_name,type,pending_entry); // needs to be created here so we can send it in the event to other pico.
     }
     if(target_channel neq "no_target_channel" &&
      back_channel neq "") 
@@ -573,7 +572,7 @@ ruleset b507199x5 {
           "relationship" : your_role,
           "event_channel"  : back_channel, // is this a channel or a eci?
           "status" : "pending_incoming",
-          "type" : type
+          "channel_type" : type
         };
     }
     fired {
@@ -594,7 +593,7 @@ ruleset b507199x5 {
     select when nano_manager add_pending_subscription_requested
    pre {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
-        type = event:attr("type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
+        type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
 
         createIncoming = function(){
           pending_entry = {
@@ -604,9 +603,8 @@ ruleset b507199x5 {
             "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription"); 
-          unique_name = "magneticRods";
-          //unique_name = random_name(name_space);
-          back_channel = createBackChannel(unique_name,type,pending_entry.encode()); 
+          unique_name = random_name(name_space);
+          back_channel = createBackChannel(unique_name,type,pending_entry); 
           unique_name;
         };
       
