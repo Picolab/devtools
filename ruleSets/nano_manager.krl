@@ -560,7 +560,7 @@ ruleset b507199x5 {
         "status" : "pending_outgoing"
       }.klog("pending subscription"); 
       //create call back for subscriber
-      back_channel = createBackChannel(unique_name,type,pending_entry); // needs to be created here so we can send it in the event to other pico.
+      back_channel = createBackChannel(unique_name,type,pending_entry.encode()); // needs to be created here so we can send it in the event to other pico.
     }
     if(target_channel neq "no_target_channel" &&
      back_channel neq "") 
@@ -606,7 +606,7 @@ ruleset b507199x5 {
           }.klog("incoming pending subscription"); 
           unique_name = "magneticRods";
           //unique_name = random_name(name_space);
-          back_channel = createBackChannel(unique_name,type,pending_entry); 
+          back_channel = createBackChannel(unique_name,type,pending_entry.encode()); 
           unique_name;
         };
       
