@@ -189,10 +189,13 @@ ruleset b507199x5 {
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
-      subscription = subscriptions.collect(function(name){
+      status = function(name){
         attributes = subscriptionsAttributesName(name);
         (attributes{"status"});
-        });
+      };
+      subscription = subscriptions.collect(function(name){
+        (status(name));
+      });
    //   pending =  subscription.collect(function(name){
   //      (subscriptionsAttributesName(name){"status"} eq "pending_incoming") => "pending_incoming"| "pending_outgoing";
   //      });
@@ -202,6 +205,7 @@ ruleset b507199x5 {
         'subscriptions'  : subscription
       }
     }
+
     randomName = function(namespace,attempt){
         n = 5;
         array = (0).range(n).map(function(n){
