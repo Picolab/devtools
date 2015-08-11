@@ -383,7 +383,7 @@ ruleset b507199x5 {
   rule deleteChannel {
     select when nano_manager channel_deletion_requested
     pre {
-      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr eci"));
     }
     {
       deleteChannel(eci);

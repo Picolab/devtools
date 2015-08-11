@@ -270,7 +270,7 @@
     {
         cb = cb || function(){};
         options = options || {};
-    var json = {channel_id:ECI}; 
+    var json = {eci:ECI}; 
         var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
         Devtools.log("Destroy channels");
         return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
