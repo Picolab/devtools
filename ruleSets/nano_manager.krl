@@ -549,7 +549,8 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : target_channel
       };
-      unique_name = randomName(name_space);
+      //unique_name = randomName(name_space);
+      unique_name = "magneticRods";
        // build pending subscription entry
       pending_entry = {
         "name"  : name,
@@ -603,7 +604,8 @@ ruleset b507199x5 {
             "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription"); 
-          unique_name = random_name(name_space);
+          unique_name = "magneticRods";
+          //unique_name = random_name(name_space);
           back_channel = createBackChannel(unique_name,type,pending_entry); 
           unique_name;
         };
@@ -611,7 +613,7 @@ ruleset b507199x5 {
      pending_sub_channel_name = (channel_name eq "") => // no channel name means its incoming.
             createIncoming() |
             channel_name;
-  //    new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
+      new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
     }
     if(channel_name eq "") 
     then
@@ -621,13 +623,13 @@ ruleset b507199x5 {
     fired { //can i put multiple lines in a single guard?????????????????
       log(standardOut("successful pending incoming"));
       raise nano_manager event incoming_subscription_pending;
-//set ent:subscriptions new_subscriptions; 
+      set ent:subscriptions new_subscriptions; 
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
       raise nano_manager event outgoing_subscription_pending;
- //     set ent:subscriptions new_subscriptions;
+      set ent:subscriptions new_subscriptions;
     }
   }
   rule approvePendingSubscription { // used to notify both picos to add subscription request
