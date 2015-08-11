@@ -40,7 +40,7 @@ ruleset b507199x5 {
     // Accounting keys
       //none
     provides installedRulesets, describeRulesets, //ruleset
-    channels, channelAttributes, channelPolicy, channelType, //channel
+    channels, channelAttributes, channelPolicy, channelType,createBackChannel, //channel
     children, parent, attributes, //pico
     subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
     currentSession,standardError
