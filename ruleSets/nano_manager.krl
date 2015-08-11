@@ -206,7 +206,7 @@ ruleset b507199x5 {
       }
     }
 
-    randomName = function(namespace,attempt){
+    randomName = function(namespace){
         n = 5;
         array = (0).range(n).map(function(n){
           (random:word());
@@ -607,7 +607,7 @@ ruleset b507199x5 {
             "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription"); 
-          unique_name = random_name(pending_entry{'name_space'});
+          unique_name = random_name(pending_entry{"name_space"});
           back_channel = createBackChannel(unique_name,type,pending_entry); 
           unique_name;
         };
