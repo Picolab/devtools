@@ -597,9 +597,9 @@ ruleset b507199x5 {
     select when nano_manager add_pending_subscription_requested
    pre {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
-        type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
 
         createIncoming = function(){
+          type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
           pending_entry = {
             "name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
