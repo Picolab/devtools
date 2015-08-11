@@ -611,7 +611,7 @@ ruleset b507199x5 {
      pending_sub_channel_name = (channel_name eq "") => // no channel name means its incoming.
             createIncoming() |
             channel_name;
-      new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
+  //    new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
     }
     if(channel_name eq "") 
     then
@@ -621,13 +621,13 @@ ruleset b507199x5 {
     fired { //can i put multiple lines in a single guard?????????????????
       log(standardOut("successful pending incoming"));
       raise nano_manager event incoming_subscription_pending;
-      set ent:subscriptions new_subscriptions; 
+//set ent:subscriptions new_subscriptions; 
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
       raise nano_manager event outgoing_subscription_pending;
-      set ent:subscriptions new_subscriptions;
+ //     set ent:subscriptions new_subscriptions;
     }
   }
   rule approvePendingSubscription { // used to notify both picos to add subscription request
