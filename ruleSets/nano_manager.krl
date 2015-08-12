@@ -548,9 +548,9 @@ ruleset b507199x5 {
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
       
       // extract roles of the relationship
-     // roles   = relationship.split(re/\-/);
-     // my_role  = roles[0];
-     // your_role = roles[1];
+      roles   = relationship.split(re/\-/);
+      my_role  = roles[0];
+      your_role = roles[1];
      // // destination for external event
      // subscription_map = {
      //       "cid" : target_channel
