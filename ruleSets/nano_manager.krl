@@ -574,6 +574,7 @@ ruleset b507199x5 {
           //'policy' : ,
     */   // };
     cat = "car";
+    
     }
     //if(target_channel neq "no_target_channel") 
   //  then
