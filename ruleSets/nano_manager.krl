@@ -541,7 +541,7 @@ ruleset b507199x5 {
     select when nano_manager subscription_requested
    pre {
       // attributes for back_channel attrs
-      name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
+    /*  name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
@@ -572,30 +572,34 @@ ruleset b507199x5 {
           'eci_type' : type,
           'attributes' : pending_entry
           //'policy' : ,
-        };
+    */   // };
+    cat = "cat";
     }
-    if(target_channel neq "no_target_channel") 
-    then
+    //if(target_channel neq "no_target_channel") 
+  //  then
+  if(true) then
     {
-      createChannel(meta:eci(),options);
+    //  createChannel(meta:eci(),options);
 
-      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+      event:send({
+            "cid" : "3BF55616-3712-11E5-86F8-957FE71C24E1"
+      }, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
-          "name"  : name,
-          "name_space"    : name_space,
-          "relationship" : your_role,
-          "event_channel"  : channelByName(unique_name), 
-          "status" : "pending_incoming",
-          "channel_type" : channel_type
+          "name"  : "test",
+       //   "name_space"    : name_space,
+        //  "relationship" : your_role,
+        //  "event_channel"  : channelByName(unique_name), 
+          "status" : "pending_incoming"
+         // "channel_type" : channel_type
         };
     }
     fired {
       log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event add_pending_subscription_requested
-        with 
-        channel_name = unique_name;
-      log(standardOut("failure")) if (unique_name eq "");
+      raise nano_manager event "add_pending_subscription_requested";
+      //  with 
+     //   channel_name = unique_name;
+     // log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
