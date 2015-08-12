@@ -542,7 +542,7 @@ ruleset b507199x5 {
    pre {
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
-     // name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
+      name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
      // relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
      // target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
       //channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("class"));
