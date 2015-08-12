@@ -234,7 +234,7 @@ ruleset b507199x5 {
         };
         user = currentSession();
         backChannel = pci:new_eci(user, options);
-        backChannel_b = backChannel{"cid"}.defaultsTo("", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
+        backChannel_b = backChannel{"cid"}.defaultsTo("no_eci_found", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
         backChannel_b;
     }
     subscriptionsAttributesName = function (channel_name){
@@ -539,12 +539,13 @@ ruleset b507199x5 {
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
+      // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
-      // attributes
+      
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
       my_role  = roles[0];
@@ -553,13 +554,14 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : target_channel
       };
+      // create unique_name for channel
       unique_name = randomName(name_space).klog(standardOut("unique_name: "));
        // build pending subscription entry
       pending_entry = {
         "name"  : name,
         "name_space"    : name_space,
         "relationship" : my_role,
-        "target_channel"  : target_channel,
+        "target_channel"  : target_channel, // this will remain after accepted
         "status" : "pending_outgoing"
       }.klog("pending subscription"); 
       //create call back for subscriber
@@ -573,7 +575,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : back_channel, // is this a channel or a eci?
+          "event_channel"  : back_channel, 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         };
