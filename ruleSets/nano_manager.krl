@@ -545,62 +545,58 @@ ruleset b507199x5 {
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("class"));
-      /*
+      channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
+      
       // extract roles of the relationship
-      roles   = relationship.split(re/\-/);
-      my_role  = roles[0];
-      your_role = roles[1];
-      // destination for external event
-      subscription_map = {
-            "cid" : target_channel
-      };
+     // roles   = relationship.split(re/\-/);
+     // my_role  = roles[0];
+     // your_role = roles[1];
+     // // destination for external event
+     // subscription_map = {
+     //       "cid" : target_channel
+     // };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("unique_name: "));/*
+     // unique_name = randomName(name_space).klog(standardOut("unique_name: "));
        // build pending subscription entry
 
-      pending_entry = {
-        "subscription_name"  : name,
-        "name_space"    : name_space,
-        "relationship" : my_role,
-        "target_channel"  : target_channel, // this will remain after accepted
-        "status" : "pending_outgoing"
-      }.klog("pending subscription"); 
+     // pending_entry = {
+     //   "subscription_name"  : name,
+     //   "name_space"    : name_space,
+     //   "relationship" : my_role,
+     //   "target_channel"  : target_channel, // this will remain after accepted
+     //   "status" : "pending_outgoing"
+     // }.klog("pending subscription"); 
       //create call back for subscriber     
-      options = {
-          'name' : unique_name, 
-          'eci_type' : type,
-          'attributes' : pending_entry
+     // options = {
+     //     'name' : unique_name, 
+     //     'eci_type' : type,
+     //     'attributes' : pending_entry
           //'policy' : ,
-    */   // };
-    cat = "car";
-
+     //   };
     }
-    //if(target_channel neq "no_target_channel") 
-  //  then
-  if(true) then
+    if(target_channel neq "no_target_channel") 
+    then
     {
     //  createChannel(meta:eci(),options);
 
-      event:send({
-            "cid" : "3BF55616-3712-11E5-86F8-957FE71C24E1"
-      }, "nano_manager", "add_pending_subscription_requested") // send request
-        with attrs = {
-          "name"  : "test",
-       //   "name_space"    : name_space,
-        //  "relationship" : your_role,
-        //  "event_channel"  : channelByName(unique_name), 
-          "status" : "pending_incoming"
-         // "channel_type" : channel_type
-        };
+    //  event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+    //    with attrs = {
+     //     "name"  : name,
+     //     "name_space"    : name_space,
+     //     "relationship" : your_role,
+     //     "event_channel"  : channelByName(unique_name), 
+     //     "status" : "pending_incoming",
+     //     "channel_type" : channel_type
+     //   };
+     noop();
     }
     fired {
-      log (standardOut("success"));
+    //  log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event "add_pending_subscription_requested";
-      //  with 
-     //   channel_name = unique_name;
-      //log(standardOut("failure")) if (unique_name eq "");
+    //  raise nano_manager event add_pending_subscription_requested
+    //    with 
+    //    channel_name = unique_name;
+    //  log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
