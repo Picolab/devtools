@@ -556,7 +556,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      */unique_name = randomName(name_space).klog(standardOut("unique_name: "));/*
+      unique_name = randomName(name_space).klog(standardOut("unique_name: "));/*
        // build pending subscription entry
 
       pending_entry = {
@@ -573,6 +573,7 @@ ruleset b507199x5 {
           'attributes' : pending_entry
           //'policy' : ,
     */   // };
+    cat = "car";
     }
     //if(target_channel neq "no_target_channel") 
   //  then
@@ -598,7 +599,7 @@ ruleset b507199x5 {
       raise nano_manager event "add_pending_subscription_requested";
       //  with 
      //   channel_name = unique_name;
-      log(standardOut("failure")) if (unique_name eq "");
+      //log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
