@@ -546,7 +546,7 @@ ruleset b507199x5 {
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
-      
+      /*
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
       my_role  = roles[0];
@@ -555,7 +555,7 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : target_channel
       };
-     /* // create unique_name for channel
+      // create unique_name for channel
       */unique_name = randomName(name_space).klog(standardOut("unique_name: "));/*
        // build pending subscription entry
 
