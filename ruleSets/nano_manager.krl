@@ -543,7 +543,7 @@ ruleset b507199x5 {
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
-      type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
+      channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
       // attributes
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
@@ -563,20 +563,19 @@ ruleset b507199x5 {
         "status" : "pending_outgoing"
       }.klog("pending subscription"); 
       //create call back for subscriber
-      back_channel = createBackChannel(unique_name,type,pending_entry); // needs to be created here so we can send it in the event to other pico.
+      back_channel = createBackChannel(unique_name,channel_type,pending_entry); // needs to be created here so we can send it in the event to other pico.
     }
-    if(target_channel neq "no_target_channel" &&
-     back_channel neq "") 
+    if(target_channel neq "no_target_channel") 
     then
     {
-      event:send(subscription_map, "nano_manager", add_pending_subscription_requested) // send request
+      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
           "event_channel"  : back_channel, // is this a channel or a eci?
           "status" : "pending_incoming",
-          "channel_type" : type
+          "channel_type" : channel_type
         };
     }
     fired {
@@ -599,7 +598,7 @@ ruleset b507199x5 {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
 
         createIncoming = function(){
-          type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
+          channel_type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
           pending_entry = {
             "name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
@@ -608,7 +607,7 @@ ruleset b507199x5 {
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription"); 
           unique_name = random_name(pending_entry{"name_space"});
-          back_channel = createBackChannel(unique_name,type,pending_entry); 
+          back_channel = createBackChannel(unique_name,channel_type,pending_entry); 
           unique_name;
         };
       
