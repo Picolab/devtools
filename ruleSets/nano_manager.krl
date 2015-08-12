@@ -145,20 +145,21 @@ ruleset b507199x5 {
 
   //-------------------- Picos --------------------
   currentSession = function() {
-    pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+    //pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+    meta:eci();
   };
 
 	children = function() {
-		eci = meta:eci();
-		children = pci:list_children(eci).defaultsTo("error", standardError("pci children list failed"));
+		self = meta:eci();
+		children = pci:list_children(self).defaultsTo("error", standardError("pci children list failed"));
 		{
 			'status' : (children neq "error"),
 			'children' : children
 		}
 	}
 	parent = function() {
-		eci = meta:eci();
-		parent = pci:list_parent(eci).defaultsTo("error", standardError("pci parent retrival failed"));
+		self = meta:eci();
+		parent = pci:list_parent(self).defaultsTo("error", standardError("pci parent retrival failed"));
 		{
 			'status' : (parent neq "error"),
 			'parent' : parent
@@ -212,7 +213,7 @@ ruleset b507199x5 {
           (random:word());
           });
         names= array.collect(function(name){
-          (checkName(namespace +':'+ name)) => "unique" | "taken";
+          (checkName("#{namespace}:#{name}")) => "unique" | "taken";
           });
         name = names{"unique"} || [];
         unique_name = name.head().defaultsTo("",standardError("unique name failed"));
@@ -225,7 +226,7 @@ ruleset b507199x5 {
           channel = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found for channel name #{name}"));
           (channel eq "no Channel"); // if true channel is unique
     }//has to be a function, but breaks methodaligy 
-    createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
+  /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
           'name' : name, 
           'eci_type' : type,
@@ -236,7 +237,7 @@ ruleset b507199x5 {
         backChannel = pci:new_eci(user, options);
         backChannel_b = backChannel{"cid"}.defaultsTo("no_eci_found", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
         backChannel_b;
-    }
+    }*/
     subscriptionsAttributesName = function (channel_name){
       channel = getChannelByName(channel_name);
       eci = channel{'cid'};
@@ -557,25 +558,33 @@ ruleset b507199x5 {
       // create unique_name for channel
       unique_name = randomName(name_space).klog(standardOut("unique_name: "));
        // build pending subscription entry
+
       pending_entry = {
-        "name"  : name,
+        "subscription_name"  : name,
         "name_space"    : name_space,
         "relationship" : my_role,
         "target_channel"  : target_channel, // this will remain after accepted
         "status" : "pending_outgoing"
       }.klog("pending subscription"); 
-      //create call back for subscriber
-      back_channel = createBackChannel(unique_name,channel_type,pending_entry); // needs to be created here so we can send it in the event to other pico.
+      //create call back for subscriber     
+      options = {
+          'name' : unique_name, 
+          'eci_type' : type,
+          'attributes' : pending_entry
+          //'policy' : ,
+        };
     }
     if(target_channel neq "no_target_channel") 
     then
     {
+      createChannel(meta:eci(),options);
+
       event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : back_channel, 
+          "event_channel"  : channelByName(unique_name), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         };
@@ -598,30 +607,36 @@ ruleset b507199x5 {
     select when nano_manager add_pending_subscription_requested
    pre {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
+        channel_type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
+        name_space = event:attr("name_space").defaultsTo("", standardError("type"));
 
-        createIncoming = function(){
-          channel_type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
-          pending_entry = {
+      pending_subcriptions = (channel_name eq "") =>
+         {
             "name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
             "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
-          }.klog("incoming pending subscription"); 
-          unique_name = random_name(pending_entry{"name_space"});
-          back_channel = createBackChannel(unique_name,channel_type,pending_entry); 
-          unique_name;
-        };
-      
-     pending_sub_channel_name = (channel_name eq "") => // no channel name means its incoming.
-            createIncoming() |
+          }.klog("incoming pending subscription") |
+          {};
+
+      options = {
+        'name' : unique_name, 
+        'eci_type' : type,
+        'attributes' : pending_subcriptions
+          //'policy' : ,
+      };
+
+      new_channel_name = (channel_name eq "") => // no channel name means its incoming.
+            random_name(name_space)|
             channel_name;
-      new_subscriptions = ent:subscriptions.append(pending_sub_channel_name); // create new list of subscriptions.
+    
+      new_subscriptions = ent:subscriptions.append(new_channel_name); // create new list of subscriptions.
     }
     if(channel_name eq "") 
     then
     {
-     noop();
+      createChannel(meta:eci(),options);
     }
     fired { //can i put multiple lines in a single guard?????????????????
       log(standardOut("successful pending incoming"));
