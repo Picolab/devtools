@@ -541,7 +541,7 @@ ruleset b507199x5 {
     select when nano_manager subscription_requested
    pre {
       // attributes for back_channel attrs
-    /*  name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
+      name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
@@ -555,7 +555,7 @@ ruleset b507199x5 {
       subscription_map = {
             "cid" : target_channel
       };
-      // create unique_name for channel
+     /* // create unique_name for channel
       */unique_name = randomName(name_space).klog(standardOut("unique_name: "));/*
        // build pending subscription entry
 
