@@ -226,13 +226,7 @@ ruleset b507199x5 {
       // use filter
       // check namespace as well
           chan = channels();
-<<<<<<< HEAD
           //channels = channels(); worse bug evver!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          
-=======
-          
-          //channels = channels();
->>>>>>> parent of e9304c3... bug SMASHED
           // in our meetings we said to check name_space, how is that done?
           /*{
           "last_active": 1426286486,
