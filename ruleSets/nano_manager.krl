@@ -221,6 +221,8 @@ ruleset b507199x5 {
        //names;
       // checkName("unique:carl");
       array;
+
+      
     }
     checkName = function(name){
       // use filter
