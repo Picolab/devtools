@@ -224,6 +224,7 @@ ruleset b507199x5 {
       // check namespace as well
           chan = channels();
           //channels = channels(); worse bug evver!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          
           // in our meetings we said to check name_space, how is that done?
           /*{
           "last_active": 1426286486,
