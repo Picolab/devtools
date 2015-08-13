@@ -220,6 +220,7 @@ ruleset b507199x5 {
        // unique_name;
        //names;
        checkName("unique:carl");
+       
     }
     checkName = function(name){
       // use filter
