@@ -226,6 +226,7 @@ ruleset b507199x5 {
       // use filter
       // check namespace as well
           chan = channels();
+          
           //channels = channels();
           // in our meetings we said to check name_space, how is that done?
           /*{
