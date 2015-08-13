@@ -236,6 +236,7 @@ ruleset b507199x5 {
           "attributes": null}
           */
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+          
           //channels = chs.filter(function(k,v){v{"name"} eq name});
           //channels.isnull(); // if true channel is unique
           chs;
