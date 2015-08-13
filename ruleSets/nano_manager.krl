@@ -212,13 +212,14 @@ ruleset b507199x5 {
         array = (0).range(n).map(function(n){
           (random:word());
           });
-        names= array.collect(function(name){
-          (checkName( namespace +':'+ name )) => "unique" | "taken";
-          });
+      //  names= array.collect(function(name){
+      //    (checkName( namespace +':'+ name )) => "unique" | "taken";
+      //    });
        // name = names{"unique"} || [];
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
-       names;
+       //names;
+       checkName("unique:carl");
     }
     checkName = function(name){
       // use filter
