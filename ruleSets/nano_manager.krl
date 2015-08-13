@@ -225,7 +225,7 @@ ruleset b507199x5 {
     checkName = function(name){
       // use filter
       // check namespace as well
-          channels = channels();
+       //   channels = channels();
           // in our meetings we said to check name_space, how is that done?
           /*{
           "last_active": 1426286486,
@@ -237,7 +237,8 @@ ruleset b507199x5 {
           //chs = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
           //channels = chs.filter(function(k,v){v{"name"} eq name});
           //channels.isnull(); // if true channel is unique
-          channels;
+       //   channels;
+       name;
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
