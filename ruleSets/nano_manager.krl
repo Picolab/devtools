@@ -235,10 +235,10 @@ ruleset b507199x5 {
           "cid": "158E6E0C-C9D2-11E4-A556-4DDC87B7806A",
           "attributes": null}
           */
-          //chs = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
+          chs = chan{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
           //channels = chs.filter(function(k,v){v{"name"} eq name});
           //channels.isnull(); // if true channel is unique
-          chan;
+          chs;
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
