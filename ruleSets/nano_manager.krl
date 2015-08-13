@@ -120,7 +120,7 @@ ruleset b507199x5 {
         type2 = (temp.typeof() eq "array") => temp[0] | temp;   
         type2;
       };
-      type = ((my_channels{'status'}) && (channels neq {} )) => getType() | "error";
+      type = ((my_channels{"status"}) && (channels neq {} )) => getType() | "error";
       {
         'status'   : (type neq "error"),
         'channels' : channels
@@ -209,16 +209,16 @@ ruleset b507199x5 {
 
     randomName = function(namespace){
         n = 5;
-     //   array = (0).range(n).map(function(n){
-     //     (random:word());
-      //    });
+        array = (0).range(n).map(function(n){
+          (random:word());
+          });
      //   names= array.collect(function(name){
       //    (checkName("#{namespace}:#{name}")) => "unique" | "taken";
       //    });
        // name = names{"unique"} || [];
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
-       n;
+       array;
     }
     checkName = function(name){
       // use filter
