@@ -224,9 +224,18 @@ ruleset b507199x5 {
       // use filter
       // check namespace as well
           channels = channels();
-          channel = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found for channel name #{name}"));
-          (channel eq "no Channel"); // if true channel is unique
-    }//has to be a function, but breaks methodaligy 
+          // in our meetings we said to check name_space, how is that done?
+          /*{
+          "last_active": 1426286486,
+          "name": "Oauth Developer ECI",
+          "type": "OAUTH",
+          "cid": "158E6E0C-C9D2-11E4-A556-4DDC87B7806A",
+          "attributes": null}
+          */
+          chs = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
+          channels = chs.filter(function(k,v){v{"name"} eq name});
+          channels.isnull(); // if true channel is unique
+    }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
           'name' : name, 
