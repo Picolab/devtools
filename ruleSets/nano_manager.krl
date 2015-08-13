@@ -219,7 +219,7 @@ ruleset b507199x5 {
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
        //names;
-       checkName("unique:carl");
+       checkName("uniquecarl");
 
     }
     checkName = function(name){
