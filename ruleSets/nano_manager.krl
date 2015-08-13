@@ -215,10 +215,10 @@ ruleset b507199x5 {
         names= array.collect(function(name){
           (checkName("#{namespace}:#{name}")) => "unique" | "taken";
           });
-       // name = names{"unique"} || [];
+        name = names{"unique"} || [];
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
-       names;
+       name;
     }
     checkName = function(name){
       // use filter
