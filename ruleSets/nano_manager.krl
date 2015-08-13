@@ -219,7 +219,7 @@ ruleset b507199x5 {
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
        //names;
-       checkName("carlson");
+       checkName("unique:carl");
 
     }
     checkName = function(name){
@@ -237,8 +237,10 @@ ruleset b507199x5 {
           */
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
           //chan{'channels'} bug????????????
-          names = chs.filter(function(channel){channel{"name"} eq name});
-          names; // if true channel is unique
+          names = chs.filter(function(channel){channel{"name"} eq "carlson"});
+         // channels = names.filter(function(k,v){ v eq name});
+         // channels.isnull(); // if true channel is unique
+         names;
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
