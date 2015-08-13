@@ -212,22 +212,18 @@ ruleset b507199x5 {
         array = (0).range(n).map(function(n){
           (random:word());
           });
-      //  names= array.collect(function(name){
-      //    (checkName( namespace +':'+ name )) => "unique" | "taken";
-      //    });
-       // name = names{"unique"} || [];
-       // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
-       // unique_name;
-       //names;
-       checkName("unique:carl");
-
+        names= array.collect(function(name){
+          (checkName( namespace +':'+ name )) => "unique" | "taken";
+          });
+        name = names{"unique"} || [];
+        unique_name = name.head().defaultsTo("",standardError("unique name failed"));
+        unique_name;
     }
     checkName = function(name){
       // use filter
       // check namespace as well
           chan = channels();
-          
-          //channels = channels();
+          //channels = channels(); worse bug evver!!!!!!!!!!!!!!!!!!!!!!!!!!!
           // in our meetings we said to check name_space, how is that done?
           /*{
           "last_active": 1426286486,
@@ -236,10 +232,9 @@ ruleset b507199x5 {
           "cid": "158E6E0C-C9D2-11E4-A556-4DDC87B7806A",
           "attributes": null}
           */
-          //chs = channels{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
-          //channels = chs.filter(function(k,v){v{"name"} eq name});
-          //channels.isnull(); // if true channel is unique
-          chan;
+          chs = chan{'channels'}.defaultsTo("no Channel",standardOut("no channel found"));
+          channels = chs.filter(function(k,v){v{"name"} eq name});
+          channels.isnull(); // if true channel is unique
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
@@ -575,44 +570,44 @@ ruleset b507199x5 {
 
        // build pending subscription entry
 
-     // pending_entry = {
-     //   "subscription_name"  : name,
-     //   "name_space"    : name_space,
-     //   "relationship" : my_role,
-     //   "target_channel"  : target_channel, // this will remain after accepted
-     //   "status" : "pending_outgoing"
-     // }.klog("pending subscription"); 
+      pending_entry = {
+        "subscription_name"  : name,
+        "name_space"    : name_space,
+        "relationship" : my_role,
+        "target_channel"  : target_channel, // this will remain after accepted
+        "status" : "pending_outgoing"
+      }.klog("pending subscription"); 
       //create call back for subscriber     
-     // options = {
-     //     'name' : unique_name, 
-     //     'eci_type' : type,
-     //     'attributes' : pending_entry
+      options = {
+          'name' : unique_name, 
+          'eci_type' : type,
+          'attributes' : pending_entry
           //'policy' : ,
-     //   };
+        };
     }
     if(target_channel neq "no_target_channel") 
     then
     {
     //  createChannel(meta:eci(),options);
 
-    //  event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
-    //    with attrs = {
-     //     "name"  : name,
-     //     "name_space"    : name_space,
-     //     "relationship" : your_role,
-     //     "event_channel"  : channelByName(unique_name), 
-     //     "status" : "pending_incoming",
-     //     "channel_type" : channel_type
-     //   };
+      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+        with attrs = {
+          "name"  : name,
+          "name_space"    : name_space,
+          "relationship" : your_role,
+          "event_channel"  : channelByName(unique_name), 
+          "status" : "pending_incoming",
+          "channel_type" : channel_type
+        };
      noop();
     }
     fired {
-    //  log (standardOut("success"));
+      log (standardOut("success"));
       log(">> successful >>");
-    //  raise nano_manager event add_pending_subscription_requested
-    //    with 
-    //    channel_name = unique_name;
-    //  log(standardOut("failure")) if (unique_name eq "");
+      raise nano_manager event add_pending_subscription_requested
+        with 
+        channel_name = unique_name;
+      log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
