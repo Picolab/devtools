@@ -216,6 +216,7 @@ ruleset b507199x5 {
           (checkName( namespace +':'+ name )) => "unique" | "taken";
         });
        // name = names{"unique"} || [];
+       
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
        names;
