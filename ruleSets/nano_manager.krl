@@ -237,7 +237,7 @@ ruleset b507199x5 {
           */
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
           //chan{'channels'} bug????????????
-          names = chs.any(function(channel){channel{"name"} eq name});
+          names = chs.none(function(channel){channel{"name"} eq name});
           (names);  // inverse boolian 
 
     }
