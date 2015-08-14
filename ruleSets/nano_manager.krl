@@ -581,7 +581,7 @@ ruleset b507199x5 {
       //create call back for subscriber     
       options = {
           'name' : unique_name, 
-          'eci_type' : type,
+          'eci_type' : channel_type,
           'attributes' : pending_entry
           //'policy' : ,
       };
@@ -600,15 +600,14 @@ ruleset b507199x5 {
           "status" : "pending_incoming",
           "channel_type" : channel_type
         };
-     noop();
     }
     fired {
       log (standardOut("success"));
-      log(">> successful >>");
-      raise nano_manager event add_pending_subscription_requested
-        with 
-        channel_name = unique_name;
-      log(standardOut("failure")) if (unique_name eq "");
+ //     log(">> successful >>");
+//      raise nano_manager event add_pending_subscription_requested
+//        with 
+ //       channel_name = unique_name;
+ //     log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
@@ -620,12 +619,12 @@ ruleset b507199x5 {
     select when nano_manager add_pending_subscription_requested
    pre {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
-        channel_type = event:attr("channel_type").defaultsTo("PCI_SUBSCRIPTION", standardError("type")); // never will defaultto
+        channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
         name_space = event:attr("name_space").defaultsTo("", standardError("type"));
 
       pending_subcriptions = (channel_name eq "") =>
          {
-            "name"  : event:attr("name").defaultsTo("", standardError("")),
+            "subscription_name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
             "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
@@ -635,7 +634,7 @@ ruleset b507199x5 {
 
       options = {
         'name' : unique_name, 
-        'eci_type' : type,
+        'eci_type' : channel_type,
         'attributes' : pending_subcriptions
           //'policy' : ,
       };
