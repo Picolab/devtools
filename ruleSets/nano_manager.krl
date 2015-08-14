@@ -240,7 +240,7 @@ ruleset b507199x5 {
           names = chs.filter(function(channel){channel{"name"} eq "unique"}).klog("value of names: ");
 
          // channels.isnull(); // if true channel is unique
-         (names);
+         (names eq []);
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
         options = {
