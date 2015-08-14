@@ -264,13 +264,15 @@ ruleset b507199x5 {
     //I can join these two functions if I can tell the differents between a name and eci....
     channelByName = function (name) {
       my_channels = channels();
-      filtered_channels = my_channels.filter(function(channel){
+      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+      filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);});
       filtered_channels.head().defaultsTo("",standardError("no channel found"));
     }
     channelByEci = function (eci) {
       my_channels = channels();
-      filtered_channels = my_channels.filter(function(channel){
+      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+      filtered_channels = chs.filter(function(channel){
         (channel{'cid'} eq eci);});
       filtered_channels.head().defaultsTo("",standardError("no channel found"));
     }
@@ -565,7 +567,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.8  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.9  unique_name: "));
 
       // build pending subscription entry
 
