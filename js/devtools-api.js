@@ -65,6 +65,82 @@
             cb(json);
         }, {"eci":eci});
     },
+	
+	ensureBootstrap: function(cb, options){
+		cb = cb || function(){};
+		options = options || {};
+		var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+		Devtools.log("Ensuring Bootstrap for " + eci);
+		
+		//Check for nano_manager and devtools on pico
+		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
+			return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+				console.log(json);
+				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
+					console.log("Pico is bootstrapped");
+					cb();
+				}
+				else if ($.inArray('b507199x1.dev', json.rids) > -1) {
+					justNeedsBootstrap();
+				}
+				else {
+					needsBootstrapRuleset();
+				}
+			}, {"eci":eci});
+		}
+		
+		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
+		addBootstrapRuleset = function(localCB) {
+			return CloudOS.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, {}, function(json) {
+	            //console.log("Directive from installing bootstrap", json);
+				localCB();
+			}, {"eci":CloudOS.defaultECI});
+		}
+		
+		//attempt bootstrap
+		bootstrapPico = function(localCB) {
+			CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+				localCB();
+			}, {"eci":eci});
+		}
+		
+		//timer for bootstrapping
+		var timeToWait = 0;
+		var timeStep = 500;
+		stallBootstrap = function(localCB) {
+			if (timeToWait >= 10 * timeStep) {
+				throw "Bootstrap failed consistently";
+			}
+			else {
+				setTimeout(function() {
+					timeToWait += timeStep;
+					localCB();
+				}, timeToWait);
+			}
+		}
+		
+		
+		//tie together and run
+		persistent_bootstrap = function() {
+			checkForBootstrapped(function() {
+				console.log("NOT bootstrapped");
+				stallBootstrap(function() {
+					bootstrapPico(persistent_bootstrap);
+				})
+			}, function() {
+				console.log("NEEDS bootstrap ruleset");
+				addBootstrapRuleset(function() {
+					stallBootstrap(function() {
+						bootstrapPico(persistent_bootstrap);
+					})
+				})
+				
+			});
+		}
+		
+		persistent_bootstrap();
+		
+	},
 
     getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {
