@@ -87,5 +87,20 @@ ruleset DevTools_bootstrap {
             log "DevTools user bootstrap failed";
         }
     }
+	
+	
+	rule install_bootstrap_on_child {
+		select when bootstrap bootstrap_rid_needed_on_child
+		pre {
+			target_pico = event:attr("target");
+		}
+		{
+			pci:new_ruleset(target_pico, "b507199x1.dev");
+			send_directive("added bootstrap ruleset to #{target_pico}");
+		}
+		fired {
+			log "added bootstrap ruleset to #{target_pico}";
+		}
+	}
 
 }
