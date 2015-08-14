@@ -175,7 +175,6 @@ ruleset b507199x5 {
 	
 	prototypes = {
 		"core": [
-			"b507199x1.dev",
 			"a169x625"
 		]
 	};
@@ -339,7 +338,7 @@ ruleset b507199x5 {
       rid_list = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
     { 
-      uninstall(eci,rid_list);
+      uninstallRulesets(eci,rid_list);
     }
     fired {
       log (standardOut("success uninstalled rids #{rids}"));
