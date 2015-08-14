@@ -574,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.15   unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.16   unique_name: "));
 
       // build pending subscription entry
 
@@ -627,7 +627,7 @@ ruleset b507199x5 {
    pre {
         channel_name = event:attr("channel_name").defaultsTo("", standardError("channel_name"));
         channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
-        name_space = event:attr("name_space").defaultsTo("", standardError("type"));
+        name_space = event:attr("name_space").defaultsTo("", standardError("name_space"));
 
       pending_subcriptions = (channel_name eq "") =>
          {
