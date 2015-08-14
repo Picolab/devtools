@@ -212,19 +212,16 @@ ruleset b507199x5 {
         array = (0).range(n).map(function(n){
           (random:word());
           });
-      //  names= array.collect(function(name){
-      //    (checkName( namespace +':'+ name )) => "unique" | "taken";
-      //    });
+        names= array.collect(function(name){
+          (checkName( namespace +':'+ name )) => "unique" | "taken";
+        });
        // name = names{"unique"} || [];
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
-       //names;
-       checkName("carlson");
+       names;
 
     }
     checkName = function(name){
-      // use filter
-      // check namespace as well
           chan = channels();
           //channels = channels(); worse bug evver!!!!!!!!!!!!!!!!!!!!!!!!!!!
           // in our meetings we said to check name_space, how is that done?
@@ -238,7 +235,7 @@ ruleset b507199x5 {
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
           //chan{'channels'} bug????????????
           names = chs.none(function(channel){channel{"name"} eq name});
-          (names);  // inverse boolian 
+          (names);
 
     }
   /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
@@ -571,7 +568,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2 unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.0 unique_name: "));
 
        // build pending subscription entry
 
