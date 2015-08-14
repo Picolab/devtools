@@ -567,7 +567,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.4 unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.5 unique_name: "));
 
       // build pending subscription entry
 
@@ -589,14 +589,14 @@ ruleset b507199x5 {
     if(target_channel neq "no_target_channel") 
     then
     {
-      createChannel(meta:eci(),options);
+  //    createChannel(meta:eci(),options);
 
       event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : channelByName(unique_name), 
+   //       "event_channel"  : channelByName(unique_name), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         };
