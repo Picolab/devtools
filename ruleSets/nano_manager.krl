@@ -569,22 +569,22 @@ ruleset b507199x5 {
       // create unique_name for channel
       unique_name = randomName(name_space).klog(standardOut("v2.3 unique_name: "));
 
-       // build pending subscription entry
+      // build pending subscription entry
 
-     // pending_entry = {
-     //   "subscription_name"  : name,
-     //   "name_space"    : name_space,
-     //   "relationship" : my_role,
-     //   "target_channel"  : target_channel, // this will remain after accepted
-     //   "status" : "pending_outgoing"
-     // }.klog("pending subscription"); 
+      pending_entry = {
+        "subscription_name"  : name,
+        "name_space"    : name_space,
+        "relationship" : my_role,
+        "target_channel"  : target_channel, // this will remain after accepted
+        "status" : "pending_outgoing"
+      }.klog("pending subscription"); 
       //create call back for subscriber     
-     // options = {
-     //     'name' : unique_name, 
-     //     'eci_type' : type,
-     //     'attributes' : pending_entry
+      options = {
+          'name' : unique_name, 
+          'eci_type' : type,
+          'attributes' : pending_entry
           //'policy' : ,
-     //   };
+      };
     }
     if(target_channel neq "no_target_channel") 
     then
