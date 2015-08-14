@@ -574,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.15  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.15   unique_name: "));
 
       // build pending subscription entry
 
