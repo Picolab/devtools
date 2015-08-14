@@ -266,7 +266,7 @@ ruleset b507199x5 {
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);}).klog("filtered_channels :");
       channel = filtered_channels.head().defaultsTo("",standardError("no channel found"));
-      channel{'eci'};
+      channel{'cid'};
     }
     //I can join these two functions if I can tell the differents between a name and eci....
     channelByName = function (name) {
@@ -574,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.13  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.14  unique_name: "));
 
       // build pending subscription entry
 
