@@ -260,6 +260,14 @@ ruleset b507199x5 {
       attributes = channelAttributes(eci);
       attributes{'Attributes'};
     }
+    channelEciByName = function (name) {
+      my_channels = channels();
+      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+      filtered_channels = chs.filter(function(channel){
+        (channel{'name'} eq name);});
+      channel = filtered_channels.head().defaultsTo("",standardError("no channel found"));
+      channel{'eci'};
+    }
     //I can join these two functions if I can tell the differents between a name and eci....
     channelByName = function (name) {
       my_channels = channels();
@@ -566,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.9  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.10  unique_name: "));
 
       // build pending subscription entry
 
@@ -595,7 +603,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : channelByName(unique_name), 
+          "event_channel"  : channelEciByName(unique_name), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         };
