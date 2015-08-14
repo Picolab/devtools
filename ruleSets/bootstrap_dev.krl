@@ -93,12 +93,11 @@ ruleset DevTools_bootstrap {
 		select when bootstrap bootstrap_rid_needed_on_child
 		pre {
 			target_pico = event:attr("target");
-			installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
-											meta:eci())
-								.defaultsTo("error","add child");
+			installed = CloudOS:rulesetAddChild(["b507199x1.dev"], meta:eci())
+								.defaultsTo("error","installing bootstrap");
 		}
 		{
-			send_directive("added #{installed} to #{target_pico}");
+			send_directive("added bootstrap rids to #{target_pico}");
 		}
 		fired {
 			log "added bootstrap ruleset to #{target_pico}";
