@@ -237,7 +237,7 @@ ruleset b507199x5 {
           */
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
           //chan{'channels'} bug????????????
-          names = chs.filter(function(channel){channel{"name"} eq "unique"});
+          names = chs.filter(function(channel){channel{"name"} eq "unique"}).klog("value of names: ");
 
          // channels.isnull(); // if true channel is unique
          (names eq []);
