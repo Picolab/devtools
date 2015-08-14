@@ -261,10 +261,10 @@ ruleset b507199x5 {
       attributes{'Attributes'};
     }
     channelEciByName = function (name) {
-      my_channels = channels().klog("channels() :");
+      my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
       filtered_channels = chs.filter(function(channel){
-        (channel{'name'} eq name);}).klog("filtered_channels :");
+        (channel{'name'} eq name);});
       channel = filtered_channels.head().defaultsTo("",standardError("no channel found"));
       channel{'cid'};
     }
@@ -574,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.14  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.15  unique_name: "));
 
       // build pending subscription entry
 
@@ -610,11 +610,11 @@ ruleset b507199x5 {
     }
     fired {
       log (standardOut("success"));
- //     log(">> successful >>");
-//      raise nano_manager event add_pending_subscription_requested
-//        with 
- //       channel_name = unique_name;
- //     log(standardOut("failure")) if (unique_name eq "");
+      log(">> successful >>");
+      raise nano_manager event add_pending_subscription_requested
+        with 
+        channel_name = unique_name;
+      log(standardOut("failure")) if (unique_name eq "");
     } 
     else {
       log(">> failure >>");
@@ -642,13 +642,13 @@ ruleset b507199x5 {
 
 
       new_channel_name = (channel_name eq "") => // no channel name means its incoming.
-            random_name(name_space)|
+            random_name(name_space) |
             channel_name;
     
       new_subscriptions = ent:subscriptions.append(new_channel_name); // create new list of subscriptions.
 
       options = {
-        'name' : new_channel_name, 
+        'name' : new_channel_name.klog("new_channel_name : "), 
         'eci_type' : channel_type,
         'attributes' : pending_subcriptions
           //'policy' : ,
