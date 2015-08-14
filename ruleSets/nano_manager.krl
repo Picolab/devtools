@@ -215,12 +215,10 @@ ruleset b507199x5 {
         names= array.collect(function(name){
           (checkName( namespace +':'+ name )) => "unique" | "taken";
         });
-       // name = names{"unique"} || [];
-       
-       // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
-       // unique_name;
-       names;
+        name = names{"unique"} || [];
 
+        unique_name = name.head().defaultsTo("",standardError("unique name failed"));
+        unique_name;
     }
     checkName = function(name){
           chan = channels();
@@ -569,7 +567,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.0 unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.1 unique_name: "));
 
        // build pending subscription entry
 
