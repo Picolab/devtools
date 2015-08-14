@@ -261,10 +261,10 @@ ruleset b507199x5 {
       attributes{'Attributes'};
     }
     channelEciByName = function (name) {
-      my_channels = channels();
+      my_channels = channels().klog("channels() :");
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
       filtered_channels = chs.filter(function(channel){
-        (channel{'name'} eq name);});
+        (channel{'name'} eq name);}).klog("filtered_channels :");
       channel = filtered_channels.head().defaultsTo("",standardError("no channel found"));
       channel{'eci'};
     }
@@ -574,7 +574,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v2.11  unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v2.12  unique_name: "));
 
       // build pending subscription entry
 
