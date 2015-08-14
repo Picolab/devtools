@@ -219,7 +219,7 @@ ruleset b507199x5 {
        // unique_name = name.head().defaultsTo("",standardError("unique name failed"));
        // unique_name;
        //names;
-       checkName("random:word()");
+       checkName("carlson");
 
     }
     checkName = function(name){
