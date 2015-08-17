@@ -174,8 +174,12 @@ return $.ajax({
     nano_manager.installedRulesets = function(parameters, postFunction, options)
     {
         console.log("Getting installed rulesets");
-        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
+        var rulesets = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
         console.log("Got installed rulesets", results);
+        var rids = rulesets.rids;
+        var description = nano_manager.describeRulesets(rids,postFunction,options);
+        console.log("Installed rulesets with description", description.description);
+        return description.description;
 
         return results; 
     };
@@ -193,14 +197,11 @@ return $.ajax({
     nano_manager.installRulesets = function( eventAttributes, eventParameters, postFunction, options)
     {
         console.log("Installing rulesets");
-        var rulesets = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
+        var results = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
         console.log("Installed rulesets", eventAttributes.rids);
-        var rids = rulesets.rids;
-        var description = nano_manager.describeRulesets(rids,postFunction,options);
-        console.log("Installed rulesets with description", description.description);
-        return description.description;
+        return results;
     };
-    
+
     nano_manager.uninstallRuleset = function( eventAttributes, eventParameters, postFunction, options)
     {
         console.log("uninstalling ruleset: ",eventAttributes.eci);
