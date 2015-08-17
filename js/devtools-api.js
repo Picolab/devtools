@@ -40,20 +40,6 @@
         }
     },
 
-    getProfile: function(channel, cb, options)
-    {
-        cb = cb || function(){};
-        options = options || {};
-            Devtools.log("Retrieving profile for user");
-
-        return CloudOS.skyCloud("a169x676", "get_all_me", {}, function(res) { //fix this up. what rule is this calling?
-            CloudOS.clean(res);
-            if(typeof cb !== "undefined"){
-                cb(res);
-            }
-        },
-        {"eci": channel});
-    },
 
     bootstrapped: function(cb,options){
         cb = cb || function(){};
@@ -273,7 +259,7 @@
     {
         var parameters = {};
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
         Devtools.log("Showing installed rulesets");
         cb = cb || function(){};
         post_function = function(json) {
@@ -289,7 +275,7 @@
         var attributes = {rids: ridlist}; 
         var parameters = {}; // whats event parameters ???
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
+        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI; //<-- is this vallid?
         Devtools.log("Installing rulesets");
         cb = cb || function(){};
         post_function = function(json) {
@@ -307,7 +293,7 @@
         var attributes = {rids: ridlist}; 
         var parameters = {}; 
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
+        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI; //<-- is this vallid?
         Devtools.log("Uninstalling rulesets",ridlist);
         cb = cb || function(){};
         post_function = function(json) {
