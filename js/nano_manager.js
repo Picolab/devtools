@@ -1,4 +1,4 @@
- (function($)
+; (function()
 {
     window.nano_manager = {};
 
