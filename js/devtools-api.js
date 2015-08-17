@@ -1,5 +1,5 @@
 (function($) {
-     window['Devtools'] = { //window represents the browser window
+     window.Devtools = { //window represents the browser window
         //by putting it in window, it's essentially greating a global variable
 
         // development settings.
@@ -87,7 +87,7 @@
 					needsBootstrapRuleset();
 				}
 			}, {"eci":eci});
-		}
+		},
 		
 		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
 		addBootstrapRuleset = function(localCB) {
@@ -95,14 +95,14 @@
 	            //console.log("Directive from installing bootstrap", json);
 				localCB();
 			}, {"eci":CloudOS.defaultECI});
-		}
+		},
 		
 		//attempt bootstrap
 		bootstrapPico = function(localCB) {
 			CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
 				localCB();
 			}, {"eci":eci});
-		}
+		},
 		
 		//timer for bootstrapping
 		var timeToWait = 0;
@@ -117,7 +117,7 @@
 					localCB();
 				}, timeToWait);
 			}
-		}
+		},
 		
 		
 		//tie together and run
