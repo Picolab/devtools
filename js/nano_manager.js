@@ -23,7 +23,7 @@
     var res = 'https://'+ parts.join("/");
     return res;
     };
-    get_rid : function(name) {
+    get_rid = function(name) {
         
         var rids = {
             "rulesets": {"prod": "b507199x0.prod", 
