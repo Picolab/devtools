@@ -195,12 +195,12 @@ return $.ajax({
         console.log("Installing rulesets");
         var rulesets = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
         console.log("Installed rulesets", eventAttributes.rids);
-        var rids = rulesets{'rids'};
-        var description = nano_manager:describeRulesets(rids,postFunction,options);
-        console.log("Installed rulesets with description", description{'description'});
-        return description{'description'};
+        var rids = rulesets.rids;
+        var description = nano_manager.describeRulesets(rids,postFunction,options);
+        console.log("Installed rulesets with description", description.description);
+        return description.description;
     };
-
+    
     nano_manager.uninstallRuleset = function( eventAttributes, eventParameters, postFunction, options)
     {
         console.log("uninstalling ruleset: ",eventAttributes.eci);
