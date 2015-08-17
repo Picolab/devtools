@@ -8,147 +8,207 @@
     nano_manager.access_token = "none";
 
     var mkEci = function(cid) {
-	var res = cid || nano_manager.defaultECI;
-        if (res === "none") {
-	    throw "No nano_manager event channel identifier (ECI) defined";
-        }
-	return res;
-    };
+       var res = cid || nano_manager.defaultECI;
+       if (res === "none") {
+           throw "No nano_manager event channel identifier (ECI) defined";
+       }
+       return res;
+   };
 
-    var mkEsl = function(parts) {
-        if (nano_manager.host === "none") {
-            throw "No nano_manager host defined";
-        }
-	parts.unshift(nano_manager.host);
-	var res = 'https://'+ parts.join("/");
-	return res;
+   var mkEsl = function(parts) {
+    if (nano_manager.host === "none") {
+        throw "No nano_manager host defined";
+    }
+    parts.unshift(nano_manager.host);
+    var res = 'https://'+ parts.join("/");
+    return res;
+    };
+    get_rid : function(name) {
+        
+        var rids = {
+            "rulesets": {"prod": "b507199x0.prod", 
+                          "dev": "b507199x0.dev"
+            },
+            "bootstrap":{"prod": "b507199x1.prod", 
+                          "dev": "b507199x1.dev"
+            }
+        };
+
+        return rids[name].dev;
     };
 
     // ------------------------------------------------------------------------
     // Raise Sky Event
     nano_manager.raiseEvent = function(eventDomain, eventType, eventAttributes, eventParameters, postFunction, options)
     {
-	try {
+       try {
 
-	    options = options || {};
+           options = options || {};
 
-	    var eci = mkEci(options.eci);
-            var eid = Math.floor(Math.random() * 9999999);
-            var esl = mkEsl(['sky/event',
-			     eci,
-			     eid,
-			     eventDomain,
-			     eventType
-			    ]);
+           var eci = mkEci(options.eci);
+           var eid = Math.floor(Math.random() * 9999999); // whats the event id used for and do we need it?
+           var esl = mkEsl(['sky/event',
+            eci,
+            eid,
+            eventDomain,
+            eventType
+            ]);
 
-            if (typeof eventParameters !== "undefined" &&
-		eventParameters !== null &&
-		eventParameters !== ""
-	       ) {
-		   console.log("Attaching event parameters ", eventParameters);
-		   var param_string = $.param(eventParameters);
-		   if (param_string.length > 0) {
-                       esl = esl + "?" + param_string;
-		   }
-               }
+           if (typeof eventParameters !== "undefined" &&
+              eventParameters !== null &&
+              eventParameters !== ""
+              ) {
+               console.log("Attaching event parameters ", eventParameters);
+           var param_string = $.param(eventParameters);
+           if (param_string.length > 0) {
+             esl = esl + "?" + param_string;
+         }
+     }
 
-            console.log("nano_manager.raise ESL: ", esl);
-            console.log("event attributes: ", eventAttributes);
+     console.log("nano_manager.raise ESL: ", esl);
+     console.log("event attributes: ", eventAttributes);
 
-            return $.ajax({
-		type: 'POST',
-		url: esl,
-		data: $.param(eventAttributes),
-		dataType: 'json',
+     return $.ajax({
+      type: 'POST',
+      url: esl,
+      data: $.param(eventAttributes),
+      dataType: 'json',
 		headers: { 'Kobj-Session': eci }, // not sure needed since eci in URL
 		success: postFunction,
 		error: options.errorFunc || function(res) { console.error(res) }
-            });
-	} catch(error) {
-	    console.error("[raise]", error);
-	    return null;
-	}
-    };
+    });
+ } catch(error) {
+   console.error("[raise]", error);
+   return null;
+}
+};
 
-    nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
-    {
+nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
+{
 	try {
 
-	    var retries = 2;
-	    
+       var retries = 2;
 
-	    options = options || {};
 
-            if (typeof options.repeats !== "undefined") {
-		console.warn("This is a repeated request: ", options.repeats);
-		if (options.repeats > retries) {
-                    throw "terminating repeating request due to consistent failure.";
-		}
-            }
+       options = options || {};
 
-	    var eci = mkEci(options.eci);
+       if (typeof options.repeats !== "undefined") {
+          console.warn("This is a repeated request: ", options.repeats);
+          if (options.repeats > retries) {
+            throw "terminating repeating request due to consistent failure.";
+        }
+    }
 
-            var esl = mkEsl(['sky/cloud',
-			     module,
-			     func_name
-			    ]);
+    var eci = mkEci(options.eci);
 
-            $.extend(parameters, { "_eci": eci });
+    var esl = mkEsl(['sky/cloud',
+        module,
+        func_name
+        ]);
 
-            console.log("Attaching event parameters ", parameters);
-            esl = esl + "?" + $.param(parameters);
+    $.extend(parameters, { "_eci": eci });
 
-            var process_error = function(res)
-            {
-		console.error("skyCloud Server Error with esl ", esl, res);
-		if (typeof options.errorFunc === "function") {
-                    options.errorFunc(res);
-		}
-            };
+    console.log("Attaching event parameters ", parameters);
+    esl = esl + "?" + $.param(parameters);
 
-            var process_result = function(res)
-            {
-		console.log("Seeing res ", res, " for ", esl);
-		var sky_cloud_error = typeof res === 'Object' && typeof res.skyCloudError !== 'undefined';
-		if (! sky_cloud_error ) {
-                    getSuccess(res);
-		} else {
-                    console.error("skyCloud Error (", res.skyCloudError, "): ", res.skyCloudErrorMsg);
-                    if (!!res.httpStatus && 
-			!!res.httpStatus.code && 
-			(parseInt(res.httpStatus.code) === 400 || parseInt(res.httpStatus.code) === 500)) 
-		    {
-			console.error("The request failed due to an ECI error. Going to repeat the request.");
-			var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
-			options.repeats = repeat_num;
+    var process_error = function(res)
+    {
+      console.error("skyCloud Server Error with esl ", esl, res);
+      if (typeof options.errorFunc === "function") {
+        options.errorFunc(res);
+    }
+};
+
+var process_result = function(res) // whats this for???
+{
+  console.log("Seeing res ", res, " for ", esl);
+  var sky_cloud_error = typeof res === 'Object' && typeof res.skyCloudError !== 'undefined';
+  if (! sky_cloud_error ) {
+    getSuccess(res);
+} else {
+    console.error("skyCloud Error (", res.skyCloudError, "): ", res.skyCloudErrorMsg);
+    if (!!res.httpStatus && 
+     !!res.httpStatus.code && 
+     (parseInt(res.httpStatus.code) === 400 || parseInt(res.httpStatus.code) === 500)) 
+    {
+     console.error("The request failed due to an ECI error. Going to repeat the request.");
+     var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
+     options.repeats = repeat_num;
 			// I don't think this will support promises; not sure how to fix
 			nano_manager.skyCloud(module, func_name, parameters, getSuccess, options);
-                    }
-		}
-            };
+        }
+    }
+};
 
-            console.log("sky cloud call to ", module+':'+func_name, " on ", esl, " with token ", eci);
+console.log("sky cloud call to ", module+':'+func_name, " on ", esl, " with token ", eci);
 
-            return $.ajax({
-		type: 'GET',
-		url: esl,
-		dataType: 'json',
+return $.ajax({
+  type: 'GET',
+  url: esl,
+  dataType: 'json',
 		// try this as an explicit argument
 		//		headers: {'Kobj-Session' : eci},
 		success: process_result
 		// error: process_error
-            });
-	} catch(error) {
-	    console.error("[skyCloud]", error);
-	    if (typeof options.errorFunc === "function") {
-		options.errorFunc();
-	    } 
-	    return null;
-	}
+    });
+} catch(error) {
+   console.error("[skyCloud]", error);
+   if (typeof options.errorFunc === "function") {
+      options.errorFunc();
+  } 
+  return null;
+}
+};
+/*    nano provides installedRulesets, describeRulesets, //ruleset
+    channels, channelAttributes, channelPolicy, channelType, //channel
+    children, parent, attributes, //pico
+    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
+    currentSession,standardError
+
+    */
+
+
+    // ------------------------------------------------------------------------ installed Rulests
+    // function(eventDomain, eventType, eventAttributes, eventParameters, postFunction, options) // <--- raiseEvent paramiters 
+
+    nano_manager.installedRulesets = function(parameters, postFunction, options)
+    {
+        console.log("Getting installed rulesets");
+        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
+        console.log("Got installed rulesets", results);
+        return results; 
+    };
+    
+
+
+    nano_manager.describeRulesets = function(parameters, postFunction, options)
+    {
+        console.log("Getting ruleset discription ");
+        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
+        console.log("Got discription :", results);
+        return results; 
     };
 
+    nano_manager.installRulesets = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        console.log("Installing rulesets");
+        var results = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
+        console.log("Installed rulesets", eventAttributes.rids);
+        return results;
+    };
 
-    // ------------------------------------------------------------------------
+    nano_manager.uninstallRuleset = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        console.log("uninstalling ruleset: ",eventAttributes.eci);
+        var results = nano_manager.raiseEvent("nano_manager", "uninstall_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
+        console.log("uninstalled rulesets: ", eventAttributes.eci);
+        return results;
+    };
+
+    // ------------------------------------------------------------------------ Channels
+    // ------------------------------------------------------------------------ pico
+    // ------------------------------------------------------------------------ subscription
+
     nano_manager.createChannel = function(postFunction)
     {
         return nano_manager.raiseEvent('nano_manager', 'api_Create_Channel', {}, {}, postFunction);
@@ -158,7 +218,7 @@
     nano_manager.destroyChannel = function(myToken, postFunction)
     {
         return nano_manager.raiseEvent('nano_manager', 'api_Destroy_Channel',
-			{ "token": myToken }, {}, postFunction);
+         { "token": myToken }, {}, postFunction);
     };
 
     // ========================================================================
@@ -167,11 +227,11 @@
     nano_manager.getMyProfile = function(getSuccess)
     {
         return nano_manager.skyCloud("a169x676", "get_all_me", {}, function(res) {
-	    clean(res);
-	    if(typeof getSuccess !== "undefined"){
-		getSuccess(res);
-	    }
-	});
+           clean(res);
+           if(typeof getSuccess !== "undefined"){
+              getSuccess(res);
+          }
+      });
     };
 
     nano_manager.updateMyProfile = function(eventAttributes, postFunction)
@@ -262,40 +322,40 @@
     nano_manager.login = function(username, password, success, failure) {
 
 
-	var parameters = {"email": username, "pass": password};
+       var parameters = {"email": username, "pass": password};
 
-        if (typeof nano_manager.anonECI === "undefined") {
-	    console.error("nano_manager.anonECI undefined. Configure nano_manager.js in nano_manager-config.js; failing...");
-	    return null;
-        }
+       if (typeof nano_manager.anonECI === "undefined") {
+           console.error("nano_manager.anonECI undefined. Configure nano_manager.js in nano_manager-config.js; failing...");
+           return null;
+       }
 
-	return nano_manager.skyCloud("nano_manager",
-				"cloudAuth", 
-				parameters, 
-				function(res){
+       return nano_manager.skyCloud("nano_manager",
+        "cloudAuth", 
+        parameters, 
+        function(res){
 				    // patch this up since it's not OAUTH
 				    if(res.status) {
-					var tokens = {"access_token": "none",
-						      "OAUTH_ECI": res.token
-						     };
-					nano_manager.saveSession(tokens); 
-					if(typeof success == "function") {
-					    success(tokens);
-					}
-				    } else {
-					console.log("Bad login ", res);
-					if(typeof failure == "function") {
-					    failure(res);
-					}
-				    }
-				},
-				{eci: nano_manager.anonECI,
-				 errorFunc: failure
-				}
-			       );
+                       var tokens = {"access_token": "none",
+                       "OAUTH_ECI": res.token
+                   };
+                   nano_manager.saveSession(tokens); 
+                   if(typeof success == "function") {
+                       success(tokens);
+                   }
+               } else {
+                   console.log("Bad login ", res);
+                   if(typeof failure == "function") {
+                       failure(res);
+                   }
+               }
+           },
+           {eci: nano_manager.anonECI,
+               errorFunc: failure
+           }
+           );
 
 
-    };
+   };
 
 
 
@@ -317,10 +377,10 @@
             window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
         }
         var url = 'https://' + nano_manager.login_server +
-			'/oauth/authorize?response_type=code' +
-			'&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
-			'&client_id=' + nano_manager.appKey +
-			'&state=' + client_state;
+        '/oauth/authorize?response_type=code' +
+        '&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
+        '&client_id=' + nano_manager.appKey +
+        '&state=' + client_state;
 
         return (url)
     };
@@ -338,10 +398,10 @@
             window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
         }
         var url = 'https://' + nano_manager.login_server +
-			'/oauth/authorize/newuser?response_type=code' +
-			'&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
-			'&client_id=' + nano_manager.appKey +
-			'&state=' + client_state;
+        '/oauth/authorize/newuser?response_type=code' +
+        '&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
+        '&client_id=' + nano_manager.appKey +
+        '&state=' + client_state;
 
         return (url)
     };
@@ -390,7 +450,7 @@
             {
                 console.log("Failed to retrieve access token " + json);
                 error_func = error_func || function(){};
-		error_func(json);
+                error_func(json);
             }
         });
     };
@@ -409,19 +469,19 @@
         } else {
             nano_manager.defaultECI = "none";
         }
-	return nano_manager.defaultECI;
+        return nano_manager.defaultECI;
     };
 
     // ------------------------------------------------------------------------
     nano_manager.saveSession = function(token_json)
     {
-	var Session_ECI = token_json.OAUTH_ECI;
-	var access_token = token_json.access_token;
-        console.log("Saving session for ", Session_ECI);
-        nano_manager.defaultECI = Session_ECI;
-	nano_manager.access_token = access_token;
-        kookie_create(Session_ECI);
-    };
+       var Session_ECI = token_json.OAUTH_ECI;
+       var access_token = token_json.access_token;
+       console.log("Saving session for ", Session_ECI);
+       nano_manager.defaultECI = Session_ECI;
+       nano_manager.access_token = access_token;
+       kookie_create(Session_ECI);
+   };
     // ------------------------------------------------------------------------
     nano_manager.removeSession = function(hard_reset)
     {
@@ -478,14 +538,14 @@
     };
 
     nano_manager.clean = function(obj) {
-	delete obj._type;
-	delete obj._domain;
-	delete obj._async;
-	
-    };
+       delete obj._type;
+       delete obj._domain;
+       delete obj._async;
 
-    var SkyTokenName = '__SkySessionToken';
-    var SkyTokenExpire = 7;
+   };
+
+   var SkyTokenName = '__SkySessionToken';
+   var SkyTokenExpire = 7;
 
     // --------------------------------------------
     function kookie_create(SkySessionToken)

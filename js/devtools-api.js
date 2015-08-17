@@ -268,42 +268,54 @@
     },
 
 
-    showInstalledRulesets: function(cb, options) // PJW
+    showInstalledRulesets: function(cb, options) 
     {
-        cb = cb || function(){};
+        var parameters = {};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
-        Devtools.log("Showing the rulesets");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
-            Devtools.log("Displaying installed rulesets", json);
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        Devtools.log("Showing installed rulesets");
+        cb = cb || function(){};
+        post_function = function(json) {
+            Devtools.log("Displaying installed channels", json);
             cb(json);
-        }, {"eci":eci});
+        };
+        return nano_manager.installedRulesets(parameters,post_function,options);
     },
 
-    installRulesets: function(ridlist, cb, options) // PJW
+    installRulesets: function(ridlist, cb, options) 
     {
-        cb = cb || function(){};
+
+        var attributes = {rids: ridlist}; 
+        var parameters = {}; // whats event parameters ???
         options = options || {};
-	var json = {rids: ridlist}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
         Devtools.log("Installing rulesets");
-        return CloudOS.raiseEvent("devtools", "install_rulesets", json, {}, function(json) {
+        cb = cb || function(){};
+        post_function = function(json) {
             Devtools.log("Directive from installing rulesets", json);
             cb(json);
-        }, {"eci":eci});
+        };
+
+        return nano_manager.installedRulesets(attributes,parameters,post_function,options);
+
     },
 
-    uninstallRulesets: function(ridlist, cb, options) // PJW
+    uninstallRulesets: function(ridlist, cb, options) 
     {
-        cb = cb || function(){};
+
+        var attributes = {rids: ridlist}; 
+        var parameters = {}; 
         options = options || {};
-	var json = {rids: ridlist}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
-        Devtools.log("Uninstalling rulesets");
-        return CloudOS.raiseEvent("devtools", "uninstall_rulesets", json, {}, function(json) {
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
+        Devtools.log("Uninstalling rulesets",ridlist);
+        cb = cb || function(){};
+        post_function = function(json) {
             Devtools.log("Directive from uninstalling rulesets", json);
             cb(json);
-        }, {"eci":eci});
+        };
+
+        return nano_manager.uninstallRuleset(attributes,parameters,post_function,options);
+
     },
     RegisterRuleset: function(url,cb,options)
     {
@@ -329,6 +341,17 @@
             Devtools.log("Displaying installed channels", json);
             cb(json);
         }, {"eci":eci});
+/*
+        var parameters = {};
+        options = options || {};
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        Devtools.log("Showing the channels");
+        post_function = function(json) {
+            Devtools.log("Displaying installed channels", json);
+            cb(json);
+        };
+        return nano_manager.installedRulesets(parameters,post_function,options);
+*/
     },
     installChannel: function(channel_name, cb, options) 
     {
