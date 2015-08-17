@@ -161,7 +161,7 @@
         var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
         Devtools.log("Showing the channels");
         //return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   
