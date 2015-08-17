@@ -26,8 +26,8 @@
     get_rid = function(name) {
         
         var rids = {
-            "rulesets": {"prod": "b507199x0.prod", 
-                          "dev": "b507199x0.dev"
+            "rulesets": {"prod": "b507199x5.prod", 
+                          "dev": "b507199x5.dev"
             },
             "bootstrap":{"prod": "b507199x1.prod", 
                           "dev": "b507199x1.dev"
@@ -176,6 +176,7 @@ return $.ajax({
         console.log("Getting installed rulesets");
         var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
         console.log("Got installed rulesets", results);
+
         return results; 
     };
     
@@ -192,9 +193,12 @@ return $.ajax({
     nano_manager.installRulesets = function( eventAttributes, eventParameters, postFunction, options)
     {
         console.log("Installing rulesets");
-        var results = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
+        var rulesets = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
         console.log("Installed rulesets", eventAttributes.rids);
-        return results;
+        var rids = rulesets{'rids'};
+        var description = nano_manager:describeRulesets(rids,postFunction,options);
+        console.log("Installed rulesets with description", description{'description'});
+        return description{'description'};
     };
 
     nano_manager.uninstallRuleset = function( eventAttributes, eventParameters, postFunction, options)

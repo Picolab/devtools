@@ -24,7 +24,7 @@ ruleset b507199x5 {
     description <<
       Nano Manager ( ) Module
 
-      use module a169x625 alias nano_manager
+      use module  b507199x5 alias nano_manager
 
       This Ruleset/Module provides a developer interface to the PICO (persistent computer object).
       When a PICO is created or authenticated this ruleset
