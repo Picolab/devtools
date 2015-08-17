@@ -67,7 +67,7 @@ ruleset b507199x5 {
     }
     describeRulesets = function(rids) {//takes an array of rids as parameter // can we write this better???????
       //check if its an array vs string, to make this more robust.
-      rids_string = rids.join(";");
+      rids_string = ( rids.typeof() eq "array" ) => rids.join(";") | ( rids.typeof() eq "str" ) => rids | "" ;
       describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
       resp = http:get(describe_url);
       results = resp{"content"}.decode().defaultsTo("",standardError("content failed to return"));

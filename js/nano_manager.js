@@ -174,13 +174,8 @@ return $.ajax({
     nano_manager.installedRulesets = function(parameters, postFunction, options)
     {
         console.log("Getting installed rulesets");
-        var rulesets = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
+        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
         console.log("Got installed rulesets", results);
-        var rids = rulesets.rids;
-        var description = nano_manager.describeRulesets(rids,postFunction,options);
-        console.log("Installed rulesets with description", description.description);
-        return description.description;
-
         return results; 
     };
     

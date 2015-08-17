@@ -259,15 +259,21 @@
     {
         var parameters = {};
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;// where does defaultEci come from?? 
         Devtools.log("Showing installed rulesets");
         cb = cb || function(){};
         post_function = function(json) {
-            Devtools.log("Displaying installed channels", json);
+            Devtools.log("Displaying installed rulesets", json);
             cb(json);
         };
-        return nano_manager.installedRulesets(parameters,post_function,options);
+        var rulesets = nano_manager.installedRulesets(parameters,post_function,options);
+        var rids = rulesets.rids;
+        var description = NanoManager.describeRulesets(rids,post_function,options);
+        console.log("description ", description);
+        return description.description;
+
     },
+
 
     installRulesets: function(ridlist, cb, options) 
     {
