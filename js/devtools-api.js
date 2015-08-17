@@ -74,7 +74,7 @@
 		
 		//Check for nano_manager and devtools on pico
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
-			return CloudOS.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+			return nano_manager.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
 				console.log(json);
 				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
@@ -91,23 +91,24 @@
 		
 		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
 		addBootstrapRuleset = function(localCB) {
-			return CloudOS.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, {}, function(json) {
+			return nano_manager.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, {}, function(json) {
 	            //console.log("Directive from installing bootstrap", json);
 				localCB();
-			}, {"eci":CloudOS.defaultECI});
+			}, {"eci":nano_manager.defaultECI});
 		},
 		
 		//attempt bootstrap
 		bootstrapPico = function(localCB) {
-			CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+			nano_manager.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
 				localCB();
 			}, {"eci":eci});
 		},
 		
-		//timer for bootstrapping
-		var timeToWait = 0;
-		var timeStep = 500;
+
 		stallBootstrap = function(localCB) {
+            //timer for bootstrapping
+            var timeToWait = 0;
+            var timeStep = 500;
 			if (timeToWait >= 10 * timeStep) {
 				throw "Bootstrap failed consistently";
 			}
