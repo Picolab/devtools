@@ -199,7 +199,7 @@ ruleset b507199x5 {
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       status = function(name){
-        attributes = subscriptionsAttributesName(name);
+        attributes = subscriptionsAttributesName(name).klog("attributes: ");
         (attributes{"status"});
       };
       subscription = subscriptions.collect(function(name){
