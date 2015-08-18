@@ -76,6 +76,15 @@ ruleset b507199x5 {
        'description'     : results
       };
     }
+ /*  installedRulesetsDiscription = function(){ // for develpers ??
+      rulesets = installedRulesets();
+      rids = rulesets{"rids"};
+      description = describeRulesets(rids);
+      {
+       'status'   : (description{'status'}),
+       'descriptions'     : description{'description'}
+      };
+    }*/
     installRulesets = defaction(eci, rids){
       new_ruleset = pci:new_ruleset(eci, rids);
       send_directive("installed #{rids}");
@@ -295,7 +304,7 @@ ruleset b507199x5 {
       }
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
-       vehicle_ecis = CloudOS:subscriptionList(common:namespace(),"Vehicle");
+       vehicle_ecis = nano_manager:subscriptionList(common:namespace(),"Vehicle");
         vehicle_ecis_by_backchannel = vehicle_ecis
                                         .collect(function(x){x{"backChannel"}})
                                      .map(function(k,v){v.head()})
@@ -528,7 +537,7 @@ ruleset b507199x5 {
 		}
 	}
 
-  //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+CloudOS+Service
+  //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+nano_manager+Service
    // ========================================================================
   // Persistent Variables:
   //

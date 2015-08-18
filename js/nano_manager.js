@@ -200,17 +200,12 @@
     // ------------------------------------------------------------------------ pico
     // ------------------------------------------------------------------------ subscription
 
-    nano_manager.createChannel = function(postFunction)
-    {
-        return nano_manager.raiseEvent('nano_manager', 'api_Create_Channel', {}, {}, postFunction);
-    };
 
-    // ------------------------------------------------------------------------
-    nano_manager.destroyChannel = function(myToken, postFunction)
-    {
-        return nano_manager.raiseEvent('nano_manager', 'api_Destroy_Channel',
-         { "token": myToken }, {}, postFunction);
-    };
+
+
+
+
+
 
     // ========================================================================
     // Profile Management
