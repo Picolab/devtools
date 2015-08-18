@@ -270,7 +270,7 @@ ruleset b507199x5 {
       my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
-        (channel{'name'} eq name);});
+        (channel{'name'} eq name);}).klog("matched channels: ");
       filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
     }
     channelByEci = function (eci) {
