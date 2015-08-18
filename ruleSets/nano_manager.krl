@@ -245,18 +245,6 @@ ruleset b507199x5 {
           (names);
 
     }
-  /*  createBackChannel = function(name,type,attrs){ // should this be a function? we use this block of code a few times but its a mutator
-        options = {
-          'name' : name, 
-          'eci_type' : type,
-          'attributes' : attrs
-          //'policy' : ,
-        };
-        user = currentSession();
-        backChannel = pci:new_eci(user, options);
-        backChannel_b = backChannel{"cid"}.defaultsTo("no_eci_found", standardError("pci session_token failed"));  // cant find a way to move this out of pre and still capture backChannel
-        backChannel_b;
-    }*/
     subscriptionsAttributesName = function (channel_name){
       channel = channelByName(channel_name);
       eci = channel{'cid'};
@@ -271,19 +259,19 @@ ruleset b507199x5 {
     }
     channelEciByName = function (name) {
       my_channels = channels();
-      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);});
-      channel = filtered_channels.head().defaultsTo("",standardError("no channel found"));
+      channel = filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
       channel{'cid'};
     }
     //I can join these two functions if I can tell the differents between a name and eci....
     channelByName = function (name){
       my_channels = channels();
-      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
+      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);});
-      filtered_channels.head().defaultsTo("",standardError("no channel found"));
+      filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
     }
     channelByEci = function (eci) {
       my_channels = channels();

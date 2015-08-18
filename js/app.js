@@ -997,6 +997,7 @@
 						dynamic_subscriptions_items2 = "";
 						
 						$.each(subscriptions, function(key, object) {
+							console.log(key,object);
 								dynamic_subscriptions_items2 +=
 								 snippets.subscription_out_going_template(
 									{"name": object["name"],
