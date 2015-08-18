@@ -258,7 +258,7 @@ ruleset b507199x5 {
         backChannel_b;
     }*/
     subscriptionsAttributesName = function (channel_name){
-      channel = getChannelByName(channel_name);
+      channel = channelByName(channel_name);
       eci = channel{'cid'};
       attributes = channelAttributes(eci);
       attributes{'Attributes'};
