@@ -278,7 +278,7 @@ ruleset b507199x5 {
       channel{'cid'};
     }
     //I can join these two functions if I can tell the differents between a name and eci....
-    channelByName = function (name) {
+    channelByName = function (name){
       my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
       filtered_channels = chs.filter(function(channel){
