@@ -120,7 +120,7 @@
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
 				console.log("authChecked");
-				if (!CloudOS.authenticatedSession()){
+				if (!nano_manager.authenticatedSession()){
 					var pageComponents = ui.toPage.split("#");
 					pageComponents[pageComponents.length-1] = "page-authorize";
 					ui.toPage = pageComponents.join("#");
@@ -392,14 +392,14 @@
 				//$.mobile.loading("hide");
 
 				function populate_logpage() {
-					Pico.logging.status(CloudOS.defaultECI, function(json){
+					Pico.logging.status(nano_manager.defaultECI, function(json){
 						console.log("Logging status: ", json);
 						if(json) {
 						 	$("#logstatus").val("on").slider("refresh");
 						 	loadSpinner("#loglist", "pico logs");
 						 	
 
-						 	Pico.logging.getLogs(CloudOS.defaultECI, function(logdata){
+						 	Pico.logging.getLogs(nano_manager.defaultECI, function(logdata){
 							 	$("#loglist" ).empty();
 								console.log("Retrieved logs");
 
@@ -452,10 +452,10 @@
 				$("#logstatus").unbind("change").change(function(){
 					var newstatus = $("#logstatus").val();
 					if(newstatus === "on") {
-						Pico.logging.reset(CloudOS.defaultECI, {});
+						Pico.logging.reset(nano_manager.defaultECI, {});
 						populate_logpage();
 					} else {
-						Pico.logging.inactive(CloudOS.defaultECI, {});
+						Pico.logging.inactive(nano_manager.defaultECI, {});
 						$("#loglist" ).empty();
 					}
 				});
@@ -465,7 +465,7 @@
 				});
 				$( "#logclear" ).unbind("click").click(function(event, ui) {
 					$("#loglist" ).empty();
-					Pico.logging.flush(CloudOS.defaultECI, {});
+					Pico.logging.flush(nano_manager.defaultECI, {});
 				});
 			},
 			
@@ -1202,12 +1202,12 @@
 	{
 		//Oauth through kynetx
 		console.log("plant authorize button");
-		var OAuth_kynetx_URL = CloudOS.getOAuthURL();
+		var OAuth_kynetx_URL = nano_manager.getOAuthURL();
 		$('#authorize-link').attr('href', OAuth_kynetx_URL);
-		var OAuth_kynetx_newuser_URL = CloudOS.getOAuthNewAccountURL();
+		var OAuth_kynetx_newuser_URL = nano_manager.getOAuthNewAccountURL();
 		$('#create-link').attr('href', OAuth_kynetx_newuser_URL);
 		
-		$('#account-link').attr('href', "https://" + CloudOS.login_server + "/login/profile");
+		$('#account-link').attr('href', "https://" + nano_manager.login_server + "/login/profile");
 	}
 
 	function onMobileInit() {
@@ -1217,14 +1217,14 @@
 
 	function onPageLoad() {// Document.Ready
 		console.log("document ready");
-		CloudOS.retrieveSession();
+		nano_manager.retrieveSession();
 		// only put static stuff here...
 		plant_authorize_button();
 
 		$('.logout').off("tap").on("tap", function(event)
 		{
-			window.open("https://" + CloudOS.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
-			CloudOS.removeSession(true); // true for hard reset (log out of login server too)
+			window.open("https://" + nano_manager.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
+			nano_manager.removeSession(true); // true for hard reset (log out of login server too)
 			$.mobile.changePage('#page-authorize', {
 				transition: 'slide'
 			}); // this will go to the authorization page.
@@ -1250,7 +1250,7 @@
 
 		
 		try {
-			var authd = CloudOS.authenticatedSession();
+			var authd = nano_manager.authenticatedSession();
 			if(authd) {
 				console.log("Authorized");
 				Devtools.ensureBootstrap();

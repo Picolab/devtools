@@ -83,82 +83,82 @@
 }
 };
 
-nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
-{
-	try {
-
-       var retries = 2;
-
-
-       options = options || {};
-
-       if (typeof options.repeats !== "undefined") {
-          console.warn("This is a repeated request: ", options.repeats);
-          if (options.repeats > retries) {
-            throw "terminating repeating request due to consistent failure.";
-        }
-    }
-
-    var eci = mkEci(options.eci);
-
-    var esl = mkEsl(['sky/cloud',
-        module,
-        func_name
-        ]);
-
-    $.extend(parameters, { "_eci": eci });
-
-    console.log("Attaching event parameters ", parameters);
-    esl = esl + "?" + $.param(parameters);
-
-    var process_error = function(res)
+    nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
     {
-      console.error("skyCloud Server Error with esl ", esl, res);
-      if (typeof options.errorFunc === "function") {
-        options.errorFunc(res);
-    }
-};
+    	try {
 
-var process_result = function(res) // whats this for???
-{
-  console.log("Seeing res ", res, " for ", esl);
-  var sky_cloud_error = typeof res === 'Object' && typeof res.skyCloudError !== 'undefined';
-  if (! sky_cloud_error ) {
-    getSuccess(res);
-} else {
-    console.error("skyCloud Error (", res.skyCloudError, "): ", res.skyCloudErrorMsg);
-    if (!!res.httpStatus && 
-     !!res.httpStatus.code && 
-     (parseInt(res.httpStatus.code) === 400 || parseInt(res.httpStatus.code) === 500)) 
-    {
-     console.error("The request failed due to an ECI error. Going to repeat the request.");
-     var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
-     options.repeats = repeat_num;
-			// I don't think this will support promises; not sure how to fix
-			nano_manager.skyCloud(module, func_name, parameters, getSuccess, options);
+           var retries = 2;
+
+
+           options = options || {};
+
+           if (typeof options.repeats !== "undefined") {
+              console.warn("This is a repeated request: ", options.repeats);
+              if (options.repeats > retries) {
+                throw "terminating repeating request due to consistent failure.";
+            }
         }
+
+        var eci = mkEci(options.eci);
+
+        var esl = mkEsl(['sky/cloud',
+            module,
+            func_name
+            ]);
+
+        $.extend(parameters, { "_eci": eci });
+
+        console.log("Attaching event parameters ", parameters);
+        esl = esl + "?" + $.param(parameters);
+
+        var process_error = function(res)
+        {
+          console.error("skyCloud Server Error with esl ", esl, res);
+          if (typeof options.errorFunc === "function") {
+            options.errorFunc(res);
+        }
+    };
+
+    var process_result = function(res) // whats this for???
+    {
+      console.log("Seeing res ", res, " for ", esl);
+      var sky_cloud_error = typeof res === 'Object' && typeof res.skyCloudError !== 'undefined';
+      if (! sky_cloud_error ) {
+        getSuccess(res);
+    } else {
+        console.error("skyCloud Error (", res.skyCloudError, "): ", res.skyCloudErrorMsg);
+        if (!!res.httpStatus && 
+         !!res.httpStatus.code && 
+         (parseInt(res.httpStatus.code) === 400 || parseInt(res.httpStatus.code) === 500)) 
+        {
+         console.error("The request failed due to an ECI error. Going to repeat the request.");
+         var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
+         options.repeats = repeat_num;
+    			// I don't think this will support promises; not sure how to fix
+    			nano_manager.skyCloud(module, func_name, parameters, getSuccess, options);
+            }
+        }
+    };
+
+    console.log("sky cloud call to ", module+':'+func_name, " on ", esl, " with token ", eci);
+
+    return $.ajax({
+      type: 'GET',
+      url: esl,
+      dataType: 'json',
+    		// try this as an explicit argument
+    		//		headers: {'Kobj-Session' : eci},
+    		success: process_result
+    		// error: process_error
+        });
+    } catch(error) {
+       console.error("[skyCloud]", error);
+       if (typeof options.errorFunc === "function") {
+          options.errorFunc();
+      } 
+      return null;
     }
-};
-
-console.log("sky cloud call to ", module+':'+func_name, " on ", esl, " with token ", eci);
-
-return $.ajax({
-  type: 'GET',
-  url: esl,
-  dataType: 'json',
-		// try this as an explicit argument
-		//		headers: {'Kobj-Session' : eci},
-		success: process_result
-		// error: process_error
-    });
-} catch(error) {
-   console.error("[skyCloud]", error);
-   if (typeof options.errorFunc === "function") {
-      options.errorFunc();
-  } 
-  return null;
-}
-};
+    };
 /*    nano provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
@@ -183,8 +183,8 @@ return $.ajax({
 
     nano_manager.describeRulesets = function(parameters, postFunction, options)
     {
-        console.log("Getting ruleset discription ");
-        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
+        console.log("Getting ruleset discription for : ", parameters);
+        var results = nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
         console.log("Got discription :", results);
         return results; 
     };

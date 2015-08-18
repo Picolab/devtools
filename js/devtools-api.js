@@ -19,9 +19,6 @@
             },
             "bootstrap":{"prod": "b507199x1.prod", 
                           "dev": "b507199x1.dev"
-            },
-            "cloud_os":{"prod": "a169x625.prod", 
-                          "dev": "a169x625.prod"
             }
         };
 
@@ -44,9 +41,9 @@
     bootstrapped: function(cb,options){
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("bootstrapped?");
-        return CloudOS.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
             Devtools.log("Displaying testingReturns", json);
             cb(json);
         }, {"eci":eci});
@@ -55,7 +52,7 @@
 	ensureBootstrap: function(cb, options){
 		cb = cb || function(){};
 		options = options || {};
-		var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+		var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
 		Devtools.log("Ensuring Bootstrap for " + eci);
 		
 		//Check for nano_manager and devtools on pico
@@ -134,9 +131,9 @@
         cb = cb || function(){};
         options = options || {};
         //var rid = "rulesets";
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the rulesets");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
             Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
@@ -145,10 +142,10 @@
     status: function(cb, options){
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the channels");
-        //return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   
@@ -162,7 +159,7 @@
         attrs = attrs || {};
             Devtools.log("Initializing account for user with attributes ", attrs);
 
-            return CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
+            return nano_manager.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
             {
         // note that because the channel is create asynchronously, processing callback does
         // NOT mean the channel exists. 
@@ -180,9 +177,9 @@
         cb = cb || function(){};
         options = options || {};
         var json = {rids: rid,url: url}; //not sure what this does
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Getting info about pico ");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
             Devtools.log("This pico: ", json);
             cb(json);
         }, {"eci":eci});
@@ -192,9 +189,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Creating pico");
-       return CloudOS.raiseEvent("devtools", "createChild", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "createChild", data,{}, function(json) {
            Devtools.log("Directive from createPico", json);
            cb(json);
        }, {"eci":eci});
@@ -205,9 +202,9 @@
 		cb = cb || function(){};
 		options = options || {};
 		var json = {rids: rid, url: url};
-		var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+		var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
 		Devtools.log("Getting child picos ");
-		return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
 			Devtools.log("Children: ", json);
 			cb(json);
 		}, {"eci":eci});	
@@ -220,9 +217,9 @@
         cb = cb || function(){};
         options = options || {};
         var json = {rid: rid,url: url}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Updating the URL");
-        return CloudOS.raiseEvent("devtools", "update_url", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "update_url", json, {}, function(json) {
             Devtools.log("Directive from updating URL", json);
             cb(json);
         }, {"eci":eci});
@@ -233,9 +230,9 @@
         cb = cb || function(){};
         options = options || {};
         var json = {rid: rid}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Flushing RID " + rid);
-        return CloudOS.raiseEvent("devtools", "flush_rid", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "flush_rid", json, {}, function(json) {
             Devtools.log("Directive from Flushing Rid", json);
             cb(json);
         }, {"eci":eci});
@@ -246,9 +243,9 @@
         cb = cb || function(){};
         options = options || {};
         var json = {rid: rid}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Deleting RID " + rid);
-        return CloudOS.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
             Devtools.log("Directive from Deleting Rid", json);
             cb(json);
         }, {"eci":eci});
@@ -259,21 +256,15 @@
     {
         var parameters = {};
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;// where does defaultEci come from?? 
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;// where does defaultEci come from?? 
         Devtools.log("Showing installed rulesets");
         cb = cb || function(){};
         post_function = function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         };
-        var rulesets = nano_manager.installedRulesets(parameters,post_function,options);
-        var rids = rulesets.rids;
-        var description = NanoManager.describeRulesets(rids,post_function,options);
-        console.log("description ", description);
-        return description.description;
-
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {},post_function, options);
     },
-
 
     installRulesets: function(ridlist, cb, options) 
     {
@@ -281,7 +272,7 @@
         var attributes = {rids: ridlist}; 
         var parameters = {}; // whats event parameters ???
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI; //<-- is this vallid?
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
         Devtools.log("Installing rulesets");
         cb = cb || function(){};
         post_function = function(json) {
@@ -299,7 +290,7 @@
         var attributes = {rids: ridlist}; 
         var parameters = {}; 
         options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI; //<-- is this vallid?
+        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
         Devtools.log("Uninstalling rulesets",ridlist);
         cb = cb || function(){};
         post_function = function(json) {
@@ -315,9 +306,9 @@
         cb = cb || function(){};
         options = options || {};
     var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Registering rulesets");
-        return CloudOS.raiseEvent("devtools", "register_ruleset", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "register_ruleset", json, {}, function(json) {
             Devtools.log("Directive from register ruleset", json);
             cb(json);
         }, {"eci":eci});
@@ -328,9 +319,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the channels");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
             Devtools.log("Displaying installed channels", json);
             cb(json);
         }, {"eci":eci});
@@ -351,9 +342,9 @@
         cb = cb || function(){};
         options = options || {};
     var parameters = {channel_name:channel_name}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Installing channels");
-       return CloudOS.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
        }, {"eci":eci});
@@ -363,9 +354,9 @@
         cb = cb || function(){};
         options = options || {};
     var json = {eci:ECI}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Destroy channels");
-        return CloudOS.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
+        return nano_manager.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
         }, {"eci":eci});
@@ -376,9 +367,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("authorizing clientlient ");
-       return CloudOS.raiseEvent("devtools", "authorize_client", app_Data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "authorize_client", app_Data,{}, function(json) {
            Devtools.log("Directive from AuthorizeClient", json);
            cb(json);
        }, {"eci":eci});
@@ -387,9 +378,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the showing clients");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
             Devtools.log("Displaying athorize clients", json);
             cb(json);
         }, {"eci":eci});
@@ -399,10 +390,10 @@
         cb = cb || function(){};
         options = options || {};
         var json = {"app_id":app_ECI}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("remove client");
         console.log("attributes",json);
-        return CloudOS.raiseEvent("devtools", "remove_client", json,{}, function(json) {
+        return nano_manager.raiseEvent("devtools", "remove_client", json,{}, function(json) {
            Devtools.log("Directive from remove client", json);
            cb(json);
         }, {"eci":eci});
@@ -412,9 +403,9 @@
         cb = cb || function(){};
         options = options || {};
         app_Data["app_id"]=app_ECI;
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Updating client");
-        return CloudOS.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, {"eci":eci});
@@ -424,9 +415,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show scheduled events");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
             Devtools.log("Displaying scheduled events", json);
             cb(json);
         }, {"eci":eci});   
@@ -435,9 +426,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("scheduling event");
-       return CloudOS.raiseEvent("devtools", "event_scheduled", Data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "event_scheduled", Data,{}, function(json) {
            Devtools.log("Directive from ScheduleEvent", json);
            cb(json);
        }, {"eci":eci});
@@ -448,9 +439,9 @@
         cb = cb || function(){};
         options = options || {};
         var parameters = {channelName:channel_name}; 
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Installing channels");
-       return CloudOS.raiseEvent("nano_manager", "scheduled_created", data,{}, function(json) {
+       return nano_manager.raiseEvent("nano_manager", "scheduled_created", data,{}, function(json) {
            Devtools.log("Creating a scheduled event", json);
            cb(json);
        }, {"eci":eci});
@@ -460,9 +451,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show Subscriptions");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", {}, function(json) {
             Devtools.log("Displaying showSubscriptions", json);
             cb(json);
         }, {"eci":eci});  
@@ -471,9 +462,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show Incoming");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", {}, function(json) {
             Devtools.log("Displaying showIncoming", json);
             cb(json);
         }, {"eci":eci});  
@@ -482,9 +473,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show OutGoing");
-        return CloudOS.skyCloud(Devtools.get_rid("rulesets"), "showOutgoing", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showOutgoing", {}, function(json) {
             Devtools.log("Displaying showOutGoing", json);
             cb(json);
         }, {"eci":eci});  
@@ -493,9 +484,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("approve subscription");
-       return CloudOS.raiseEvent("devtools", "incoming_request_approved", event_channel,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "incoming_request_approved", event_channel,{}, function(json) {
            Devtools.log("Directive from ApproveSubscription", json);
            cb(json);
        }, {"eci":eci});
@@ -504,9 +495,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Request subscription");
-       return CloudOS.raiseEvent("devtools", "subscribe", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "subscribe", data,{}, function(json) {
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        }, {"eci":eci});
@@ -515,9 +506,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("reject in coming subscription");
-       return CloudOS.raiseEvent("devtools", "incoming_request_rejected", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "incoming_request_rejected", data,{}, function(json) {
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
        }, {"eci":eci});
@@ -526,9 +517,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("unsubscription");
-       return CloudOS.raiseEvent("devtools", "init_unsubscribed", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "init_unsubscribed", data,{}, function(json) {
            Devtools.log("Directive from init_unsubscribed", json);
            cb(json);
        }, {"eci":eci});
@@ -537,9 +528,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || CloudOS.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("cancel subscription request");
-       return CloudOS.raiseEvent("devtools", "out_going_request_rejected", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "out_going_request_rejected", data,{}, function(json) {
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
        }, {"eci":eci});
