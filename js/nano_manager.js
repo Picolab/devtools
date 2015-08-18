@@ -173,28 +173,19 @@
 
     nano_manager.installedRulesets = function(parameters, postFunction, options)
     {
-        console.log("Getting installed rulesets");
-        var results = nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
-        console.log("Got installed rulesets", results);
-        return results; 
+        return nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
     };
     
 
 
     nano_manager.describeRulesets = function(parameters, postFunction, options)
     {
-        console.log("Getting ruleset discription for : ", parameters);
-        var results = nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
-        console.log("Got discription :", results);
-        return results; 
+        return nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
     };
 
     nano_manager.installRulesets = function( eventAttributes, eventParameters, postFunction, options)
     {
-        console.log("Installing rulesets");
-        var results = nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
-        console.log("Installed rulesets", eventAttributes.rids);
-        return results;
+        return nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, eventParameters, postFunction, options);
     };
 
     nano_manager.uninstallRuleset = function( eventAttributes, eventParameters, postFunction, options)

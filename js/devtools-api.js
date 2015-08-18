@@ -280,7 +280,7 @@
             cb(json);
         };
 
-        return nano_manager.installedRulesets(attributes,parameters,post_function,options);
+        return nano_manager.installRulesets(attributes,parameters,post_function,options);
 
     },
 
