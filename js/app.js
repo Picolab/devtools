@@ -840,7 +840,6 @@
 					 	
 					 	dynamicInsRulesets = "";
 					 	$.each(ruleset_list, function(k, ruleset) {
-					 		console.log(k, ruleset);
 						 	ruleset["rid"] = k;
 			 			 	ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
 				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
