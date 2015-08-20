@@ -19,6 +19,7 @@ ruleset DevTools_bootstrap {
             "core": [
                    "a169x625.prod",  // CloudOS Service
                    "b507199x5.dev",  // next gen CloudOS
+                   "b507199x0.dev",  // bootstrap // should not be needed here because of apps...
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
                    "b507199x0.dev", //DevTools
