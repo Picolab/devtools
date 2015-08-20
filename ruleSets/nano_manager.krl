@@ -215,7 +215,7 @@ ruleset b507199x5 {
   //    };
       {
         'status' : true,
-        'subscriptions'  : "hello"
+        'subscriptions'  : 'hello'
       }
     }
 
