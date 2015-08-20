@@ -214,7 +214,7 @@ ruleset b507199x5 {
   //      'subscriptions'  : subscription
   //    };
       {
-        'status' : true,
+        'status' : 'true',
         'subscriptions'  : 'hello'
       }
     }
