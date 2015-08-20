@@ -211,11 +211,11 @@ ruleset b507199x5 {
   //    subscriptions = subscription.put(['pending_subcriptions'],pending); // will this over write ...
   //    {
   //      'status' : (subscriptions neq "error"),
-  //      'subscriptions'  : subscriptions
+  //      'subscriptions'  : subscription
   //    };
       {
         'status' : true,
-        'subscriptions'  : subscriptions
+        'subscriptions'  : "hello"
       }
     }
 
