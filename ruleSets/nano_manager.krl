@@ -571,7 +571,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v3.2 unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v3.3 unique_name: "));
 
       // build pending subscription entry
 
@@ -638,10 +638,9 @@ ruleset b507199x5 {
 
 
 
-     // new_channel_name = (channel_name eq "") => // no channel name means its incoming.
-     //       random_name(name_space) |
-     //       channel_name;
-      unique_name = random_name("name_space");
+      new_channel_name = (channel_name eq "") => // no channel name means its incoming.
+            randomName(name_space) |
+            channel_name;
 
       new_subscriptions = ent:subscriptions.append(unique_name.klog("unique_name : ")); // create new list of subscriptions.
 
