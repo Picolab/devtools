@@ -636,9 +636,7 @@ ruleset b507199x5 {
           }.klog("incoming pending subscription") |
           {};
 
-
-
-      new_channel_name = (channel_name eq "") => // no channel name means its incoming.
+      unique_name = (channel_name eq "") => // no channel name means its incoming.
             randomName(name_space) |
             channel_name;
 
