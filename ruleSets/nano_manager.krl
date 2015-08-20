@@ -571,7 +571,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v3 unique_name: "));
+      unique_name = randomName(name_space).klog(standardOut("v3.1 unique_name: "));
 
       // build pending subscription entry
 
@@ -600,10 +600,10 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : channelEciByName(unique_name).klog("event_channel eci: "), 
+          "event_channel"  : channelEciByName(unique_name), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
-        };
+        }.klog("event:send() attributes: ");
     }
     fired {
       log (standardOut("success"));
@@ -641,11 +641,12 @@ ruleset b507199x5 {
      // new_channel_name = (channel_name eq "") => // no channel name means its incoming.
      //       random_name(name_space) |
      //       channel_name;
-      new_channel_name = random_name(name_space);
-      new_subscriptions = ent:subscriptions.append(new_channel_name.klog("new_channel_name : ")); // create new list of subscriptions.
+      unique_name = random_name(name_space);
+
+      new_subscriptions = ent:subscriptions.append(unique_name.klog("unique_name : ")); // create new list of subscriptions.
 
       options = {
-        'name' : new_channel_name, 
+        'name' : unique_name, 
         'eci_type' : channel_type,
         'attributes' : pending_subcriptions
           //'policy' : ,
