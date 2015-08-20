@@ -209,8 +209,12 @@ ruleset b507199x5 {
   //      (subscriptionsAttributesName(name){"status"} eq "pending_incoming") => "pending_incoming"| "pending_outgoing";
   //      });
   //    subscriptions = subscription.put(['pending_subcriptions'],pending); // will this over write ...
+  //    {
+  //      'status' : (subscriptions neq "error"),
+  //      'subscriptions'  : subscriptions
+  //    };
       {
-        'status' : (subscriptions neq "error"),
+        'status' : true,
         'subscriptions'  : subscriptions
       }
     }
@@ -240,7 +244,6 @@ ruleset b507199x5 {
           "attributes": null}
           */
           chs = chan{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
-          //chan{'channels'} bug????????????
           names = chs.none(function(channel){channel{"name"} eq name});
           (names);
 
