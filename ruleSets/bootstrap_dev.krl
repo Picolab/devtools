@@ -6,10 +6,10 @@ ruleset DevTools_bootstrap {
             Bootstrap ruleset for DevTools developing website
         >>
 
-        use module a169x625 alias CloudOS
+       // use module a169x625 alias CloudOS
         logging on
 
-        provides testingReturns
+        //provides testingReturns
         sharing on
     }
 
@@ -48,7 +48,7 @@ ruleset DevTools_bootstrap {
         'rids'     : rids,
         'status'   : status
       }
-    }
+    };
     }
 
     rule bootstrap_guard {
