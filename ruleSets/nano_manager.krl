@@ -638,14 +638,14 @@ ruleset b507199x5 {
 
 
 
-      new_channel_name = (channel_name eq "") => // no channel name means its incoming.
-            random_name(name_space) |
-            channel_name;
-    
-      new_subscriptions = ent:subscriptions.append(new_channel_name); // create new list of subscriptions.
+     // new_channel_name = (channel_name eq "") => // no channel name means its incoming.
+     //       random_name(name_space) |
+     //       channel_name;
+      new_channel_name = random_name(name_space);
+      new_subscriptions = ent:subscriptions.append(new_channel_name.klog("new_channel_name : ")); // create new list of subscriptions.
 
       options = {
-        'name' : new_channel_name.klog("new_channel_name : "), 
+        'name' : new_channel_name, 
         'eci_type' : channel_type,
         'attributes' : pending_subcriptions
           //'policy' : ,
