@@ -7,6 +7,8 @@ ruleset DevTools_bootstrap {
         >>
 
        // use module a169x625 alias CloudOS
+        use module b16x24 alias system_credentials
+
         logging on
 
         provides installedRulesets
