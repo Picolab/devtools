@@ -209,14 +209,11 @@ ruleset b507199x5 {
   //      (subscriptionsAttributesName(name){"status"} eq "pending_incoming") => "pending_incoming"| "pending_outgoing";
   //      });
   //    subscriptions = subscription.put(['pending_subcriptions'],pending); // will this over write ...
-  //    {
-  //      'status' : (subscriptions neq "error"),
-  //      'subscriptions'  : subscription
-  //    };
       {
-        'status' : 'true',
-        'subscriptions'  : 'hello'
-      }
+        'status' : (subscriptions neq "error"),
+        'subscriptions'  : subscription
+      };
+
     }
 
     randomName = function(namespace){
