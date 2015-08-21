@@ -70,7 +70,7 @@
 					needsBootstrapRuleset();
 				}
 			}, {"eci":eci});
-		},
+		};
 		
 		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
 		addBootstrapRuleset = function(localCB) {
@@ -78,20 +78,19 @@
 	            //console.log("Directive from installing bootstrap", json);
 				localCB();
 			}, {"eci":nano_manager.defaultECI});
-		},
+		};
 		
 		//attempt bootstrap
 		bootstrapPico = function(localCB) {
 			nano_manager.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
 				localCB();
 			}, {"eci":eci});
-		},
+		};
 		
-
+        var timeToWait = 0;
+        var timeStep = 500;
 		stallBootstrap = function(localCB) {
             //timer for bootstrapping
-            var timeToWait = 0;
-            var timeStep = 500;
 			if (timeToWait >= 10 * timeStep) {
 				throw "Bootstrap failed consistently";
 			}
@@ -101,7 +100,7 @@
 					localCB();
 				}, timeToWait);
 			}
-		},
+		};
 		
 		
 		//tie together and run
@@ -120,7 +119,7 @@
 				})
 				
 			});
-		}
+		};
 		
 		persistent_bootstrap();
 		
