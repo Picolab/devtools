@@ -9,7 +9,7 @@ ruleset DevTools_bootstrap {
        // use module a169x625 alias CloudOS
         logging on
 
-        //provides testingReturns
+        provides installedRulesets
         sharing on
     }
 
@@ -26,7 +26,16 @@ ruleset DevTools_bootstrap {
             ],
       "unwanted": []
         };
-
+      // from nano...
+      installedRulesets = function() {
+      eci = meta:eci();
+      results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("error",standardError("pci list_ruleset failed"));  
+      rids = results{'rids'}.defaultsTo("error",standardError("no hash key rids"));
+      {
+       'status'   : (rids neq "error"),
+        'rids'     : rids
+      };
+    }
       // from cloudOS.. needs to be updated(defaction) and placed into nano, was called rulesetAddChild.
       InstallRulesets = function(rulesetID, eci) {
       // array of rids needed. 

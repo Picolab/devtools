@@ -55,15 +55,15 @@
 		var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
 		Devtools.log("Ensuring Bootstrap for " + eci);
 		
-		//Check for nano_manager and devtools on pico
+		//Check for nano_manager and devtools on pico.. could this be a rule in bootrap rulesets?
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
-			return nano_manager.skyCloud(Devtools.get_rid("cloud_os"), "rulesetList", {}, function(json) {
+			return nano_manager.skyCloud(Devtools.get_rid("bootstrap"), "installedRulesets", {}, function(json) {
 				console.log(json);
 				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
 					cb();
 				}
-				else if ($.inArray('b507199x1.dev', json.rids) > -1) {
+				else if ($.inArray('b507199x1.dev', json.rids) > -1) { // will never make it here ...
 					justNeedsBootstrap();
 				}
 				else {
