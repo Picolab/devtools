@@ -184,18 +184,18 @@ ruleset devtools {
 
         // -------------------- SUBSCRIPTIONS ---------------------- 
 	        showSubscriptions = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
+	          subscriptions = NanoManager:subscriptions_unique().klog(standardOut("NanoManager:subscriptions()"));
 	          subscription = subscriptions{'subscriptions'};
 	          subscription{'subscriptions'};
 	        };
 	        showIncoming = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
+	          subscriptions = NanoManager:subscriptions_unique().klog(standardOut("NanoManager:subscriptions()"));
 	          pending = subscriptions{'subscriptions'};
 	          incoming = pending{'pending_incoming'};
 	          incoming;
 	        };
 	        showOutgoing = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
+	          subscriptions = NanoManager:subscriptions_unique().klog(standardOut("NanoManager:subscriptions()"));
 	          pending = subscriptions{'subscriptions'};
 	          out = pending{'pending_outgoing'};
 	          out;
