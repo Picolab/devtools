@@ -42,7 +42,7 @@ ruleset b507199x5 {
     provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
-    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
+    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, subscriptions_unique,//subscription
     currentSession,standardError
     sharing on
 
@@ -196,7 +196,7 @@ ruleset b507199x5 {
 	}
 
   //-------------------- Subscriptions ----------------------
-    subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
+    subscriptions_unique = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       status = function(name){
         attributes = subscriptionsAttributesName(name).klog("attributes: ");
