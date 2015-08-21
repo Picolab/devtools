@@ -10,6 +10,7 @@ ruleset DevTools_bootstrap {
         use module b16x24 alias system_credentials
 
         logging on
+        
 
         provides installedRulesets
         sharing on
