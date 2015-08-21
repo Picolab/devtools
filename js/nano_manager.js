@@ -159,13 +159,6 @@
       return null;
     }
     };
-/*    nano provides installedRulesets, describeRulesets, //ruleset
-    channels, channelAttributes, channelPolicy, channelType, //channel
-    children, parent, attributes, //pico
-    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
-    currentSession,standardError
-
-    */
 
 
     // ------------------------------------------------------------------------ installed Rulests
@@ -175,8 +168,6 @@
     {
         return nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); // do we need options , whats getsucces???
     };
-    
-
 
     nano_manager.describeRulesets = function(parameters, postFunction, options)
     {
@@ -197,12 +188,123 @@
     };
 
     // ------------------------------------------------------------------------ Channels
+        nano_manager.channels = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channels", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.channelAttributes = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channelAttributes", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.channelPolicy = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channelPolicy", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.channelType = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channelType", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+
+    nano_manager.updateChannelAttributes = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "update_channel_attributes_requested", eventAttributes, eventParameters, postFunction, options);
+    };    
+    nano_manager.updateChannelPolicy = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "update_channel_policy_requested", eventAttributes, eventParameters, postFunction, options);
+    };    
+    nano_manager.deleteChannel = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "channel_deletion_requested", eventAttributes, eventParameters, postFunction, options);
+    };   
+    nano_manager.createChannel = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "createChannel", eventAttributes, eventParameters, postFunction, options);
+    };
+
     // ------------------------------------------------------------------------ pico
+        nano_manager.children = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "children", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.parent = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "parent", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.attributes = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "attributes", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+
+     nano_manager.createChild = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "child_creation_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+     nano_manager.initializeChild = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "child_created", eventAttributes, eventParameters, postFunction, options);
+    }; 
+     nano_manager.setPicoAttributes = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "set_attributes_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+     nano_manager.clearPicoAttributes = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "clear_attributes_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+     nano_manager.deleteChild = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "child_deletion_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
     // ------------------------------------------------------------------------ subscription
 
+    nano_manager.subscriptions = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptions", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.channelByName = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channelByName", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.channelByEci = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.subscriptionsAttributesEci = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptionsAttributesEci", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+        nano_manager.subscriptionsAttributesName = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptionsAttributesName", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
+         nano_manager.requestSubscription = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "subscription_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+         nano_manager.addPendingSubscription = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "add_pending_subscription_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+         nano_manager.approvePendingSubscription = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "approve_pending_subscription_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+         nano_manager.addSubscription = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "add_subscription_requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+         nano_manager.cancelSubscription = function( eventAttributes, eventParameters, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "cancel_subscription__requested", eventAttributes, eventParameters, postFunction, options);
+    }; 
+    
+    // ------------------------------------------------------------------------ other
 
-
-
+        nano_manager.currentSession = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "currentSession", parameters, postFunction , options); // do we need options , whats getsucces???
+    };
 
 
 
@@ -293,12 +395,6 @@
             "token": token
         };
         return nano_manager.raiseEvent('nano_manager', 'api_send_notification', eventAttributes, {}, postFunction);
-    };
-
-    // ------------------------------------------------------------------------
-    nano_manager.subscriptionList = function(callParmeters, getSuccess)
-    {
-        return nano_manager.skyCloud("nano_manager", "subscriptionList", callParmeters, getSuccess);
     };
 
 
