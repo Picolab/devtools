@@ -1248,39 +1248,11 @@
 
 		console.log("Choose page to show");
 		
-		/*var timeToWait = 0;
-		var timeStep = 500;
-		function persistant_bootstrap(){
-			Devtools.status(function(rid_list){
-				var rids = rid_list["rids"];
-				if ($.inArray('b507199x0.dev', rids) > -1 && $.inArray('b507199x5.dev', rids) > -1 ) { // we only check for next gen dev not prod..........
-					console.log("true , Bootstrapped");
-					return true;
-				}
-				else {
-					console.log("false , Bootstrapped");
-					if (timeToWait >= 10 * timeStep) {
-						throw "Bootstrap failure";
-					}
-					else {
-						setTimeout(function() {
-							CloudOS.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
-								timeToWait += timeStep;
-								persistant_bootstrap();
-						}, {"eci":PicoNavigator.currentPico || CloudOS.defaultECI})}, timeToWait);
-					}
-					return false;
-				}
-			});
-		}*/
-		
-
 		
 		try {
 			var authd = nano_manager.authenticatedSession();
 			if(authd) {
 				console.log("Authorized");
-				//persistant_bootstrap();
 				Devtools.ensureBootstrap();
 				//document.location.hash = "#home";
 			} else {  

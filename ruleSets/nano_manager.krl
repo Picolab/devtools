@@ -198,17 +198,18 @@ ruleset b507199x5 {
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
-      status = function(name){
-        attributes = subscriptionsAttributesName(name).klog("attributes: ");
-        (attributes{"status"});
-      };
-      subscription = subscriptions.collect(function(name){
-        (status(name));
+
+      subscriptionList = function(names){ names.map( 
+                            function(name){ {}.put([name],subscriptionsAttributesName(name));
+                            });
+                         };
+
+      subs = subscriptionList(subscriptions);
+      subscription = subs.collect(function(sub){
+        array = sub.values();
+        (array{'status'});
       });
-   //   pending =  subscription.collect(function(name){
-  //      (subscriptionsAttributesName(name){"status"} eq "pending_incoming") => "pending_incoming"| "pending_outgoing";
-  //      });
-  //    subscriptions = subscription.put(['pending_subcriptions'],pending); // will this over write ...
+
       {
         'status' : (subscriptions neq "error"),
         'subscriptions'  : subscription
