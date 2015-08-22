@@ -207,7 +207,7 @@ ruleset b507199x5 {
       status = function(sub){
         s = sub.klog("subscription  : ");
         array = sub.values();
-        status = (array.typeof("array")) => array{'status'} | "error";
+        status = (array.typeof() eq "array") => array{'status'} | "error";
         (status);
       };
       subs = subscriptionList(subscriptions);
