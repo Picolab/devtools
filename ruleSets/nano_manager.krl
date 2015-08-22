@@ -204,10 +204,13 @@ ruleset b507199x5 {
                             });
                          };
 
-      subs = subscriptionList(subscriptions);
-      subscription = subs.collect(function(sub){
+      status = function(sub){
         array = sub.values();
         (array{'status'});
+      };
+      subs = subscriptionList(subscriptions);
+      subscription = subs.collect(function(sub){
+        (status(sub));
       });
 
       {
