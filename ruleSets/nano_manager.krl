@@ -205,6 +205,7 @@ ruleset b507199x5 {
                          };
 
       status = function(sub){
+        s = sub.klog("subscription : ");
         array = sub.values();
         (array{'status'});
       };
