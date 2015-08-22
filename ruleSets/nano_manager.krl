@@ -210,7 +210,7 @@ ruleset b507199x5 {
       };
       subs = subscriptionList(subscriptions);
       subscription = subs.collect(function(sub){
-        (status(sub));
+        (status(sub)).klog("status : ");
       });
 
       {
