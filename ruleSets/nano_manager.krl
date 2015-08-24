@@ -646,8 +646,10 @@ ruleset b507199x5 {
       unique_name = (channel_name eq "") => // no channel name means its incoming.
             randomName(name_space) |
             channel_name;
-
-      new_subscriptions = ent:subscriptions.append(unique_name.klog("unique_name : ")); // create new list of subscriptions.
+      // create new list of subscriptions, if its empty start a new one.
+      new_subscriptions = (ent:subscriptions.isnull()) => 
+              [unique_name] |
+              ent:subscriptions.append(unique_name.klog("unique_name : ")); 
 
       options = {
         'name' : unique_name, 
