@@ -812,8 +812,6 @@ ruleset b507199x5 {
       }
       always{
         clear ent:subscriptions;
-        clear ent:pending_outgoing;
-        clear ent:pending_incoming;
       }
     } 
 // unsubscribed all, check event from parent 
