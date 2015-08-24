@@ -268,7 +268,7 @@ ruleset b507199x5 {
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);});
-      channel = filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
+      channel = filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
       channel{'cid'};
     }
     //I can join these two functions if I can tell the differents between a name and eci....
@@ -277,14 +277,14 @@ ruleset b507199x5 {
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);}).klog("matched channels: "); 
-      filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
+      filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
     }
     channelByEci = function (eci) {
       my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
       filtered_channels = chs.filter(function(channel){
         (channel{'cid'} eq eci);});
-      filtered_channels.head().defaultsTo("",standardError("no channel found"));
+      filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
     }
       nameFromEci = function(){ // not used
         eci = meta:eci();
