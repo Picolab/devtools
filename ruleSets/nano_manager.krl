@@ -200,7 +200,7 @@ ruleset b507199x5 {
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
 
       subscriptionList = function(names){ names.map( 
-                            function(name){ {"channel_name":name}.put([name],subscriptionsAttributesName(name));
+                            function(name){ {}.put([name],subscriptionsAttributesName(name));
                             });
                          };
 
