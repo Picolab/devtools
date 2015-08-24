@@ -210,7 +210,7 @@ ruleset b507199x5 {
         status = (array.typeof() eq "array") => array{'status'} | "error";
         (status);
       };
-      subs = subscriptionList(subscriptions);
+      subs = subscriptionList(subscriptions).klog("subscriptionList : ");
       subscription = subs.collect(function(sub){
         (status(sub)).klog("status : ");
       });
