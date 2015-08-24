@@ -273,14 +273,14 @@ ruleset b507199x5 {
     }
     //I can join these two functions if I can tell the differents between a name and eci....
     channelByName = function (name){
-      my_channels = channels().klog("channels() results: ");
+      my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{'name'} eq name);}).klog("matched channels: "); 
       filtered_channels.head().defaultsTo("",standardError("no channel found, by head"));
     }
     channelByEci = function (eci) {
-      my_channels = channels().klog("channels() results: ");
+      my_channels = channels();
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
       filtered_channels = chs.filter(function(channel){
         (channel{'cid'} eq eci);});
