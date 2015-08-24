@@ -238,7 +238,7 @@ ruleset b507199x5 {
     }
     checkName = function(name){
           chan = channels();
-          //channels = channels(); worse bug evver!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          //channels = channels(); worse bug ever!!!!!!!!!!!!!!!!!!!!!!!!!!!
           // in our meetings we said to check name_space, how is that done?
           /*{
           "last_active": 1426286486,
@@ -253,48 +253,43 @@ ruleset b507199x5 {
 
     }
     subscriptionsAttributesName = function (channel_name){
-      channel = channelByName(channel_name);
-      eci = channel{'cid'};
+      channil = channel(channel_name);
+      eci = channil{'cid'};
       attributes = channelAttributes(eci);
       attributes{'Attributes'};
     } 
     subscriptionsAttributesEci = function (eci){
-      channel = getChannelByEci(eci);
-      eci = channel{'cid'};
+      channil = channel(eci);
+      eci = channil{'cid'};
       attributes = channelAttributes(eci);
       attributes{'Attributes'};
     }
     channelEciByName = function (name) {
+      channil= channel(name);
+      channil{'cid'};
+    }
+    
+     channel = function (value){
+      // if value has a ":"" then attribute is name otherwise its cid 
+      // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
       my_channels = channels();
+      attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
+              'cid' |
+              'name';
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
-        (channel{'name'} eq name);});
-      channel = filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
-      channel{'cid'};
+        (channel{attribute} eq value);}).klog("matched channels: "); 
+      filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
     }
-    //I can join these two functions if I can tell the differents between a name and eci....
-    channelByName = function (name){
-      my_channels = channels();
-      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
-      filtered_channels = chs.filter(function(channel){
-        (channel{'name'} eq name);}).klog("matched channels: "); 
-      filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
-    }
-    channelByEci = function (eci) {
-      my_channels = channels();
-      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found"));
-      filtered_channels = chs.filter(function(channel){
-        (channel{'cid'} eq eci);});
-      filtered_channels[1].defaultsTo("",standardError("no channel found, by [1]"));
-    }
+
       nameFromEci = function(){ // not used
         eci = meta:eci();
-        channel = channelByEci(back_channel_eci);
+        channel = channel(back_channel_eci);
         channel{'name'};
       } 
 
       eciFromName = function(name){
-        channel = channelByName;
+        channel = channel(name);
         channel{'cid'};
       }
     /*findVehicleByBackchannel = function (bc) {
@@ -647,7 +642,7 @@ ruleset b507199x5 {
             randomName(name_space) |
             channel_name;
       // create new list of subscriptions, if its empty start a new one.
-      new_subscriptions = (ent:subscriptions.head() eq 0) => 
+      new_subscriptions = (ent:subscriptions.head() eq 0) => //--------------------------------------could erase your list of subscriptions is there a better way?
               [unique_name] |
               ent:subscriptions.append(unique_name.klog("unique_name : ")); 
 
