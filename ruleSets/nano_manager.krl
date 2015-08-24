@@ -647,7 +647,7 @@ ruleset b507199x5 {
             randomName(name_space) |
             channel_name;
       // create new list of subscriptions, if its empty start a new one.
-      new_subscriptions = (ent:subscriptions[0] eq 0) => 
+      new_subscriptions = (ent:subscriptions.head() eq 0) => 
               [unique_name] |
               ent:subscriptions.append(unique_name.klog("unique_name : ")); 
 
