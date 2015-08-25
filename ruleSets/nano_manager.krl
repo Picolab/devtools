@@ -209,7 +209,8 @@ ruleset b507199x5 {
       */
       status = function(sub){
         s = sub.klog("sub : ");
-        attributes = sub.values();
+        value = sub.values();
+        attributes = value.head(); 
         status = attributes{'status'};
         (status);
       };
