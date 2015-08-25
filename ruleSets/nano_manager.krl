@@ -203,15 +203,19 @@ ruleset b507199x5 {
                             function(name){ {}.put([name],subscriptionsAttributesName(name));
                             });
                          };
-
+      /* 
+      {"18:floppy" :
+          {"status":"pending_incoming","relationship":"","name_space":"18"}
+      */
       status = function(sub){
-        s = sub.klog("subscription  : ");
-        array = sub.values();
-        status = (array.typeof() eq "array") => array{'status'} | "error";
+        s = sub.klog("sub : ");
+        attributes = sub.values();
+        status = attributes{'status'};
         (status);
       };
       klogging = subscriptions.klog("ent:subscriptions :");
       subs = subscriptionList(subscriptions).klog("subscriptionList : ");
+
       subscription = subs.collect(function(sub){
         (status(sub)).klog("status : ");
       });
