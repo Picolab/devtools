@@ -210,8 +210,11 @@ ruleset b507199x5 {
       status = function(sub){
         s = sub.klog("sub : ");
         value = sub.values();
+      rid_list = rids.typeof() eq "array" => rids | rids.split(re/;/); 
         attributes = value.head(); 
-        status = attributes{'status'};
+        status = (attributes.typeof() eq 'hash')=>
+        attributes{'status'} |
+          'error';
         (status);
       };
       klogging = subscriptions.klog("ent:subscriptions :");
