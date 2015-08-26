@@ -611,7 +611,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : eciFromName(unique_name), 
+          "event_channel"  : eciFromName(unique_name).klog("eci: "), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         }.klog("event:send() attributes: ");
