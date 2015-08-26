@@ -942,79 +942,96 @@
 
 				function populate_subscriptions() {
 					Devtools.showSubscriptions(function(subscriptions){
-						$("#Subscriptions").empty();
-						//use teplate to format 
-						$("#Subcriptions" ).empty();
-						dynamic_subscriptions_items = "";
-						dynamic_subscriptions_items2 = "";
 						
-						$.each(subscriptions, function(key, object) {
-								dynamic_subscriptions_items2 +=
-								 snippets.subscription_template(
-									{"name": object["name"],
-									"name_space": object["name_space"],
-									"relationship": object["relationship"],
-									"e_cid": object["event_channel"],
-									"b_cid": object["back_channel"],
-									"attributes":JSON.stringify(object["attrs"])}
-									);
-						  });
-						  //outter div
-							dynamic_subscriptions_items += 
-								snippets.subscription_tab_template(
-									{"Type": "subscriptions"}//,
-									);
-					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-					  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+						$("#Subcriptions" ).empty();
+								if('pending_incoming' in subscriptions){
+								incoming = subscriptions.pending_incoming;
+								$("#Subcriptions" ).empty();
+								dynamic_subscriptions_items = "";
+								dynamic_subscriptions_items2 = "";
+								
+								$.each(incoming, function(key, object) {
+									$.each(object, function(key, object) {
+										console.log(key,object);
+										dynamic_subscriptions_items2 +=
+										 snippets.subscription_incoming_template(
+											{"name": object["subscription_name"],
+											"name_space": object["name_space"],
+											"relationship": object["relationship"],
+											"e_cid": object["event_channel"],
+											"attributes":"attrs"
+											//"attributes":JSON.stringify(object["attrs"])
+										}
+											);
+								  	});
+								  });
+								  //outter div
+									dynamic_subscriptions_items += 
+										snippets.subscription_tab_template(
+											{"Type": "Incomeing"}//,
+											);
+							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+						};
+						if('pending_outgoing' in subscriptions){
+								OutGoing = subscriptions.pending_outgoing;
+								$("#Subcriptions" ).empty();
+								dynamic_subscriptions_items = "";
+								dynamic_subscriptions_items2 = "";
+								
+								$.each(OutGoing, function(key, object) {
+									$.each(object, function(key, object) {
+									console.log(key,object);
+										dynamic_subscriptions_items2 +=
+										 snippets.subscription_out_going_template(
+											{"name": object["subscription_name"],
+											"name_space": object["name_space"],
+											"relationship": object["relationship"],
+											"b_cid": object["back_channel"]//,
+											//"attributes":JSON.stringify(object["attrs"])
+										}
+											);
+								  });
+								  });
+								  //outter div
+									dynamic_subscriptions_items += 
+										snippets.subscription_tab_template(
+											{"Type": "OutGoing"}//,
+											);
+							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+							  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+						};
+						if('subscribed' in subscriptions){
+							subscribed = subscriptions.subscribed;
+							$("#Subscriptions").empty();
+							//use teplate to format 
 
-							});
-					Devtools.showIncoming(function(subscriptions){
-						$("#Subcriptions" ).empty();
-						dynamic_subscriptions_items = "";
-						dynamic_subscriptions_items2 = "";
-						
-						$.each(subscriptions, function(key, object) {
-								dynamic_subscriptions_items2 +=
-								 snippets.subscription_incoming_template(
-									{"name": object["name"],
-									"name_space": object["name_space"],
-									"relationship": object["relationship"],
-									"e_cid": object["event_channel"],
-									"attributes":JSON.stringify(object["attrs"])}
-									);
-						  });
-						  //outter div
-							dynamic_subscriptions_items += 
-								snippets.subscription_tab_template(
-									{"Type": "Incomeing"}//,
-									);
-					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-					  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
-							});
-					Devtools.showOutgoing(function(subscriptions){
-						$("#Subcriptions" ).empty();
-						dynamic_subscriptions_items = "";
-						dynamic_subscriptions_items2 = "";
-						
-						$.each(subscriptions, function(key, object) {
-							console.log(key,object);
-								dynamic_subscriptions_items2 +=
-								 snippets.subscription_out_going_template(
-									{"name": object["name"],
-									"name_space": object["name_space"],
-									"relationship": object["relationship"],
-									"b_cid": object["back_channel"],
-									"attributes":JSON.stringify(object["attrs"])}
-									);
-						  });
-						  //outter div
-							dynamic_subscriptions_items += 
-								snippets.subscription_tab_template(
-									{"Type": "OutGoing"}//,
-									);
-					  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-					  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
-							});
+							dynamic_subscriptions_items = "";
+							dynamic_subscriptions_items2 = "";
+							
+							$.each(subscribed, function(key, object) {
+									$.each(object, function(key, object) {
+									dynamic_subscriptions_items2 +=
+									 snippets.subscription_template(
+										{"name": object["subscription_name"],
+										"name_space": object["name_space"],
+										"relationship": object["relationship"],
+										"e_cid": object["event_channel"],
+										"b_cid": object["back_channel"]//,
+										//"attributes":JSON.stringify(object["attrs"])
+									}
+										);
+							  });
+							  });
+							  //outter div
+								dynamic_subscriptions_items += 
+									snippets.subscription_tab_template(
+										{"Type": "subscriptions"}//,
+										);
+						  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
+						  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							};
+						});
 					  $.mobile.loading("hide");
 				}
 				populate_subscriptions();
