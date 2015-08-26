@@ -8,6 +8,7 @@
 
 
 // questions
+// standard state change function??
 // when should we use klogs? what is the standard? varible getters|| mutators 
 // is log our choice of status setting for rules ? when should we send directives. can we send directives in postlude with status varible?
 // varible validating for removing , deleteing, uninstalling
@@ -283,11 +284,11 @@ ruleset b507199x5 {
       (result);
     }
 
-  //    nameFromEci = function(){ // not used
-  //      eci = meta:eci();
-  //      channil = channel(back_channel_eci);
-  //      channil{'name'};
-  //    } 
+      nameFromEci = function(eci){ 
+        //eci = meta:eci();
+        channil = channel(eci);
+        channil{'name'};
+      } 
 
       eciFromName = function(name){
         channil = channel(name);
@@ -366,9 +367,9 @@ ruleset b507199x5 {
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
       attrs = attributes.split(re/;/);
       //attrs = attributes.decode();
-      channels = Channels();
+      //channels = Channels();
     }
-    if(channels{"eci"} neq "" && attributes neq "error") then { // check?? redundant????
+    if(eci neq "" && attributes neq "error") then { // check?? redundant????
       updateAttributes(eci,attributes);
     }
     fired {
@@ -708,10 +709,8 @@ ruleset b507199x5 {
       channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
       event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
 
-// can i get the eci at the same time as attributes?
-
       outGoing = function(event_channel){
-        back_channel_eci = meta:eci(); // channel it came in on.
+        back_channel_eci = meta:eci(); // channel event came in on.
         attributes = subscriptionsAttributes(back_channel_eci);
         attr = attributes.put(["status"],"subscribed"); // over write original status
         attrs = attr.put(["event_channel"],event_channel); // add event_channel
@@ -734,18 +733,20 @@ ruleset b507199x5 {
             meta:eci() | 
             eciFromName(channel_name);
     }
-    if (channel_name eq "no channel name") then
+    //if (channel_name eq "no channel name") then
+    // always update attribute changes
     {
-     noop();
+     updateAttributes(eci,attributes);
     }
     fired {
       log (standardOut("success"));
-      raise nano_manager event 'subscription_added'
+      raise nano_manager event 'subscription_added' // event to nothing
       with channel_name = channel_name;
       // set attributes to new values
-      raise nano_manager event 'update_channel_attributes_requested' // security? could I change anyones channels I come across?
-      with attributes = attributes// need to be a array of attributes 
-      and eci = eci;
+      // why not do this directly in actionblock?
+     // raise nano_manager event 'update_channel_attributes_requested' // security? could I change anyones channels I come across?
+     //   with attributes = attributes// need to be a array of attributes 
+     //   and eci = eci;
           } 
     else {
       log(">> failure >>");
@@ -754,26 +755,23 @@ ruleset b507199x5 {
     rule removeSubscription {
     select when nano_manager remove_subscription_requested
     pre{
-      // if i get a name i need to look up eci 
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
       eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
-      name = (channel_name eq 'No channel_name') => nameFromEci(eci) | channel_name;
+      name = (name eq "No channel_name") => nameFromEci(eci) | channel_name;
+      eCi = (eci eq "no eci") => eciFromName(name)| eci;
     }
-    if(channel_name neq "No channel_name") then
     {
-      noop();
+      //clean up channel
+      deleteChannel(eCi); 
     }
-    fired {
-      log (standardOut("success"));
-      raise nano_manager event subscription_removed
-      with channel_name = channel_name;
+    always {
+      log (standardOut("success, attemped to remove subscription"));
+      raise nano_manager event subscription_removed // event to nothing
+        with channel_name = channel_name;
       // clean up
-      raise nano_manager event channel_delete_requested with eci = eci;  
-      clear ent:subscriptions{channel_name}; // will this remove array value?
+      //raise nano_manager event channel_deletion_requested with eci = eci;  
+      clear ent:subscriptions{channel_name};
           } 
-    else {
-      log(">> failure >>");
-    }
   } 
   rule cancelSubscription {
     select when nano_manager cancel_subscription__requested
