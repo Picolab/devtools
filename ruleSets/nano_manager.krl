@@ -42,7 +42,7 @@ ruleset b507199x5 {
     provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
-    subscriptions, channelByName, channelByEci, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
+    subscriptions, channel, ciFromName, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
     currentSession,standardError
     sharing on
 
@@ -611,7 +611,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : channel(unique_name), 
+          "event_channel"  : eciFromName(unique_name), 
           "status" : "pending_incoming",
           "channel_type" : channel_type
         }.klog("event:send() attributes: ");
