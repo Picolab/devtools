@@ -958,7 +958,7 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"e_cid": object["event_channel"],
-											"c_name": key
+											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -986,7 +986,7 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"t_cid": object["target_channel"],
-											"c_name": key
+											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -1017,7 +1017,7 @@
 										"relationship": object["relationship"],
 										"e_cid": object["event_channel"],
 										"b_cid": object["back_channel"],
-										"c_name": key
+										"c_name": key2
 										//"attributes":JSON.stringify(object["attrs"])
 									}
 										);
