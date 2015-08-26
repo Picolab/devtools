@@ -951,15 +951,14 @@
 								dynamic_subscriptions_items2 = "";
 								
 								$.each(incoming, function(key, object) {
-									$.each(object, function(key, object) {
-										console.log(key,object);
+									$.each(object, function(key2, object) {
 										dynamic_subscriptions_items2 +=
 										 snippets.subscription_incoming_template(
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"e_cid": object["event_channel"],
-											"attributes":"attrs"
+											"c_name": key
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -980,14 +979,14 @@
 								dynamic_subscriptions_items2 = "";
 								
 								$.each(OutGoing, function(key, object) {
-									$.each(object, function(key, object) {
-									console.log(key,object);
+									$.each(object, function(key2, object) {
 										dynamic_subscriptions_items2 +=
 										 snippets.subscription_out_going_template(
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"t_cid": object["target_channel"]//,
+											"t_cid": object["target_channel"],
+											"c_name": key
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -1010,14 +1009,15 @@
 							dynamic_subscriptions_items2 = "";
 							
 							$.each(subscribed, function(key, object) {
-									$.each(object, function(key, object) {
+									$.each(object, function(key2, object) {
 									dynamic_subscriptions_items2 +=
 									 snippets.subscription_template(
 										{"name": object["subscription_name"],
 										"name_space": object["name_space"],
 										"relationship": object["relationship"],
 										"e_cid": object["event_channel"],
-										"b_cid": object["back_channel"]//,
+										"b_cid": object["back_channel"],
+										"c_name": key
 										//"attributes":JSON.stringify(object["attrs"])
 									}
 										);
