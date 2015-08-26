@@ -287,7 +287,8 @@ ruleset b507199x5 {
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
         (channel{attribute} eq value);}); 
-      filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
+      result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
+      (result.klog("result: "));
     }
 
       nameFromEci = function(){ // not used
