@@ -676,7 +676,7 @@ ruleset b507199x5 {
     select when nano_manager approve_pending_subscription_requested
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
-      back_channel = eciFromName(channel_name);
+      back_channel = eciFromName(channel_name).klog("back eci: ");
       //back_channel = channel(channel_name);
       //event_channel = back_channel{'attributes'}{'event_channel'}; // whats better?
       event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
@@ -684,7 +684,7 @@ ruleset b507199x5 {
             "cid" : event_channel
       };
     }
-    if (back_channel neq "") then
+    if (event_channel neq "no event_channel") then
     {
       event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
       event:send(subscription_map, "nano_manager", "add_subscription_requested")
