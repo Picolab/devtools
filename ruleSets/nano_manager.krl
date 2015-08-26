@@ -42,7 +42,7 @@ ruleset b507199x5 {
     provides installedRulesets, describeRulesets, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
-    subscriptions, channel, ciFromName, subscriptionsAttributesEci, subscriptionsAttributesName, //subscription
+    subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
     currentSession,standardError
     sharing on
 
@@ -200,7 +200,7 @@ ruleset b507199x5 {
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
 
       subscriptionList = function(names){ names.map( 
-                            function(name){ {}.put([name],subscriptionsAttributesName(name));
+                            function(name){ {}.put([name],subscriptionsAttributes(name));
                             });
                          };
       /* 
@@ -260,23 +260,15 @@ ruleset b507199x5 {
           (names);
 
     }
-    subscriptionsAttributesName = function (channel_name){
-      channil = channel(channel_name);
-      eci = channil{'cid'};
+    subscriptionsAttributes = function (value){
+      eci = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
+              value |
+              eciFromName(value);
+
       attributes = channelAttributes(eci);
       attributes{'Attributes'};
     } 
-    subscriptionsAttributesEci = function (eci){
-      channil = channel(eci);
-      eci = channil{'cid'};
-      attributes = channelAttributes(eci);
-      attributes{'Attributes'};
-    }
-    channelEciByName = function (name) {
-      channil= channel(name);
-      channil{'cid'};
-    }
-    
+
      channel = function (value){
       // if value has a ":"" then attribute is name otherwise its cid 
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
@@ -288,14 +280,14 @@ ruleset b507199x5 {
       filtered_channels = chs.filter(function(channel){
         (channel{attribute} eq value);}); 
       result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
-      (result.klog("result: "));
+      (result);
     }
 
-      nameFromEci = function(){ // not used
-        eci = meta:eci();
-        channil = channel(back_channel_eci);
-        channil{'name'};
-      } 
+  //    nameFromEci = function(){ // not used
+  //      eci = meta:eci();
+  //      channil = channel(back_channel_eci);
+  //      channil{'name'};
+  //    } 
 
       eciFromName = function(name){
         channil = channel(name);
@@ -683,7 +675,9 @@ ruleset b507199x5 {
     select when nano_manager approve_pending_subscription_requested
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
-      back_channel = channelByName(channel_name);
+      back_channel = eciFromName(channel_name);
+      //back_channel = channel(channel_name);
+      //event_channel = back_channel{'attributes'}{'event_channel'}; // whats better?
       event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
       subscription_map = {
             "cid" : event_channel
@@ -713,25 +707,27 @@ ruleset b507199x5 {
     pre{
       channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
       event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+
 // can i get the eci at the same time as attributes?
-      createOutGoing = function(event_channel){
-        back_channel_eci = meta:eci();
-        attributes = subscriptionsAttributesEci(back_channel_eci);
-        attr = attributes.put(["status"],"subscribed");
-        attrs = attr.put(["event_channel"],event_channel);
+
+      outGoing = function(event_channel){
+        back_channel_eci = meta:eci(); // channel it came in on.
+        attributes = subscriptionsAttributes(back_channel_eci);
+        attr = attributes.put(["status"],"subscribed"); // over write original status
+        attrs = attr.put(["event_channel"],event_channel); // add event_channel
         attrs;
       };
 
-      createIncoming = function(channel_name){
-        attributes = subscriptionsAttributesName(channel_name);
+      incoming = function(channel_name){
+        attributes = subscriptionsAttributes(channel_name);
         attr = attributes.put(["status"],"subscribed");
         attr;
       };
       // if no name its outgoing accepted
       // if name its incoming accepted
       attributes = (channel_name eq "no channel name" ) => 
-            createOutGoing(event_channel) | 
-            createIncoming(channel_name);
+            outGoing(event_channel) | 
+            incoming(channel_name);
       
       // get eci to raise change attributes event
       eci = (channel_name eq "no channel name" ) => 
@@ -747,8 +743,8 @@ ruleset b507199x5 {
       raise nano_manager event 'subscription_added'
       with channel_name = channel_name;
       // set attributes to new values
-      raise nano_manager event 'update_channel_attributes_requested'
-      with attributes = attributes// need to be a array of attributes
+      raise nano_manager event 'update_channel_attributes_requested' // security? could I change anyones channels I come across?
+      with attributes = attributes// need to be a array of attributes 
       and eci = eci;
           } 
     else {
