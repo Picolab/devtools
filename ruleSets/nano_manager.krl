@@ -217,11 +217,11 @@ ruleset b507199x5 {
           'error';
         (status);
       };
-      klogging = subscriptions.klog("ent:subscriptions :");
-      subs = subscriptionList(subscriptions).klog("subscriptionList : ");
+      klogging = subscriptions;
+      subs = subscriptionList(subscriptions);
 
       subscription = subs.collect(function(sub){
-        (status(sub)).klog("status : ");
+        (status(sub));
       });
 
       {
@@ -286,7 +286,7 @@ ruleset b507199x5 {
               'name';
       chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = chs.filter(function(channel){
-        (channel{attribute} eq value);}).klog("matched channels: "); 
+        (channel{attribute} eq value);}); 
       filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
     }
 
