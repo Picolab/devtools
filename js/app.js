@@ -987,7 +987,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"b_cid": object["back_channel"]//,
+											"t_cid": object["target_channel"]//,
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);

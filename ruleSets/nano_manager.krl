@@ -293,13 +293,13 @@ ruleset b507199x5 {
 
       nameFromEci = function(){ // not used
         eci = meta:eci();
-        channel = channel(back_channel_eci);
-        channel{'name'};
+        channil = channel(back_channel_eci);
+        channil{'name'};
       } 
 
       eciFromName = function(name){
-        channel = channel(name);
-        channel{'cid'};
+        channil = channel(name);
+        channil{'cid'};
       }
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
@@ -582,7 +582,7 @@ ruleset b507199x5 {
             "cid" : target_channel
       };
       // create unique_name for channel
-      unique_name = randomName(name_space).klog(standardOut("v3.4 unique_name: "));
+      unique_name = randomName(name_space);
 
       // build pending subscription entry
 
@@ -592,7 +592,7 @@ ruleset b507199x5 {
         "relationship" : my_role,
         "target_channel"  : target_channel, // this will remain after accepted
         "status" : "pending_outgoing"
-      }.klog("pending subscription"); 
+      }; 
       //create call back for subscriber     
       options = {
           'name' : unique_name, 
