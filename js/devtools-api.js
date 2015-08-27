@@ -24,7 +24,7 @@
 
 	    return this.defaults.production ? rids[name].prod : rids[name].dev;
 	},
-
+    // whats this for?
     rid_eci: null, //fleet_eci
     rid_summary: {}, //vehicle_summary
     rid_list: [], //vehicles
@@ -74,7 +74,7 @@
 		
 		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
 		addBootstrapRuleset = function(localCB) {
-			return nano_manager.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, {}, function(json) {
+			return nano_manager.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, function(json) {
 	            //console.log("Directive from installing bootstrap", json);
 				localCB();
 			}, {"eci":nano_manager.defaultECI});
@@ -82,9 +82,9 @@
 		
 		//attempt bootstrap
 		bootstrapPico = function(localCB) {
-			nano_manager.raiseEvent("devtools", "bootstrap", {}, {}, function(response) {
+			nano_manager.raiseEvent("devtools", "bootstrap", {}, function(response) {
 				localCB();
-			}, {"eci":eci});
+			}, {"eci":eci}); // where is this eci coming from? should you pass options and let nano default handle this?
 		};
 		
         var timeToWait = 0;
@@ -154,11 +154,10 @@
     initAccount: function(attrs, cb, options)
         {
         cb = cb || function(){};
-        options = options || {};
         attrs = attrs || {};
             Devtools.log("Initializing account for user with attributes ", attrs);
 
-            return nano_manager.raiseEvent("devtools", "bootstrap", {}, {}, function(response)
+            return nano_manager.raiseEvent("devtools", "bootstrap", {}, function(response)
             {
         // note that because the channel is create asynchronously, processing callback does
         // NOT mean the channel exists. 
@@ -167,7 +166,7 @@
             throw "Account initialization failed";
         }
         cb(response);
-            });
+            },options);
         },
 
 
@@ -187,13 +186,11 @@
     createPico: function(data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Creating pico");
-       return nano_manager.raiseEvent("devtools", "createChild", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "createChild", data, function(json) {
            Devtools.log("Directive from createPico", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
 	
 	childPicos: function(cb, options)
@@ -214,64 +211,53 @@
     updateUrl: function(rid, url, cb, options) //basing this off of updateCarvoyantVehicle
     {
         cb = cb || function(){};
-        options = options || {};
         var json = {rid: rid,url: url}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Updating the URL");
-        return nano_manager.raiseEvent("devtools", "update_url", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "update_url", json, function(json) {
             Devtools.log("Directive from updating URL", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 
     flushRID: function(rid, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
         var json = {rid: rid}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Flushing RID " + rid);
-        return nano_manager.raiseEvent("devtools", "flush_rid", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "flush_rid", json, function(json) {
             Devtools.log("Directive from Flushing Rid", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 
     deleteRID: function(rid, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
         var json = {rid: rid}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Deleting RID " + rid);
-        return nano_manager.raiseEvent("devtools", "delete_rid", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "delete_rid", json, function(json) {
             Devtools.log("Directive from Deleting Rid", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 
 
     showInstalledRulesets: function(cb, options) 
     {
         var parameters = {};
-        options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;// where does defaultEci come from?? 
         Devtools.log("Showing installed rulesets");
         cb = cb || function(){};
         post_function = function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         };
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {},post_function, options);
+        return nano_manager.installedRulesets(parameters, post_function, options);
     },
 
     installRulesets: function(ridlist, cb, options) 
     {
 
         var attributes = {rids: ridlist}; 
-        var parameters = {}; // whats event parameters ???
-        options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
         Devtools.log("Installing rulesets");
         cb = cb || function(){};
         post_function = function(json) {
@@ -279,7 +265,7 @@
             cb(json);
         };
 
-        return nano_manager.installRulesets(attributes,parameters,post_function,options);
+        return nano_manager.installRulesets(attributes,post_function,options);
 
     },
 
@@ -287,9 +273,6 @@
     {
 
         var attributes = {rids: ridlist}; 
-        var parameters = {}; 
-        options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
         Devtools.log("Uninstalling rulesets",ridlist);
         cb = cb || function(){};
         post_function = function(json) {
@@ -297,20 +280,18 @@
             cb(json);
         };
 
-        return nano_manager.uninstallRuleset(attributes,parameters,post_function,options);
+        return nano_manager.uninstallRuleset(attributes,post_function,options);
 
     },
     RegisterRuleset: function(url,cb,options)
     {
         cb = cb || function(){};
-        options = options || {};
     var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Registering rulesets");
-        return nano_manager.raiseEvent("devtools", "register_ruleset", json, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "register_ruleset", json, function(json) {
             Devtools.log("Directive from register ruleset", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 
     //--------------------------------Channels mannagement----------------------
@@ -339,39 +320,33 @@
     installChannel: function(channel_name, cb, options) 
     {
         cb = cb || function(){};
-        options = options || {};
-    var parameters = {channel_name:channel_name}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+    var attributes = {channel_name:channel_name}; 
         Devtools.log("Installing channels");
-       return nano_manager.raiseEvent("devtools", "create_channel", parameters,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "create_channel", attributes, function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
     uninstallChannel: function(ECI, cb, options) 
     {
         cb = cb || function(){};
-        options = options || {};
     var json = {eci:ECI}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Destroy channels");
-        return nano_manager.raiseEvent("devtools", "channel_destroy", json,{}, function(json) {
+        return nano_manager.raiseEvent("devtools", "channel_destroy", json, function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
-        }, {"eci":eci});
+        }, options);
 
     },
     //---------------------------------(Apps) Authorize Client mannagement----------------
     authorizeClient: function(app_Data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("authorizing clientlient ");
-       return nano_manager.raiseEvent("devtools", "authorize_client", app_Data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "authorize_client", app_Data, function(json) {
            Devtools.log("Directive from AuthorizeClient", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
 	showAuthorizedClients: function(cb, options)
     {
@@ -387,27 +362,23 @@
     removeClient: function(app_ECI, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
         var json = {"app_id":app_ECI}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("remove client");
         console.log("attributes",json);
-        return nano_manager.raiseEvent("devtools", "remove_client", json,{}, function(json) {
+        return nano_manager.raiseEvent("devtools", "remove_client", json, function(json) {
            Devtools.log("Directive from remove client", json);
            cb(json);
-        }, {"eci":eci});
+        }, options);
     },
     updateClient: function(app_ECI, app_Data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
         app_Data["app_id"]=app_ECI;
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Updating client");
-        return nano_manager.raiseEvent("devtools", "update_client", app_Data, {}, function(json) {
+        return nano_manager.raiseEvent("devtools", "update_client", app_Data, function(json) {
             Devtools.log("Directive from updating Client", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 
     showScheduledEvents: function(cb, options)
@@ -424,49 +395,51 @@
     /*scheduleEvent: function(Data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("scheduling event");
-       return nano_manager.raiseEvent("devtools", "event_scheduled", Data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "event_scheduled", Data, function(json) {
            Devtools.log("Directive from ScheduleEvent", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },*/
     //TESTING CODE WRITTEN IN NANO MANAGER
    scheduleEvent: function(data, cb, options) 
     {
         cb = cb || function(){};
-        options = options || {};
         var parameters = {channelName:channel_name}; 
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Installing channels");
-       return nano_manager.raiseEvent("nano_manager", "scheduled_created", data,{}, function(json) {
+       return nano_manager.raiseEvent("nano_manager", "scheduled_created", data, function(json) {
            Devtools.log("Creating a scheduled event", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
     //-------------------Subscriptions--------------------
     showSubscriptions: function(cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show Subscriptions");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", function(json) {
             Devtools.log("Displaying showSubscriptions", json);
             cb(json);
-        }, {"eci":eci});  
+        }, options);  
+    },
+    SubscriptionAttributes: function(name,cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("show Subscriptions");
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", function(json) {
+            Devtools.log("Displaying showSubscriptions", json);
+            cb(json);
+        }, options);  
     },
     showIncoming: function(cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("show Incoming");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", function(json) {
             Devtools.log("Displaying showIncoming", json);
             cb(json);
-        }, {"eci":eci});  
+        }, options);  
     },
     showOutgoing: function(cb, options)
     {
@@ -482,46 +455,38 @@
     ApproveSubscription: function(event_channel, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("approve subscription");
-       return nano_manager.raiseEvent("devtools", "incoming_request_approved", event_channel,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "incoming_request_approved", event_channel, function(json) {
            Devtools.log("Directive from ApproveSubscription", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
     RequestSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Request subscription");
-       return nano_manager.raiseEvent("devtools", "subscribe", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "subscribe", data, function(json) {
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
     RejectIncomingSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("reject in coming subscription");
-       return nano_manager.raiseEvent("devtools", "incoming_request_rejected", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "incoming_request_rejected", data, function(json) {
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
     Unsubscribe: function(data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("unsubscription");
-       return nano_manager.raiseEvent("devtools", "init_unsubscribed", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "init_unsubscribed", data, function(json) {
            Devtools.log("Directive from init_unsubscribed", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     },
    RejectOutgoingSubscription: function(data, cb, options)
     {
@@ -529,10 +494,10 @@
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("cancel subscription request");
-       return nano_manager.raiseEvent("devtools", "out_going_request_rejected", data,{}, function(json) {
+       return nano_manager.raiseEvent("devtools", "out_going_request_rejected", data, function(json) {
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
-       }, {"eci":eci});
+       }, options);
     }
 //
 }; //closes the "window" inside the function DON'T DELETE
