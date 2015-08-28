@@ -18,11 +18,9 @@ ruleset devtools {
         use module b507199x6 alias Account
         //use module a169x625 alias PicoInspector
 
-        provides showRulesets,showRuleset, showInstalledRulesets, aboutPico, childPicos,
+        provides showRulesets,showRuleset,  aboutPico, childPicos,
          showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, // schedule
-         showInstalledChannels,
-        showClients, showClient,/*testing*/list_bootstrap, get_appinfo, list_callback, //apps
-        showSubscriptions, showIncoming, showOutgoing 
+        showClients, showClient //apps
         sharing on
     }
     global {
@@ -71,13 +69,7 @@ ruleset devtools {
 	        }; 
         //------------------------------- <End oF>  Rulesets -------------------
 
-        //------------------------------- Channnels -------------------
-	        showInstalledChannels = function() {
-	            channels = NanoManager:channels().klog(standardOut("NanoManager:Channels()"));
-	            channels;
-	        };
-        //------------------------------- <End oF>  Channnels -------------------
-
+     
         //------------------------------- Authorize clients-------------------
 	        showClients = function() {
 	            clients = apps().klog(standardOut("NanoManager:clients()"));
@@ -181,26 +173,6 @@ ruleset devtools {
 		    
 		    }
         // -------------------- <End oF> Scheduled ---------------------- 
-
-        // -------------------- SUBSCRIPTIONS ---------------------- 
-	        showSubscriptions = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
-	          subscription = subscriptions{'subscriptions'};
-	          subscription;
-	        };
-	        showIncoming = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
-	          pending = subscriptions{'subscriptions'};
-	          incoming = pending{'pending_incoming'};
-	          incoming;
-	        };
-	        showOutgoing = function() {
-	          subscriptions = NanoManager:subscriptions().klog(standardOut("NanoManager:subscriptions()"));
-	          pending = subscriptions{'subscriptions'};
-	          out = pending{'pending_outgoing'};
-	          out;
-	        };
-        // -------------------- <End oF> SUBSCRIPTIONS ---------------------- 
 
     }
 	
@@ -331,114 +303,8 @@ ruleset devtools {
 		      log ""
 		    }
 		  }  
-    // ---------- ruleset installation ----------
-	    rule installRulesets {
-	      select when devtools install_rulesets
-	      pre {
-	        rids = event:attr("rids").klog(">> rids attribute <<").defaultsTo("", ">> missing event attr rids >> ").klog(">> rids attribute <<");
-	          }
-	      if(rids neq "") then {
-	        noop();
-	          }
-	      fired {
-	        log (standardOut("successfully installed rids #{rids}"));
-	        raise nano_manager event "install_rulesets_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log (standardOut("failure"));
-	      }
-	        }
+   
 
-	    rule uninstallRulesets {
-	      select when devtools uninstall_rulesets
-	      pre {
-	        rids = event:attr("rids").defaultsTo("", ">> missing event attr rids >> ");
-	          }
-	      if(rids neq "") then {
-	        noop();
-	          }
-	      fired {
-	        log(">> successfully uninstalled rids #{rids} >>");
-	        raise nano_manager event "uninstall_rulesets_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log(">> could not uninstall rids #{rids} >>");
-	      }
-	    }
-
-    //---------------- channel manager ---------------
-
-	    rule CreateChannel {
-	      select when devtools create_channel
-	      pre {
-	        channel_name = event:attr("channel_name").defaultsTo("", ">> missing event attr channels >> ");
-	          }
-	      if(channel_name.match(re/\w[\w\d_-]*/)) then {
-	        send_directive("Created #{channel_name}");
-	          }
-	      fired {
-	        log(">> successfully raised create channel #{channel_name} event >>");
-	        raise nano_manager event "channel_creation_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log(">> could not create channels #{channel_name} >>");
-	      }
-	    }
-
-	    rule DestroyChannel {
-	      select when devtools channel_destroy
-	      pre {
-	        channel_id = event:attr("eci").defaultsTo("", ">> missing event attr eci >> ");
-	          }
-	      if(channel_id neq "") then {
-	        send_directive("deleteing #{channel_id}");
-	          }
-	      fired {
-	        log(">> success, raising delete channel #{channel_id} event >>");
-	        raise nano_manager event "channel_deletion_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log(">> could not delete channel #{channel_id} >>");
-	      }
-	    }
-	    rule UpdateChannelAttributes {
-	      select when devtools channel_attributes_updated
-	      pre {
-	        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
-	          }
-	      if(channelID neq "") then {
-	        send_directive("updateing #{channelID} attrs");
-	          }
-	      fired {
-	        log(">> success, raiseing updated channel attrs  #{channelID} event >>");
-	        raise nano_manager event "update_channel_attributes_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log(">> could not update channel #{channelID} >>");
-	      }
-	    }
-	    rule UpdateChannelPolicy {
-	      select when devtools channel_policy_updated
-	      pre {
-	        channelID = event:attr("channel_id").defaultsTo("", ">> missing event attr channelID >> ");
-	          }
-	      if(channelID neq "") then {
-	        send_directive("updateing #{channelID} policy");
-	          }
-	      fired {
-	        log(">> success, raiseing updated policy channel #{channelID} event >>");
-	        raise nano_manager event "update_channel_policy_requested"
-	              attributes event:attrs();
-	      } 
-	      else {
-	        log(">> could not update channel #{channelID} >>");
-	      }
-	    }	
 
     //-------------------OAuthRegistry---------------
 
@@ -595,81 +461,7 @@ ruleset devtools {
 	      		log (standardOut("failure"));
 	      	}
 	      }
- 	// <!-- -------------------- Subscription ---------------------- -->
-	  rule addSubscriptionRequest {
-	        select when devtools subscribe
-	        pre {
-	            target_channel = event:attr("target_channel").defaultsTo("", ">> missing event attr targetChannel >> ");
-	        }
-	        if(target_channel neq "" ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	            raise nano_manager event "subscription_requested"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-	        }
-	    }
-	  rule ApproveIncomingRequest {
-	        select when devtools incoming_request_approved
-	        pre {
-	            event_channel= event:attr("event_channel").defaultsTo("", ">> missing event attr eventChannel >> ");
-	        }
-	        if(event_channel neq "" ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	            raise nano_manager event "approve_pending_subscription_requested"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-	        }
-	    }
-	  rule RejectIncomingRequest {
-	        select when devtools incoming_request_rejected
-	        or out_going_request_rejected
-	        pre {
-	        }
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	            raise nano_manager event "reject_incoming_subscription_requested"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-	        }
-	    }
-	  rule INITUnsubscribe {
-	        select when devtools init_unsubscribed
-	        pre {
-	            event_channel= event:attr("event_channel").defaultsTo("", ">> missing event attr eventChannel >> ");
-	        }
-	        if(event_channel neq "" ) then
-	        {
-	          noop();
-	        }
-	        fired {
-	          log (standardOut("success"));
-	            raise nano_manager event "cancelSubscription"
-	              attributes event:attrs();
-	        }
-	        else {
-	          log (standardOut("failure"));
-	        }
-	    }
-
- 	// <!-- --------------------<End oF> Subscription ---------------------- -->
-
+ 	
  	// <!-- -------------------- Scheduled ---------------------- -->
       rule DeleteScheduledEvent {
 	    select when nano_manager delete_scheduled_event_requested

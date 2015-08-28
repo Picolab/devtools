@@ -28,7 +28,7 @@
     rid_eci: null, //fleet_eci
     rid_summary: {}, //vehicle_summary
     rid_list: [], //vehicles
-
+    // ------------------------------------------------------------------------ bootStrap/ utilities
 
     log: function() {
         if (this.defaults.logging && console && console.log) {
@@ -124,33 +124,7 @@
 		persistent_bootstrap();
 		
 	},
-
-    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
-    {
-        cb = cb || function(){};
-        options = options || {};
-        //var rid = "rulesets";
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("Showing the rulesets");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
-            Devtools.log("Displaying rulesets", json);
-            cb(json);
-        }, {"eci":eci});
-    },
-
-    status: function(cb, options){
-        cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("Showing the channels");
-        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
-            Devtools.log("Displaying installed rulesets", json);
-            cb(json);
-        }, {"eci":eci});   
-    },
-// ---------- account ----------
-    // this is called in _layouts/code.html when the account is created
+        // this is called in _layouts/code.html when the account is created
     initAccount: function(attrs, cb, options)
         {
         cb = cb || function(){};
@@ -169,44 +143,42 @@
             },options);
         },
 
+    status: function(cb, options){ // is this the same as showInstalledRulesets
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        Devtools.log("Showing the channels");
+        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+            Devtools.log("Displaying installed rulesets", json);
+            cb(json);
+        }, {"eci":eci});   
+    },
 
-    about: function(cb, options) 
+    // ------------------------------------------------------------------------ Rulesets 
+    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {
         cb = cb || function(){};
         options = options || {};
-        var json = {rids: rid,url: url}; //not sure what this does
+        //var rid = "rulesets";
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("Getting info about pico ");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
-            Devtools.log("This pico: ", json);
+        Devtools.log("Showing the rulesets");
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
+            Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
     },
-	
-    createPico: function(data, cb, options)
+
+    RegisterRuleset: function(url,cb,options)
     {
         cb = cb || function(){};
-        Devtools.log("Creating pico");
-       return nano_manager.raiseEvent("devtools", "createChild", data, function(json) {
-           Devtools.log("Directive from createPico", json);
-           cb(json);
-       }, options);
+    var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
+        Devtools.log("Registering rulesets");
+        return nano_manager.raiseEvent("devtools", "register_ruleset", json, function(json) {
+            Devtools.log("Directive from register ruleset", json);
+            cb(json);
+        }, options);
     },
-	
-	childPicos: function(cb, options)
-	{
-		cb = cb || function(){};
-		options = options || {};
-		var json = {rids: rid, url: url};
-		var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-		Devtools.log("Getting child picos ");
-		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
-			Devtools.log("Children: ", json);
-			cb(json);
-		}, {"eci":eci});	
-	},
-
-//---------the functions for updating rulesets
 
     updateUrl: function(rid, url, cb, options) //basing this off of updateCarvoyantVehicle
     {
@@ -241,6 +213,7 @@
         }, options);
     },
 
+    // ------------------------------------------------------------------------ installed Rulesets 
 
     showInstalledRulesets: function(cb, options) 
     {
@@ -283,59 +256,78 @@
         return nano_manager.uninstallRuleset(attributes,post_function,options);
 
     },
-    RegisterRuleset: function(url,cb,options)
-    {
-        cb = cb || function(){};
-    var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
-        Devtools.log("Registering rulesets");
-        return nano_manager.raiseEvent("devtools", "register_ruleset", json, function(json) {
-            Devtools.log("Directive from register ruleset", json);
-            cb(json);
-        }, options);
-    },
 
-    //--------------------------------Channels mannagement----------------------
-    showInstalledChannels: function(cb, options) // copied PJW
+
+    // ------------------------------------------------------------------------ Picos
+
+    about: function(cb, options) 
     {
         cb = cb || function(){};
-        options = options || {};
+        //var json = {rids: rid,url: url}; //not sure what this does// never passed or used, dead code
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("Showing the channels");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledChannels", {}, function(json) {
-            Devtools.log("Displaying installed channels", json);
+        Devtools.log("Getting info about pico ");
+        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
+            Devtools.log("This pico: ", json);
             cb(json);
         }, {"eci":eci});
-/*
+    },
+	
+    createPico: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("Creating pico");
+       return nano_manager.raiseEvent("devtools", "createChild", data, function(json) {
+           Devtools.log("Directive from createPico", json);
+           cb(json);
+       }, options);
+    },
+	
+	childPicos: function(cb, options)
+	{
+		cb = cb || function(){};
+		//var json = {rids: rid, url: url};
+		Devtools.log("Getting child picos ");
+		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+			Devtools.log("Children: ", json);
+			cb(json);
+		}, options);	
+	},
+
+
+    // ------------------------------------------------------------------------ Channels mannagement
+    showInstalledChannels: function(cb, options)
+    {
+        cb = cb || function(){};
         var parameters = {};
-        options = options || {};
-        options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the channels");
         post_function = function(json) {
             Devtools.log("Displaying installed channels", json);
             cb(json);
         };
         return nano_manager.installedRulesets(parameters,post_function,options);
-*/
+
     },
     installChannel: function(channel_name, cb, options) 
     {
         cb = cb || function(){};
-    var attributes = {channel_name:channel_name}; 
+        var attributes = {channel_name:channel_name}; 
         Devtools.log("Installing channels");
-       return nano_manager.raiseEvent("devtools", "create_channel", attributes, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from create channel", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.createChannel(attributes, post_function, options);
     },
     uninstallChannel: function(ECI, cb, options) 
     {
         cb = cb || function(){};
-    var json = {eci:ECI}; 
+        var attributes = {eci:ECI}; 
         Devtools.log("Destroy channels");
-        return nano_manager.raiseEvent("devtools", "channel_destroy", json, function(json) {
-           Devtools.log("Directive from create channel", json);
+        post_function = function(json) {
+            Devtools.log("Directive from create channel", json);
            cb(json);
-        }, options);
+        };
+        return nano_manager.deleteChannel(attributes, post_function, options);
 
     },
     //---------------------------------(Apps) Authorize Client mannagement----------------
@@ -381,6 +373,7 @@
         }, options);
     },
 
+    //-------------------------------------------------------------- scheduled events
     showScheduledEvents: function(cb, options)
     {
         cb = cb || function(){};
@@ -416,50 +409,38 @@
     showSubscriptions: function(cb, options)
     {
         cb = cb || function(){};
+        var parameters = {};
         Devtools.log("show Subscriptions");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", function(json) {
+        post_function = function(json) {
             Devtools.log("Displaying showSubscriptions", json);
             cb(json);
-        }, options);  
+        };
+        return nano_manager.subscriptions(parameters, post_function, options);  
     },
+
     SubscriptionAttributes: function(name,cb, options)
     {
         cb = cb || function(){};
+        var parameters = {};
         Devtools.log("show Subscriptions");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showSubscriptions", function(json) {
+        post_function = function(json) {
             Devtools.log("Displaying showSubscriptions", json);
-            cb(json);
-        }, options);  
+            cb(json)
+        };
+        return nano_manager.SubscriptionAttributes(parameters, post_function, options);
+
     },
-    showIncoming: function(cb, options)
-    {
-        cb = cb || function(){};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("show Incoming");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showIncoming", function(json) {
-            Devtools.log("Displaying showIncoming", json);
-            cb(json);
-        }, options);  
-    },
-    showOutgoing: function(cb, options)
-    {
-        cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
-        Devtools.log("show OutGoing");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showOutgoing", {}, function(json) {
-            Devtools.log("Displaying showOutGoing", json);
-            cb(json);
-        }, {"eci":eci});  
-    },
+   
     ApproveSubscription: function(event_channel, cb, options)
     {
         cb = cb || function(){};
+        var attributes = event_channel;
         Devtools.log("approve subscription");
-       return nano_manager.raiseEvent("devtools", "incoming_request_approved", event_channel, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from ApproveSubscription", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.approvePendingSubscription(attributes , post_function , options);
     },
     RequestSubscription: function(data, cb, options)
     {
