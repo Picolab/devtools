@@ -224,7 +224,7 @@
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         };
-        return nano_manager.installedRulesets(parameters, post_function, options);
+        return nano_manager.installedRulesetsWithDiscription(parameters, post_function, options);
     },
 
     installRulesets: function(ridlist, cb, options) 
@@ -445,40 +445,45 @@
     RequestSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
+        var attributes = data;
         Devtools.log("Request subscription");
-       return nano_manager.raiseEvent("devtools", "subscribe", data, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.RequestSubscription(attributes, post_function, options);
     },
     RejectIncomingSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
         Devtools.log("reject in coming subscription");
-       return nano_manager.raiseEvent("devtools", "incoming_request_rejected", data, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.RejectIncomingSubscription( data, post_function , options);
     },
     Unsubscribe: function(data, cb, options)
     {
         cb = cb || function(){};
+        var attributes = data;
         Devtools.log("unsubscription");
-       return nano_manager.raiseEvent("devtools", "init_unsubscribed", data, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from init_unsubscribed", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.Unsubscribe( attributes, post_function, options);
     },
    RejectOutgoingSubscription: function(data, cb, options)
     {
         cb = cb || function(){};
-        options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var attributes = data;
         Devtools.log("cancel subscription request");
-       return nano_manager.raiseEvent("devtools", "out_going_request_rejected", data, function(json) {
+        post_function = function(json) {
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
-       }, options);
+       };
+       return nano_manager.RejectOutgoingSubscription( attributes, post_function, options);
     }
 //
 }; //closes the "window" inside the function DON'T DELETE

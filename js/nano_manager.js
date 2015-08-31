@@ -171,9 +171,16 @@
         return nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", parameters, postFunction , options); 
     };
 
+    nano_manager.installedRulesetsWithDiscription = function(parameters, postFunction, options)
+    {
+      return nano_manager.installedRulesets({},function(rids){
+         return nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", rids.rids, postFunction , options);
+      }, options);
+    };
+
     nano_manager.installRulesets = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes,postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, postFunction, options);
     };
 
     nano_manager.uninstallRuleset = function( eventAttributes, postFunction, options)
