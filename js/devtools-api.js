@@ -264,12 +264,11 @@
     {
         cb = cb || function(){};
         //var json = {rids: rid,url: url}; //not sure what this does// never passed or used, dead code
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Getting info about pico ");
         return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
             Devtools.log("This pico: ", json);
             cb(json);
-        }, {"eci":eci});
+        }, options);
     },
 	
     createPico: function(data, cb, options)
