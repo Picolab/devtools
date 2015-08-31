@@ -202,10 +202,10 @@ ruleset b507199x5 {
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       // list of channels
       channils = channels();
-      channels = channils{'channels'};
+      chans = channils{'channels'}.klog("channels.channels : ");
       // filter list channels to only have subs
       // 2nbigO(n^2) but is faster because of less server calls to database
-      filtered_channels = channels.filter( function(channel){
+      filtered_channels = chans.filter( function(channel){
         //channel{'name'} in other array? 
         subscriptions.any( function(name){ 
           (name eq channel{'name'});  
