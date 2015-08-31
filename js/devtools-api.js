@@ -304,7 +304,7 @@
             Devtools.log("Displaying installed channels", json);
             cb(json);
         };
-        return nano_manager.installedRulesets(parameters,post_function,options);
+        return nano_manager.channels(parameters,post_function,options);
 
     },
     installChannel: function(channel_name, cb, options) 
