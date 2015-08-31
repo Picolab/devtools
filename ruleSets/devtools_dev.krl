@@ -19,7 +19,7 @@ ruleset devtools {
         //use module a169x625 alias PicoInspector
 
         provides showRulesets,showRuleset,  aboutPico, childPicos,
-         showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, // schedule
+         showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, showInstalledRulesets,// schedule
         showClients, showClient //apps
         sharing on
     }
