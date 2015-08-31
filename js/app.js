@@ -942,7 +942,7 @@
 
 				function populate_subscriptions() {
 					Devtools.showSubscriptions(function(subscriptions){
-						
+						subscriptions = subscriptions.subscriptions;
 						$("#Subcriptions" ).empty();
 								if('pending_incoming' in subscriptions){
 								incoming = subscriptions.pending_incoming;

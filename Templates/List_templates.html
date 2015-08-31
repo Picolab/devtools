@@ -179,8 +179,8 @@
         <p><b>Relationship:</b> {{relationship}}</p>
         <p><b>Event Channel:</b> {{e_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
-         <p style="position:relative; top:-20px"><a id="reject-button" style="float:right;" href="#reject-incoming-subscription?eventChannel={{e_cid}}&name={{c_name}}" data-role="button" data-icon="reject" class="ui-btn ui-icon-delete ">Reject</a></p>
-         <p style="position:relative; top:-20px"><a id="approve-button" style="float:right;" href="#approve-incoming-subscription?eventChannel={{e_cid}}&name={{c_name}}" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete ">Approve</a></p>
+         <p style="position:relative; top:-20px"><a id="reject-button" style="float:right;" href="#reject-incoming-subscription?eventChannel={{e_cid}}&name={{c_name}}" data-role="button" data-icon="reject" class="ui-btn ui-icon-delete RejectButton">Reject</a></p>
+         <p style="position:relative; top:-20px"><a id="approve-button" style="float:right;" href="#approve-incoming-subscription?eventChannel={{e_cid}}&name={{c_name}}" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete ApproveButton ">Approve</a></p>
      </div>
    </div>
 </div>
@@ -193,7 +193,7 @@
         <p><b>Relationship:</b> {{relationship}}</p>
         <p><b>Target Channel:</b> {{t_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
-         <p style="position:relative; top:-20px"><a style="float:right; margin: 0px;" href="#cancel-subscription?backChannel={{b_cid}}&name={{c_name}}" data-role="button" data-icon="cancel" class="ui-btn ui-icon-delete ">Cancel</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right; margin: 0px;" href="#cancel-subscription?backChannel={{b_cid}}&name={{c_name}}" data-role="button" data-icon="cancel" class="ui-btn ui-icon-delete CancelSubscriptionButton">Cancel</a></p>
          <br>
      </div>
    </div>
@@ -209,7 +209,7 @@
         <p><b>Back Channel:</b> {{b_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
          <p style="position:relative; top:-20px"><a style="float:right;" href="#un-subscribe-subscription?eventChannel={{e_cid}}&name={{name}}" 
-         data-role="button" data-icon="un-subscribe" class="ui-btn ui-icon-delete ">Un-Subscribe</a></p>
+         data-role="button" data-icon="un-subscribe" class="ui-btn ui-icon-delete UnSubscribeButton">Un-Subscribe</a></p>
      </div>
    </div>
 </div>
