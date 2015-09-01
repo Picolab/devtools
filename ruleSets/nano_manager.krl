@@ -44,7 +44,7 @@ ruleset b507199x5 {
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
     subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
-    currentSession,standardError
+    standardError
     sharing on
 
   }
@@ -154,10 +154,6 @@ ruleset b507199x5 {
     }
 
   //-------------------- Picos --------------------
-  currentSession = function() {
-    //pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
-    meta:eci();
-  };
 
 	children = function() {
 		self = meta:eci();
@@ -201,11 +197,11 @@ ruleset b507199x5 {
       // list of subs
       subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       // list of channels
-      channils = channels();
-      chans = channils{'channels'};
+      channels_result = channels();
+      channel_list = channels_result{'channels'};
       // filter list channels to only have subs
       // 2nbigO(n^2) but is faster because of less server calls to database
-      filtered_channels = chans.filter( function(channel){
+      filtered_channels = channel_list.filter( function(channel){
         //channel{'name'} in other array? 
         subscriptions.any( function(name){ 
           (name eq channel{'name'});  
@@ -252,6 +248,7 @@ ruleset b507199x5 {
         unique_name =  name.head().defaultsTo("",standardError("unique name failed"));
         (namespace +':'+ unique_name);
     }
+    // optimize by taking a list of names, to prevent multiple network calls for channels
     checkName = function(name){
           chan = channels();
           //channels = channels(); worse bug ever!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -268,6 +265,7 @@ ruleset b507199x5 {
           (names);
 
     }
+    // takes name or eci 
     subscriptionsAttributes = function (value){
       eci = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               value |
@@ -284,8 +282,8 @@ ruleset b507199x5 {
       attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               'cid' |
               'name';
-      chs = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
-      filtered_channels = chs.filter(function(channel){
+      channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
+      filtered_channels = channel_list.filter(function(channel){
         (channel{attribute} eq value);}); 
       result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
       (result);
@@ -293,13 +291,13 @@ ruleset b507199x5 {
 
       nameFromEci = function(eci){ 
         //eci = meta:eci();
-        channil = channel(eci);
-        channil{'name'};
+        channel_single = channel(eci);
+        channel_single{'name'};
       } 
 
       eciFromName = function(name){
-        channil = channel(name);
-        channil{'cid'};
+        channel_single = channel(name);
+        channel_single{'cid'};
       }
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
@@ -328,11 +326,12 @@ ruleset b507199x5 {
   //------------------------------------------------------------------------------------Rules
   //-------------------- Rulesets --------------------
   
-  rule installRuleset {// should this handle multiple rulesets or a single one
+  rule installRulesets {
     select when nano_manager install_rulesets_requested
-    pre {
-      eci = meta:eci().defaultsTo({},standardError("undefined"));
-      rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
+    pre { 
+      eci = meta:eci();
+      rids = event:attr("rids").defaultsTo("",standardError(" "));
+      // this will never get an array from a url/event ?
       rid_list = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
     if(rids neq "") then { // should we be valid checking?
@@ -346,10 +345,10 @@ ruleset b507199x5 {
       log(">> could not install rids #{rids} >>");
     }
   }
-  rule uninstallRuleset { // should this handle multiple uninstalls ??? 
+  rule uninstallRulesets { // should this handle multiple uninstalls ??? 
     select when nano_manager uninstall_rulesets_requested
     pre {
-      eci = meta:eci().defaultsTo({},standardError("undefined"));
+      eci = meta:eci();
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
       rid_list = rids.typeof() eq "array" => rids | rids.split(re/;/); 
     }
@@ -370,7 +369,7 @@ ruleset b507199x5 {
   rule updateChannelAttributes {
     select when nano_manager update_channel_attributes_requested
     pre {
-      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels")); // should we force the event to be raised to the eci being updated.
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
       attrs = attributes.split(re/;/);
       //attrs = attributes.decode();
@@ -391,11 +390,11 @@ ruleset b507199x5 {
   rule updateChannelPolicy {
     select when nano_manager update_channel_policy_requested // channel_policy_update_requested
     pre {
-      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels"));
-      policy = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
-      channels = Channels();
+      eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels")); // should we force... use meta:eci()
+      policy_string = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
+      policy = policy_string.decode();
     }
-    if(channels{"channelID"} neq "" && policy neq "error") then { // check?? redundant?? whats better??
+    if(eci neq "" && policy neq "error") then { // check?? redundant?? whats better??
       updatePolicy(eci, policy);
     }
     fired {
@@ -418,10 +417,11 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success deleted channel #{eci}"));
       log(">> successfully  >>");
-          } else {
-      log(">> could not delete channel #{eci} >>");
-          }
-        }
+    } 
+   // else { -------------------------------------------// can we reach this point?
+    //  log(">> could not delete channel #{eci} >>");
+   //    }
+  }
   rule createChannel {
     select when nano_manager channel_creation_requested
     pre {
@@ -429,8 +429,7 @@ ruleset b507199x5 {
       //type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
       //attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       //attrs = attributes.decode();
-      user = currentSession();
-      //user = pci:session_token(meta:eci()).defaultsTo("", standardError("pci session_token failed")); // this is old way.. why not just eci??
+
       
       options = {
         'name' : channel_name//,
@@ -440,7 +439,7 @@ ruleset b507199x5 {
       };
           }
     if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
-      createChannel(user, options);
+      createChannel(meta:eci(), options);
           }
     fired {
       log (standardOut("success created channels #{channel_name}"));
@@ -459,7 +458,7 @@ ruleset b507199x5 {
 		pre {
 			myEci = meta:eci();
 			
-			newPico = picoFactory(myEci, []);
+			newPico = picoFactory(myEci, []); // breaks the rules, mutates.............
 		}
 
 		{
@@ -470,13 +469,13 @@ ruleset b507199x5 {
 			log(standardOut("pico created"));
 		}
 	}
-	
+	 // move attributes to create child. 
 	rule initializeChild {
 		select when nano_manager child_created
 		
 		pre {
-			parentInfo = event:attr("parent");
-			name = event:attr("name");
+      //parentInfo = event:attr("parent");
+	//		name = event:attr("name");
 			attrs = event:attr("attributes").decode();
 		}
 		
@@ -485,9 +484,9 @@ ruleset b507199x5 {
 		}
 		
 		fired {
-			set ent:parent parentInfo;
-			set ent:children {};
-			set ent:name name;
+		//	set ent:parent parentInfo;
+		//	set ent:children {};
+			//set ent:name name;
 			set ent:attributes attrs;
 		}
 	}
@@ -569,12 +568,14 @@ ruleset b507199x5 {
   rule requestSubscription {// need to change varibles to snake case.
     select when nano_manager subscription_requested
    pre {
+    // update to use a status instead of target channel 
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
+      status      = event:attr("status").defaultsTo("status", standardError("status "));
       
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
@@ -607,7 +608,7 @@ ruleset b507199x5 {
     if(target_channel neq "no_target_channel") 
     then
     {
-      createChannel(meta:eci(),options);
+      createChannel(meta:eci(),options);// just use meta:eci()??
 
       event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
         with attrs = {
@@ -686,16 +687,17 @@ ruleset b507199x5 {
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
       back_channel = channel(channel_name);
-      back_channel_eci = back_channel{'cid'};
+      //back_channel_eci = back_channel{'cid'};
       attributes = back_channel{'attributes'};
       status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
-      //event_channel = back_channel{'attributes'}{'event_channel'}; // whats better?
-      event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+      event_channel_attributes = back_channel{'attributes'}; // whats better?
+      event_channel = event_channel_attributes{'event_channel'}; // whats better?
+      //event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
       subscription_map = {
             "cid" : event_channel
       };
-    }
+    }// this is a possible place to create a channel for subscription
     if (event_channel neq "no event_channel") then
     {
       //event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
@@ -708,8 +710,9 @@ ruleset b507199x5 {
       log (standardOut("success"));
     //  raise nano_manager event 'remove_pending_subscription' // event to nothing  
     //  with channel_name = channel_name;
-
-      raise nano_manager event 'event add_subscription_requested'
+    //  raise nano_manager event 'pending_subscription_approved' // event to nothing  
+    //  with channel_name = channel_name;
+      raise nano_manager event 'event add_subscription_requested' // state channging event 
       with channel_name = channel_name
        and status = "pending_incoming";
     } 
@@ -769,7 +772,7 @@ ruleset b507199x5 {
       eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
       //??????
       name = (channel_name eq "No channel_name") => nameFromEci(eci) | channel_name;
-      eCi = (eci eq "no eci") => eciFromName(name)| eci;
+      eCi = (eci eq "no eci") => eciFromName(name)| eci;// never will be "no eci"
     }
     {
       //clean up channel
