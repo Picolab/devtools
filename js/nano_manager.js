@@ -289,23 +289,23 @@
     };
          nano_manager.requestSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "subscription_requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "subscription", eventAttributes, postFunction, options);
     }; 
          nano_manager.addPendingSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "add_pending_subscription_requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "pending_subscription", eventAttributes, postFunction, options);
     }; 
          nano_manager.approvePendingSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "approve_pending_subscription_requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "pending_subscription_approval", eventAttributes, postFunction, options);
     }; 
          nano_manager.addSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "add_subscription_requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "pending_subscription_approved", eventAttributes, postFunction, options);
     }; 
          nano_manager.cancelSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "cancel_subscription__requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "subscription_cancellation", eventAttributes, postFunction, options);
     }; 
     
     // ------------------------------------------------------------------------ other
