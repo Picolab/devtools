@@ -950,7 +950,7 @@
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subcriptions" ).empty();
-								if('pending_incoming' in subscriptions){
+								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
@@ -978,7 +978,7 @@
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
-						if('pending_outgoing' in subscriptions){
+						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
