@@ -175,7 +175,7 @@
     {
       return nano_manager.installedRulesets({},function(rids){
         console.log("rids.rids", rids.rids);
-         return nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", {'rids':rids.rids.join(';')}, postFunction , options);
+         return nano_manager.skyCloud(get_rid("rulesets"), "rulesetsInfo", {'rids':rids.rids.join(';')}, postFunction , options);
       }, options);
     };
 
