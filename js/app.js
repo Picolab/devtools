@@ -147,7 +147,8 @@
 					text: "Loading about page...",
 					textVisible: true
 				});
-				//place in a better method for loading on this page
+				
+				$("#Open-primary-button").text("Open Primary Pico : " + nano_manager.defaultECI);
 				
 				Devtools.about(function(json){ 
 					console.log("About informtion ");
@@ -156,6 +157,11 @@
 					$("#about-eci").html(json.oauth_eci);
 					$('#about-list').listview('refresh');
 				});
+				
+				Devtools.parentPico(function(parent_result) {
+					$("#Open-parent-button").text("Open Parent : " + parent_result.parent);
+				});
+				
 				
 				Devtools.childPicos(function(children_result){
 					console.log("Children");

@@ -165,7 +165,7 @@ ruleset b507199x5 {
 	}
 	parent = function() {
 		self = meta:eci();
-		parent = pci:list_parent(self).defaultsTo("error", standardError("pci parent retrival failed"));
+		parent = pci:list_parent(self).defaultsTo("error", standardError("pci parent retrieval failed"));
 		{
 			'status' : (parent neq "error"),
 			'parent' : parent
@@ -185,7 +185,7 @@ ruleset b507199x5 {
 		]
 	};
 	picoFactory = function(myEci, protos) {
-		newPicoInfo = pci:new_cloud(myEci);
+		newPicoInfo = pci:new_pico(myEci);
 		newPico = newPicoInfo{"cid"};
 		a = pci:new_ruleset(newPico, prototypes{"core"});
 		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypes{x});});
@@ -528,7 +528,7 @@ ruleset b507199x5 {
 		}
 		if(picoDeleted neq "" || ent:children{picoDeleted}.isnull()) then
 		{
-			pci:delete_cloud(eciDeleted);
+			pci:delete_pico(eciDeleted);
 		}
 		notfired {
 			log "deletion failed because no child name was specified";

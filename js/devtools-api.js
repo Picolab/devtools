@@ -281,6 +281,16 @@
        }, options);
     },
 	
+	parentPico: function(cb, options)
+	{
+		cb = cb || function(){};
+		Devtools.log("Getting parent pico");
+		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
+			Devtools.log("Parent: ", json);
+			cb(json);
+		}, options);
+	},
+	
 	childPicos: function(cb, options)
 	{
 		cb = cb || function(){};

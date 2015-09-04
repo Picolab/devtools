@@ -141,6 +141,11 @@ ruleset devtools {
 	          account_profile {'profile'};
 	        };
 			
+			parentPico = function() {
+				parent = NanoManager:parent();
+				parent;
+			};
+			
 			childPicos = function() {
 				children = NanoManager:children();
 				children;
