@@ -973,7 +973,7 @@
 								  //outter div
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "Incomeing"}//,
+											{"Type": "Inbound"}//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
@@ -991,7 +991,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"t_cid": object["target_channel"],
+											"t_cid": object["target_eci"],
 											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
@@ -1001,7 +1001,7 @@
 								  //outter div
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "OutGoing"}//,
+											{"Type": "Outbound"}//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
