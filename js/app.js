@@ -951,7 +951,7 @@
 						subscriptions = subscriptions.subscriptions;
 						$("#Subcriptions" ).empty();
 								if('pending_incoming' in subscriptions){
-								incoming = subscriptions.pending_incoming;
+								incoming = subscriptions.inbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
@@ -979,7 +979,7 @@
 							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
 						if('pending_outgoing' in subscriptions){
-								OutGoing = subscriptions.pending_outgoing;
+								OutGoing = subscriptions.outbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
