@@ -436,7 +436,7 @@
             Devtools.log("Displaying showSubscriptions", json);
             cb(json)
         };
-        return nano_manager.SubscriptionAttributes(parameters, post_function, options);
+        return nano_manager.subscriptionAttributes(parameters, post_function, options);
 
     },
    
