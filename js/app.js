@@ -1063,6 +1063,7 @@
 								"channel_type": subscribe_form_data.Subcription_type,
 								"relationship" : subscribe_form_data.Subcription_relationship,
 								"attrs": subscribe_form_data.Subcription_attrs,
+								"status": "outbound"
 							};
 							if( true 	) {
 								Devtools.RequestSubscription(subscription_Data, function(directives) {
