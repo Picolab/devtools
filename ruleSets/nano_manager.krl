@@ -542,7 +542,7 @@ ruleset b507199x5 {
   //      (Subscription) "name"  : ,
   //      "name_space": ,
   //       "relationship" : ,
-  //        "target_eci"/"event_channel" : ,
+  //        "target_eci"/"event_eci" : ,
   //        "status": 
   //       ],
   //      }
@@ -602,7 +602,7 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : eciFromName(unique_name).klog("eci: "), 
+          "event_eci"  : eciFromName(unique_name).klog("eci: "), 
           "status" : "inbound",
           "channel_type" : channel_type
         }.klog("event:send() attributes: ");
@@ -632,7 +632,7 @@ ruleset b507199x5 {
             "subscription_name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
-            "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
+            "event_eci"  : event:attr("event_eci").defaultsTo("", standardError("event_eci")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription") |
           {};
@@ -678,17 +678,16 @@ ruleset b507199x5 {
       attributes = back_channel{'attributes'};
       status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
-      event_channel_attributes = back_channel{'attributes'}; // whats better?
-      event_channel = event_channel_attributes{'event_channel'}; // whats better?
-      //event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+      back_channel_attributes = back_channel{'attributes'}; // whats better?
+      event_eci = back_channel_attributes{'event_eci'}; // whats better?
       subscription_map = {
-            "cid" : event_channel
+            "cid" : event_eci
       };
     }// this is a possible place to create a channel for subscription
-    if (event_channel neq "no event_channel") then
+    if (event_eci neq "no event_eci") then
     {
       event:send(subscription_map, "nano_manager", "pending_subscription_approved") // pending_subscription_approved..
-       with attrs = {"event_channel" : back_channel_eci}
+       with attrs = {"event_eci" : back_channel_eci}
        and status = "outbound";
     }
     fired 
@@ -707,14 +706,14 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approved
     pre{
       channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
-      event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+      event_eci = event:attrs("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
       status = event:attr("status").defaultsTo("", standardError("status"));
 
-      outGoing = function(event_channel){
+      outGoing = function(event_eci){
         back_channel_eci = meta:eci(); // channel event came in on.
         attributes = subscriptionsAttributes(back_channel_eci);
         attr = attributes.put(["status"],"subscribed"); // over write original status
-        attrs = attr.put(["event_channel"],event_channel); // add event_channel
+        attrs = attr.put(["event_eci"],event_eci); // add event_eci
         attrs;
       };
 
@@ -726,7 +725,7 @@ ruleset b507199x5 {
       // if no name its outgoing accepted
       // if name its incoming accepted
       attributes = (status eq "outbound" ) => 
-            outGoing(event_channel) | 
+            outGoing(event_eci) | 
             incoming(channel_name);
       
       // get eci to change channel attributes
@@ -759,7 +758,7 @@ ruleset b507199x5 {
             "cid" : eci
       };
     }
-    if( eci neq "No event_channel") then
+    if( eci neq "No event_eci") then
     {
       event:send(subscription_map, "nano_manager", "subscription_removal")
         with attrs = {

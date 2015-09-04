@@ -963,7 +963,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"e_cid": object["event_channel"],
+											"e_cid": object["event_eci"],
 											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
@@ -1021,8 +1021,8 @@
 										{"name": object["subscription_name"],
 										"name_space": object["name_space"],
 										"relationship": object["relationship"],
-										"e_cid": object["event_channel"],
-										"b_cid": object["back_channel"],
+										"e_cid": object["event_eci"],
+										"b_cid": object["back_eci"],
 										"c_name": key2
 										//"attributes":JSON.stringify(object["attrs"])
 									}
@@ -1059,7 +1059,7 @@
 							var subscription_Data={
 								"name": subscribe_form_data.Subcription_name,
 								"name_space": subscribe_form_data.Subcription_name_space,
-								"target_channel": subscribe_form_data.Subcription_target,
+								"target_eci": subscribe_form_data.Subcription_target,
 								"channel_type": subscribe_form_data.Subcription_type,
 								"relationship" : subscribe_form_data.Subcription_relationship,
 								"attrs": subscribe_form_data.Subcription_attrs,
@@ -1095,7 +1095,7 @@
 				loadSpinner("#approve-incoming-subscription", "subscriptions");
 				var eventChannel = router.getParams(match[1])["eventChannel"];
 				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription({"event_channel" : eventChannel}, function(directives) {
+				Devtools.ApproveSubscription({"event_eci" : eventChannel}, function(directives) {
 									console.log("approving ", eventChannel, directives);
 									$.mobile.changePage("#page-subscription-management", {
 										transition: 'slide'
