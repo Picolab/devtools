@@ -163,12 +163,12 @@
 
     nano_manager.installedRulesets = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "installedRulesets", parameters, postFunction , options); 
+        return nano_manager.skyCloud(get_rid("rulesets"), "rulesets", parameters, postFunction , options); 
     };
 
     nano_manager.describeRulesets = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "describeRulesets", parameters, postFunction , options); 
+        return nano_manager.skyCloud(get_rid("rulesets"), "rulesetsInfo", parameters, postFunction , options); 
     };
 
     nano_manager.installedRulesetsWithDiscription = function(parameters, postFunction, options)

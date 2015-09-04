@@ -8,13 +8,9 @@
 
 
 // questions
-// standard state change function??
-// when should we use klogs? what is the standard? varible getters|| mutators 
-// is log our choice of status setting for rules ? when should we send directives. can we send directives in postlude with status varible?
-// varible validating for removing , deleteing, uninstalling
+// standard state change raiseevent post function??
+// when should we use klogs?
 // when registering a ruleset if you pass empty peramiters what happens
-
-//old channel create uses a "login" eci to create a new channel, why and should we do it that way? 
 
 //whats the benifit of forking a ruleset vs creating a new one?
 //pci: lacks abillity to change channel type 
@@ -40,7 +36,7 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
-    provides installedRulesets, describeRulesets, //ruleset
+    provides rulesets, rulesetsInfo, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, //pico
     subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
@@ -57,7 +53,7 @@ ruleset b507199x5 {
 	
 	
   //-------------------- Rulesets --------------------
-    installedRulesets = function() {
+    rulesets = function() {
       eci = meta:eci().klog("eci: ");
       results = pci:list_ruleset(eci).klog("results of pci list_ruleset");//defaultsTo("error",standardError("pci list_ruleset failed"));  
       rids = results{'rids'}.defaultsTo("error",standardError("no hash key rids"));
@@ -66,7 +62,8 @@ ruleset b507199x5 {
         'rids'     : rids
       };
     }
-    describeRulesets = function(rids) {//takes an array of rids as parameter // can we write this better???????
+    // pci method? 
+    rulesetsInfo = function(rids) {//takes an array of rids as parameter // can we write this better???????
       //check if its an array vs string, to make this more robust.
       rids_string = ( rids.typeof() eq "array" ) => rids.join(";") | ( rids.typeof() eq "str" ) => rids | "" ;
       describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
@@ -77,15 +74,6 @@ ruleset b507199x5 {
        'description'     : results
       };
     }
- /*  installedRulesetsDiscription = function(){ // for develpers ??
-      rulesets = installedRulesets();
-      rids = rulesets{"rids"};
-      description = describeRulesets(rids);
-      {
-       'status'   : (description{'status'}),
-       'descriptions'     : description{'description'}
-      };
-    }*/
     installRulesets = defaction(eci, rids){
       new_ruleset = pci:new_ruleset(eci, rids);
       send_directive("installed #{rids}");
@@ -181,13 +169,14 @@ ruleset b507199x5 {
 	
 	prototypes = {
 		"core": [
-			"a169x625"
+        "b507199x5"
+			//"a169x625"
 		]
-	};
+	};// defaction needs to return a result to solve this 
 	picoFactory = function(myEci, protos) {
 		newPicoInfo = pci:new_pico(myEci);
 		newPico = newPicoInfo{"cid"};
-		a = pci:new_ruleset(newPico, prototypes{"core"});
+		a = pci:new_ruleset(newPico, prototypes{"core"}); 
 		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypes{x});});
 		newPico;
 	}
@@ -687,7 +676,7 @@ ruleset b507199x5 {
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
       back_channel = channel(channel_name);
-      //back_channel_eci = back_channel{'cid'};
+      back_channel_eci = back_channel{'cid'};
       attributes = back_channel{'attributes'};
       status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
@@ -702,7 +691,7 @@ ruleset b507199x5 {
     {
       //event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
       event:send(subscription_map, "nano_manager", "add_subscription_requested") // pending_subscription_approved..
-       with attrs = {"event_channel" : back_channel}
+       with attrs = {"event_channel" : back_channel_eci}
        and status = "pending_outgoing";
     }
     fired 
