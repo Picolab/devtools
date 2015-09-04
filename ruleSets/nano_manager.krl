@@ -202,7 +202,7 @@ ruleset b507199x5 {
       });
       /* 
       {"18:floppy" :
-          {"status":"pending_incoming","relationship":"","name_space":"18",..}
+          {"status":"inbound","relationship":"","name_space":"18",..}
       */
       status = function(sub){ // takes a subscription and returns its status.
         value = sub.values(); // array of values [attributes]
@@ -584,7 +584,7 @@ ruleset b507199x5 {
         "name_space"    : name_space,
         "relationship" : my_role,
         "target_channel"  : target_channel, // this will remain after accepted
-        "status" : "pending_outgoing"
+        "status" : "outbound"
       }; 
       //create call back for subscriber     
       options = {
@@ -605,7 +605,7 @@ ruleset b507199x5 {
           "name_space"    : name_space,
           "relationship" : your_role,
           "event_channel"  : eciFromName(unique_name).klog("eci: "), 
-          "status" : "pending_incoming",
+          "status" : "inbound",
           "channel_type" : channel_type
         }.klog("event:send() attributes: ");
     }
@@ -629,7 +629,7 @@ ruleset b507199x5 {
         channel_name = event:attr("channel_name").defaultsTo("SUBSCRIPTION", standardError("channel_name")); // never will defaultto
         channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
         status = event:attr("status").defaultsTo("", standardError("status"));
-      pending_subcriptions = (status eq "pending_incoming") =>
+      pending_subcriptions = (status eq "inbound") =>
          {
             "subscription_name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
@@ -639,7 +639,7 @@ ruleset b507199x5 {
           }.klog("incoming pending subscription") |
           {};
 
-      unique_name = (status eq "pending_incoming") => 
+      unique_name = (status eq "inbound") => 
             randomName(name_space) |
             channel_name;
       // create new list of subscriptions, if its empty start a new one.
@@ -654,7 +654,7 @@ ruleset b507199x5 {
           //'policy' : ,
       };
     }
-    if(status eq "pending_incoming") 
+    if(status eq "inbound") 
     then
     {
       createChannel(meta:eci(),options);
@@ -692,7 +692,7 @@ ruleset b507199x5 {
       //event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
       event:send(subscription_map, "nano_manager", "add_subscription_requested") // pending_subscription_approved..
        with attrs = {"event_channel" : back_channel_eci}
-       and status = "pending_outgoing";
+       and status = "outbound";
     }
     fired 
     {
@@ -703,7 +703,7 @@ ruleset b507199x5 {
     //  with channel_name = channel_name;
       raise nano_manager event 'event add_subscription_requested' // state channging event 
       with channel_name = channel_name
-       and status = "pending_incoming";
+       and status = "inbound";
     } 
     else 
     {
@@ -732,12 +732,12 @@ ruleset b507199x5 {
       };
       // if no name its outgoing accepted
       // if name its incoming accepted
-      attributes = (status eq "pending_outgoing" ) => 
+      attributes = (status eq "outbound" ) => 
             outGoing(event_channel) | 
             incoming(channel_name);
       
       // get eci to change channel attributes
-      eci = (status eq "pending_outgoing" ) => 
+      eci = (status eq "outbound" ) => 
             meta:eci() | 
             eciFromName(channel_name);
     }
