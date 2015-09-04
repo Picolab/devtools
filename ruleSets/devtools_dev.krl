@@ -18,7 +18,7 @@ ruleset devtools {
         use module b507199x6 alias Account
         //use module a169x625 alias PicoInspector
 
-        provides showRulesets,showRuleset,  aboutPico, childPicos,
+        provides showRulesets,showRuleset,  aboutPico, childPicos, parentPico,
          showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, showInstalledRulesets,// schedule
         showClients, showClient //apps
         sharing on
