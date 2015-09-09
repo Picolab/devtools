@@ -428,8 +428,8 @@ ruleset b507199x5 {
       options = {
         'name' : channel_name,
         'eci_type' : type,
-        'attributes' : {"attributes" : attrs},
-        'policy' : {"policy" : policy_hash}
+        'attributes' : {"channel_attributes" : attributes},
+        'policy' : {"policy" : policy}
       };
           }
           // do we need to check the format of name? is it nano_manager's job?
