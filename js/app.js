@@ -987,6 +987,7 @@
 								$.each(OutGoing, function(key, object) {
 									$.each(object, function(key2, object) {
 										console.log("outbound",object);
+										console.log("key",key2);
 										dynamic_subscriptions_items2 +=
 										 snippets.subscription_out_going_template(
 											{"name": object["subscription_name"],
