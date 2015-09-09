@@ -437,7 +437,8 @@ ruleset b507199x5 {
       };
           }
           // do we need to check the format of name? is it nano_manager's job?
-    if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then { 
+    if(channel_name.match(re/\w[\w-]*/)) then 
+          { 
       createChannel(meta:eci(), options);
           }
     fired {
