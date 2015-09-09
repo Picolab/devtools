@@ -424,7 +424,7 @@ ruleset b507199x5 {
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
-      attrs = attributes.decode();
+      attrs = attributes.decode().klog("decode: ");
       attributes = (attrs.typeof() eq "hash") => attrs | {"attributes" : attrs};
       policy_hash = policy.decode();
       policy = (policy_hash.typeof() eq "hash") => policy_hash | 
