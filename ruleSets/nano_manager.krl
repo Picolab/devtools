@@ -414,18 +414,25 @@ ruleset b507199x5 {
   rule createChannel {
     select when nano_manager channel_creation_requested
     pre {
+    /*  <eci options>
+    name     : <string>        // default is "Generic ECI channel" 
+    eci_type : <string>        // default is "PCI"
+    attributes: <array>
+    policy: <map>  */
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
       type = event:attr("channel_type").defaultsTo("", standardError("missing event attr channel_type"));
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
-      //attrs = attributes.decode();
-
+      attrs = attributes.decode();
+      policy_hash = policy.decode();
+      policy = (policy_hash.typeof() eq "hash") => policy_hash | 
+            {}.put(["policy"], policy_hash);
       
       options = {
         'name' : channel_name,
         'eci_type' : type,
-        'attributes' : attrs,
+        'attributes' : [].append(attrs),
         'policy' : policy
       };
           }
