@@ -415,7 +415,7 @@ ruleset b507199x5 {
     select when nano_manager channel_creation_requested
     pre {
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
-      type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
+      type = event:attr("channel_type").defaultsTo("", standardError("missing event attr type"));
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?

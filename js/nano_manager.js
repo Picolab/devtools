@@ -228,7 +228,7 @@
     };   
     nano_manager.createChannel = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "createChannel", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "channel_creation_requested", eventAttributes, postFunction, options);
     };
 
     // ------------------------------------------------------------------------ pico
