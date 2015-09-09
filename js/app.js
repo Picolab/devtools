@@ -972,10 +972,10 @@
 				function populate_subscriptions() {
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
-						$("#Subcriptions" ).empty();
+						$("#Subscriptions" ).empty();
 								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
-								$("#Subcriptions" ).empty();
+								$("#Subscriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
@@ -1004,7 +1004,7 @@
 						};
 						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
-								$("#Subcriptions" ).empty();
+								$("#Subscriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
