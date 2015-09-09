@@ -414,20 +414,32 @@ ruleset b507199x5 {
   rule createChannel {
     select when nano_manager channel_creation_requested
     pre {
+    /*  <eci options>
+    name     : <string>        // default is "Generic ECI channel" 
+    eci_type : <string>        // default is "PCI"
+    attributes: <array>
+    policy: <map>  */
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
-      //type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
-      //attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
-      //attrs = attributes.decode();
-
+      type = event:attr("channel_type").defaultsTo("", standardError("missing event attr channel_type"));
+      attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
+      policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
+      // do we need to check if we need to decode ?? what would we check?
+      attrs = attributes.decode();
+      attributes = (attrs.typeof() eq "hash") => attrs | {"attributes" : attrs};
+      policy_hash = policy.decode();
+      policy = (policy_hash.typeof() eq "hash") => policy_hash | 
+            {"policy" : policy_hash};
       
       options = {
-        'name' : channel_name//,
-     //   'eci_type' : type,
-      //  'attributes' : attrs//,
-        //'policy' : ,
+        'name' : channel_name,
+        'eci_type' : type,
+        'attributes' : attributes.klog("attributes: ")//,
+        //'policy' : policy
       };
           }
-    if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
+          // do we need to check the format of name? is it nano_manager's job?
+    if(channel_name.match(re/\w[\w-]*/)) then 
+          { 
       createChannel(meta:eci(), options);
           }
     fired {
@@ -542,7 +554,7 @@ ruleset b507199x5 {
   //      (Subscription) "name"  : ,
   //      "name_space": ,
   //       "relationship" : ,
-  //        "target_channel"/"event_channel" : ,
+  //        "target_eci"/"event_eci" : ,
   //        "status": 
   //       ],
   //      }
@@ -552,17 +564,15 @@ ruleset b507199x5 {
    // ========================================================================
    // creates back_channel and sends event for other pico to create back_channel.
 
-   // inbound 
-   // outbound
-  rule requestSubscription {// need to change varibles to snake case.
-    select when nano_manager subscription_requested
+  rule subscribe {// need to change varibles to snake case.
+    select when nano_manager subscription
    pre {
     // update to use a status instead of target channel 
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
-      target_channel = event:attr("target_channel").defaultsTo("no_target_channel", standardError("target_channel"));
+      target_eci = event:attr("target_eci").defaultsTo("no_target_eci", standardError("target_eci"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
       status      = event:attr("status").defaultsTo("status", standardError("status "));
       
@@ -572,7 +582,7 @@ ruleset b507199x5 {
       your_role = roles[1];
      // // destination for external event
       subscription_map = {
-            "cid" : target_channel
+            "cid" : target_eci
       };
       // create unique_name for channel
       unique_name = randomName(name_space);
@@ -583,7 +593,7 @@ ruleset b507199x5 {
         "subscription_name"  : name,
         "name_space"    : name_space,
         "relationship" : my_role,
-        "target_channel"  : target_channel, // this will remain after accepted
+        "target_eci"  : target_eci, // this will remain after accepted
         "status" : "outbound"
       }; 
       //create call back for subscriber     
@@ -594,17 +604,17 @@ ruleset b507199x5 {
           //'policy' : ,
       };
     }
-    if(target_channel neq "no_target_channel") 
+    if(target_eci neq "no_target_eci") 
     then
     {
       createChannel(meta:eci(),options);// just use meta:eci()??
 
-      event:send(subscription_map, "nano_manager", "add_pending_subscription_requested") // send request
+      event:send(subscription_map, "nano_manager", "pending_subscription") // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_channel"  : eciFromName(unique_name).klog("eci: "), 
+          "event_eci"  : eciFromName(unique_name).klog("eci: "), 
           "status" : "inbound",
           "channel_type" : channel_type
         }.klog("event:send() attributes: ");
@@ -612,7 +622,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event add_pending_subscription_requested
+      raise nano_manager event pending_subscription
         with status = pending_entry{'status'}
         and channel_name = unique_name;
       log(standardOut("failure")) if (unique_name eq "");
@@ -624,7 +634,7 @@ ruleset b507199x5 {
   // creates back channel if needed, then it adds pending subscription to list of subscriptions.
   // can we put all this in a map and pass it as a attr? the rules internal.
   rule addPendingSubscription { // depends on wether or not a channel_name is being passed as an attribute
-    select when nano_manager add_pending_subscription_requested
+    select when nano_manager pending_subscription
    pre {
         channel_name = event:attr("channel_name").defaultsTo("SUBSCRIPTION", standardError("channel_name")); // never will defaultto
         channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
@@ -634,7 +644,7 @@ ruleset b507199x5 {
             "subscription_name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
-            "event_channel"  : event:attr("event_channel").defaultsTo("", standardError("event_channel")),
+            "event_eci"  : event:attr("event_eci").defaultsTo("", standardError("event_eci")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription") |
           {};
@@ -661,18 +671,18 @@ ruleset b507199x5 {
     }
     fired { 
       log(standardOut("successful pending incoming"));
-      raise nano_manager event incoming_subscription_pending; // event to nothing
+      raise nano_manager event inbound_pending_subscription_added; // event to nothing
       set ent:subscriptions new_subscriptions; 
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
-      raise nano_manager event outgoing_subscription_pending; // event to nothing
+      raise nano_manager event outbound_pending_subscription_added; // event to nothing
       set ent:subscriptions new_subscriptions;
     }
   }
   rule approvePendingSubscription { // used to notify both picos to add subscription request
-    select when nano_manager approve_pending_subscription_requested
+    select when nano_manager pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
       back_channel = channel(channel_name);
@@ -680,30 +690,24 @@ ruleset b507199x5 {
       attributes = back_channel{'attributes'};
       status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
-      event_channel_attributes = back_channel{'attributes'}; // whats better?
-      event_channel = event_channel_attributes{'event_channel'}; // whats better?
-      //event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+      back_channel_attributes = back_channel{'attributes'}; // whats better?
+      event_eci = back_channel_attributes{'event_eci'}; // whats better?
       subscription_map = {
-            "cid" : event_channel
+            "cid" : event_eci
       };
     }// this is a possible place to create a channel for subscription
-    if (event_channel neq "no event_channel") then
+    if (event_eci neq "no event_eci") then
     {
-      //event:send(subscription_map, "nano_manager", "remove_pending_subscription"); // event to nothing needs better name
-      event:send(subscription_map, "nano_manager", "add_subscription_requested") // pending_subscription_approved..
-       with attrs = {"event_channel" : back_channel_eci}
+      event:send(subscription_map, "nano_manager", "pending_subscription_approved") // pending_subscription_approved..
+       with attrs = {"event_eci" : back_channel_eci}
        and status = "outbound";
     }
     fired 
     {
       log (standardOut("success"));
-    //  raise nano_manager event 'remove_pending_subscription' // event to nothing  
-    //  with channel_name = channel_name;
-    //  raise nano_manager event 'pending_subscription_approved' // event to nothing  
-    //  with channel_name = channel_name;
-      raise nano_manager event 'event add_subscription_requested' // state channging event 
-      with channel_name = channel_name
-       and status = "inbound";
+      raise nano_manager event 'pending_subscription_approved' // event to nothing  
+        with channel_name = channel_name
+        and status = "inbound";
     } 
     else 
     {
@@ -711,17 +715,17 @@ ruleset b507199x5 {
     }
   }
   rule addSubscription { // changes attribute status value to subscribed
-    select when nano_manager add_subscription_requested
+    select when nano_manager pending_subscription_approved
     pre{
       channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
-      event_channel = event:attrs("event_channel").defaultsTo( "no event_channel", standardError("no event_channel"));
+      event_eci = event:attrs("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
       status = event:attr("status").defaultsTo("", standardError("status"));
 
-      outGoing = function(event_channel){
+      outGoing = function(event_eci){
         back_channel_eci = meta:eci(); // channel event came in on.
         attributes = subscriptionsAttributes(back_channel_eci);
         attr = attributes.put(["status"],"subscribed"); // over write original status
-        attrs = attr.put(["event_channel"],event_channel); // add event_channel
+        attrs = attr.put(["event_eci"],event_eci); // add event_eci
         attrs;
       };
 
@@ -733,7 +737,7 @@ ruleset b507199x5 {
       // if no name its outgoing accepted
       // if name its incoming accepted
       attributes = (status eq "outbound" ) => 
-            outGoing(event_channel) | 
+            outGoing(event_eci) | 
             incoming(channel_name);
       
       // get eci to change channel attributes
@@ -747,63 +751,61 @@ ruleset b507199x5 {
     }
     fired {
       log (standardOut("success"));
-     // raise nano_manager event 'subscription_added' // event to nothing
-     // with channel_name = channel_name;
+      raise nano_manager event 'subscription_added' // event to nothing
+        with channel_name = channel_name;
       } 
     else {
       log(">> failure >>");
     }
   }
-    rule removeSubscription {
-    select when nano_manager remove_subscription_requested
-    pre{
-      channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
-      eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
-      //??????
-      name = (channel_name eq "No channel_name") => nameFromEci(eci) | channel_name;
-      eCi = (eci eq "no eci") => eciFromName(name)| eci;// never will be "no eci"
-    }
-    {
-      //clean up channel
-      deleteChannel(eCi); 
-    }
-    always {
-      log (standardOut("success, attemped to remove subscription"));
-    //  raise nano_manager event subscription_removed // event to nothing
-    //    with channel_name = channel_name;
-      // clean up
-      clear ent:subscriptions{name};
-    } 
-  } 
+
   rule cancelSubscription {
-    select when nano_manager cancel_subscription__requested
-            or  nano_manager reject_incoming_subscription_requested
-            or  nano_manager cancel_outgoing_subscription_requested
+    select when nano_manager subscription_cancellation
+            or  nano_manager inbound_subscription_rejection
+            or  nano_manager outbound_subscription_cancellation
     pre{
-      event_channel = event:attr("event_channel").defaultsTo( "No event_channel", standardError("event_channel"));
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
-      subscription_map = {
-            "cid" : event_channel
-      };
       eci = eciFromName(channel_name);
+      subscription_map = {
+            "cid" : eci
+      };
     }
-    if(event_channel neq "No event_channel") then
+    if( eci neq "No event_eci") then
     {
-      event:send(subscription_map, "nano_manager", "remove_subscription_requested")
+      event:send(subscription_map, "nano_manager", "subscription_removal")
         with attrs = {
-          "eci"  : event_channel
+          "eci"  : eci,
+          "channel_name" : channel_name
         };
 
     }
     fired {
-      raise nano_manager event remove_subscription_requested 
-      with channel_name = channel_name
-      and eci = eci; 
+      raise nano_manager event subscription_removal 
+        with channel_name = channel_name
+          and eci = eci; 
       log (standardOut("success"));
           } 
     else {
       log(">> failure >>");
     }
+  } 
+  rule removeSubscription {
+    select when nano_manager subscription_removal
+    pre{
+      channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
+      eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
+    }
+    {
+      //clean up channel
+      deleteChannel(eci); 
+    }
+    always {
+      log (standardOut("success, attemped to remove subscription"));
+      raise nano_manager event subscription_removed // event to nothing
+        with channel_name = channel_name;
+      // clean up
+      clear ent:subscriptions{channel_name};
+    } 
   } 
   rule subscribeReset {// for testing purpose, will not be in production 
       select when nano_manager sub_scrip_tions_reset
@@ -816,6 +818,7 @@ ruleset b507199x5 {
         clear ent:subscriptions;
       }
     } 
-// unsubscribed all, check event from parent 
+// unsubscribed all, check event from parent // just cancelSubscription... 
+// let all your connection know your leaving.
 
 }

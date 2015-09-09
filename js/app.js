@@ -507,12 +507,17 @@
 							});
 							var install_form_data = process_form(frm);
 							console.log(">>>>>>>>> channels to install", install_form_data);
-							var channel_name = install_form_data.channel_name;
+							channel_data = {
+								"channel_name": install_form_data.channel_name,
+								"channel_type" : install_form_data.channel_type,
+								"attributes" : install_form_data.channel_attributes,
+								"policy" : install_form_data.channel_policy
+							};
 				
 							if( true //typeof channel_name !== "undefined"
 						 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
 							) {
-								Devtools.installChannel(channel_name, function(directives) {
+								Devtools.installChannel(channel_data, function(directives) {
 									console.log("installed ", channel_name, directives);
 									$.mobile.changePage("#page-channel-management", {
 										transition: 'slide'
@@ -968,8 +973,8 @@
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subcriptions" ).empty();
-								if('pending_incoming' in subscriptions){
-								incoming = subscriptions.pending_incoming;
+								if('inbound' in subscriptions){
+								incoming = subscriptions.inbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
@@ -981,7 +986,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"e_cid": object["event_channel"],
+											"e_cid": object["event_eci"],
 											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
@@ -989,27 +994,30 @@
 								  	});
 								  });
 								  //outter div
+								  Type = "Inbound";
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "Incomeing"}//,
+											{"Type": Type}//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
-						if('pending_outgoing' in subscriptions){
-								OutGoing = subscriptions.pending_outgoing;
+						if('outbound' in subscriptions){
+								OutGoing = subscriptions.outbound;
 								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
 								$.each(OutGoing, function(key, object) {
 									$.each(object, function(key2, object) {
+										console.log("outbound",object);
+										console.log("key",key2);
 										dynamic_subscriptions_items2 +=
 										 snippets.subscription_out_going_template(
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"t_cid": object["target_channel"],
+											"t_cid": object["target_eci"],
 											"c_name": key2
 											//"attributes":JSON.stringify(object["attrs"])
 										}
@@ -1017,12 +1025,13 @@
 								  });
 								  });
 								  //outter div
+								  Type = "Outbound";
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "OutGoing"}//,
+											{"Type": Type }//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-							  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
 						if('subscribed' in subscriptions){
 							subscribed = subscriptions.subscribed;
@@ -1039,8 +1048,8 @@
 										{"name": object["subscription_name"],
 										"name_space": object["name_space"],
 										"relationship": object["relationship"],
-										"e_cid": object["event_channel"],
-										"b_cid": object["back_channel"],
+										"e_cid": object["event_eci"],
+										"b_cid": object["back_eci"],
 										"c_name": key2
 										//"attributes":JSON.stringify(object["attrs"])
 									}
@@ -1048,12 +1057,13 @@
 							  });
 							  });
 							  //outter div
+								  Type = "subscriptions";
 								dynamic_subscriptions_items += 
 									snippets.subscription_tab_template(
-										{"Type": "subscriptions"}//,
+										{"Type": Type}//,
 										);
 						  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-						  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+						  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							};
 						});
 					  $.mobile.loading("hide");
@@ -1077,10 +1087,11 @@
 							var subscription_Data={
 								"name": subscribe_form_data.Subcription_name,
 								"name_space": subscribe_form_data.Subcription_name_space,
-								"target_channel": subscribe_form_data.Subcription_target,
+								"target_eci": subscribe_form_data.Subcription_target,
 								"channel_type": subscribe_form_data.Subcription_type,
 								"relationship" : subscribe_form_data.Subcription_relationship,
 								"attrs": subscribe_form_data.Subcription_attrs,
+								"status": "outbound"
 							};
 							if( true 	) {
 								Devtools.RequestSubscription(subscription_Data, function(directives) {
@@ -1113,7 +1124,7 @@
 				loadSpinner("#approve-incoming-subscription", "subscriptions");
 				var eventChannel = router.getParams(match[1])["eventChannel"];
 				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription({"event_channel" : eventChannel}, function(directives) {
+				Devtools.ApproveSubscription({"event_eci" : eventChannel}, function(directives) {
 									console.log("approving ", eventChannel, directives);
 									$.mobile.changePage("#page-subscription-management", {
 										transition: 'slide'

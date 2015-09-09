@@ -316,10 +316,9 @@
         return nano_manager.channels(parameters,post_function,options);
 
     },
-    installChannel: function(channel_name, cb, options) 
+    installChannel: function(attributes, cb, options) 
     {
         cb = cb || function(){};
-        var attributes = {channel_name:channel_name}; 
         Devtools.log("Installing channels");
         post_function = function(json) {
            Devtools.log("Directive from create channel", json);
@@ -436,7 +435,7 @@
             Devtools.log("Displaying showSubscriptions", json);
             cb(json)
         };
-        return nano_manager.SubscriptionAttributes(parameters, post_function, options);
+        return nano_manager.subscriptionAttributes(parameters, post_function, options);
 
     },
    
@@ -460,7 +459,7 @@
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        };
-       return nano_manager.RequestSubscription(attributes, post_function, options);
+       return nano_manager.requestSubscription(attributes, post_function, options);
     },
     RejectIncomingSubscription: function(data, cb, options)
     {
@@ -470,7 +469,7 @@
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
        };
-       return nano_manager.RejectIncomingSubscription( data, post_function , options);
+       return nano_manager.rejectIncomingSubscription( data, post_function , options);
     },
     Unsubscribe: function(data, cb, options)
     {
@@ -481,7 +480,7 @@
            Devtools.log("Directive from init_unsubscribed", json);
            cb(json);
        };
-       return nano_manager.Unsubscribe( attributes, post_function, options);
+       return nano_manager.unsubscribe( attributes, post_function, options);
     },
    RejectOutgoingSubscription: function(data, cb, options)
     {
@@ -492,7 +491,7 @@
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
        };
-       return nano_manager.RejectOutgoingSubscription( attributes, post_function, options);
+       return nano_manager.rejectOutgoingSubscription( attributes, post_function, options);
     }
 //
 }; //closes the "window" inside the function DON'T DELETE
