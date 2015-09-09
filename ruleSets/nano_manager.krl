@@ -415,7 +415,7 @@ ruleset b507199x5 {
     select when nano_manager channel_creation_requested
     pre {
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
-      type = event:attr("channel_type").defaultsTo("", standardError("missing event attr type"));
+      type = event:attr("channel_type").defaultsTo("", standardError("missing event attr channel_type"));
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
@@ -429,7 +429,8 @@ ruleset b507199x5 {
         'policy' : policy
       };
           }
-    if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
+          // do we need to check the format of name? is it nano_manager's job?
+    if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then { 
       createChannel(meta:eci(), options);
           }
     fired {
