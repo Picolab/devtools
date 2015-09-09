@@ -433,7 +433,7 @@ ruleset b507199x5 {
       options = {
         'name' : channel_name,
         'eci_type' : type,
-        'attributes' : attributes//,
+        'attributes' : attributes.klog("attributes: ")//,
         //'policy' : policy
       };
           }
