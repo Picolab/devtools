@@ -491,7 +491,7 @@
 							console.log(">>>>>>>>> channels to install", install_form_data);
 							channel_data = {
 								"channel_name": install_form_data.channel_name,
-								"type" : install_form_data.channel_type,
+								"channel_type" : install_form_data.channel_type,
 								"attributes" : install_form_data.channel_attributes,
 								"policy" : install_form_data.channel_policy
 							};
