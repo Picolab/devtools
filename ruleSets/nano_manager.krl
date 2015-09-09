@@ -415,16 +415,18 @@ ruleset b507199x5 {
     select when nano_manager channel_creation_requested
     pre {
       channel_name = event:attr("channel_name").defaultsTo("", standardError("missing event attr channels"));
-      //type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
-      //attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
+      type = event:attr("type").defaultsTo("", standardError("missing event attr type"));
+      attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
+      policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
+      // do we need to check if we need to decode ?? what would we check?
       //attrs = attributes.decode();
 
       
       options = {
-        'name' : channel_name//,
-     //   'eci_type' : type,
-      //  'attributes' : attrs//,
-        //'policy' : ,
+        'name' : channel_name,
+        'eci_type' : type,
+        'attributes' : attrs,
+        'policy' : policy
       };
           }
     if(channel_name.match(re/\w[\w\d_-]*/) && user neq "") then {
@@ -806,7 +808,7 @@ ruleset b507199x5 {
         clear ent:subscriptions;
       }
     } 
-// unsubscribed all, check event from parent 
+// unsubscribed all, check event from parent // just cancelSubscription... 
 // let all your connection know your leaving.
 
 }

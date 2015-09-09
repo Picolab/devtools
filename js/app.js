@@ -489,12 +489,17 @@
 							});
 							var install_form_data = process_form(frm);
 							console.log(">>>>>>>>> channels to install", install_form_data);
-							var channel_name = install_form_data.channel_name;
+							channel_data = {
+								"channel_name": install_form_data.channel_name,
+								"type" : install_form_data.channel_type,
+								"attributes" : install_form_data.channel_attributes,
+								"policy" : install_form_data.channel_policy
+							};
 				
 							if( true //typeof channel_name !== "undefined"
 						 		//&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
 							) {
-								Devtools.installChannel(channel_name, function(directives) {
+								Devtools.installChannel(channel_data, function(directives) {
 									console.log("installed ", channel_name, directives);
 									$.mobile.changePage("#page-channel-management", {
 										transition: 'slide'

@@ -316,10 +316,9 @@
         return nano_manager.channels(parameters,post_function,options);
 
     },
-    installChannel: function(channel_name, cb, options) 
+    installChannel: function(attributes, cb, options) 
     {
         cb = cb || function(){};
-        var attributes = {channel_name:channel_name}; 
         Devtools.log("Installing channels");
         post_function = function(json) {
            Devtools.log("Directive from create channel", json);
