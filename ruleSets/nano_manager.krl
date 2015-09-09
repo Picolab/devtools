@@ -424,17 +424,12 @@ ruleset b507199x5 {
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
-      attrs = "attributes".decode().klog("decode: ");
-      attributes = (attrs.typeof() eq "hash") => attrs | {"attributes" : attrs};
-      policy_hash = policy.decode();
-      policy = (policy_hash.typeof() eq "hash") => policy_hash | 
-            {"policy" : policy_hash};
       
       options = {
         'name' : channel_name,
         'eci_type' : type,
-        'attributes' : {"attributes" : attrs}.klog("attributes: ")//,
-        //'policy' : policy
+        'attributes' : {"attributes" : attrs},
+        'policy' : {"policy" : policy_hash}
       };
           }
           // do we need to check the format of name? is it nano_manager's job?
