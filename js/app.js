@@ -414,16 +414,16 @@
 			picologging: function(type, match, ui, page) {
 				console.log("pico logging page");
 				//$.mobile.loading("hide");
-
+				eci = PicoNavigator.currentPico;
 				function populate_logpage() {
-					Pico.logging.status(nano_manager.defaultECI, function(json){
+					Pico.logging.status(eci, function(json){
 						console.log("Logging status: ", json);
 						if(json) {
 						 	$("#logstatus").val("on").slider("refresh");
 						 	loadSpinner("#loglist", "pico logs");
 						 	
 
-						 	Pico.logging.getLogs(nano_manager.defaultECI, function(logdata){
+						 	Pico.logging.getLogs(eci, function(logdata){
 							 	$("#loglist" ).empty();
 								console.log("Retrieved logs");
 
@@ -476,10 +476,10 @@
 				$("#logstatus").unbind("change").change(function(){
 					var newstatus = $("#logstatus").val();
 					if(newstatus === "on") {
-						Pico.logging.reset(nano_manager.defaultECI, {});
+						Pico.logging.reset(eci, {});
 						populate_logpage();
 					} else {
-						Pico.logging.inactive(nano_manager.defaultECI, {});
+						Pico.logging.inactive(eci, {});
 						$("#loglist" ).empty();
 					}
 				});
@@ -489,7 +489,7 @@
 				});
 				$( "#logclear" ).unbind("click").click(function(event, ui) {
 					$("#loglist" ).empty();
-					Pico.logging.flush(nano_manager.defaultECI, {});
+					Pico.logging.flush(eci, {});
 				});
 			},
 			
