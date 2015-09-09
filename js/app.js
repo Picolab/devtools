@@ -972,10 +972,10 @@
 				function populate_subscriptions() {
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
-						$("#subscription-tab-template" ).empty();
+						$("#Subcriptions" ).empty();
 								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
-								$("#subscription-incoming-template" ).empty();
+								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
@@ -1004,7 +1004,7 @@
 						};
 						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
-								$("#subscription-out-going-template" ).empty();
+								$("#Subcriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
@@ -1035,7 +1035,7 @@
 						};
 						if('subscribed' in subscriptions){
 							subscribed = subscriptions.subscribed;
-							$("#subscription-template").empty();
+							$("#Subscriptions").empty();
 							//use teplate to format 
 
 							dynamic_subscriptions_items = "";
