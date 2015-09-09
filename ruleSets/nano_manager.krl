@@ -425,10 +425,10 @@ ruleset b507199x5 {
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
       attrs = attributes.decode();
-      attributes = (attrs.typeof() eq "hash") => attrs | {}.put(["attributes"],attrs);
+      attributes = (attrs.typeof() eq "hash") => attrs | {"attributes" : attrs};
       policy_hash = policy.decode();
       policy = (policy_hash.typeof() eq "hash") => policy_hash | 
-            {}.put(["policy"], policy_hash);
+            {"policy" : policy_hash};
       
       options = {
         'name' : channel_name,
