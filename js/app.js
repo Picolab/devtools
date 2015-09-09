@@ -971,12 +971,13 @@
 								  	});
 								  });
 								  //outter div
+								  Type = "Inbound";
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "Inbound"}//,
+											{"Type": Type}//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-							  		$("#Incomeing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
 						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
@@ -1001,12 +1002,13 @@
 								  });
 								  });
 								  //outter div
+								  Type = "Outbound";
 									dynamic_subscriptions_items += 
 										snippets.subscription_tab_template(
-											{"Type": "Outbound"}//,
+											{"Type": Type }//,
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-							  		$("#OutGoing2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+							  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 						};
 						if('subscribed' in subscriptions){
 							subscribed = subscriptions.subscribed;
@@ -1032,12 +1034,13 @@
 							  });
 							  });
 							  //outter div
+								  Type = "subscriptions";
 								dynamic_subscriptions_items += 
 									snippets.subscription_tab_template(
-										{"Type": "subscriptions"}//,
+										{"Type": Type}//,
 										);
 						  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
-						  		$("#subscriptions2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
+						  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							};
 						});
 					  $.mobile.loading("hide");
