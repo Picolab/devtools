@@ -418,13 +418,13 @@
 				function populate_logpage() {
 					Pico.logging.status(eci, function(json){
 						console.log("Logging status: ", json);
+						$("#loglist" ).empty();
 						if(json) {
 						 	$("#logstatus").val("on").slider("refresh");
 						 	loadSpinner("#loglist", "pico logs");
 						 	
 
 						 	Pico.logging.getLogs(eci, function(logdata){
-							 	$("#loglist" ).empty();
 								console.log("Retrieved logs");
 
 								dynamicLogItems = "";
