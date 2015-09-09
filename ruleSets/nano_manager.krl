@@ -428,7 +428,7 @@ ruleset b507199x5 {
       options = {
         'name' : channel_name,
         'eci_type' : type,
-        'attributes' : [attributes],
+        'attributes' : {"channel_attributes" : attributes},
         'policy' : {"policy" : policy}
       };
           }
