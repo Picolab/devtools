@@ -701,7 +701,7 @@ ruleset b507199x5 {
     {
       log (standardOut("success"));
       raise nano_manager event 'pending_subscription_approved' // event to nothing  
-        with channel_name = channel_name
+        with channel_name = channel_name.klog("raise event attributes channel_name: ")
         and status = "inbound";
     } 
     else 
