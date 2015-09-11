@@ -1030,7 +1030,6 @@
 						};
 						if('subscribed' in subscriptions){
 							subscribed = subscriptions.subscribed;
-							$("#Subscriptions").empty();
 							//use teplate to format 
 
 							dynamic_subscriptions_items = "";
