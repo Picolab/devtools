@@ -972,7 +972,6 @@
 
 								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
-								$("#Subscriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
@@ -1001,7 +1000,6 @@
 						};
 						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
-								$("#Subscriptions" ).empty();
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
 								
