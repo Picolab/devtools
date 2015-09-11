@@ -643,9 +643,9 @@ ruleset b507199x5 {
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
           }.klog("incoming pending subscription") |
           {};
-
+          // should this go into the hash above?
       unique_name = (status eq "inbound") => 
-            randomName(name_space) |
+            randomName(pending_subscriptions{'name_space'}) |
             channel_name;
       // create new list of subscriptions, if its empty start a new one.
       new_subscriptions = (ent:subscriptions.head() eq 0) => //--------------------------------------could erase your list of subscriptions is there a better way?
