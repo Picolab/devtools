@@ -1,21 +1,44 @@
 <div data-role="page" id="page-schedules" data-title="Scheduled Events">
-  {% include header.html title="Installed Rulesets" %}
+  {% include header.html title="Scheduled Events" %}
+  
+  
 
-   <div data-role="content">
-     <ul id="scheduled-events-control" data-role="listview" data-inset="true"> 
-       <li data-role="list-divider" >Sceduled Events</li>
-       <li>
-         <a id="schedule-event-button" href="#schedule-event" class="ui-btn ui-icon-edit ui-btn-icon-right">Schedule Event</a>
-       </li>
-     </ul>
-
-     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="scheduled-events">
+   	<div data-role="content">
+     	<ul id="scheduled-events-control" data-role="listview" data-inset="true"> 
+       	<li data-role="list-divider" >Scheduled Events</li>
+       	<li>
+         	<a id="schedule-event-button" href="#schedule-event" class="ui-btn ui-icon-edit ui-btn-icon-right">Schedule Event</a>
+        </li>
+      </ul>
+      <div data-role="tabs" id="tabs">
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#one" data-ajax="false">Scheduled Events</a></li>
+            <li><a href="ajax-content.html" data-ajax="false">History</a></li>
+          </ul>
+        </div>
+        <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="scheduled-events">
+        <div id="two">
+          <ul data-role="listview" data-inset="true">
+              <li><a href="#">Acura</a></li>
+              <li><a href="#">Audi</a></li>
+              <li><a href="#">BMW</a></li>
+              <li><a href="#">Cadillac</a></li>
+              <li><a href="#">Ferrari</a></li>
+          </ul>
+        </div>
+      </div>
+     
      </div>
+
 
    </div><!-- /content -->
 
    {% include footer.html %}
 </div><!-- /page -->
+
+
+
 
 <div data-role="page" id="schedule-event" data-title="Schedule Event">
   {% include header.html title="Install a Ruleset" %}
@@ -27,11 +50,15 @@
 	      <form id="form-schedule-event">
 	        <div data-role="fieldcontain">
    	      <label for="event_domain">Event Domain:</label>
-		  <input type="text" name="event_domain" id="event_domain" value="" placeholder="Nano" />
+		  <input type="text" name="event_domain" id="event_domain" value="" placeholder="notification" />
           <label for="event_type">Event Type:</label>
-      <input type="text" name="event_type" id="event_type" value="" placeholder="Rocks" />
-          <label for="date_time">Date, Time:</label>
-      <input type="text" name="date_time" id="date_time" value="" placeholder="" />
+      <input type="text" name="event_type" id="event_type" value="" placeholder="status" />
+          <!--<label for="date_time">Date, Time:</label>
+      <input type="text" name="date_time" id="date_time" value="" placeholder="" />-->
+          <label for="date">Date:</label>
+          <input type="date" data-clear-btn="false" name="date" id="date" value="">
+          <label for="time">Time:</label>
+          <input type="time" data-clear-btn="false" name="time" id="time" value="">
           <label for="event_attributes">Event Attributes:</label>
       <input type="text" name="event_attributes" id="event_attributes" value="" placeholder="{'nano': rocks, ...}" />
 		</div>
@@ -47,6 +74,8 @@
   {% include footer.html %}
 
 </div>
+
+
 
 <div data-role="page" id="confirm-event-cancel" data-title="Cancel Scheduled Event">
   {% include header.html title="Cancel Scheduled Event" %}

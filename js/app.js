@@ -312,14 +312,9 @@
 												Devtools.deleteRID(rid, function(directives){
 													console.log("Deleting the rid", rid, directives);
 													$.mobile.loading("hide");
-													/*$.mobile.changePage('#listing',{
-														reloadPage: 'true'
-													});*/
-													//refreshPage(); //takes us to an empty about page at the moment
-													//want to update page
-													$.mobile.changePage("#home", {
-														transition: 'slide'
-													 });
+													//refreshes the page because refreshPage() takes us to the homepage
+													$("#manage-list" ).empty();
+													populate_registered_rulesets();
 												});
 											}
 										}
@@ -1176,14 +1171,14 @@
 			 //<!-- -------------------- Scheduled Templates---------------------- -->
 				schedule_event: function(type, match, ui, page) {
 				console.log("schedule event");
-				loadSpinner("#schedule_event", "Schedule Events");
+				$.mobile.loading("hide");
 				var frm = "#form-schedule-event";
 					$(frm)[0].reset(); // clear the fields in the form
 					
 					submitEventSchedule = function(){
 					 	{
 							$.mobile.loading("show", {
-								text: "scheduleing event...",
+								text: "Scheduling event...",
 								textVisible: true
 							});
 							var schedule_form_data = process_form(frm);
