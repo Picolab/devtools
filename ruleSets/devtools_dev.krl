@@ -514,13 +514,14 @@ ruleset devtools {
 	    rule CreateScheduled {
 	      select when nano_manager scheduled_created
 	      pre {
+	      	do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
 	      	event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
-	        do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
 	      //  date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
-	        date_time = time:add(time:now(),{"seconds":120});
+	        date_time = time:add(time:now(),{"seconds":50000000});
 	        attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
+	        do_main="notification";
 	        attr = attributes.decode();
 	      }
 	//      log("create schedule running");
@@ -543,5 +544,3 @@ ruleset devtools {
 	    }  
 
   //<!-- -------------------- <End oF> Scheduled ---------------------- -->
-
-}
