@@ -1086,18 +1086,15 @@
 													{"channel_name": channel_name,
 														"event_eci": event_eci},
 															 function(directives){
-
 													$.mobile.loading("hide");
-
-													//update page // can we call refresh ?
-													$.mobile.changePage("#page-subscription-management", {
-														transition: 'slide'
-													 });
+												$("#Subscriptions" ).empty();
+												populate_subscriptions();
 												});
 											}
 									},
 									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
 											$noty.close();
+
 											//noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
 										}
 									}
