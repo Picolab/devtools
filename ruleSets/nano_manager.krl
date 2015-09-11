@@ -286,7 +286,7 @@ ruleset b507199x5 {
       } 
 
       eciFromName = function(name){
-        channel_single = channel(name);
+        channel_single = channel(name.klog("name passed into ecifromName: "));
         channel_single{'cid'};
       }
     /*findVehicleByBackchannel = function (bc) {
