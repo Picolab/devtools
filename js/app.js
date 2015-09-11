@@ -1067,6 +1067,54 @@
 						  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							};
 						});
+						$('.ApproveButton').off('tap').on('tap', function(event)
+						{	
+							event_eci = this.dataset.eventeci;
+							channel_name =this.dataset.channelname;
+
+							noty({
+								layout: 'topCenter',
+								text: 'Are you sure you want to approve subscription?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Approve', onClick: function($noty) {
+											$noty.close();
+											
+												Devtools.ApproveSubscription(
+													{"channel_name": channel_name,
+														"event_eci": event_eci},
+															 function(directives){
+
+													$.mobile.loading("hide");
+
+													//update page // can we call refresh ?
+													$.mobile.changePage("#page-subscription-management", {
+														transition: 'slide'
+													 });
+												});
+											}
+										}
+									},
+									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+											//noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}
+								]
+							});
+							
+
+
+
+
+
+
+
+
+
+
+
 					  $.mobile.loading("hide");
 				}
 				populate_subscriptions();
