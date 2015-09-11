@@ -1067,7 +1067,6 @@
 						  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 						  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							}
-						});
 				
 				$('.approveButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
@@ -1104,6 +1103,7 @@
 									}
 								]
 							});
+				});
 				});
 				}
 
