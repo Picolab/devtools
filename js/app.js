@@ -1094,7 +1094,6 @@
 													 });
 												});
 											}
-										}
 									},
 									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
 											$noty.close();
@@ -1104,7 +1103,6 @@
 								]
 							});
 							
-						});
 
 
 
