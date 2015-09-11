@@ -93,7 +93,7 @@ ruleset b507199x5 {
       };
     }
     channelAttributes = function(eci) {
-      results = pci:get_eci_attributes(eci).defaultsTo("error",standardError("get_eci_attributes")); // list of ECIs assigned to userid
+      results = pci:get_eci_attributes(eci.klog("get_eci_attributes passed eci: ")).defaultsTo("error",standardError("get_eci_attributes")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "error"),
         'Attributes' : results
