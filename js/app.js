@@ -970,6 +970,7 @@
 
 
 				function populate_subscriptions() {
+
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subscriptions" ).empty();
@@ -1065,10 +1066,10 @@
 										);
 						  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 						  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
-							};
+							}
 						});
-						$('.ApproveButton').off('tap').on('tap', function(event)
-						{	
+				}
+				$('.ApproveButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
 							channel_name =this.dataset.channelname;
 
@@ -1102,21 +1103,13 @@
 									}
 								]
 							});
-							
+				});
+					
 
-
-
-
-
-
-
-
-
-
-
-					  $.mobile.loading("hide");
-				}
+				$.mobile.loading("hide");
+				
 				populate_subscriptions();
+			
 			},
 			subscribe: function(type, match, ui, page) {
 				console.log("Subscribe page");
