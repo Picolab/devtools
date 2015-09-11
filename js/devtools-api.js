@@ -439,10 +439,9 @@
 
     },
    
-    ApproveSubscription: function(event_channel, cb, options)
+    ApproveSubscription: function(attributes, cb, options)
     {
         cb = cb || function(){};
-        var attributes = event_channel;
         Devtools.log("approve subscription");
         post_function = function(json) {
            Devtools.log("Directive from ApproveSubscription", json);
