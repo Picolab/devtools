@@ -680,13 +680,12 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
-      back_channel = channel(channel_name);
-      back_channel_eci = back_channel{'cid'};
+      back_channel = channel(channel_name).klog("channel: ");
+      back_channel_eci = back_channel{'cid'}.klog("eci : ");
       attributes = back_channel{'attributes'};
-      status = attributes{'status'};
+      status = attributes{'status'}.klog("status");
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
-      back_channel_attributes = back_channel{'attributes'}; // whats better?
-      event_eci = back_channel_attributes{'event_eci'}; // whats better?
+      event_eci = attributes{'event_eci'}.klog("event_eci: "); // whats better?
       subscription_map = {
             "cid" : event_eci
       };
