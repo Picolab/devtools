@@ -260,7 +260,7 @@ ruleset b507199x5 {
               value |
               eciFromName(value);
 
-      attributes = channelAttributes(eci);
+      attributes = channelAttributes(eci).klog("channelAttributes: ");
       attributes{'Attributes'};
     } 
 
@@ -683,7 +683,7 @@ ruleset b507199x5 {
       back_channel = channel(channel_name).klog("channel: ");
       back_channel_eci = back_channel{'cid'}.klog("eci : ");
       attributes = back_channel{'attributes'};
-      status = attributes{'status'}.klog("status");
+      status = attributes{'status'}.klog("status: ");
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
       event_eci = attributes{'event_eci'}.klog("event_eci: "); // whats better?
       subscription_map = {
@@ -716,16 +716,15 @@ ruleset b507199x5 {
       status = event:attr("status").defaultsTo("", standardError("status"));
 
       outGoing = function(event_eci){
-        back_channel_eci = meta:eci(); // channel event came in on.
-        attributes = subscriptionsAttributes(back_channel_eci);
-        attr = attributes.put({"status" : "subscribed"}); // over write original status
-        attrs = attr.put({"event_eci" : event_eci}); // add event_eci
+        attributes = subscriptionsAttributes(meta:eci()).klog("outgoing attributes: ");
+        attr = attributes.put({"status" : "subscribed"}).klog("put outgoing status: "); // over write original status
+        attrs = attr.put({"event_eci" : event_eci}).klog("put outgoing event_eci: "); // add event_eci
         attrs;
       };
 
       incoming = function(channel_name){
-        attributes = subscriptionsAttributes(channel_name);
-        attr = attributes.put({"status": "subscribed"});
+        attributes = subscriptionsAttributes(channel_name).klog("incoming attributes: ");
+        attr = attributes.put({"status": "subscribed"}).klog("incoming attributes: ");
         attr;
       };
       // if no name its outgoing accepted
@@ -737,11 +736,11 @@ ruleset b507199x5 {
       // get eci to change channel attributes
       eci = (status eq "outbound" ) => 
             meta:eci() | 
-            eciFromName(channel_name);
+            eciFromName(channel_name).klog("eci from name: ");
     }
     // always update attribute changes
     {
-     updateAttributes(eci,attributes);
+     updateAttributes(eci,attributes.klog("updateAttributes: "));
     }
     fired {
       log (standardOut("success"));
