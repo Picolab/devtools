@@ -718,14 +718,14 @@ ruleset b507199x5 {
       outGoing = function(event_eci){
         back_channel_eci = meta:eci(); // channel event came in on.
         attributes = subscriptionsAttributes(back_channel_eci);
-        attr = attributes.put(["status"],"subscribed"); // over write original status
-        attrs = attr.put(["event_eci"],event_eci); // add event_eci
+        attr = attributes.put({"status" : "subscribed"}); // over write original status
+        attrs = attr.put({"event_eci" : event_eci}); // add event_eci
         attrs;
       };
 
       incoming = function(channel_name){
         attributes = subscriptionsAttributes(channel_name);
-        attr = attributes.put(["status"],"subscribed");
+        attr = attributes.put({"status": "subscribed"});
         attr;
       };
       // if no name its outgoing accepted
