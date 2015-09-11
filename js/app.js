@@ -973,6 +973,8 @@
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subscriptions" ).empty();
+						$("#Subcriptions" ).empty();
+
 								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
 								$("#Subscriptions" ).empty();
