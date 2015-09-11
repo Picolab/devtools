@@ -634,7 +634,7 @@ ruleset b507199x5 {
         channel_name = event:attr("channel_name").defaultsTo("SUBSCRIPTION", standardError("channel_name")); // never will defaultto
         channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
         status = event:attr("status").defaultsTo("", standardError("status"));
-      pending_subcriptions = (status eq "inbound") =>
+      pending_subscriptions = (status eq "inbound") =>
          {
             "subscription_name"  : event:attr("name").defaultsTo("", standardError("")),
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
@@ -655,7 +655,7 @@ ruleset b507199x5 {
       options = {
         'name' : unique_name, 
         'eci_type' : channel_type,
-        'attributes' : pending_subcriptions
+        'attributes' : pending_subscriptions
           //'policy' : ,
       };
     }

@@ -973,7 +973,6 @@
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subscriptions" ).empty();
-						$("#Subcriptions" ).empty();
 
 								if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
@@ -1085,14 +1084,14 @@
 								textVisible: true
 							});
 							var subscribe_form_data = process_form(frm);
-							console.log(">>>>>>>>> Subcription ", subscribe_form_data);
+							console.log(">>>>>>>>> Subscription ", subscribe_form_data);
 							var subscription_Data={
-								"name": subscribe_form_data.Subcription_name,
-								"name_space": subscribe_form_data.Subcription_name_space,
-								"target_eci": subscribe_form_data.Subcription_target,
-								"channel_type": subscribe_form_data.Subcription_type,
-								"relationship" : subscribe_form_data.Subcription_relationship,
-								"attrs": subscribe_form_data.Subcription_attrs,
+								"name": subscribe_form_data.Subscription_name,
+								"name_space": subscribe_form_data.Subscription_name_space,
+								"target_eci": subscribe_form_data.Subscription_target,
+								"channel_type": subscribe_form_data.Subscription_type,
+								"relationship" : subscribe_form_data.Subscription_relationship,
+								"attrs": subscribe_form_data.Subscription_attrs,
 								"status": "outbound"
 							};
 							if( true 	) {

@@ -1,16 +1,16 @@
 <!-- naming needs to be redone ???? -->
 
-<div data-role="page" id="page-subscription-management" data-title="Subcription Management" >
-  {% include header.html title="Subcription Management" %}
+<div data-role="page" id="page-subscription-management" data-title="Subscription Management" >
+  {% include header.html title="Subscription Management" %}
 
    <div data-role="content">
        <p>
-         Welcome to the Subcription Manager. Here you can view and add Subcription for your Pico.
+         Welcome to the Subscription Manager. Here you can view and add Subscription for your Pico.
         </p>
-     <ul id="Subcriptions-control" data-role="listview" data-inset="true"> 
-       <li data-role="list-divider" >Subcription Manager</li>
+     <ul id="Subscriptions-control" data-role="listview" data-inset="true"> 
+       <li data-role="list-divider" >Subscription Manager</li>
        <li>
-         <a id="Subscribe-button" href="#Subscribe" class="ui-btn ui-icon-edit ui-btn-icon-right">New Subcription</a>
+         <a id="Subscribe-button" href="#Subscribe" class="ui-btn ui-icon-edit ui-btn-icon-right">New Subscription</a>
        </li>
      </ul>
 
@@ -23,31 +23,31 @@
 </div><!-- /page -->
 
 <div data-role="page" id="Subscribe" data-title="Subscribe">
-  {% include header.html title="Create a Subcription" %}
+  {% include header.html title="Create a Subscription" %}
 
   <div data-role="main" class="ui-content">
-   <ul id="install-Subcription" data-role="listview" data-inset="true"> 
-    <li data-role="list-divider" >Create Subcription</li>
+   <ul id="install-Subscription" data-role="listview" data-inset="true"> 
+    <li data-role="list-divider" >Create Subscription</li>
     <li>
      <form id="form-subscribe">
        <div data-role="fieldcontain">
-        <label for="Subcription_name">Name:</label>
-        <input type="text" name="Subcription_name" id="Subcription_name" value="" placeholder="KRL Rocks" />
-        <label for="Subcription_name_space">Name Space:</label>
-        <input type="text" name="Subcription_name_space" id="Subcription_name_space" value="" placeholder="KRL Rocks" />
-        <label for="Subcription_type">Channel Type:</label>
-        <input type="text" name="Subcription_type" id="Subcription_type" value="" placeholder="Type" />
-        <label for="Subcription_relationship">Relationship:</label>
-        <input type="text" name="Subcription_relationship" id="Subcription_relationship" value="" placeholder="KRL Rocks" />
-        <label for="Subcription_target">Target:</label>
-        <input type="text" name="Subcription_target" id="Subcription_target" value="" placeholder="KRL Rocks" />
-        <label for="Subcription_attrs">Attrs:</label>
-        <input type="text" name="Subcription_attrs" id="Subcription_attrs" value="" placeholder="KRL Rocks" />
+        <label for="Subscription_name">Name:</label>
+        <input type="text" name="Subscription_name" id="Subscription_name" value="" placeholder="KRL Rocks" />
+        <label for="Subscription_name_space">Name Space:</label>
+        <input type="text" name="Subscription_name_space" id="Subscription_name_space" value="" placeholder="KRL Rocks" />
+        <label for="Subscription_type">Channel Type:</label>
+        <input type="text" name="Subscription_type" id="Subscription_type" value="" placeholder="Type" />
+        <label for="Subscription_relationship">Relationship:</label>
+        <input type="text" name="Subscription_relationship" id="Subscription_relationship" value="" placeholder="KRL Rocks" />
+        <label for="Subscription_target">Target:</label>
+        <input type="text" name="Subscription_target" id="Subscription_target" value="" placeholder="KRL Rocks" />
+        <label for="Subscription_attrs">Attrs:</label>
+        <input type="text" name="Subscription_attrs" id="Subscription_attrs" value="" placeholder="KRL Rocks" />
       </div>
     </form>
     <div>
     <a id="Subscribe-confirm-button" href="#approve-subscription" class="ui-btn ui-btn-b ui-btn-inline">Subscribe</a>
-      <a href="#page-Subcription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+      <a href="#page-Subscription-management" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
     </div>
   </li>
 </ul>
@@ -57,11 +57,11 @@
 
 </div>
 
-<div data-role="page" id="confirm-uninstall-Subcription" data-title="Uninstall Subcription">
-  {% include header.html title="Delete a Subcription" %}
+<div data-role="page" id="confirm-uninstall-Subscription" data-title="Uninstall Subscription">
+  {% include header.html title="Delete a Subscription" %}
 
 	<div data-role="main" class="ui-content">
-	  <ul id="remove-Subcription" data-role="listview" data-inset="true"> 
+	  <ul id="remove-Subscription" data-role="listview" data-inset="true"> 
        	    
      	  </ul>
 	</div>
