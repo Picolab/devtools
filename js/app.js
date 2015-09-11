@@ -1069,7 +1069,7 @@
 							}
 						});
 				
-				$('.ApproveButton').off('tap').on('tap', function(event){	
+				$('.approveButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
 							console.log("event_eci: ",event_eci);
 							channel_name =this.dataset.channelname;

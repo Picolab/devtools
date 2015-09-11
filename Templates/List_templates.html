@@ -171,7 +171,7 @@
    </div>
 </div>
 <div id="subscription-incoming-template" style="display:none;">
-   <div id="{{c_name}}" data-channelname= {{c_name}} data-eventeci={{e_cid}}  data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
+   <div id="{{c_name}}"  data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
      <h4>{{name}} ({{e_cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
         <p><b>Name:</b> {{name}}</p>
@@ -180,7 +180,7 @@
         <p><b>Event Channel:</b> {{e_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
          <p style="position:relative; top:-20px"><a id="reject-button" style="float:right;" href="#" data-role="button" data-icon="reject" class="ui-btn ui-icon-delete RejectButton">Reject</a></p>
-         <p style="position:relative; top:-20px"><a id="approve-button" style="float:right;" href="#" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete ApproveButton ">Approve</a></p>
+         <p style="position:relative; top:-20px"><a id="approve-button" style="float:right;" href="#"  data-channelname= "{{c_name}}" data-eventeci="{{e_cid}}" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete approveButton ">Approve</a></p>
      </div>
    </div>
 </div>
