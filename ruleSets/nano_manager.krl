@@ -737,7 +737,7 @@ ruleset b507199x5 {
       // get eci to change channel attributes
       eci = (status eq "outbound" ) => 
             meta:eci() | 
-            eciFromName(channel_name).klog("eci from name: ");
+            eciFromName(channel_name.klog("attribute channel_name: ")).klog("eci from name: ");
     }
     // always update attribute changes
     {
