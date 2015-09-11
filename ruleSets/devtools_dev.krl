@@ -484,7 +484,7 @@ ruleset devtools {
 	      log(">> failure >>");
 	    }
 	  }  
-	  rule ScheduleEvent {
+	  /*rule ScheduleEvent {
 	    select when devtools event_scheduled
 	    pre{
 	      event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr event_type"));
@@ -508,7 +508,7 @@ ruleset devtools {
 	      log (standardOut("success multiple"));
 	      schedule do_main event eventype repeat timespec attributes attr ;
 	    }
-	  }  
+	  }  */
 	    //TESTING NEW CODE WHICH IS FROM NANO MANAGER
 
 	    rule CreateScheduled {
@@ -535,12 +535,12 @@ ruleset devtools {
 	        schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
 	            } 
-	      else {
+	      /*else {
 	        log(">> multiple >>");
 	        //schedule do_main event eventype repeat timespec attributes attr ;
 	        schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
-	      }
+	      }*/
 	    }  
 
   //<!-- -------------------- <End oF> Scheduled ---------------------- -->
