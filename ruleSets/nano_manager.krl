@@ -712,9 +712,9 @@ ruleset b507199x5 {
   rule addSubscription { // changes attribute status value to subscribed
     select when nano_manager pending_subscription_approved
     pre{
-      channel_name = event:attrs("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
+      channel_name = event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
       c = channel_name.klog("channel name from event: ");
-      event_eci = event:attrs("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
+      event_eci = event:attr("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
       status = event:attr("status").defaultsTo("", standardError("status"));
 
       outGoing = function(event_eci){
