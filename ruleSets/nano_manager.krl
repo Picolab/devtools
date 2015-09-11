@@ -256,19 +256,19 @@ ruleset b507199x5 {
     }
     // takes name or eci 
     subscriptionsAttributes = function (value){
-      v = value.klog("passed value in subscriptionsAttributes: ");
+      v = value;
       eci = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               value |
               eciFromName(value);
 
-      attributes = channelAttributes(eci.klog("eci for attributes: ")).klog("channelAttributes: ");
+      attributes = channelAttributes(eci);
       attributes{'Attributes'};
     } 
 
      channel = function (value){
       // if value has a ":"" then attribute is name otherwise its cid 
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
-      my_channels = channels().klog("channels in chennel: ");
+      my_channels = channels();
       attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               'cid' |
               'name';
@@ -286,7 +286,7 @@ ruleset b507199x5 {
       } 
 
       eciFromName = function(name){
-        channel_single = channel(name.klog("name passed into ecifromName: "));
+        channel_single = channel(name);
         channel_single{'cid'};
       }
     /*findVehicleByBackchannel = function (bc) {
@@ -610,10 +610,10 @@ ruleset b507199x5 {
           "name"  : name,
           "name_space"    : name_space,
           "relationship" : your_role,
-          "event_eci"  : eciFromName(unique_name).klog("eci: "), 
+          "event_eci"  : eciFromName(unique_name), 
           "status" : "inbound",
           "channel_type" : channel_type
-        }.klog("event:send() attributes: ");
+        };
     }
     fired {
       log (standardOut("success"));
@@ -642,7 +642,7 @@ ruleset b507199x5 {
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
             "event_eci"  : event:attr("event_eci").defaultsTo("", standardError("event_eci")),
             "status"  : event:attr("status").defaultsTo("", standardError("status"))
-          }.klog("incoming pending subscription") |
+          } |
           {};
           // should this go into the hash above?
       unique_name = (status eq "inbound") => 
@@ -651,7 +651,7 @@ ruleset b507199x5 {
       // create new list of subscriptions, if its empty start a new one.
       new_subscriptions = (ent:subscriptions.head() eq 0) => //--------------------------------------could erase your list of subscriptions is there a better way?
               [unique_name] |
-              ent:subscriptions.append(unique_name.klog("unique_name : ")); 
+              ent:subscriptions.append(unique_name); 
 
       options = {
         'name' : unique_name, 
@@ -681,12 +681,12 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
-      back_channel = channel(channel_name).klog("channel: ");
-      back_channel_eci = back_channel{'cid'}.klog("eci : ");
+      back_channel = channel(channel_name);
+      back_channel_eci = back_channel{'cid'};
       attributes = back_channel{'attributes'};
-      status = attributes{'status'}.klog("status: ");
+      status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
-      event_eci = attributes{'event_eci'}.klog("event_eci: "); // whats better?
+      event_eci = attributes{'event_eci'}; // whats better?
       subscription_map = {
             "cid" : event_eci
       };
@@ -701,7 +701,7 @@ ruleset b507199x5 {
     {
       log (standardOut("success"));
       raise nano_manager event 'pending_subscription_approved' // event to nothing  
-        with channel_name = channel_name.klog("raise event attributes channel_name: ")
+        with channel_name = channel_name
         and status = "inbound";
     } 
     else 
@@ -713,10 +713,9 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approved
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
-      c = channel_name.klog("channel name from event: ");
       event_eci = event:attr("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
       status = event:attr("status").defaultsTo("", standardError("status"));
-
+      s = status.klog("status: ");
       outGoing = function(event_eci){
         attributes = subscriptionsAttributes(meta:eci().klog("meta:eci for attributes: ")).klog("outgoing attributes: ");
         attr = attributes.put({"status" : "subscribed"}).klog("put outgoing status: "); // over write original status
