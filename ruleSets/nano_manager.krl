@@ -256,6 +256,7 @@ ruleset b507199x5 {
     }
     // takes name or eci 
     subscriptionsAttributes = function (value){
+      v = value.klog("passed value in subscriptionsAttributes: ");
       eci = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               value |
               eciFromName(value);
@@ -267,7 +268,7 @@ ruleset b507199x5 {
      channel = function (value){
       // if value has a ":"" then attribute is name otherwise its cid 
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
-      my_channels = channels();
+      my_channels = channels().klog("channels in chennel: ");
       attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               'cid' |
               'name';
