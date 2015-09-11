@@ -93,7 +93,7 @@ ruleset b507199x5 {
       };
     }
     channelAttributes = function(eci) {
-      results = pci:get_eci_attributes(eci).defaultsTo("error",standardError("undefined")); // list of ECIs assigned to userid
+      results = pci:get_eci_attributes(eci).defaultsTo("error",standardError("get_eci_attributes")); // list of ECIs assigned to userid
       {
         'status'   : (results neq "error"),
         'Attributes' : results
@@ -260,7 +260,7 @@ ruleset b507199x5 {
               value |
               eciFromName(value);
 
-      attributes = channelAttributes(eci).klog("channelAttributes: ");
+      attributes = channelAttributes(eci.klog("eci for attributes: ")).klog("channelAttributes: ");
       attributes{'Attributes'};
     } 
 
@@ -716,7 +716,7 @@ ruleset b507199x5 {
       status = event:attr("status").defaultsTo("", standardError("status"));
 
       outGoing = function(event_eci){
-        attributes = subscriptionsAttributes(meta:eci()).klog("outgoing attributes: ");
+        attributes = subscriptionsAttributes(meta:eci().klog("meta:eci for attributes: ")).klog("outgoing attributes: ");
         attr = attributes.put({"status" : "subscribed"}).klog("put outgoing status: "); // over write original status
         attrs = attr.put({"event_eci" : event_eci}).klog("put outgoing event_eci: "); // add event_eci
         attrs;
