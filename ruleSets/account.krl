@@ -30,8 +30,7 @@ ruleset b507199x6 {
 	  
 	//-------------------- Acounts --------------------
   accountProfile = function() { // move to account mannagement rulesets
-    profile = pci:get_profile(nano_manager:currentSession()).defaultsTo("error",nano_manager:standardError("undefined"))
-    .put( ["oauth_eci"], meta:eci() );
+    profile = pci:get_profile(nano_manager:currentSession()).defaultsTo("error",nano_manager:standardError("undefined"));
     {
      'status' : (profile neq "error"),
      'profile'  : profile

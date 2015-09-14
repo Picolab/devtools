@@ -20,6 +20,10 @@
 					events: "s", // do when we create the page
 					argsre: true
 			} },
+			{"#account": {handler: "account",
+					events: "s", // do when we create the page
+					argsre: true
+			} },
 			{"#pico-creation": {handler: "pico_creation",
 					events: "s",
 					argsre: true
@@ -139,10 +143,24 @@
 				$.mobile.loading("hide");
 			},
 
+			account: function(type, match, ui, page) {
+				$("#about-account" ).empty();
+				$.mobile.loading("show", {
+					text: "Loading account page...",
+					textVisible: true
+				});
+				
+				Devtools.about(function(json){ 
+					$.mobile.loading("hide");
+					$("#about-account").html(snippets.about_account(json));
+				});
+			},
+			
 			about: function(type, match, ui, page) {
 				console.log("About Page Handler");
-				$("#about-account" ).empty();
+				
 				$("#about-eci" ).empty();
+				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI)
 				$.mobile.loading("show", {
 					text: "Loading about page...",
 					textVisible: true
@@ -155,14 +173,6 @@
 						transition: 'slide',
 						allowSamePageTransition : true
 					});
-				});
-				
-				Devtools.about(function(json){ 
-					console.log("About informtion ");
-					$.mobile.loading("hide");
-					$("#about-account").html(snippets.about_account(json));
-					$("#about-eci").html(json.oauth_eci);
-					$('#about-list').listview('refresh');
 				});
 				
 				Devtools.parentPico(function(parent_result) {
@@ -209,6 +219,8 @@
 							});
 						}, {"eci":picoToOpen});
 					});
+					
+					$.mobile.loading("hide");
 				});
 			},
 			
@@ -1291,6 +1303,15 @@
 		$('#create-link').attr('href', OAuth_kynetx_newuser_URL);
 		
 		$('#account-link').attr('href', "https://" + nano_manager.login_server + "/login/profile");
+		$('#account-link-2').attr('href', "https://" + nano_manager.login_server + "/login/profile");
+		
+		$('#logout-link').off('tap').on('tap', function(event) {
+			window.open("https://" + nano_manager.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
+			nano_manager.removeSession(true); // true for hard reset (log out of login server too)
+			$.mobile.changePage('#page-authorize', {
+				transition: 'slide'
+			}); // this will go to the authorization page.
+		});
 	}
 
 	function onMobileInit() {
@@ -1306,11 +1327,9 @@
 
 		$('.logout').off("tap").on("tap", function(event)
 		{
-			window.open("https://" + nano_manager.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
-			nano_manager.removeSession(true); // true for hard reset (log out of login server too)
-			$.mobile.changePage('#page-authorize', {
+			$.mobile.changePage('#account', {
 				transition: 'slide'
-			}); // this will go to the authorization page.
+			});
 		});
 
 		Handlebars.registerHelper({

@@ -38,7 +38,7 @@ ruleset b507199x5 {
       //none
     provides rulesets, rulesetsInfo, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
-    children, parent, attributes, //pico
+    children, parent, attributes, prototypes, name, //pico
     subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
     standardError
     sharing on
@@ -159,15 +159,27 @@ ruleset b507199x5 {
 			'parent' : parent
 		}
 	}
+	name = function() {
+		{
+			'status' : true,
+			'picoName' : ent:name
+		}
+	}
 	attributes = function() {
 		{
 			'status' : true,
-			'attributes' : ent:attributes.put( {'picoName' : ent:name} )
+			'attributes' : ent:attributes
+		}
+	}
+	prototypes = function() {
+		{
+			'status' : true,
+			'prototypes' : ent:prototypes
 		}
 	}
 	
 	
-	prototypes = {
+	prototypeDefinitions = {
 		"core": [
         "b507199x5"
 			//"a169x625"
@@ -176,8 +188,8 @@ ruleset b507199x5 {
 	picoFactory = function(myEci, protos) {
 		newPicoInfo = pci:new_pico(myEci);
 		newPico = newPicoInfo{"cid"};
-		a = pci:new_ruleset(newPico, prototypes{"core"}); 
-		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypes{x});});
+		a = pci:new_ruleset(newPico, prototypeDefinitions{"core"}); 
+		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{x});});
 		newPico;
 	}
 
@@ -452,7 +464,7 @@ ruleset b507199x5 {
   
   //-------------------- Picos ----------------------
 	rule createChild {
-		select when nano_manager child_creation_requested
+		select when nano_manager child_creation
 		
 		pre {
 			myEci = meta:eci();
@@ -468,14 +480,14 @@ ruleset b507199x5 {
 			log(standardOut("pico created"));
 		}
 	}
-	 // move attributes to create child. 
+	 
 	rule initializeChild {
 		select when nano_manager child_created
 		
 		pre {
-      //parentInfo = event:attr("parent");
-	//		name = event:attr("name");
+			name = event:attr("name");
 			attrs = event:attr("attributes").decode();
+			protos = event:attr("prototypes").decode();
 		}
 		
 		{
@@ -483,10 +495,9 @@ ruleset b507199x5 {
 		}
 		
 		fired {
-		//	set ent:parent parentInfo;
-		//	set ent:children {};
-			//set ent:name name;
+			set ent:name name;
 			set ent:attributes attrs;
+			set ent:prototypes protos;
 		}
 	}
 
