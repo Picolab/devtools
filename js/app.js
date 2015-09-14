@@ -1091,7 +1091,7 @@
 									}
 								]
 							});
-				});
+				})
 				$('.rejectButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
 							console.log("event_eci: ",event_eci);
@@ -1123,7 +1123,7 @@
 									}
 								]
 							});
-				});
+				})
 				$('.CancelSubscriptionButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
 							console.log("event_eci: ",event_eci);
@@ -1155,7 +1155,7 @@
 									}
 								]
 							});
-				});
+				})
 				$('.UnSubscribeButton').off('tap').on('tap', function(event){	
 							event_eci = this.dataset.eventeci;
 							console.log("event_eci: ",event_eci);
@@ -1187,8 +1187,8 @@
 									}
 								]
 							});
-				});
-				});
+				})
+				})
 				}
 
 				$.mobile.loading("hide");
