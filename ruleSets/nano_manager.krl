@@ -272,6 +272,7 @@ ruleset b507199x5 {
       attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
               'cid' |
               'name';
+      a = attribute.klog("attribute, name or cid: ");
       channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = channel_list.filter(function(channel){
         (channel{attribute} eq value);}); 
