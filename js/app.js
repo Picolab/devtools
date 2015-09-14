@@ -1066,7 +1066,7 @@
 							channel_name =this.dataset.channelname;
 
 							noty({
-								layout: 'Center',
+								layout: 'topCenter',
 								text: 'Are you sure you want to approve subscription?',
 								type: 'warning',
 
@@ -1098,7 +1098,7 @@
 							channel_name =this.dataset.channelname;
 
 							noty({
-								layout: 'Center',
+								layout: 'topCenter',
 								text: 'Are you sure you want to reject subscription?',
 								type: 'warning',
 
@@ -1130,7 +1130,7 @@
 							channel_name =this.dataset.channelname;
 
 							noty({
-								layout: 'Center',
+								layout: 'topCenter',
 								text: 'Are you sure you want to Cancel subscription?',
 								type: 'warning',
 
@@ -1162,7 +1162,7 @@
 							channel_name =this.dataset.channelname;
 
 							noty({
-								layout: 'Center',
+								layout: 'topCenter',
 								text: 'Are you sure you want to unsubscriptioNator with doom?',
 								type: 'warning',
 
