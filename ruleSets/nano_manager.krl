@@ -269,7 +269,7 @@ ruleset b507199x5 {
       // if value has a ":"" then attribute is name otherwise its cid 
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
       my_channels = channels();
-      v =value.klog("value befor regex2: ");
+      v =value.klog("value befor regex3: ");
       attribute = (value.match(re/((([A-Z]|\d)+-)+([A-Z]|\d)+)/)) => 
               'cid' |
               'name';
