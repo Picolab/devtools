@@ -681,6 +681,7 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
+      n = channel_name.klog("channel_namename: ");
       back_channel = channel(channel_name);
       back_channel_eci = back_channel{'cid'};
       attributes = back_channel{'attributes'};
