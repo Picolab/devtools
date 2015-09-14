@@ -689,7 +689,7 @@ ruleset b507199x5 {
       event_eci = attributes{'event_eci'}; // whats better?
       subscription_map = {
             "cid" : event_eci
-      }.klog("subscription Map: ");
+      };
     }// this is a possible place to create a channel for subscription
     if (event_eci neq "no event_eci") then
     {
