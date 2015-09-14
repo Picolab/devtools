@@ -1118,7 +1118,7 @@
 							var subscription_Data={
 								"name": subscribe_form_data.Subscription_name,
 								"name_space": subscribe_form_data.Subscription_name_space,
-								"target_eci": subscribe_form_data.Subscription_target,
+								"target_eci": subscribe_form_data.Subscription_target.strip(),
 								"channel_type": subscribe_form_data.Subscription_type,
 								"relationship" : subscribe_form_data.Subscription_relationship,
 								"attrs": subscribe_form_data.Subscription_attrs,
