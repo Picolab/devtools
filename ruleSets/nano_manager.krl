@@ -712,8 +712,6 @@ ruleset b507199x5 {
   rule addSubscription { // changes attribute status value to subscribed
     select when nano_manager pending_subscription_approved
     pre{
-      channel_name = event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
-      event_eci = event:attr("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"));
       status = event:attr("status").defaultsTo("", standardError("status"));
       s = status.klog("status: ");
       outGoing = function(event_eci){
@@ -724,20 +722,18 @@ ruleset b507199x5 {
       };
 
       incoming = function(channel_name){
-        attributes = subscriptionsAttributes(channel_name).klog("incoming attributes: ");
+        attributes = subscriptionsAttributes(channel_name);
         attr = attributes.put({"status": "subscribed"}).klog("incoming attributes: ");
         attr;
       };
-      // if no name its outgoing accepted
-      // if name its incoming accepted
       attributes = (status eq "outbound" ) => 
-            outGoing(event_eci) | 
-            incoming(channel_name);
+            outGoing(event:attr("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"))) | 
+            incoming(event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name")));
       
       // get eci to change channel attributes
       eci = (status eq "outbound" ) => 
             meta:eci() | 
-            eciFromName(channel_name.klog("attribute channel_name: ")).klog("eci from name: ");
+            eciFromName(event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name")).klog("attribute channel_name: ")).klog("eci from name: ");
     }
     // always update attribute changes
     {
@@ -746,7 +742,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       raise nano_manager event 'subscription_added' // event to nothing
-        with channel_name = channel_name;
+        with channel_name = event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
       } 
     else {
       log(">> failure >>");
