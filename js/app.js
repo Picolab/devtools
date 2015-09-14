@@ -104,18 +104,6 @@
 			{"#Subscribe": {handler: "subscribe",
 					events: "s", // do page before show
 					argsre: true
-			} },
-			{"#approve-incoming-subscription": {handler: "approve_incoming_subscription",
-					events: "s", // do page before show
-					argsre: true
-			} },
-			{"#reject-incoming-subscription": {handler: "reject_incoming_subscription",
-					events: "s", // do page before show
-					argsre: true
-			} },
-			{"#approve-subscription": {handler: "approve_subscription",
-					events: "s", // do page before show
-					argsre: true
 			} }
 		],
 
@@ -1078,7 +1066,7 @@
 							channel_name =this.dataset.channelname;
 
 							noty({
-								layout: 'topCenter',
+								layout: 'Center',
 								text: 'Are you sure you want to approve subscription?',
 								type: 'warning',
 
@@ -1087,8 +1075,103 @@
 											$noty.close();
 											
 												Devtools.ApproveSubscription(
-													{"channel_name": channel_name,
-														"event_eci": event_eci},
+													{"channel_name": channel_name},
+															 function(directives){
+													$.mobile.loading("hide");
+												$("#Subscriptions" ).empty();
+												populate_subscriptions();
+												});
+											}
+									},
+									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+
+											//noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}
+								]
+							});
+				});
+				$('.rejectButton').off('tap').on('tap', function(event){	
+							event_eci = this.dataset.eventeci;
+							console.log("event_eci: ",event_eci);
+							channel_name =this.dataset.channelname;
+
+							noty({
+								layout: 'Center',
+								text: 'Are you sure you want to reject subscription?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Approve', onClick: function($noty) {
+											$noty.close();
+											
+												Devtools.RejectIncomingSubscription(
+													{"channel_name": channel_name},
+															 function(directives){
+													$.mobile.loading("hide");
+												$("#Subscriptions" ).empty();
+												populate_subscriptions();
+												});
+											}
+									},
+									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+
+											//noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}
+								]
+							});
+				});
+				$('.CancelSubscriptionButton').off('tap').on('tap', function(event){	
+							event_eci = this.dataset.eventeci;
+							console.log("event_eci: ",event_eci);
+							channel_name =this.dataset.channelname;
+
+							noty({
+								layout: 'Center',
+								text: 'Are you sure you want to Cancel subscription?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Approve', onClick: function($noty) {
+											$noty.close();
+											
+												Devtools.RejectOutgoingSubscription(
+													{"channel_name": channel_name},
+															 function(directives){
+													$.mobile.loading("hide");
+												$("#Subscriptions" ).empty();
+												populate_subscriptions();
+												});
+											}
+									},
+									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+
+											//noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}
+								]
+							});
+				});
+				$('.UnSubscribeButton').off('tap').on('tap', function(event){	
+							event_eci = this.dataset.eventeci;
+							console.log("event_eci: ",event_eci);
+							channel_name =this.dataset.channelname;
+
+							noty({
+								layout: 'Center',
+								text: 'Are you sure you want to unsubscriptioNator with doom?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Approve', onClick: function($noty) {
+											$noty.close();
+											
+												Devtools.Unsubscribe(
+													{"channel_name": channel_name},
 															 function(directives){
 													$.mobile.loading("hide");
 												$("#Subscriptions" ).empty();
@@ -1161,18 +1244,6 @@
 					});
 					
 					$('#Subscribe-confirm-button').off('tap').on('tap', subscribeForm);
-			},
-			approve_incoming_subscription: function(type, match, ui, page) {
-				console.log("approve subscription page");
-				loadSpinner("#approve-incoming-subscription", "subscriptions");
-				var eventChannel = router.getParams(match[1])["eventChannel"];
-				//var name = router.getParams(match[1])["name"];
-				Devtools.ApproveSubscription({"event_eci" : eventChannel}, function(directives) {
-									console.log("approving ", eventChannel, directives);
-									$.mobile.changePage("#page-subscription-management", {
-										transition: 'slide'
-									});
-								}); 
 			},
 
 //--------------------------------End oF Subscriptions---------------------------------
