@@ -1,4 +1,6 @@
 _site
 secretstuff.txt
 
+.DS_Store
+
 js/CloudOS-config.js
