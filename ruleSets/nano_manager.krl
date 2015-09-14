@@ -694,8 +694,8 @@ ruleset b507199x5 {
     if (event_eci neq "no event_eci") then
     {
       event:send(subscription_map, "nano_manager", "pending_subscription_approved") // pending_subscription_approved..
-       with attrs = {"event_eci" : back_channel_eci}
-       and status = "outbound";
+       with attrs = {"event_eci" : back_channel_eci , 
+                      "status" : "outbound"}
     }
     fired 
     {
