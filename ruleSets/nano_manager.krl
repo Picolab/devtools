@@ -270,7 +270,7 @@ ruleset b507199x5 {
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
       my_channels = channels().klog("channels in channel call: ");
       v =value.klog("value befor regex: ");
-      attribute = (value.match(re/((([A-Z]|\d)*-)+([A-Z]|\d)*)/)) => 
+      attribute = (value.match(re/((([A-Z]|\d)+-)+([A-Z]|\d)*)/)) => 
               'cid' |
               'name';
       a = attribute.klog("attribute, name or cid: ");
