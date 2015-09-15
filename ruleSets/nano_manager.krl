@@ -269,7 +269,7 @@ ruleset b507199x5 {
     // takes name or eci 
     subscriptionsAttributes = function (value){
       v = value;
-      eci = (value.match(re/((([A-Z]|\d)+-)+([A-Z]|\d)+)/)) => 
+      eci = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
               value |
               eciFromName(value);
 
@@ -281,11 +281,9 @@ ruleset b507199x5 {
       // if value has a ":"" then attribute is name otherwise its cid 
       // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
       my_channels = channels();
-      v =value.klog("value befor regex3: ");
-      attribute = (value.match(re/((([A-Z]|\d)+-)+([A-Z]|\d)+)/)) => 
+      attribute = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
               'cid' |
               'name';
-      a = attribute.klog("attribute, name or cid: ");
       channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
       filtered_channels = channel_list.filter(function(channel){
         (channel{attribute} eq value);}); 
@@ -773,7 +771,7 @@ ruleset b507199x5 {
       // get attr from channel
       attributes = subscriptionsAttributes(channel_name);
       // get event_eci for subscription_map
-      event_eci = attributes{'event_eci'}; // whats better?
+      event_eci = attributes{'event_eci'}.defaultsTo(attributes{'target_eci'}, " target_eci used."); // whats better?
       // send remove event to event_eci
       // raise remove event to self with eci from name .
 
@@ -807,8 +805,7 @@ ruleset b507199x5 {
     }
     {
       //clean up channel
-      // deleteChannel(eci); 
-      noop();
+      deleteChannel(eci.klog("eci being deleted. : ")); 
     }
     always {
       log (standardOut("success, attemped to remove subscription"));
