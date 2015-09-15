@@ -779,7 +779,7 @@ ruleset b507199x5 {
 
       subscription_map = {
             "cid" : event_eci
-      };
+      }.klog("subscription_map: ");
     }
     if( eci neq "No event_eci") then
     {
@@ -791,8 +791,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       raise nano_manager event subscription_removal 
-        with channel_name = channel_name
-          and eci = eciFromName(channel_name); 
+        with eci = eciFromName(channel_name); 
           } 
     else {
       log(">> failure >>");
@@ -808,7 +807,8 @@ ruleset b507199x5 {
     }
     {
       //clean up channel
-      deleteChannel(eci); 
+      // deleteChannel(eci); 
+      noop();
     }
     always {
       log (standardOut("success, attemped to remove subscription"));
