@@ -263,7 +263,7 @@
     }; 
      nano_manager.deleteChild = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "child_deletion_requested", eventAttributes, postFunction, options);
+        return nano_manager.raiseEvent("nano_manager", "child_deletion", eventAttributes, postFunction, options);
     }; 
     // ------------------------------------------------------------------------ subscription
 

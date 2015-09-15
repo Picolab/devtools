@@ -183,22 +183,7 @@ ruleset devtools {
 	
 	
 	//------------------------------ Picos -----------------------------
-		rule createPico {
-			select when devtools createChild
-			pre {
-			}
 
-			{
-				noop();
-			}
-			
-			fired {
-				raise nano_manager event "child_creation_requested"
-					attributes event:attrs();
-			}
-		}
-	
-	
 	
 
     //------------------------------- Rulesets -------------------

@@ -275,7 +275,7 @@
     {
         cb = cb || function(){};
         Devtools.log("Creating pico");
-       return nano_manager.raiseEvent("devtools", "createChild", data, function(json) {
+       return nano_manager.raiseEvent("nano_manager", "child_creation", data, function(json) {
            Devtools.log("Directive from createPico", json);
            cb(json);
        }, options);

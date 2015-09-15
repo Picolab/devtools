@@ -529,14 +529,13 @@ ruleset b507199x5 {
 	}
 	
 	rule deleteChild {
-		select when nano_manager child_deletion_requested
+		select when nano_manager child_deletion
 		pre {
-			picoDeleted = event:attr("picoName").defaultsTo("", standardError("missing pico name for deletion"));
-			eciDeleted = (picoDeleted neq "") => ent:children{picoDeleted} | "none";
+			eciDeleted = event:attr("deletionTarget").defaultsTo("", standardError("missing pico for deletion"));
 		}
-		if(picoDeleted neq "" || ent:children{picoDeleted}.isnull()) then
+		if(eciDeleted neq "") then
 		{
-			pci:delete_pico(eciDeleted);
+			pci:delete_pico(eciDeleted, {"cascade" : 1});
 		}
 		notfired {
 			log "deletion failed because no child name was specified";

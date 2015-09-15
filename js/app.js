@@ -208,6 +208,16 @@
 						}, {"eci":picoToOpen});
 					});
 					
+					$(".deletePicoButton").off('tap').on('tap', function() {
+						console.log("DELETE button pushed for " + this.id);
+						nano_manager.deleteChild({"deletionTarget":this.id}, function() {
+							$.mobile.changePage("#about", {
+								transition: 'slide',
+								allowSamePageTransition : true
+							});
+						});
+					});
+					
 					$.mobile.loading("hide");
 				});
 			},
