@@ -801,11 +801,13 @@ ruleset b507199x5 {
       eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed?
         meta:eci()
         , standardError("eci"));
+      e =eci.klog("eci to be deleted: ");
       channel_name = nameFromEci(eci);
     }
     {
       //clean up channel
-      deleteChannel(eci.klog("eci being deleted. : ")); 
+     // deleteChannel(eci.klog("eci being deleted. : ")); 
+     noop();
     }
     always {
       log (standardOut("success, attemped to remove subscription"));
