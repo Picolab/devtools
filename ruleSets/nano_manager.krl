@@ -195,26 +195,19 @@ ruleset b507199x5 {
 
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
-      // list of subs
-      subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       // list of channels
       channels_result = channels();
       channel_list = channels_result{'channels'};
       // filter list channels to only have subs
-      // 2nbigO(n^2) but is faster because of less server calls to database
-      //                I could just filter on channel_list looking for attributs with subscription_names. 
       filtered_channels = channel_list.filter( function(channel){
-        //channel{'name'} in other array? 
-          isSubscription = function(channel) {
+        isSubscription = function(channel) {
             attributes = channel{'attributes'};
             (attributes.isnull()) => null |
             (attributes{'subscription_name'}.isnull() eq false); // how do u use not in krl?
           };
         isSubscription(channel).klog("isSubscriptions(): ");
-        //subscriptions.any( function(name){ 
-         // (name eq channel{'name'});  
-        //}); 
-      }).klog("filtered_channels : "); 
+
+      }); 
       // reconstruct list, to be channelname hashed to attributes.
       subs = filtered_channels.map( function(channel){
           {channel{'name'}:channel{'attributes'}};
@@ -554,7 +547,6 @@ ruleset b507199x5 {
    // ========================================================================
   // Persistent Variables:
   //
-  // ent:subscriptions = [ uniqe_channel_name,uniqe_channel_name2,..]
   //
   //
   //{
@@ -666,11 +658,6 @@ ruleset b507199x5 {
       unique_name = (status eq "inbound") => 
             randomName(pending_subscriptions{'name_space'}) |
             channel_name;
-      // create new list of subscriptions, if its empty start a new one.
-      new_subscriptions = (ent:subscriptions.head() eq 0) => //--------------------------------------could erase your list of subscriptions is there a better way?
-              [unique_name] |
-              ent:subscriptions.append(unique_name); 
-
       options = {
         'name' : unique_name, 
         'eci_type' : channel_type,
@@ -686,13 +673,11 @@ ruleset b507199x5 {
     fired { 
       log(standardOut("successful pending incoming"));
       raise nano_manager event inbound_pending_subscription_added; // event to nothing
-      set ent:subscriptions new_subscriptions; 
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
       raise nano_manager event outbound_pending_subscription_added; // event to nothing
-      set ent:subscriptions new_subscriptions;
     }
   }
   rule approvePendingSubscription { // used to notify both picos to add subscription request
@@ -701,7 +686,7 @@ ruleset b507199x5 {
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
       n = channel_name.klog("channel_namename: ");
       back_channel = channel(channel_name);
-      back_channel_eci = back_channel{'cid'};
+      back_channel_eci = back_channel{'cid'}; // this is why we call channel and not subscriptionsAttributes.
       attributes = back_channel{'attributes'};
       status = attributes{'status'};
       //back_channel_eci = eciFromName(channel_name).klog("back eci: ");
@@ -745,6 +730,7 @@ ruleset b507199x5 {
         attr = attributes.put({"status": "subscribed"}).klog("incoming attributes: ");
         attr;
       };
+
       attributes = (status eq "outbound" ) => 
             outGoing(event:attr("event_eci").defaultsTo( "no event_eci", standardError("no event_eci"))) | 
             incoming(event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name")));
@@ -820,20 +806,9 @@ ruleset b507199x5 {
       raise nano_manager event subscription_removed // event to nothing
         with channel_name = channel_name;
       // clean up
-      clear ent:subscriptions{channel_name};
     } 
   } 
-  rule subscribeReset {// for testing purpose, will not be in production 
-      select when nano_manager sub_scrip_tions_reset
-      pre{
-      }
-      {
-        noop();
-      }
-      always{
-        clear ent:subscriptions;
-      }
-    } 
+
 // unsubscribed all, check event from parent // just cancelSubscription... 
 // let all your connection know your leaving.
 
