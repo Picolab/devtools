@@ -196,7 +196,7 @@ ruleset b507199x5 {
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
       // list of subs
-      subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
+      //subscriptions = ent:subscriptions.defaultsTo("error",standardError("undefined"));
       // list of channels
       channels_result = channels();
       channel_list = channels_result{'channels'};
@@ -209,10 +209,10 @@ ruleset b507199x5 {
             attributes = channel{'attributes'};
             attributes{'subscription_name'}.isnull();
           };
-        //  isSubscription(channel);
-        subscriptions.any( function(name){ 
-          (name eq channel{'name'});  
-        }); 
+        isSubscription(channel);
+        //subscriptions.any( function(name){ 
+         // (name eq channel{'name'});  
+        //}); 
       }); 
       // reconstruct list, to be channelname hashed to attributes.
       subs = filtered_channels.map( function(channel){
