@@ -208,7 +208,7 @@ ruleset b507199x5 {
           isSubscription = function(channel) {
             attributes = channel{'attributes'};
             (attributes.isnull()) => null |
-            attributes{'subscription_name'}.isnull();
+            (attributes{'subscription_name'}.isnull() eq false); // how do u use not in krl?
           };
         isSubscription(channel).klog("isSubscriptions(): ");
         //subscriptions.any( function(name){ 
