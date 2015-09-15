@@ -202,8 +202,14 @@ ruleset b507199x5 {
       channel_list = channels_result{'channels'};
       // filter list channels to only have subs
       // 2nbigO(n^2) but is faster because of less server calls to database
+      //                I could just filter on channel_list looking for attributs with subscription_names. 
       filtered_channels = channel_list.filter( function(channel){
         //channel{'name'} in other array? 
+          isSubscription = function(channel) {
+            attributes = channel{'attributes'};
+            attributes{'subscription_name'}.isnull();
+          };
+        //  isSubscription(channel);
         subscriptions.any( function(name){ 
           (name eq channel{'name'});  
         }); 
