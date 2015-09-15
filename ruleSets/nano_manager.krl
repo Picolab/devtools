@@ -769,25 +769,30 @@ ruleset b507199x5 {
             or  nano_manager outbound_subscription_cancellation
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
-      eci = eciFromName(channel_name);
+      //get channel from name
+      // get attr from channel
+      attributes = subscriptionsAttributes(channel_name);
+      // get event_eci for subscription_map
+      event_eci = attributes{'event_eci'}; // whats better?
+      // send remove event to event_eci
+      // raise remove event to self with eci from name .
+
       subscription_map = {
-            "cid" : eci
+            "cid" : event_eci
       };
     }
     if( eci neq "No event_eci") then
     {
-      event:send(subscription_map, "nano_manager", "subscription_removal")
-        with attrs = {
-          "eci"  : eci,
-          "channel_name" : channel_name
-        };
-
+      event:send(subscription_map, "nano_manager", "subscription_removal");
+      //  with attrs = {
+      //    "eci"  : eci
+      //  };
     }
     fired {
+      log (standardOut("success"));
       raise nano_manager event subscription_removal 
         with channel_name = channel_name
-          and eci = eci; 
-      log (standardOut("success"));
+          and eci = eciFromName(channel_name); 
           } 
     else {
       log(">> failure >>");
@@ -796,8 +801,10 @@ ruleset b507199x5 {
   rule removeSubscription {
     select when nano_manager subscription_removal
     pre{
-      channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
-      eci = event:attr("eci").defaultsTo( "no eci", standardError("eci"));
+      eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed?
+        meta:eci()
+        , standardError("eci"));
+      channel_name = nameFromEci(eci);
     }
     {
       //clean up channel
