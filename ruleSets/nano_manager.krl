@@ -806,8 +806,7 @@ ruleset b507199x5 {
     }
     {
       //clean up channel
-     // deleteChannel(eci.klog("eci being deleted. : ")); 
-     noop();
+     deleteChannel(eci.klog("eci being deleted. : ")); 
     }
     always {
       log (standardOut("success, attemped to remove subscription"));
