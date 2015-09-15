@@ -214,7 +214,7 @@ ruleset b507199x5 {
         //subscriptions.any( function(name){ 
          // (name eq channel{'name'});  
         //}); 
-      }); 
+      }).klog("filtered_channels : "); 
       // reconstruct list, to be channelname hashed to attributes.
       subs = filtered_channels.map( function(channel){
           {channel{'name'}:channel{'attributes'}};
