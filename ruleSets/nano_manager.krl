@@ -721,7 +721,6 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approved
     pre{
       status = event:attr("status").defaultsTo("", standardError("status"));
-      s = status.klog("status: ");
       outGoing = function(event_eci){
         attributes = subscriptionsAttributes(meta:eci().klog("meta:eci for attributes: ")).klog("outgoing attributes: ");
         attr = attributes.put({"status" : "subscribed"}).klog("put outgoing status: "); // over write original status
@@ -784,7 +783,8 @@ ruleset b507199x5 {
       event:send(subscription_map, "nano_manager", "subscription_removal")
         with attrs = {
           // this will catch the problem with canceling outbound
-          "eci"  : back_channel_eci
+          "eci"  : back_channel_eci,
+          "status": "outbound"
         };
     }
     fired {
@@ -799,11 +799,28 @@ ruleset b507199x5 {
   rule removeSubscription {
     select when nano_manager subscription_removal
     pre{
-      attrs = event:attrs().klog("attrs :");
-      eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed, unless its canceling a not accepted inbound.
-        meta:eci() // should never get here.
-        , standardError("eci"));
+      status = event:attr("status").defaultsTo("", standardError("status"));
+      eciLookUpFromEvent = function(eci){
+          get_event_eci = function(channel){
+              attributes = channel{'attributes'};
+              return = (attributes.isnull()) => null |
+              (attributes{'event_eci'} ); 
+              return;
+          };
+          my_channels = channels();
+          channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
+          filtered_channels = channel_list.filter(function(channel){
+          (get_event_eci(channel) eq eci);
+          }); 
+        result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
+        (result);
+      };
+
+      eci = (status eq "outbound") => eciLookUpFromEvent(event:attr("eci").defaultsTo( "error", standardError("eci"))) |
+        event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed, unless its canceling a not accepted inbound.
+        "error", standardError("eci"));
       channel_name = nameFromEci(eci);
+
     }
     {
       //clean up channel
