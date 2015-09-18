@@ -683,7 +683,6 @@ ruleset b507199x5 {
     select when nano_manager pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
-      n = channel_name.klog("channel_namename: ");
       back_channel = channel(channel_name);
       back_channel_eci = back_channel{'cid'}; // this is why we call channel and not subscriptionsAttributes.
       attributes = back_channel{'attributes'};
@@ -760,13 +759,25 @@ ruleset b507199x5 {
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
       //get channel from name
+      back_channel = channel(channel_name);
       // get attr from channel
-      attributes = subscriptionsAttributes(channel_name);
+      attributes = back_channel{'attributes'};
       // get event_eci for subscription_map
       event_eci = attributes{'event_eci'}.defaultsTo(attributes{'target_eci'}, " target_eci used."); // whats better?
       // send remove event to event_eci
       // raise remove event to self with eci from name .
+      status = event:attr("status").defaultsTo("stashed", standardError("status"));
+      outbound = function (channel){
+        {
+          "status": "negated",
+          "event_eci": channel{'cid'}// this is why we call channel and not subscriptionsAttributes.
+        };
 
+      };
+      property = function (){
+        {};
+      };
+      attr = (status eq "negate") => outbound(back_channel) | property ;
       subscription_map = {
             "cid" : event_eci
       }.klog("subscription_map: ");
@@ -774,9 +785,7 @@ ruleset b507199x5 {
     if( eci neq "No event_eci") then
     {
       event:send(subscription_map, "nano_manager", "subscription_removal");
-      //  with attrs = {
-      //    "eci"  : eci
-      //  };
+        with attrs = attr;
     }
     fired {
       log (standardOut("success"));
@@ -793,7 +802,8 @@ ruleset b507199x5 {
       eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed?
         meta:eci()
         , standardError("eci"));
-      e =eci.klog("eci to be deleted: ");
+      status = event:attr("status").defaultsTo("stashed", standardError("status"));
+      eci = (status eq "negated" ) => 
       channel_name = nameFromEci(eci);
     }
     {
