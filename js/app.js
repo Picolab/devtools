@@ -183,6 +183,10 @@
 					console.log("Children");
 					$("#child-picos").empty();
 					dynamicChildrenList = "";
+					$.mobile.loading("hide");
+					if (children_result["children"] == "error")
+						return;
+					
 					$.each(children_result["children"], function(id, child){
 						dynamicChildrenList += 
 							snippets.child_pico_template(
@@ -218,7 +222,6 @@
 						});
 					});
 					
-					$.mobile.loading("hide");
 				});
 			},
 			
