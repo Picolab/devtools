@@ -147,6 +147,8 @@
 			about: function(type, match, ui, page) {
 				console.log("About Page Handler");
 				
+				$("#upwards-navigation-options").hide();
+				
 				$("#about-eci" ).empty();
 				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI)
 				$.mobile.loading("show", {
@@ -168,6 +170,7 @@
 					$("#Open-parent-button").text("Open Parent : " + parentECI);
 					$("#Open-parent-button").off('tap');
 					if (parent_result.parent != "error") {
+						$("#upwards-navigation-options").show();
 						$("#Open-parent-button").on('tap', function() {
 							PicoNavigator.navigateTo(parentECI);
 							$.mobile.changePage("#about", {
