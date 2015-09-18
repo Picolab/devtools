@@ -141,7 +141,7 @@
 				Devtools.about(function(json){ 
 					$.mobile.loading("hide");
 					$("#about-account").html(snippets.about_account(json));
-				});
+				}, {"eci":nano_manager.defaultECI});
 			},
 			
 			about: function(type, match, ui, page) {
