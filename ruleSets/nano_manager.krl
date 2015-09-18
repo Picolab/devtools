@@ -179,6 +179,12 @@ ruleset b507199x5 {
 	}
 	
 	
+	deletePico = defaction(eci) {
+		noret = pci:delete_pico(eci, {"cascade":1});
+		send_directive("deleted pico #{eci}");
+	}
+	
+	
 	prototypeDefinitions = {
 		"core": [
         "b507199x5"
@@ -535,7 +541,7 @@ ruleset b507199x5 {
 		}
 		if(eciDeleted neq "") then
 		{
-			pci:delete_pico(eciDeleted, {"cascade" : 1});
+			deletePico(eciDeleted);
 		}
 		notfired {
 			log "deletion failed because no child name was specified";
