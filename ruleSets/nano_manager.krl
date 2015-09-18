@@ -760,32 +760,26 @@ ruleset b507199x5 {
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
       //get channel from name
       back_channel = channel(channel_name);
+      // look up back channel for canceling outbound.
+      back_channel_eci = back_channel{'cid'}; // this is why we call channel and not subscriptionsAttributes.
       // get attr from channel
       attributes = back_channel{'attributes'};
       // get event_eci for subscription_map
       event_eci = attributes{'event_eci'}.defaultsTo(attributes{'target_eci'}, " target_eci used."); // whats better?
       // send remove event to event_eci
       // raise remove event to self with eci from name .
-      status = event:attr("status").defaultsTo("stashed", standardError("status"));
-      outbound = function (channel){
-        {
-          "status": "negated",
-          "event_eci": channel{'cid'}// this is why we call channel and not subscriptionsAttributes.
-        };
 
-      };
-      property = function (){
-        {};
-      };
-      attr = (status eq "negate") => outbound(back_channel) | property ;
       subscription_map = {
             "cid" : event_eci
       }.klog("subscription_map: ");
     }
     if( eci neq "No event_eci") then
     {
-      event:send(subscription_map, "nano_manager", "subscription_removal");
-        with attrs = attr;
+      event:send(subscription_map, "nano_manager", "subscription_removal")
+        with attrs = {
+          // this will catch the problem with canceling outbound
+          "eci"  : back_channel_eci
+        };
     }
     fired {
       log (standardOut("success"));
@@ -799,11 +793,9 @@ ruleset b507199x5 {
   rule removeSubscription {
     select when nano_manager subscription_removal
     pre{
-      eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed?
-        meta:eci()
+      eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed, unless its canceling a not accepted inbound.
+        meta:eci() // should never get here.
         , standardError("eci"));
-      status = event:attr("status").defaultsTo("stashed", standardError("status"));
-      eci = (status eq "negated" ) => 
       channel_name = nameFromEci(eci);
     }
     {
@@ -814,7 +806,6 @@ ruleset b507199x5 {
       log (standardOut("success, attemped to remove subscription"));
       raise nano_manager event subscription_removed // event to nothing
         with channel_name = channel_name;
-      // clean up
     } 
   } 
 
