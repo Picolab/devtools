@@ -799,6 +799,7 @@ ruleset b507199x5 {
   rule removeSubscription {
     select when nano_manager subscription_removal
     pre{
+      attrs = event:attrs().klog("attrs :");
       eci = event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed, unless its canceling a not accepted inbound.
         meta:eci() // should never get here.
         , standardError("eci"));
