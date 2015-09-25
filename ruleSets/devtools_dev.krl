@@ -232,8 +232,9 @@ ruleset devtools {
 		    else{
 		      log""
 		    }
-		  }
-		  rule deleteRuleset {
+		}
+
+		rule deleteRuleset {
 	        select when devtools delete_rid
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
@@ -249,8 +250,9 @@ ruleset devtools {
 		    else{
 		      log ">>>> #{rid} not found "; 
 		    }
-		  }
-		  rule flushRulesets {
+		}
+
+		rule flushRulesets {
 	        select when devtools flush_rid
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
@@ -267,8 +269,9 @@ ruleset devtools {
 		      log ">>>> failed to flush #{rid} <<<<"
 
 		    } 
-		  }
-		  rule relinkRuleset {
+		}
+
+		rule relinkRuleset {
 		    select when nano_manager ruleset_relink_requested
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
@@ -292,7 +295,7 @@ ruleset devtools {
 		    else{
 		      log ""
 		    }
-		  }  
+		}  
    
 
 
@@ -461,6 +464,7 @@ ruleset devtools {
 	    if (sid neq "") then
 	    {
 	      event:delete(sid);
+	      klog sid;
 	    }
 	    fired {
 	      log (standardOut("success"));
