@@ -155,7 +155,7 @@
         }, {"eci":eci});   
     },
 
-    // ------------------------------------------------------------------------ Rulesets 
+// ------------------------------------------------------------------------ Rulesets 
     getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {
         cb = cb || function(){};
@@ -213,7 +213,7 @@
         }, options);
     },
 
-    // ------------------------------------------------------------------------ installed Rulesets 
+// ------------------------------------------------------------------------ installed Rulesets 
 
     showInstalledRulesets: function(cb, options) 
     {
@@ -258,7 +258,7 @@
     },
 
 
-    // ------------------------------------------------------------------------ Picos
+// ------------------------------------------------------------------------ Picos
 
     about: function(cb, options) 
     {
@@ -303,7 +303,7 @@
 	},
 
 
-    // ------------------------------------------------------------------------ Channels mannagement
+// ------------------------------------------------------------------------ Channels mannagement
     showInstalledChannels: function(cb, options)
     {
         cb = cb || function(){};
@@ -338,7 +338,7 @@
         return nano_manager.deleteChannel(attributes, post_function, options);
 
     },
-    //---------------------------------(Apps) Authorize Client mannagement----------------
+//---------------------------------(Apps) Authorize Client mannagement----------------
     authorizeClient: function(app_Data, cb, options)
     {
         cb = cb || function(){};
@@ -381,7 +381,7 @@
         }, options);
     },
 
-    //-------------------------------------------------------------- scheduled events
+//-------------------------------------------------------------- scheduled events
     showScheduledEvents: function(cb, options)
     {
         cb = cb || function(){};
@@ -417,13 +417,14 @@
     {
         cb = cb || function(){};
         var parameters = {channelName:channel_name}; 
-        Devtools.log("Canceling scheduled event");
-       return nano_manager.raiseEvent("nano_manager", "schedule_canceled", data, function(json) {
+        Devtools.log("Canceling scheduled event",data);
+        var json = {"sid":data};
+       return nano_manager.raiseEvent("nano_manager", "schedule_canceled", json, function(json) {
            Devtools.log("Canceling a scheduled event", json);
            cb(json);
        }, options);
     },
-    //-------------------Subscriptions--------------------
+//-------------------Subscriptions--------------------
     showSubscriptions: function(cb, options)
     {
         cb = cb || function(){};
