@@ -453,8 +453,8 @@ ruleset devtools {
 	      }
  	
  	// <!-- -------------------- Scheduled ---------------------- -->
-      rule DeleteScheduledEvent {
-	    select when nano_manager delete_scheduled_event_requested
+      rule cancelScheduledEvent {
+	    select when nano_manager schedule_canceled
 	    pre{
 	      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
 	    }
@@ -497,7 +497,7 @@ ruleset devtools {
 	    //TESTING NEW CODE WHICH IS FROM NANO MANAGER
 
 	    rule CreateScheduled {
-	      select when nano_manager scheduled_created
+	      select when nano_manager schedule_created
 	      pre {
 	      	/*do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
 	      	event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));

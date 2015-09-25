@@ -1331,7 +1331,7 @@
 					 	dynamicScheduledEvents = "";
 					 	$.each(events_list, function(k, scheduled_event) {
 							dynamicScheduledEvents += snippets.scheduled_events_template({
-								"id": scheduled_event[0],
+								"sid": scheduled_event[0],
 								"name": scheduled_event[1],
 								"type": scheduled_event[2],
 								"rid": scheduled_event[3],
@@ -1341,6 +1341,47 @@
 					 	$("#scheduled-events").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
 					 	$.mobile.loading("hide");
 					 	
+					
+
+					$('.cancelEventButton').off('tap').on('tap', function(event)
+						{	
+							console.log(this.id);
+						  sid = this.id;
+							
+							console.log("Canceling this event");
+							noty({
+								layout: 'topCenter',
+								text: 'Are you sure you want to cancel this scheduled event?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Yes', onClick: function($noty) {
+											$noty.close();
+											if(typeof sid !== "undefined") {
+												$.mobile.loading("show", {
+													text: "Canceling this scheduled event...",
+													textVisible: true
+												});
+												Devtools.cancelEvent(sid, function(directives){
+													console.log("Canceling the event", sid, directives);
+													$.mobile.loading("hide");
+													//refreshes the page because refreshPage() takes us to the homepage
+													$("#scheduled-events").empty();
+													populate_schedule_events();
+												});
+											}
+										}
+									},
+									{addClass: 'btn btn-danger', text: 'No', onClick: function($noty) {
+											$noty.close();
+											noty({layout: 'topCenter', text: 'You clicked "No" button', type: 'error'});
+										}
+									}
+								]
+							});
+						
+							
+						});
 					});
 				}
 

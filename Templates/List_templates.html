@@ -149,15 +149,16 @@
   <!-- -------------------- Scheduled Templates---------------------- -->
 
 <div id="scheduled-events-template" style="display:none;">
-   <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a">
+   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a">
      <h4>{{name}}</h4>
      <div>
-      <p style="position:relative; top:-20px"><a style="float:right" href="#confirm-uninstall-ruleset?rid={{rid}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Cancel Scheduled Event</a></p>
-       <p><b>SchedEv id:</b> {{id}}
+      <p style="position:relative; top:-20px"><a id="{{sid}}"style="float:right" href="#" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete cancelEventButton">Cancel Scheduled Event</a></p>
+       <p><b>SchedEv id:</b> {{sid}}
        <p><b>Domain/Event name:</b> {{name}}
        <p><b>Type:</b> {{type}}</p>
        <p><b>Rid:</b> {{rid}}</p>
        <p><b>Next Scheduled Fire:</b> {{epoch_time}}</p>
+
      </div>
    </div>
 </div>

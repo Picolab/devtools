@@ -407,9 +407,19 @@
     {
         cb = cb || function(){};
         var parameters = {channelName:channel_name}; 
-        Devtools.log("Installing channels");
-       return nano_manager.raiseEvent("nano_manager", "scheduled_created", data, function(json) {
+        Devtools.log("Scheduling event");
+       return nano_manager.raiseEvent("nano_manager", "schedule_created", data, function(json) {
            Devtools.log("Creating a scheduled event", json);
+           cb(json);
+       }, options);
+    },
+    cancelEvent: function(data, cb, options) 
+    {
+        cb = cb || function(){};
+        var parameters = {channelName:channel_name}; 
+        Devtools.log("Canceling scheduled event");
+       return nano_manager.raiseEvent("nano_manager", "schedule_canceled", data, function(json) {
+           Devtools.log("Canceling a scheduled event", json);
            cb(json);
        }, options);
     },
