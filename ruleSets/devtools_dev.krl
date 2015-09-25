@@ -464,7 +464,7 @@ ruleset devtools {
 	    if (sid neq "") then
 	    {
 	      event:delete(sid);
-	      klog sid;
+	      log (sid);
 	    }
 	    fired {
 	      log (standardOut("success"));
