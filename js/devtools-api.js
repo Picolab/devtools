@@ -413,12 +413,12 @@
            cb(json);
        }, options);
     },
-    cancelEvent: function(data, cb, options) 
+    cancelEvent: function(sid, cb, options) 
     {
         cb = cb || function(){};
-        var parameters = {channelName:channel_name}; 
-        Devtools.log("Canceling scheduled event",data);
-        var json = {"sid":data};
+        //var parameters = {channelName:channel_name}; 
+        Devtools.log("Canceling scheduled event",sid);
+        var json = {sid: sid};
        return nano_manager.raiseEvent("nano_manager", "schedule_canceled", json, function(json) {
            Devtools.log("Canceling a scheduled event", json);
            cb(json);

@@ -177,6 +177,12 @@ ruleset devtools {
 		      }
 		    
 		    }
+
+		    delete_scheduled_event = defaction(sid){
+		      	status = event:delete(sid);
+		      	send_directive("scheduled_event_deleted") with status = status;
+		    }
+
         // -------------------- <End oF> Scheduled ---------------------- 
 
     }
@@ -463,8 +469,7 @@ ruleset devtools {
 	    }
 	    if (sid neq "") then
 	    {
-	      event:delete(sid);
-	      log (sid);
+	    	delete_scheduled_event(sid);
 	    }
 	    fired {
 	      log (standardOut("success"));
