@@ -529,7 +529,7 @@ ruleset devtools {
 	      fired {
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
-	        schedule do_main event event_type at time:add(time:now(),{"minutes" : 5} attributes attr; //attributes event:attrs();
+	        schedule do_main event event_type at time:add(time:now(),{"minutes" : 5}) attributes attr; //attributes event:attrs();
 
 	        //schedule notification event log at time:add(time:now(),{"minutes" : 5})
 
