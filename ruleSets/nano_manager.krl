@@ -110,7 +110,7 @@ ruleset b507199x5 {
       my_channels = channels().defaultsTo("error",">> undefined >>");
 
       getType = function(eci,my_channels) { // change varible names
-        channels = channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
+        channels = my_channels{"channels"}.defaultsTo("undefined",standardError("undefined"));
         channel = channels.filter( function(channel){channel{"cid"} eq eci } ).defaultsTo( "error",standardError("undefined"));
         chan = channel[0];
         type = chan{"type"};
@@ -766,10 +766,10 @@ ruleset b507199x5 {
       //get channel from name
       back_channel = channel(channel_name);
       // look up back channel for canceling outbound.
-      back_channel_eci = back_channel{'cid'}; // this is why we call channel and not subscriptionsAttributes.
+      back_channel_eci = back_channel{'cid'}.klog("back_channel_eci: "); // this is why we call channel and not subscriptionsAttributes.
       // get attr from channel
       attributes = back_channel{'attributes'};
-      // get event_eci for subscription_map
+      // get event_eci for subscription_map // who we will notify
       event_eci = attributes{'event_eci'}.defaultsTo(attributes{'target_eci'}, " target_eci used."); // whats better?
       // send remove event to event_eci
       // raise remove event to self with eci from name .
@@ -778,19 +778,20 @@ ruleset b507199x5 {
             "cid" : event_eci
       }.klog("subscription_map: ");
     }
-    if( eci neq "No event_eci") then
+    //if( eci neq "No event_eci") then // always try to notify other party
     {
       event:send(subscription_map, "nano_manager", "subscription_removal")
         with attrs = {
           // this will catch the problem with canceling outbound
-          "eci"  : back_channel_eci,
+          "eci"  : back_channel_eci, // tabo to pass this but other person has no other way to know ...
           "status": "outbound"
         };
     }
     fired {
       log (standardOut("success"));
       raise nano_manager event subscription_removal 
-        with eci = eciFromName(channel_name); 
+        with eci = eciFromName(channel_name)
+        and status = "internal"; 
           } 
     else {
       log(">> failure >>");
@@ -800,25 +801,29 @@ ruleset b507199x5 {
     select when nano_manager subscription_removal
     pre{
       status = event:attr("status").defaultsTo("", standardError("status"));
-      eciLookUpFromEvent = function(eci){
+      passedEci= event:attr("eci").defaultsTo("", standardError("eci"));
+      eciLookUpFromEvent = function(event_eci){
           get_event_eci = function(channel){
               attributes = channel{'attributes'};
-              return = (attributes.isnull()) => null |
-              (attributes{'event_eci'} ); 
+              return = (attributes.isnull()) => 
+                  null |
+                  (attributes{'event_eci'} ); 
               return;
           };
           my_channels = channels();
           channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
-          filtered_channels = channel_list.filter(function(channel){
-          (get_event_eci(channel) eq eci);
+          filtered_channels = channel_list.filter( function (channel) {
+          ( get_event_eci(channel) eq event_eci);
           }); 
         result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
-        (result);
+        // a channel with the correct event_eci
+        return = result{'cid'} // the correct eci to be removed.
+        (return);
       };
 
-      eci = (status eq "outbound") => eciLookUpFromEvent(event:attr("eci").defaultsTo( "error", standardError("eci"))) |
-        event:attr("eci").defaultsTo( // the event will come in on the eci needed to be removed, unless its canceling a not accepted inbound.
-        "error", standardError("eci"));
+      eci = (status eq "outbound") => eciLookUpFromEvent( passedEci ) |
+        passedEci;
+        
       channel_name = nameFromEci(eci);
 
     }
@@ -829,7 +834,7 @@ ruleset b507199x5 {
     always {
       log (standardOut("success, attemped to remove subscription"));
       raise nano_manager event subscription_removed // event to nothing
-        with channel_name = channel_name;
+        with removed_channel_name = channel_name;
     } 
   } 
 
