@@ -822,11 +822,12 @@ ruleset b507199x5 {
         return = result{'cid'} // the correct eci to be removed.
         (return);
       };
+      
+      eci = ( status eq "inbound_subscription_rejection" ) => meta:eci() |
+             (status eq "outbound_subscription_cancellation") => eciLookUpFromEvent( passedEci ) |
+                passedEci;
 
-      eci = (status eq "outbound_subscription_cancellation") => eciLookUpFromEvent( passedEci ) |
-        passedEci;
-        
-      channel_name = nameFromEci(eci);
+      channel_name = nameFromEci(eci); // for event to nothing
 
     }
     {
