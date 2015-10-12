@@ -793,7 +793,7 @@ ruleset b507199x5 {
       log (standardOut("success"));
       raise nano_manager event subscription_removal 
         with eci = eciFromName(channel_name)
-        and status = status; //"internal"; 
+        and status = "internal"; 
           } 
     else {
       log(">> failure >>");
@@ -822,7 +822,7 @@ ruleset b507199x5 {
         return = result{'cid'} // the correct eci to be removed.
         (return);
       };
-      
+
       eci = ( status eq "inbound_subscription_rejection" ) => meta:eci() |
              (status eq "outbound_subscription_cancellation") => eciLookUpFromEvent( passedEci ) |
                 passedEci;
