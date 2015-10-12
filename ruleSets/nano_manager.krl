@@ -792,7 +792,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       raise nano_manager event subscription_removal 
-        with eci = eciFromName(channel_name)
+        with eci = eciFromName(channel_name) // this probly could be back_channel_eci to save on computations
         and status = "internal"; 
           } 
     else {
@@ -823,9 +823,9 @@ ruleset b507199x5 {
         (return);
       };
 
-      eci = ( status eq "inbound_subscription_rejection" ) => meta:eci() |
+      eci = ( status eq "inbound_subscription_rejection" || status eq "subscription_cancellation" ) => meta:eci() |
              (status eq "outbound_subscription_cancellation") => eciLookUpFromEvent( passedEci ) |
-                passedEci;
+                passedEci; // passed is used to deleted backchannel on self 
 
       channel_name = nameFromEci(eci); // for event to nothing
 
