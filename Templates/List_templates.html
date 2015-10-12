@@ -166,12 +166,13 @@
   <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
   <!-- -------------------- subscriptions Templates---------------------- -->
 <div id="subscription-tab-template" style="display:none;">
-   <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a">
+   <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "arrow-r" data-expanded-icon="arrow-d" >
      <h4>{{Type}}</h4>
     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="{{Type}}2">
     </div>
    </div>
 </div>
+
 <div id="subscription-incoming-template" style="display:none;">
    <div id="{{c_name}}"  data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
      <h4>{{name}} ({{e_cid}})</h4>
@@ -186,6 +187,7 @@
      </div>
    </div>
 </div>
+
 <div id="subscription-out-going-template" style="display:none;">
    <div id="{{c_name}}" data-role="collapsible" data-filtertext="{{name}} ({{t_cid}})" data-theme="a" data-content-theme="a">
      <h4>{{name}} ({{t_cid}})</h4>
@@ -200,6 +202,7 @@
      </div>
    </div>
 </div>
+
 <div id="subscription-template" style="display:none;">
    <div id="{{c_name}}" data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
      <h4>{{name}} ({{e_cid}})</h4>
