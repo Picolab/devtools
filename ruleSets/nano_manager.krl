@@ -555,12 +555,15 @@ ruleset b507199x5 {
     backChannel : {
         type: <string>
         name: <string>
+        policy: ?? // not used.
         attrs: {
           (Subscription attributes) 
            "name"  : <string>,
            "name_space": <string>,
            "relationship" : <string>,
-           "target_eci"/"event_eci" : <string>,
+           "target_eci": <string>, // this is only stored in the origanal requestie
+           "event_eci" : <string>,
+           "attributes" : <string>, // this will be a object(mostlikely an array) that has been encoded as a string. 
            "status": <string> // discribes subscription status, incouming, outgoing, subscribed
         }
     }
@@ -759,6 +762,8 @@ ruleset b507199x5 {
             or  nano_manager inbound_subscription_rejection
             or  nano_manager outbound_subscription_cancellation
     pre{
+      status = event:name();
+
       channel_name = event:attr("channel_name").defaultsTo( "No channel_name", standardError("channel_name"));
       //get channel from name
       back_channel = channel(channel_name);
@@ -780,15 +785,15 @@ ruleset b507199x5 {
       event:send(subscription_map, "nano_manager", "subscription_removal")
         with attrs = {
           // this will catch the problem with canceling outbound
-          "eci"  : back_channel_eci, // tabo to pass this but other person has no other way to know ...
-          "status": "outbound"
+          "eci"  : back_channel_eci, // tabo to pass this but other pico has no other way to know ...
+          "status": status//"outbound"
         };
     }
     fired {
       log (standardOut("success"));
       raise nano_manager event subscription_removal 
         with eci = eciFromName(channel_name)
-        and status = "internal"; 
+        and status = status; //"internal"; 
           } 
     else {
       log(">> failure >>");
@@ -818,7 +823,7 @@ ruleset b507199x5 {
         (return);
       };
 
-      eci = (status eq "outbound") => eciLookUpFromEvent( passedEci ) |
+      eci = (status eq "outbound_subscription_cancellation") => eciLookUpFromEvent( passedEci ) |
         passedEci;
         
       channel_name = nameFromEci(eci);
