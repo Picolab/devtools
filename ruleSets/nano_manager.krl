@@ -652,7 +652,8 @@ ruleset b507199x5 {
             "name_space"    : event:attr("name_space").defaultsTo("", standardError("name_space")),
             "relationship" : event:attr("relationship").defaultsTo("", standardError("relationship")),
             "event_eci"  : event:attr("event_eci").defaultsTo("", standardError("event_eci")),
-            "status"  : event:attr("status").defaultsTo("", standardError("status"))
+            "status"  : event:attr("status").defaultsTo("", standardError("status")),
+            "attributes" : event:attr("attributes").defaultsTo("", standardError("attributes"))
           } |
           {};
           // should this go into the hash above?
