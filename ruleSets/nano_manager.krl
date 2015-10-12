@@ -549,44 +549,36 @@ ruleset b507199x5 {
 	}
 
   //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+nano_manager+Service
-   // ========================================================================
-  // Persistent Variables:
-  //
-  //
-  //
-  //{
-  //     backChannel : {
-  //      type: 
-  //      name: 
-  //       
-  //       
-  //       attrs: {
-  //      ""
-  //      (Subscription) "name"  : ,
-  //      "name_space": ,
-  //       "relationship" : ,
-  //        "target_eci"/"event_eci" : ,
-  //        "status": 
-  //       ],
-  //      }
-  //    }
-  //  }
-  //
-   // ========================================================================
-   // creates back_channel and sends event for other pico to create back_channel.
+  /* 
+   ========================================================================
+   No Persistent Variables for subscriptions, subscriptions information is stored in the "backChannel" Channels attributes varible
+    backChannel : {
+        type: <string>
+        name: <string>
+        attrs: {
+          (Subscription attributes) 
+           "name"  : <string>,
+           "name_space": <string>,
+           "relationship" : <string>,
+           "target_eci"/"event_eci" : <string>,
+           "status": <string> // discribes subscription status, incouming, outgoing, subscribed
+        }
+    }
+    ========================================================================
+   */
 
+   // creates back_channel and sends event for other pico to create back_channel.
   rule subscribe {// need to change varibles to snake case.
     select when nano_manager subscription
    pre {
-    // update to use a status instead of target channel 
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
       relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
       target_eci = event:attr("target_eci").defaultsTo("no_target_eci", standardError("target_eci"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
-      status      = event:attr("status").defaultsTo("status", standardError("status "));
-      
+      //status      = event:attr("status").defaultsTo("status", standardError("status ")); 
+      attributes = event:attr("attrs").defaultsTo("status", standardError("status "));
       // extract roles of the relationship
       roles   = relationship.split(re/\-/);
       my_role  = roles[0];
@@ -605,7 +597,9 @@ ruleset b507199x5 {
         "name_space"    : name_space,
         "relationship" : my_role,
         "target_eci"  : target_eci, // this will remain after accepted
-        "status" : "outbound"
+        "status" : "outbound", // should this be passed in from out side? I dont think so.
+        "attributes" : attributes
+
       }; 
       //create call back for subscriber     
       options = {
@@ -615,9 +609,10 @@ ruleset b507199x5 {
           //'policy' : ,
       };
     }
-    if(target_eci neq "no_target_eci") 
+    if(target_eci neq "no_target_eci") // check if we have someone to send a request too
     then
     {
+
       createChannel(meta:eci(),options);// just use meta:eci()??
 
       event:send(subscription_map, "nano_manager", "pending_subscription") // send request
@@ -627,7 +622,8 @@ ruleset b507199x5 {
           "relationship" : your_role,
           "event_eci"  : eciFromName(unique_name), 
           "status" : "inbound",
-          "channel_type" : channel_type
+          "channel_type" : channel_type,
+          "attributes" : attributes
         };
     }
     fired {

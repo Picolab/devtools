@@ -1233,8 +1233,7 @@
 								"target_eci": subscribe_form_data.Subscription_target.trim(),
 								"channel_type": subscribe_form_data.Subscription_type,
 								"relationship" : subscribe_form_data.Subscription_relationship,
-								"attrs": subscribe_form_data.Subscription_attrs,
-								"status": "outbound"
+								"attrs": subscribe_form_data.Subscription_attrs
 							};
 							if( true 	) {
 								Devtools.RequestSubscription(subscription_Data, function(directives) {
