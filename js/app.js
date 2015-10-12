@@ -986,7 +986,7 @@
 						subscriptions = subscriptions.subscriptions;
 						$("#Subscriptions" ).empty();
 
-								if('inbound' in subscriptions){
+						if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
 								dynamic_subscriptions_items = "";
 								dynamic_subscriptions_items2 = "";
@@ -999,7 +999,8 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"e_cid": object["event_eci"],
-											"c_name": key2
+											"c_name": key2,
+											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -1029,7 +1030,8 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"t_cid": object["target_eci"],
-											"c_name": key2
+											"c_name": key2,
+											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -1060,7 +1062,8 @@
 										"relationship": object["relationship"],
 										"e_cid": object["event_eci"],
 										"b_cid": object["back_eci"],
-										"c_name": key2
+										"c_name": key2,
+										"attributes": object["attributes"]
 										//"attributes":JSON.stringify(object["attrs"])
 									}
 										);
