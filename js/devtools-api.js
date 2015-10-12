@@ -479,7 +479,7 @@
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
        };
-       return nano_manager.cancelSubscription( data, post_function , options);
+       return nano_manager.rejectInBoundSubscription( data, post_function , options);
     },
     Unsubscribe: function(data, cb, options)
     {
@@ -501,7 +501,7 @@
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
        };
-       return nano_manager.cancelSubscription( attributes, post_function, options);
+       return nano_manager.cancelOutBoundSubscription( attributes, post_function, options);
     }
 //
 }; //closes the "window" inside the function DON'T DELETE

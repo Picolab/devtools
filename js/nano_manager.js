@@ -303,11 +303,19 @@
     {
         return nano_manager.raiseEvent("nano_manager", "pending_subscription_approved", eventAttributes, postFunction, options);
     }; 
+
          nano_manager.cancelSubscription = function( eventAttributes, postFunction, options)
     {
         return nano_manager.raiseEvent("nano_manager", "subscription_cancellation", eventAttributes, postFunction, options);
     }; 
-    
+        nano_manager.rejectInBoundSubscription = function( eventAttributes, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "inbound_subscription_rejection", eventAttributes, postFunction, options);
+    }; 
+        nano_manager.cancelOutBoundSubscription = function( eventAttributes, postFunction, options)
+    {
+        return nano_manager.raiseEvent("nano_manager", "outbound_subscription_cancellation", eventAttributes, postFunction, options);
+    }; 
     // ------------------------------------------------------------------------ other
 
         nano_manager.currentSession = function(parameters, postFunction, options)
