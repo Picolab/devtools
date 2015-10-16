@@ -719,7 +719,7 @@
           };
             Devtools.authorizeClient(appData, function(directives) {
               console.log("authorize ", client_name, directives);
-              $.mobile.changePage("#oAuth-client-registration", {
+              $.mobile.changePage("#page-client-authorize", {
                 transition: 'slide'
               });
             }); 
