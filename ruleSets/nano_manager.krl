@@ -373,7 +373,7 @@ ruleset b507199x5 {
   }
  
  //-------------------- Channels --------------------
-
+ // we should add a append / modifie channel attributes rule set. takes in new and modified values and puts them in.
   rule updateChannelAttributes {
     select when nano_manager update_channel_attributes_requested
     pre {
@@ -414,6 +414,7 @@ ruleset b507199x5 {
     }
 
   }
+
   rule deleteChannel {
     select when nano_manager channel_deletion_requested
     pre {
@@ -577,15 +578,13 @@ ruleset b507199x5 {
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
       name_space     = event:attr("name_space").defaultsTo("shared", standardError("name_space"));
-      relationship  = event:attr("relationship").defaultsTo("peer-peer", standardError("relationship"));
+      my_role  = event:attr("my_role").defaultsTo("peer", standardError("my_role"));
+      your_role  = event:attr("your_role").defaultsTo("peer", standardError("your_role"));
       target_eci = event:attr("target_eci").defaultsTo("no_target_eci", standardError("target_eci"));
       channel_type      = event:attr("channel_type").defaultsTo("subs", standardError("type"));
       //status      = event:attr("status").defaultsTo("status", standardError("status ")); 
       attributes = event:attr("attrs").defaultsTo("status", standardError("status "));
-      // extract roles of the relationship
-      roles   = relationship.split(re/\-/);
-      my_role  = roles[0];
-      your_role = roles[1];
+
      // // destination for external event
       subscription_map = {
             "cid" : target_eci
@@ -840,6 +839,25 @@ ruleset b507199x5 {
         with removed_channel_name = channel_name;
     } 
   } 
+  /* 
+  rule update{
+    // check status is subscribed
+
+    // raise mod/updated attrs event to both subscribed picos 
+
+  }
+  rule update/modChannelAttributes {
+      select when nano_manager subscription_attribute_update
+            pre{
+   
+            //get all attributes to be updated. passed in
+
+            //get current attributes.
+
+            //"put" updated values into current
+          
+            // use deffaction to update attributes
+  */
 
 // unsubscribed all, check event from parent // just cancelSubscription... 
 // let all your connection know your leaving.

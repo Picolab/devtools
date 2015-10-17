@@ -1235,7 +1235,8 @@
 								"name_space": subscribe_form_data.Subscription_name_space,
 								"target_eci": subscribe_form_data.Subscription_target.trim(),
 								"channel_type": subscribe_form_data.Subscription_type,
-								"relationship" : subscribe_form_data.Subscription_relationship,
+								"my_role" : subscribe_form_data.Subscription_my_role,
+								"your_role" : subscribe_form_data.Subscription_your_role,
 								"attrs": subscribe_form_data.Subscription_attrs
 							};
 							if( true 	) {
