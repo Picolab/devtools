@@ -1,7 +1,7 @@
 {% raw %} <!-- turn off jekyl (in github pages) -->
 
 <div id="list-rulesets-template" style="display:none;">
-   <div id="{{rid}}" data-role="collapsible" data-filtertext="{{rid}}{{uri}}" data-theme="a" data-content-theme="a">
+   <div id="{{rid}}" data-role="collapsible" data-filtertext="{{rid}}{{uri}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
      <h4 style="font-size:1em;">
      		{{rid}} <span><p style="font-weight:normal; font-size:12px;">{{uri}}</p></span>
      </h4>
@@ -19,7 +19,7 @@
 </div>
 
 <div id="logitem-template" style="display:none;">
-   <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b">
+   <div id="{{id}}" data-role="collapsible" data-theme="a" data-content-theme="b" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u">
    <h4>{{type}} -> {{formatDate timestamp}} ({{eid}}) </h4>
         {{#each log_items}}
 	 {{#ifDivider this }}
@@ -33,7 +33,7 @@
 </div>
 
 <div id="installed-channels-template" style="display:none;">
-   <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a">
+   <div id="{{Type}}" data-role="collapsible" data-filtertext="{{Type}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u">
      <h4>{{Type}}</h4>
     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="{{Type}}2">
     </div>
@@ -41,7 +41,7 @@
 </div>
 
 <div id="installed-channels-template2" style="display:none;">
-   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a">
+   <div id="{{cid}}" data-role="collapsible" data-filtertext="{{channel_name}} ({{cid}})" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u">
      <h4>{{channel_name}} ({{cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
         <p><b>Last Active:</b> {{time}}</p>
@@ -67,7 +67,7 @@
 </div>
 <!--      Authorize clients      appimageURL is not being used--> 
 <div id="authorized-clients-template" style="display:none;">
-   <div id="{{appECI}}" data-role="collapsible" data-filtertext="{{appName}} ({{appECI}})" data-theme="a" data-content-theme="a">
+   <div id="{{appECI}}" data-role="collapsible" data-filtertext="{{appName}} ({{appECI}})" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u">
      <h4>{{appName}} ({{appECI}})</h4>
     <div style = "padding-top: 18px; padding-bottom:24px;"> 
          <p style="position:relative; top:-10px"><a style="float:right;" href="#confirm-client-remove?client={{appECI}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Remove</a></p>
@@ -96,7 +96,7 @@
 <!--  -->
 
 <div id="installed-ruleset-template" style="display:none;">
-   <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{rid}})" data-theme="a" data-content-theme="a">
+   <div id="{{id}}" data-role="collapsible" data-filtertext="{{name}} ({{rid}})" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
      <h4>{{name}} ({{rid}})</h4>
      <div>
        {{#if OK }}
@@ -136,7 +136,7 @@
 </div>
 
 <div id="child-pico-template" style="display:none">
-   <div data-role="collapsible" data-theme="a" data-content-theme="a">
+   <div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed-icon = "carat-d" data-expanded-icon = "carat-u">
      <h4>{{eci}}</h4>
 	 
      <div style = "padding-top: 10px; padding-bottom:20px;"> 
@@ -149,7 +149,7 @@
   <!-- -------------------- Scheduled Templates---------------------- -->
 
 <div id="scheduled-events-template" style="display:none;">
-   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a">
+   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
      <h4>{{name}}</h4>
      <div>
       <p style="position:relative; top:-20px"><a id="{{sid}}"style="float:right" href="#" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete cancelEventButton">Cancel Scheduled Event</a></p>
