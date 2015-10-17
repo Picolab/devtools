@@ -594,9 +594,11 @@
 
 						$.each(channels, function(index, channel) {
 							key = generateKey(channel);
-							if(map[key]){map[key].push(channel);}
-							else{
-								map[key]=[channel];
+							if (!/[OAUTH]+[.]*/.test(key)){// filter oauth for issue #44
+								if(map[key]){map[key].push(channel);}
+								else{
+									map[key]=[channel];
+								}
 							}
 						});
 
