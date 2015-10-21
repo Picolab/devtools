@@ -929,14 +929,12 @@
 				var frm = "#form-install-ruleset";
 				$(frm)[0].reset(); // clear the fields in the form
 				alert_uniqueness = function(rid){
-					rid = rid.split(".");
+					var ridroot = rid.split(".");
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
 					Devtools.showInstalledRulesets( function(ruleset_list){
-						console.log('noty log rids: ',ruleset_list);
-						var rids = ruleset_list.rids;
-					 	$.each(rids.description, function(k, ruleset) {
+					 	$.each(ruleset_list.description, function(k, ruleset) {
     					var root = k.split(".");
-					 		if (rid[0] == k[0]) {
+					 		if (ridroot[0] == k[0]) {
 					 			$.noty.get(noty({
 									timeout: false,
 									text: 'You are installing a possible duplicate ruleset.  When you have duplicate rulesets installed, all events will be handled twice.  This can result in buggy behavior.',
