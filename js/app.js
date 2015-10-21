@@ -931,9 +931,10 @@
 				alert_uniqueness = function(rid){
 					rid = rid.split(".");
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
-					Devtools.showInstalledRulesets(function(ruleset_list){
-						ruleset_list = ruleset_list.rids;
-					 	$.each(ruleset_list.description, function(k, ruleset) {
+					Devtools.showInstalledRulesets( function(ruleset_list){
+						console.log('noty log rids: ',ruleset_list);
+						var rids = ruleset_list.rids;
+					 	$.each(rids.description, function(k, ruleset) {
     					var root = k.split(".");
 					 		if (rid[0] == k[0]) {
 					 			$.noty.get(noty({
