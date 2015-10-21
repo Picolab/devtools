@@ -150,7 +150,7 @@
 				$("#upwards-navigation-options").hide();
 				
 				$("#about-eci" ).empty();
-				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI)
+				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI);
 				$.mobile.loading("show", {
 					text: "Loading about page...",
 					textVisible: true
@@ -251,7 +251,7 @@
 							transition: 'slide'
 						});
 					});
-				}
+				};
 					
 				$(frm).off('keypress').on('keypress', function(event) {
 					if (event.which == 13) {
@@ -468,7 +468,7 @@
 										}
 									}
 									logobj["type"] = type;
-									dynamicLogItems += snippets.logitem_template(logobj)
+									dynamicLogItems += snippets.logitem_template(logobj);
 
 								 });
 								$("#loglist").append(dynamicLogItems).collapsibleset().collapsibleset( "refresh" );
@@ -542,7 +542,7 @@
 									});
 							}
 						}
-					}
+					};
 					
 					$(frm).off('keypress').on('keypress', function(event) {
 						if (event.which == 13) {
@@ -810,7 +810,7 @@
       },
 
       update_client: function(type, match, ui, page){
-        console.log("Showing update client page")
+        console.log("Showing update client page");
         $.mobile.loading("hide");
         var frm = "#form-update-client";
           $(frm)[0].reset(); // clear the fields in the form
@@ -942,10 +942,10 @@
 									type: 'alert'
 								}));
 					 		}
+						});
 					});
-				});
+				};
 				submitInstall = function(){
-					{
 						$.mobile.loading("show", {
 							text: "Installing ruleset...",
 							textVisible: true
@@ -954,8 +954,7 @@
 						console.log(">>>>>>>>> RIDs to install", install_form_data);
 						var rid = install_form_data.rid;
 	
-						if( typeof rid !== "undefined"
-							&& rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
+						if( typeof rid !== "undefined" && rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
 						) {
 							alert_uniqueness(rid); // noty for possible duplicates. 
 							Devtools.installRulesets(rid, function(directives) {
@@ -981,8 +980,7 @@
 							});
 							$.noty.get(n);
 						}
-					}	
-				}
+				};
 				
 				$(frm).off('keypress').on('keypress', function(event){
 					if (event.which == 13) {
@@ -1032,7 +1030,7 @@
 											);
 							  		$("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  		$("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
-						};
+						}
 						if('outbound' in subscriptions){
 								OutGoing = subscriptions.outbound;
 								dynamic_subscriptions_items = "";
