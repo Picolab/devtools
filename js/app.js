@@ -943,7 +943,7 @@
 								}));
 					 		}
 					});
-				};
+				});
 				submitInstall = function(){
 					{
 						$.mobile.loading("show", {
