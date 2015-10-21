@@ -928,7 +928,7 @@
 				$.mobile.loading("hide");
 				var frm = "#form-install-ruleset";
 				$(frm)[0].reset(); // clear the fields in the form
-				alert_uniqueness: function(rid){
+				alert_uniqueness = function(rid){
 					rid = rid.split(".");
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
 					Devtools.showInstalledRulesets(function(ruleset_list){
