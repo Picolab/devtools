@@ -938,9 +938,7 @@
 					 		if (rid[0] == k[0]) {
 					 			$.noty.get(noty({
 									timeout: false,
-									text: 'You are installing a possible duplicate ruleset.
-									 When you have duplicate rulesets installed, all events will be handled twice.
-									  This can result in buggy behavior.',
+									text: 'You are installing a possible duplicate ruleset.  When you have duplicate rulesets installed, all events will be handled twice.  This can result in buggy behavior.',
 									type: 'alert'
 								}));
 					 		}
