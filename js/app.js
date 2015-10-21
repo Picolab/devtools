@@ -935,8 +935,8 @@
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
 					Devtools.showInstalledRulesets( function(ruleset_list){
 					 	$.each(ruleset_list.description, function(k, ruleset) {
-							console.log("root: ",k[0]);
     					var root = k.split(".");
+							console.log("root: ",k[0]);
 					 		if (ridroot[0] == k[0]) {
 					 			$.noty.get(noty({
 									timeout: false,
