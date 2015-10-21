@@ -934,7 +934,7 @@
 
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
 					Devtools.showInstalledRulesets( function(ruleset_list){
-					 	ruleset_list.description.each(function(k, ruleset) {
+					 	$.each(ruleset_list.description, function(k, ruleset) {
     					var root = k.split(".");
 							console.log("root: ",root[0]);
 					 		if (ridroot[0] ==root[0]) {
@@ -943,7 +943,7 @@
 									text: 'You are installing a possible duplicate ruleset.  When you have duplicate rulesets installed, all events will be handled twice.  This can result in buggy behavior.',
 									type: 'alert'
 								}));
-								// i wish I could break here
+								// i wish i could break here
 					 		}
 						});
 					});
