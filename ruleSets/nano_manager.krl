@@ -83,6 +83,29 @@ ruleset b507199x5 {
       send_directive("uninstalled #{rids}");
     }
   //-------------------- Channels --------------------
+    channel = function (value){
+      // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
+      my_channels = channels();
+      attribute = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
+              'cid' |
+              'name';
+      channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
+      filtered_channels = channel_list.filter(function(channel){
+        (channel{attribute} eq value);}); 
+      result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
+      (result);
+    }
+
+    nameFromEci = function(eci){ 
+      //eci = meta:eci();
+      channel_single = channel(eci);
+      channel_single{'name'};
+    } 
+
+    eciFromName = function(name){
+      channel_single = channel(name);
+      channel_single{'cid'};
+    }
     channels = function() { 
       eci = meta:eci();
       results = pci:list_eci(eci).defaultsTo({},standardError("undefined")); // list of ECIs assigned to userid
@@ -132,7 +155,10 @@ ruleset b507199x5 {
       set_polcy = pci:set_eci_policy(eci, policy); // policy needs to be a map, do we need to cast types?
       send_directive("updated channel policy for #{eci}");
     }
-    deleteChannel = defaction(eci) {
+    deleteChannel = defaction(value) {
+      eci = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
+              value |
+              eciFromName(value);
       deleteeci =pci:delete_eci(eci);
       send_directive("deleted channel #{eci}");
     }
@@ -274,7 +300,7 @@ ruleset b507199x5 {
     }
     // takes name or eci 
     subscriptionsAttributes = function (value){
-      v = value;
+      v = value; // we dont need this right? // remove when you can test
       eci = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
               value |
               eciFromName(value);
@@ -283,30 +309,7 @@ ruleset b507199x5 {
       attributes{'Attributes'};
     } 
 
-     channel = function (value){
-      // if value has a ":"" then attribute is name otherwise its cid 
-      // if value is a number with ((([A-Z]|\d)*-)+([A-Z]|\d)*) attribute is cid.
-      my_channels = channels();
-      attribute = (value.match(re/(^(([A-Z]|\d)+-)+([A-Z]|\d)+$)/)) => 
-              'cid' |
-              'name';
-      channel_list = my_channels{"channels"}.defaultsTo("no Channel",standardOut("no channel found, by channels"));
-      filtered_channels = channel_list.filter(function(channel){
-        (channel{attribute} eq value);}); 
-      result = filtered_channels.head().defaultsTo("",standardError("no channel found, by .head()"));
-      (result);
-    }
 
-      nameFromEci = function(eci){ 
-        //eci = meta:eci();
-        channel_single = channel(eci);
-        channel_single{'name'};
-      } 
-
-      eciFromName = function(name){
-        channel_single = channel(name);
-        channel_single{'cid'};
-      }
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
        vehicle_ecis = nano_manager:subscriptionList(common:namespace(),"Vehicle");
@@ -418,7 +421,7 @@ ruleset b507199x5 {
   rule deleteChannel {
     select when nano_manager channel_deletion_requested
     pre {
-      eci = event:attr("eci").defaultsTo("", standardError("missing event attr eci"));
+      eci = event:attr("eci").defaultsTo(event:attr("name").defaultsTo("", standardError("missing event attr eci or name")), standardError("looking for name instead of eci."));
     }
     {
       deleteChannel(eci);
@@ -431,6 +434,7 @@ ruleset b507199x5 {
     //  log(">> could not delete channel #{eci} >>");
    //    }
   }
+  
   rule createChannel {
     select when nano_manager channel_creation_requested
     pre {
