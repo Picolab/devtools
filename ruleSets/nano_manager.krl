@@ -421,17 +421,17 @@ ruleset b507199x5 {
   rule deleteChannel {
     select when nano_manager channel_deletion_requested
     pre {
-      eci = event:attr("eci").defaultsTo(event:attr("name").defaultsTo("", standardError("missing event attr eci or name")), standardError("looking for name instead of eci."));
+      value = event:attr("eci").defaultsTo(event:attr("name").defaultsTo("", standardError("missing event attr eci or name")), standardError("looking for name instead of eci."));
     }
     {
-      deleteChannel(eci);
+      deleteChannel(value);
     }
     fired {
-      log (standardOut("success deleted channel #{eci}"));
+      log (standardOut("success deleted channel #{value}"));
       log(">> successfully  >>");
     } 
    // else { -------------------------------------------// can we reach this point?
-    //  log(">> could not delete channel #{eci} >>");
+    //  log(">> could not delete channel #{value} >>");
    //    }
   }
   
