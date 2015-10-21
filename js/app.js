@@ -943,6 +943,7 @@
 									text: 'You are installing a possible duplicate ruleset.  When you have duplicate rulesets installed, all events will be handled twice.  This can result in buggy behavior.',
 									type: 'alert'
 								}));
+								break;
 					 		}
 						});
 					});
