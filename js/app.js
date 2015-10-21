@@ -936,8 +936,8 @@
 					Devtools.showInstalledRulesets( function(ruleset_list){
 					 	$.each(ruleset_list.description, function(k, ruleset) {
     					var root = k.split(".");
-							console.log("root: ",k[0]);
-					 		if (ridroot[0] == k[0]) {
+							console.log("root: ",root);
+					 		if (ridroot[0] ==root) {
 					 			$.noty.get(noty({
 									timeout: false,
 									text: 'You are installing a possible duplicate ruleset.  When you have duplicate rulesets installed, all events will be handled twice.  This can result in buggy behavior.',
