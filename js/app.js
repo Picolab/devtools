@@ -930,9 +930,12 @@
 				$(frm)[0].reset(); // clear the fields in the form
 				alert_uniqueness = function(rid){
 					var ridroot = rid.split(".");
+					console.log("checking uniqueness: ", ridroot[0]);
+
 					// this will slow things down. should we store a list in window so we dont have to racall the rulesets?
 					Devtools.showInstalledRulesets( function(ruleset_list){
 					 	$.each(ruleset_list.description, function(k, ruleset) {
+							console.log("root: ",k[0]);
     					var root = k.split(".");
 					 		if (ridroot[0] == k[0]) {
 					 			$.noty.get(noty({
