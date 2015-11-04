@@ -492,7 +492,7 @@ ruleset b507199x5 {
 		}
 		
 		fired {
-			log(standardOut("pico created"));
+			log(standardOut("pico created with name #{name}"));
 		}
 		else
 		{

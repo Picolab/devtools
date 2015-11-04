@@ -191,6 +191,10 @@
 						return;
 					
 					$.each(children_result["children"], function(id, child){
+						nano_manager.name({}, function(name_res){
+							console.log(name_res);
+						}, {"eci":child[0]});
+						
 						dynamicChildrenList += 
 							snippets.child_pico_template(
 								{"eci": child[0]}

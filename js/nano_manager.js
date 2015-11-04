@@ -240,6 +240,10 @@
     {
         return nano_manager.skyCloud(get_rid("rulesets"), "parent", parameters, postFunction , options); 
     };
+        nano_manager.name = function(parameters, postFunction, options)
+    {
+        return nano_manager.skyCloud(get_rid("rulesets"), "name", parameters, postFunction , options); 
+    };
         nano_manager.attributes = function(parameters, postFunction, options)
     {
         return nano_manager.skyCloud(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
