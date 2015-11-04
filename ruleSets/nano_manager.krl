@@ -480,10 +480,10 @@ ruleset b507199x5 {
 			
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
 			
-			newPico = (name == "") => "" | picoFactory(myEci, []); // breaks the rules, mutates.............
+			newPico = (name eq "") => "" | picoFactory(myEci, []); // breaks the rules, mutates.............
 		}
 
-		if (name != "") then
+		if (name neq "") then
 		{
 			event:send({"eci":newPico}, "nano_manager", "child_created")
 				with attrs = {
