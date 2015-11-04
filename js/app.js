@@ -242,7 +242,7 @@
 					console.log(">>>>>>>>> Pico ", create_pico_form_data);
 					var pico_Data={
 						"name": create_pico_form_data.Pico_name,
-						"prototypes": create_pico_form_data.Pico_prototypes
+						//"prototypes": create_pico_form_data.Pico_prototypes
 					};
 					
 					Devtools.createPico(pico_Data, function(directives) {

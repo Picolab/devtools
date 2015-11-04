@@ -478,15 +478,25 @@ ruleset b507199x5 {
 		pre {
 			myEci = meta:eci();
 			
-			newPico = picoFactory(myEci, []); // breaks the rules, mutates.............
+			name = event:attr("name").defaultsTo("", standardError("no name passed"));
+			
+			newPico = (name == "") => "" | picoFactory(myEci, []); // breaks the rules, mutates.............
 		}
 
+		if (name != "") then
 		{
-			noop();
+			event:send({"eci":newPico}, "nano_manager", "child_created")
+				with attrs = {
+					"name" : name
+				}
 		}
 		
 		fired {
 			log(standardOut("pico created"));
+		}
+		else
+		{
+			log "no name passed for new child";
 		}
 	}
 	 
@@ -495,8 +505,8 @@ ruleset b507199x5 {
 		
 		pre {
 			name = event:attr("name");
-			attrs = event:attr("attributes").decode();
-			protos = event:attr("prototypes").decode();
+			//attrs = event:attr("attributes").decode();
+			//protos = event:attr("prototypes").decode();
 		}
 		
 		{
@@ -505,8 +515,8 @@ ruleset b507199x5 {
 		
 		fired {
 			set ent:name name;
-			set ent:attributes attrs;
-			set ent:prototypes protos;
+			//set ent:attributes attrs;
+			//set ent:prototypes protos;
 		}
 	}
 
@@ -549,7 +559,7 @@ ruleset b507199x5 {
 			deletePico(eciDeleted);
 		}
 		notfired {
-			log "deletion failed because no child name was specified";
+			log "deletion failed because no child was specified";
 		}
 	}
 
