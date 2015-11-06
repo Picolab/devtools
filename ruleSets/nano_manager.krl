@@ -213,7 +213,7 @@ ruleset b507199x5 {
 	
 	prototypeDefinitions = {
 		"core": [
-        "b507199x5"
+        "b507199x5.dev"
 			//"a169x625"
 		]
 	};// defaction needs to return a result to solve this 

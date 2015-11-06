@@ -149,6 +149,11 @@
 				
 				$("#upwards-navigation-options").hide();
 				
+				nano_manager.name({}, function(name_res) {
+					$("#about-pico-name" ).empty();
+					$("#about-pico-name").html(name_res["picoName"]);
+				});
+				
 				$("#about-eci" ).empty();
 				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI);
 				$.mobile.loading("show", {
@@ -156,29 +161,33 @@
 					textVisible: true
 				});
 				
-				$("#Open-primary-button").text("Open Primary Pico : " + nano_manager.defaultECI);
-				$("#Open-primary-button").off('tap').on('tap', function() {
-					PicoNavigator.navigateTo(nano_manager.defaultECI);
-					$.mobile.changePage("#about", {
-						transition: 'slide',
-						allowSamePageTransition : true
+				nano_manager.name({}, function(name_res) {
+					$("#Open-primary-button").text("Open Primary Pico : " + name_res["picoName"] + " (" + nano_manager.defaultECI + ")");
+					$("#Open-primary-button").off('tap').on('tap', function() {
+						PicoNavigator.navigateTo(nano_manager.defaultECI);
+						$.mobile.changePage("#about", {
+							transition: 'slide',
+							allowSamePageTransition : true
+						});
 					});
-				});
+				}, {"eci":nano_manager.defaultECI});
 				
 				Devtools.parentPico(function(parent_result) {
 					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
-					$("#Open-parent-button").text("Open Parent : " + parentECI);
-					$("#Open-parent-button").off('tap');
-					if (parent_result.parent != "error") {
-						$("#upwards-navigation-options").show();
-						$("#Open-parent-button").on('tap', function() {
-							PicoNavigator.navigateTo(parentECI);
-							$.mobile.changePage("#about", {
-								transition: 'slide',
-								allowSamePageTransition : true
+					nano_manager.name({}, function(name_res) {
+						$("#Open-parent-button").text("Open Parent : " + name_res["picoName"] + " (" + parentECI + ")");
+						$("#Open-parent-button").off('tap');
+						if (parent_result.parent != "error") {
+							$("#upwards-navigation-options").show();
+							$("#Open-parent-button").on('tap', function() {
+								PicoNavigator.navigateTo(parentECI);
+								$.mobile.changePage("#about", {
+									transition: 'slide',
+									allowSamePageTransition : true
+								});
 							});
-						});
-					}
+						}
+					}, {"eci":parentECI});
 				});
 				
 				
@@ -190,43 +199,58 @@
 					if (children_result["children"] == "error")
 						return;
 					
+					resLength = children_result["children"].length;
+					readyCount = 0;
+					
+					//quick barrier for the async name calls
+					upCount = function() {
+						readyCount++;
+						if (readyCount == resLength) {
+							$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+					
+							$(".openPicoButton").off('tap').on('tap', function() {
+							    console.log(this.id);
+							    picoToOpen = this.id;
+								$.mobile.loading("show", {
+									text: "Ensuring child pico is bootstrapped...",
+									textVisible: true
+								});
+								Devtools.ensureBootstrap(function() {
+									$.mobile.loading("hide");
+									PicoNavigator.navigateTo(picoToOpen);
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
+								}, {"eci":picoToOpen});
+							});
+					
+							$(".deletePicoButton").off('tap').on('tap', function() {
+								console.log("DELETE button pushed for " + this.id);
+								nano_manager.deleteChild({"deletionTarget":this.id}, function() {
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
+								});
+							});
+						}
+					}
+					
 					$.each(children_result["children"], function(id, child){
 						nano_manager.name({}, function(name_res){
-							console.log(name_res);
+							console.log(name_res["picoName"]);
+							dynamicChildrenList += 
+								snippets.child_pico_template(
+									{
+										"eci": child[0],
+										"picoName": name_res["picoName"]
+									}
+								);
+							
+							upCount();
 						}, {"eci":child[0]});
-						
-						dynamicChildrenList += 
-							snippets.child_pico_template(
-								{"eci": child[0]}
-							);
-					});
-					$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
-					
-					$(".openPicoButton").off('tap').on('tap', function() {
-					    console.log(this.id);
-					    picoToOpen = this.id;
-						$.mobile.loading("show", {
-							text: "Ensuring child pico is bootstrapped...",
-							textVisible: true
-						});
-						Devtools.ensureBootstrap(function() {
-							$.mobile.loading("hide");
-							PicoNavigator.navigateTo(picoToOpen);
-							$.mobile.changePage("#about", {
-								transition: 'slide',
-								allowSamePageTransition : true
-							});
-						}, {"eci":picoToOpen});
-					});
-					
-					$(".deletePicoButton").off('tap').on('tap', function() {
-						console.log("DELETE button pushed for " + this.id);
-						nano_manager.deleteChild({"deletionTarget":this.id}, function() {
-							$.mobile.changePage("#about", {
-								transition: 'slide',
-								allowSamePageTransition : true
-							});
-						});
+
 					});
 					
 				});
