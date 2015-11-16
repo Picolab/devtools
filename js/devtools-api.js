@@ -259,6 +259,7 @@
 
 
 // ------------------------------------------------------------------------ Picos
+// we need to add Pico calls to nano_manager.js and call them from here.
 
     about: function(cb, options) 
     {
