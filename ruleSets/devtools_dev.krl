@@ -528,7 +528,7 @@ ruleset devtools {
 	      fired {
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
-	        schedule explicit event event_type at time:add(time:now(),{"minutes" : 5}) attributes attr; //attributes event:attrs();
+	        schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
 	        //do_main is a label, it doesn't interpret it
 	        //schedule notification event log at time:add(time:now(),{"minutes" : 5})
 
