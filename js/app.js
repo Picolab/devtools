@@ -1315,8 +1315,8 @@
 
 //--------------------------------End oF Subscriptions---------------------------------
 
-			 //<!-- -------------------- Scheduled Templates---------------------- -->
-				schedule_event: function(type, match, ui, page) {
+			//<!-- -------------------- Scheduled Templates---------------------- -->
+			schedule_event: function(type, match, ui, page) {
 				console.log("schedule event");
 				$.mobile.loading("hide");
 				var frm = "#form-schedule-event";
@@ -1324,16 +1324,14 @@
 					
 					submitEventSchedule = function(){
 					 	{
-							$.mobile.loading("show", {
-								text: "Scheduling event...",
-								textVisible: true
-							});
 							var schedule_form_data = process_form(frm);
 							console.log(">>>>>>>>> event to schedule", schedule_form_data);
 							var event_domain = schedule_form_data.event_domain;
 							var event_type 	 = schedule_form_data.event_type;
 							var	date_time 	 = schedule_form_data.date_time;
 							var event_attributes	 = schedule_form_data.event_attributes;
+							console.log("timestamp? ", Date.parse(date_time)/1000);
+							console.log("tiiiime ", date_time);
 							var sch_data ={
 								"event_type": event_type,
 								"time" : date_time,
@@ -1342,7 +1340,11 @@
 								"date_time" : date_time,
 								"attributes" : event_attributes
 							}
-							if( true ) {
+							if( schedule_form_data.date_time ) {
+								$.mobile.loading("show", {
+									text: "Scheduling event...",
+									textVisible: true
+								});
 								Devtools.scheduleEvent(sch_data, function(directives) {
 									console.log("scheduled ", sch_data, directives);
 									$.mobile.changePage("#page-schedules", {
@@ -1350,6 +1352,42 @@
 									});
 								}); 
 							} else {
+
+								noty({
+								layout: 'topCenter',
+								text: 'You are missing a proper time and date to schedule this event.',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Continue', onClick: function($noty) {
+											$noty.close();
+											noty({layout: 'topCenter', text: 'Include a date/time', type: 'error'});
+												
+										}
+									},
+									{addClass: 'btn btn-danger', text: 'Return to Scheduled Events', onClick: function($noty) {
+											$noty.close();
+											
+											$.mobile.loading("show", {
+													text: "Canceling scheduling this event...",
+													textVisible: true
+												});
+													$.mobile.loading("hide");
+													//refreshes the page because refreshPage() takes us to the homepage
+													$.mobile.changePage("#page-schedules", {
+														transition: 'slide'
+													});
+										}
+									}
+								]
+							});
+
+
+
+
+
+
+
 								//	console.log("Invalid channel_name ", channel_name);
 								//	$.mobile.loading("hide");
 								//	$.mobile.changePage("#page-channel-management", {
@@ -1372,7 +1410,7 @@
 				console.log("scheduled events");
 				loadSpinner("#schedule_events", "Schedule Events");
 
-				function populate_schedule_events() {
+				function populate_scheduled_events() {
 
 					Devtools.showScheduledEvents(function(events_list){
 
@@ -1380,19 +1418,23 @@
 					 	
 					 	dynamicScheduledEvents = "";
 					 	$.each(events_list, function(k, scheduled_event) {
+					 		var d = new Date(scheduled_event[4] * 1000);
 							dynamicScheduledEvents += snippets.scheduled_events_template({
 								"sid": scheduled_event[0],
 								"name": scheduled_event[1],
 								"type": scheduled_event[2],
 								"rid": scheduled_event[3],
-								"epoch_time": scheduled_event[4]
+								"epoch_time": d
 							});
+							//console.log(Date.parse(d)/1000);
+							//console.log(scheduled_event[4]);
 					 	});
+
 					 	$("#scheduled-events").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
 					 	$.mobile.loading("hide");
 					 	
 					
-
+					//-------------cancel scheduled event-------------------
 					$('.cancelEventButton').off('tap').on('tap', function(event)
 						{	
 							console.log(this.id);
@@ -1417,7 +1459,7 @@
 													$.mobile.loading("hide");
 													//refreshes the page because refreshPage() takes us to the homepage
 													$("#scheduled-events").empty();
-													populate_schedule_events();
+													populate_scheduled_events();
 												});
 											}
 										}
@@ -1435,7 +1477,7 @@
 					});
 				}
 
-				populate_schedule_events();
+				populate_scheduled_events();
 			},
 		},
 	// <!-- -------------------- <End oF> Scheduled ---------------------- -->

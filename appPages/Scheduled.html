@@ -41,7 +41,7 @@
 
 
 <div data-role="page" id="schedule-event" data-title="Schedule Event">
-  {% include header.html title="Install a Ruleset" %}
+  {% include header.html title="Schedule an Event" %}
 
 	<div data-role="main" class="ui-content">
 	  <ul id="schedule-events" data-role="listview" data-inset="true"> 
@@ -49,26 +49,34 @@
 	    <li>
 	      <form id="form-schedule-event">
 	        <div data-role="fieldcontain">
-   	      <label for="event_domain">Event Domain:</label>
-		  <input type="text" name="event_domain" id="event_domain" value="" placeholder="notification" />
-          <label for="event_type">Event Type:</label>
-      <input type="text" name="event_type" id="event_type" value="" placeholder="status" />
-          <!--<label for="date_time">Date, Time:</label>
-      <input type="text" name="date_time" id="date_time" value="" placeholder="" />-->
-          <label for="date">Date:</label>
-          <input type="date" data-clear-btn="false" name="date" id="date" value="">
-          <label for="time">Time:</label>
-          <input type="time" data-clear-btn="false" name="time" id="time" value="">
-          <label for="event_attributes">Event Attributes:</label>
-      <input type="text" name="event_attributes" id="event_attributes" value="" placeholder="{'nano': rocks, ...}" />
-		</div>
+	   	      <label for="event_domain">Event Domain:</label>
+			  		<input type="text" name="event_domain" id="event_domain" value="" placeholder="explicit" disabled="disabled"/>
+			  		<!--in order to make the domain input-able again, delete disabled-->
+	          <label for="event_type">Event Type:</label>
+	      		<input type="text" name="event_type" id="event_type" value="" placeholder="status" />
+
+	      		<label for "reoccuring">Reoccurring Event?</label>
+	      		<fieldset data-role="controlgroup" data-type="horizontal">
+			        
+			        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="on" checked="checked">
+			        <label for="radio-choice-h-2a">Once</label>
+			        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="off">
+			        <label for="radio-choice-h-2b">Repeating</label>
+				    </fieldset>
+
+	          <label for="datetime">Date and Time:</label>
+	          <input type="datetime-local" data-clear-btn="false" name="date_time" id="date_time" value="">
+
+	          <label for="event_attributes">Event Attributes:</label>
+	      		<input type="text" name="event_attributes" id="event_attributes" value="" placeholder="{'nano': rocks, ...}" />
+					</div>
 	      </form>
 	      <div>
-                <a id="schedule-event-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Schedule</a>
-                <a href="#page-schedules" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+          <a id="schedule-event-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Schedule</a>
+          <a href="#page-schedules" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
 	      </div>
 	    </li>
-     	  </ul>
+    </ul>
 	</div>
 
   {% include footer.html %}

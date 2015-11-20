@@ -511,14 +511,13 @@ ruleset devtools {
 	    rule CreateScheduled {
 	      select when nano_manager schedule_created
 	      pre {
-	      	do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
-	      	event_type = event:attr("event_type").defaultsTo("wrong", standardError("missing event attr eventtype"));
+	      	//do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
+	      	event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr eventtype"));
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
-	      //  date_time = event:attr("date_time").defaultsTo("wrong", standardError("missing event attr type"));
-	        date_time = time:add(time:now(),{"seconds":50000000});
+	        date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
+	        //date_time = time:add(time:now(),{"seconds":50000000});
 	        attributes = event:attrs("attributes").defaultsTo("{}", standardError("missing event attr type"));
-	        //do_main="notification";
 	        attr = attributes.decode();
 	      }
 	//      log("create schedule running");
@@ -529,8 +528,8 @@ ruleset devtools {
 	      fired {
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
-	        schedule do_main event event_type at time:add(time:now(),{"minutes" : 5}) attributes attr; //attributes event:attrs();
-
+	        schedule explicit event event_type at time:add(time:now(),{"minutes" : 5}) attributes attr; //attributes event:attrs();
+	        //do_main is a label, it doesn't interpret it
 	        //schedule notification event log at time:add(time:now(),{"minutes" : 5})
 
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
