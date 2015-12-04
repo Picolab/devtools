@@ -1332,6 +1332,7 @@
 							var event_domain = schedule_form_data.event_domain;
 							var event_type 	 = schedule_form_data.event_type;
 							var	date_time 	 = schedule_form_data.date_time;
+							var recurrment   = schedule_form_data.recurrment;
 							var event_attributes	 = schedule_form_data.event_attributes;
 							console.log("timestamp? ", Date.parse(date_time)/1000);
 							console.log("tiiiime ", date_time);
@@ -1341,6 +1342,7 @@
 								"do_main": event_domain,
 								//"timespec": ,
 								"date_time" : date_time,
+								"recurrment" : recurrment,
 								"attributes" : event_attributes
 							}
 							if( schedule_form_data.date_time ) {

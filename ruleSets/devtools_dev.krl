@@ -516,7 +516,7 @@ ruleset devtools {
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
 	        date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
-	        recurrment = "0 * * * *";
+	        recurrment = event:attr("recurrment").defaultsTo("error", standardError("missing recurring event info"));
 	        //date_time = time:add(time:now(),{"seconds":50000000});
 	        attributes = event:attrs("attributes").defaultsTo("{}", standardError("missing event attr type"));
 	        attr = attributes.decode();
