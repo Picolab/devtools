@@ -1326,6 +1326,9 @@
 					 	{
 							var schedule_form_data = process_form(frm);
 							console.log(">>>>>>>>> event to schedule", schedule_form_data);
+							var d = new Date(schedule_form_data.date_time + "Z");
+							///////////facing issues with the time input is changed for time zone. 1 am becomes 6 pm the night before.
+							console.log(d);
 							var event_domain = schedule_form_data.event_domain;
 							var event_type 	 = schedule_form_data.event_type;
 							var	date_time 	 = schedule_form_data.date_time;

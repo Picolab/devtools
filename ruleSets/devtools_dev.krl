@@ -516,6 +516,7 @@ ruleset devtools {
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
 	        date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
+	        recurrment = "0 * * * *";
 	        //date_time = time:add(time:now(),{"seconds":50000000});
 	        attributes = event:attrs("attributes").defaultsTo("{}", standardError("missing event attr type"));
 	        attr = attributes.decode();
@@ -529,6 +530,10 @@ ruleset devtools {
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
 	        schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
+	        //recurring
+	        schedule explicit event event_type repeat recurrment attributes attr;
+
+
 	        //do_main is a label, it doesn't interpret it
 	        //schedule notification event log at time:add(time:now(),{"minutes" : 5})
 
