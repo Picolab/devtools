@@ -1,6 +1,10 @@
 _site
 secretstuff.txt
-
+bin
+bin/sync_repo
 .DS_Store
 
+// in general don't sync config to git
 js/CloudOS-config.js
+js/nano_manager-config.js
+js/devtools-api-config.js
