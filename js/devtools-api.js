@@ -58,7 +58,6 @@
 		//Check for nano_manager and devtools on pico.. could this be a rule in bootrap rulesets?
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
             return nano_manager.installRulesets({}, function(json) {
-			//return nano_manager.skyCloud(Devtools.get_rid("bootstrap"), "installedRulesets", {}, function(json) {
 				console.log(json);
 				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
@@ -144,14 +143,12 @@
             },options);
         },
 
-    status: function(cb, options){ // is this the same as showInstalledRulesets
+    status: function(cb, options){ 
         cb = cb || function(){};
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the channels");
-        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        return nano_manager.installRulesets({}, function(json) {
-        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+        return nano_manager.installedRulesets({}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   

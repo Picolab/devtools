@@ -31,14 +31,14 @@ ruleset DevTools_bootstrap {
         };
       // from nano...
       installedRulesets = function() {
-      eci = meta:eci();
-      results = pci:list_ruleset(eci).klog("results of pci list_ruleset");  
-      rids = results{'rids'}.defaultsTo("error","no hash key rids");
-      {
-       'status'   : (rids neq "error"),
-        'rids'     : rids
-      };
-    }
+        eci = meta:eci();
+        results = pci:list_ruleset(eci).klog("results of pci list_ruleset");  
+        rids = results{'rids'}.defaultsTo("error","no hash key rids");
+        {
+         'status'   : (rids neq "error"),
+          'rids'     : rids
+        };
+      }
       // from cloudOS.. needs to be updated(defaction) and placed into nano, was called rulesetAddChild.
       InstallRulesets = function(rulesetID, eci) {
       // array of rids needed. 
