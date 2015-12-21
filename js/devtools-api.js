@@ -150,7 +150,8 @@
         var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
         Devtools.log("Showing the channels");
         //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "rulesetList", {}, function(json) {
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
+        return nano_manager.installRulesets({}, function(json) {
+        //return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showInstalledRulesets", {}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   
