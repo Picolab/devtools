@@ -6,10 +6,13 @@ ruleset DevTools_bootstrap {
             Bootstrap ruleset for DevTools developing website
         >>
 
-        use module a169x625 alias CloudOS
-        logging on
+       // use module a169x625 alias CloudOS
+        use module b16x24 alias system_credentials
 
-        provides testingReturns
+        logging on
+        
+
+        provides installedRulesets
         sharing on
     }
 
@@ -26,17 +29,44 @@ ruleset DevTools_bootstrap {
             ],
       "unwanted": []
         };
-
-        testingReturns = function(){
-          rulesets = CloudOS:rulesetList(meta:eci()).defaultsTo({}, ">> list of installed rulesets undefined >>");
-          rulesets;
+      // from nano...
+      installedRulesets = function() {
+        eci = meta:eci();
+        results = pci:list_ruleset(eci).klog("results of pci list_ruleset");  
+        rids = results{'rids'}.defaultsTo("error","no hash key rids");
+        {
+         'status'   : (rids neq "error"),
+          'rids'     : rids
         };
+      }
+      // from cloudOS.. needs to be updated(defaction) and placed into nano, was called rulesetAddChild.
+      InstallRulesets = function(rulesetID, eci) {
+      // array of rids needed. 
+      ridlist = rulesetID.typeof() eq "array" => rulesetID | rulesetID.split(re/;/);
+
+      // pci will not install dublicate rulesets, so there is no need to filter list.      
+      r = (ridlist.length() != 0) =>
+       pci:new_ruleset(eci, ridlist) | 
+       false;
+
+      rids = (r) => 
+        ((r{'rids'}.length() != 0) => 
+          r{'rids'} | 
+          []) | 
+        [];
+
+      status = (r) => true | false;
+      {
+        'rids'     : rids,
+        'status'   : status
+      }
+    };
     }
 
     rule bootstrap_guard {
       select when devtools bootstrap
-      pre {
-        installed_rids = CloudOS:rulesetList(meta:eci())
+      pre {// why is this written like this? cant we filter without the join?
+        installed_rids = pci:list_ruleset(meta:eci())
                             .klog(">> the ruleset list >>  ")
                             .defaultsTo({}, ">> list of installed rulesets undefined >>");
      //   rids = rulesets{"rids"};
@@ -73,9 +103,9 @@ ruleset DevTools_bootstrap {
     rule devtools_bootstrap {
         select when explicit devtools_bootstrap_needed
         pre {
-          installed = CloudOS:rulesetAddChild(rulesets{"core"}.klog(">> rulesets to install >>"), 
+          installed = InstallRulesets(rulesets{"core"}.klog(">> rulesets to install >>"), 
                                         meta:eci())
-                           .defaultsTo("error","add child");
+                           .defaultsTo("error","InstallRulesets");
         }
         if (installed neq "error") then {
             send_directive("New DevTools user bootstrapped") //with
@@ -87,5 +117,20 @@ ruleset DevTools_bootstrap {
             log "DevTools user bootstrap failed";
         }
     }
+  
+  rule install_bootstrap_on_child {
+    select when bootstrap bootstrap_rid_needed_on_child
+    pre {
+      target_pico = event:attr("target");
+      installed = InstallRulesets(["b507199x1.dev"], target_pico)
+                .defaultsTo("error","installing bootstrap");
+    }
+    {
+      send_directive("added bootstrap rids to #{target_pico}");
+    }
+    fired {
+      log "added bootstrap ruleset to #{target_pico}";
+    }
+  }
 
 }
