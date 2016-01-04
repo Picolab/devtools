@@ -242,7 +242,10 @@ ruleset b507199x5 {
       }); 
       // reconstruct list, to be channelname hashed to attributes.
       subs = filtered_channels.map( function(channel){
-          {channel{'name'}:channel{'attributes'}};
+          {
+            channel{'name'}:channel{'attributes'},
+            channel{'back_channel'}:channel{'cid'}
+          };
       });
       /* 
       {"18:floppy" :
