@@ -240,12 +240,13 @@ ruleset b507199x5 {
         isSubscription(channel).klog("isSubscriptions(): ");
 
       }); 
-      // reconstruct list, to be channelname hashed to attributes.
+      // reconstruct list, to have a backchannel in attributes.
       subs = filtered_channels.map( function(channel){
-          {
-            channel{'name'}:channel{'attributes'},
-            channel{'back_channel'}:channel{'cid'}
-          };
+           channel.put(["attributes","back_channel"],channel{"cid"});
+      });
+      // name to attributes hash
+      subsript = subs.map( function(channel){
+          {channel{'name'}:channel{'attributes'}}
       });
       /* 
       {"18:floppy" :
@@ -260,7 +261,7 @@ ruleset b507199x5 {
         (status);
       };
       // return a collection of subs based on status.
-      subscription = subs.collect(function(sub){
+      subscription = subsript.collect(function(sub){
         (status(sub));
       });
 
