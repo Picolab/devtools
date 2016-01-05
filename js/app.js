@@ -1108,7 +1108,7 @@
 										"name_space": object["name_space"],
 										"relationship": object["relationship"],
 										"e_cid": object["event_eci"],
-										"b_cid": object["back_eci"],
+										"b_cid": object["back_channel"],
 										"c_name": key2,
 										"attributes": object["attributes"]
 										//"attributes":JSON.stringify(object["attrs"])
