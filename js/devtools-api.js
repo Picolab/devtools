@@ -57,7 +57,7 @@
 		
 		//Check for nano_manager and devtools on pico.. could this be a rule in bootrap rulesets?
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
-            return nano_manager.installRulesets({}, function(json) {
+            return nano_manager.skyCloud(Devtools.get_rid("bootstrap"), "installedRulesets", {}, function(json) {
 				console.log(json);
 				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
