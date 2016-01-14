@@ -326,6 +326,10 @@
     {
         return nano_manager.skyCloud(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
     };
+		nano_manager.bootstrapCheck = function(postFunction, options)
+	{
+		return nano_manager.skyCloud(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
+	};
 
 
 
