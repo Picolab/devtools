@@ -216,13 +216,17 @@ ruleset b507199x5 {
         "b507199x5.dev"
 			//"a169x625"
 		]
-	};// defaction needs to return a result to solve this 
-	picoFactory = function(myEci, protos) {
+	}
+	picoFactory = defaction(myEci, name, protos) {
 		newPicoInfo = pci:new_pico(myEci);
 		newPico = newPicoInfo{"cid"};
 		a = pci:new_ruleset(newPico, prototypeDefinitions{"core"}); 
 		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{x});});
-		newPico;
+		
+		event:send({"eci":newPico}, "nano_manager", "child_created")
+			with attrs = {
+				"name" : name
+			}
 	}
 
   //-------------------- Subscriptions ----------------------
@@ -483,16 +487,11 @@ ruleset b507199x5 {
 			myEci = meta:eci();
 			
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
-			
-			newPico = (name eq "") => "" | picoFactory(myEci, []); // breaks the rules, mutates.............
 		}
 
 		if (name neq "") then
 		{
-			event:send({"eci":newPico}, "nano_manager", "child_created")
-				with attrs = {
-					"name" : name
-				}
+			picoFactory(myEci, name, []);
 		}
 		
 		fired {
