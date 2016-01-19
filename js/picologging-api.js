@@ -1,6 +1,6 @@
 /* jshint undef: true, unused: true */
-/* globals console:false, nano_manager:false  */
-/* globals console, setTimeout, nano_manager, Fuse */
+/* globals console:false, wrangler:false  */
+/* globals console, setTimeout, wrangler, Fuse */
 
 (function($)
 {
@@ -38,7 +38,7 @@
 	    options = options || {};
             console.log("Retrieving logging status");
 
-	    return nano_manager.skyCloud(Pico.logging.get_rid("logging"), "loggingStatus", {}, function(res) {
+	    return wrangler.skyCloud(Pico.logging.get_rid("logging"), "loggingStatus", {}, function(res) {
 		console.log("Saw log status: ", res);
 		if(typeof cb !== "undefined"){
 		    cb(res);
@@ -53,7 +53,7 @@
 	    options = options || {};
             console.log("Retrieving logs");
 
-	    return nano_manager.skyCloud(Pico.logging.get_rid("logging"), "getLogs", {}, function(res) {
+	    return wrangler.skyCloud(Pico.logging.get_rid("logging"), "getLogs", {}, function(res) {
 		console.log("Saw logs: ", res);
 		if(typeof cb !== "undefined"){
 		    cb(res);
@@ -65,19 +65,19 @@
         reset: function(channel, json, cb)
         {
 	    json = json || {};
-            return nano_manager.raiseEvent("picolog", "reset", json, {}, cb, {"eci": channel});
+            return wrangler.raiseEvent("picolog", "reset", json, {}, cb, {"eci": channel});
         },
 
 	active: this.reset,
 	
         inactive: function(channel, json, cb)
         {
-            return nano_manager.raiseEvent("picolog", "inactive", json, {}, cb, {"eci": channel});
+            return wrangler.raiseEvent("picolog", "inactive", json, {}, cb, {"eci": channel});
         },
 
         flush: function(channel, json, cb)
         {
-            return nano_manager.raiseEvent("picolog", "flush", json, {}, cb, {"eci": channel});
+            return wrangler.raiseEvent("picolog", "flush", json, {}, cb, {"eci": channel});
         }
 
     };

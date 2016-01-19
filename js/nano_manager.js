@@ -1,25 +1,25 @@
 ; (function()
 {
-    window.nano_manager = {};
+    window.wrangler = {};
 
     // ------------------------------------------------------------------------
 
-    nano_manager.defaultECI = "none";
-    nano_manager.access_token = "none";
+    wrangler.defaultECI = "none";
+    wrangler.access_token = "none";
 
     var check_eci = function(cid) {
-       var res = cid || nano_manager.defaultECI;
+       var res = cid || wrangler.defaultECI;
        if (res === "none") {
-           throw "No nano_manager event channel identifier (ECI) defined";
+           throw "No wrangler event channel identifier (ECI) defined";
        }
        return res;
    };
 
    var mkEsl = function(parts) {
-    if (nano_manager.host === "none") {
-        throw "No nano_manager host defined";
+    if (wrangler.host === "none") {
+        throw "No wrangler host defined";
     }
-    parts.unshift(nano_manager.host); // adds host to beginning of array
+    parts.unshift(wrangler.host); // adds host to beginning of array
     var res = 'https://'+ parts.join("/"); // returns a url structure string
     return res;
     };
@@ -43,12 +43,12 @@
     // use status return type to through javascript exeption ... 
 
 
-    nano_manager.raiseEvent = function(eventDomain, eventType, eventAttributes, callback, options)
+    wrangler.raiseEvent = function(eventDomain, eventType, eventAttributes, callback, options)
     {
      try {
 
        options = options || {};
-       options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
+       options.eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI; //<-- is this vallid?
 
        callback = callback || function(){};
 
@@ -62,7 +62,7 @@
             eventType
             ]);
 
-         console.log("nano_manager.raise ESL: ", esl);
+         console.log("wrangler.raise ESL: ", esl);
          console.log("event attributes: ", eventAttributes);
 
          return $.ajax({
@@ -80,12 +80,12 @@
        }
      };
 
-    nano_manager.skyCloud = function(module, func_name, parameters, getSuccess, options)
+    wrangler.skyCloud = function(module, func_name, parameters, getSuccess, options)
     {
       //put options stuff here.
     	try {
           options = options || {};
-          options.eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI; //<-- is this vallid?
+          options.eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI; //<-- is this vallid?
           var retries = 2;
 
           if (typeof options.repeats !== "undefined") {
@@ -132,7 +132,7 @@
          var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
          options.repeats = repeat_num;
     			// I don't think this will support promises; not sure how to fix
-    			nano_manager.skyCloud(module, func_name, parameters, getSuccess, options);
+    			wrangler.skyCloud(module, func_name, parameters, getSuccess, options);
             }
         }
     };
@@ -161,174 +161,174 @@
     // ------------------------------------------------------------------------ installed Rulests
     // function(eventDomain, eventType, eventAttributes, postFunction, options) // <--- raiseEvent paramiters 
 
-    nano_manager.installedRulesets = function(parameters, postFunction, options)
+    wrangler.installedRulesets = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "rulesets", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "rulesets", parameters, postFunction , options); 
     };
 
-    nano_manager.describeRulesets = function(parameters, postFunction, options)
+    wrangler.describeRulesets = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "rulesetsInfo", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "rulesetsInfo", parameters, postFunction , options); 
     };
 
-    nano_manager.installedRulesetsWithDiscription = function(parameters, postFunction, options)
+    wrangler.installedRulesetsWithDiscription = function(parameters, postFunction, options)
     {
-      return nano_manager.installedRulesets({},function(rids){
+      return wrangler.installedRulesets({},function(rids){
         console.log("rids.rids", rids.rids);
-         return nano_manager.skyCloud(get_rid("rulesets"), "rulesetsInfo", {'rids':rids.rids.join(';')}, postFunction , options);
+         return wrangler.skyCloud(get_rid("rulesets"), "rulesetsInfo", {'rids':rids.rids.join(';')}, postFunction , options);
       }, options);
     };
 
-    nano_manager.installRulesets = function( eventAttributes, postFunction, options)
+    wrangler.installRulesets = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "install_rulesets_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "install_rulesets_requested", eventAttributes, postFunction, options);
     };
 
-    nano_manager.uninstallRuleset = function( eventAttributes, postFunction, options)
+    wrangler.uninstallRuleset = function( eventAttributes, postFunction, options)
     {
         console.log("uninstalling ruleset: ",eventAttributes.eci);
-        var results = nano_manager.raiseEvent("nano_manager", "uninstall_rulesets_requested", eventAttributes,  postFunction, options);
+        var results = wrangler.raiseEvent("wrangler", "uninstall_rulesets_requested", eventAttributes,  postFunction, options);
         console.log("uninstalled rulesets: ", eventAttributes.eci);
         return results;
     };
 
     // ------------------------------------------------------------------------ Channels
-        nano_manager.channels = function(parameters, postFunction, options)
+        wrangler.channels = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channels", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channels", parameters, postFunction , options); 
     };
-        nano_manager.channel = function(parameters, postFunction, options)
+        wrangler.channel = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channel", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
-        nano_manager.channelAttributes = function(parameters, postFunction, options)
+        wrangler.channelAttributes = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channelAttributes", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channelAttributes", parameters, postFunction , options); 
     };
-        nano_manager.channelPolicy = function(parameters, postFunction, options)
+        wrangler.channelPolicy = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channelPolicy", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channelPolicy", parameters, postFunction , options); 
     };
-        nano_manager.channelType = function(parameters, postFunction, options)
+        wrangler.channelType = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channelType", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channelType", parameters, postFunction , options); 
     };
 
-    nano_manager.updateChannelAttributes = function( eventAttributes,  postFunction, options)
+    wrangler.updateChannelAttributes = function( eventAttributes,  postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "update_channel_attributes_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "update_channel_attributes_requested", eventAttributes, postFunction, options);
     };    
-    nano_manager.updateChannelPolicy = function( eventAttributes, postFunction, options)
+    wrangler.updateChannelPolicy = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "update_channel_policy_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "update_channel_policy_requested", eventAttributes, postFunction, options);
     };    
-    nano_manager.deleteChannel = function( eventAttributes, postFunction, options)
+    wrangler.deleteChannel = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "channel_deletion_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "channel_deletion_requested", eventAttributes, postFunction, options);
     };   
-    nano_manager.createChannel = function( eventAttributes, postFunction, options)
+    wrangler.createChannel = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "channel_creation_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "channel_creation_requested", eventAttributes, postFunction, options);
     };
 
     // ------------------------------------------------------------------------ pico
-        nano_manager.children = function(parameters, postFunction, options)
+        wrangler.children = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "children", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "children", parameters, postFunction , options); 
     };
-        nano_manager.parent = function(parameters, postFunction, options)
+        wrangler.parent = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "parent", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "parent", parameters, postFunction , options); 
     };
-        nano_manager.name = function(parameters, postFunction, options)
+        wrangler.name = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "name", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "name", parameters, postFunction , options); 
     };
-        nano_manager.attributes = function(parameters, postFunction, options)
+        wrangler.attributes = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
     };
 
-     nano_manager.createChild = function( eventAttributes, postFunction, options)
+     wrangler.createChild = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "child_creation_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "child_creation_requested", eventAttributes, postFunction, options);
     }; 
-     nano_manager.initializeChild = function( eventAttributes, postFunction, options)
+     wrangler.initializeChild = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "child_created", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "child_created", eventAttributes, postFunction, options);
     }; 
-     nano_manager.setPicoAttributes = function( eventAttributes, postFunction, options)
+     wrangler.setPicoAttributes = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "set_attributes_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "set_attributes_requested", eventAttributes, postFunction, options);
     }; 
-     nano_manager.clearPicoAttributes = function( eventAttributes, postFunction, options)
+     wrangler.clearPicoAttributes = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "clear_attributes_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "clear_attributes_requested", eventAttributes, postFunction, options);
     }; 
-     nano_manager.deleteChild = function( eventAttributes, postFunction, options)
+     wrangler.deleteChild = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "child_deletion", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "child_deletion", eventAttributes, postFunction, options);
     }; 
     // ------------------------------------------------------------------------ subscription
 
-    nano_manager.subscriptions = function(parameters, postFunction, options)
+    wrangler.subscriptions = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptions", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "subscriptions", parameters, postFunction , options); 
     };
-        nano_manager.channelByName = function(parameters, postFunction, options)
+        wrangler.channelByName = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
     };
-        nano_manager.channelByEci = function(parameters, postFunction, options)
+        wrangler.channelByEci = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
     };
-        nano_manager.subscriptionsAttributesEci = function(parameters, postFunction, options)
+        wrangler.subscriptionsAttributesEci = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptionsAttributesEci", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "subscriptionsAttributesEci", parameters, postFunction , options); 
     };
-        nano_manager.subscriptionsAttributesName = function(parameters, postFunction, options)
+        wrangler.subscriptionsAttributesName = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "subscriptionsAttributesName", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "subscriptionsAttributesName", parameters, postFunction , options); 
     };
-         nano_manager.requestSubscription = function( eventAttributes, postFunction, options)
+         wrangler.requestSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "subscription", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "subscription", eventAttributes, postFunction, options);
     }; 
-         nano_manager.addPendingSubscription = function( eventAttributes, postFunction, options)
+         wrangler.addPendingSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "pending_subscription", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "pending_subscription", eventAttributes, postFunction, options);
     }; 
-         nano_manager.approvePendingSubscription = function( eventAttributes, postFunction, options)
+         wrangler.approvePendingSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "pending_subscription_approval", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "pending_subscription_approval", eventAttributes, postFunction, options);
     }; 
-         nano_manager.addSubscription = function( eventAttributes, postFunction, options)
+         wrangler.addSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "pending_subscription_approved", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "pending_subscription_approved", eventAttributes, postFunction, options);
     }; 
 
-         nano_manager.cancelSubscription = function( eventAttributes, postFunction, options)
+         wrangler.cancelSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "subscription_cancellation", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "subscription_cancellation", eventAttributes, postFunction, options);
     }; 
-        nano_manager.rejectInBoundSubscription = function( eventAttributes, postFunction, options)
+        wrangler.rejectInBoundSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "inbound_subscription_rejection", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "inbound_subscription_rejection", eventAttributes, postFunction, options);
     }; 
-        nano_manager.cancelOutBoundSubscription = function( eventAttributes, postFunction, options)
+        wrangler.cancelOutBoundSubscription = function( eventAttributes, postFunction, options)
     {
-        return nano_manager.raiseEvent("nano_manager", "outbound_subscription_cancellation", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "outbound_subscription_cancellation", eventAttributes, postFunction, options);
     }; 
     // ------------------------------------------------------------------------ other
 
-        nano_manager.currentSession = function(parameters, postFunction, options)
+        wrangler.currentSession = function(parameters, postFunction, options)
     {
-        return nano_manager.skyCloud(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
+        return wrangler.skyCloud(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
     };
-		nano_manager.bootstrapCheck = function(postFunction, options)
+		wrangler.bootstrapCheck = function(postFunction, options)
 	{
-		return nano_manager.skyCloud(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
+		return wrangler.skyCloud(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
 	};
 
 
@@ -337,9 +337,9 @@
     // ========================================================================
     // Profile Management
 
-    nano_manager.getMyProfile = function(getSuccess)
+    wrangler.getMyProfile = function(getSuccess)
     {
-        return nano_manager.skyCloud("a169x676", "get_all_me", {}, function(res) {
+        return wrangler.skyCloud("a169x676", "get_all_me", {}, function(res) {
            clean(res);
            if(typeof getSuccess !== "undefined"){
               getSuccess(res);
@@ -347,23 +347,23 @@
       });
     };
 
-    nano_manager.updateMyProfile = function(eventAttributes, postFunction)
+    wrangler.updateMyProfile = function(eventAttributes, postFunction)
     {
         var eventParameters = { "element": "profileUpdate.post" };
-        return nano_manager.raiseEvent('web', 'submit', eventAttributes, postFunction);
+        return wrangler.raiseEvent('web', 'submit', eventAttributes, postFunction);
     };
 
-    nano_manager.getFriendProfile = function(friendToken, getSuccess)
+    wrangler.getFriendProfile = function(friendToken, getSuccess)
     {
         var parameters = { "myToken": friendToken };
-        return nano_manager.skyCloud("a169x727", "getFriendProfile", parameters, getSuccess);
+        return wrangler.skyCloud("a169x727", "getFriendProfile", parameters, getSuccess);
     };
 
     // ========================================================================
     // PDS Management
 
     // ------------------------------------------------------------------------
-    nano_manager.PDSAdd = function(namespace, pdsKey, pdsValue, postFunction)
+    wrangler.PDSAdd = function(namespace, pdsKey, pdsValue, postFunction)
     {
         var eventAttributes = {
             "namespace": namespace,
@@ -371,34 +371,34 @@
             "pdsValue": JSON.stringify(pdsValue)
         };
 
-        return nano_manager.raiseEvent('nano_manager', 'api_pds_add', eventAttributes, {}, postFunction);
+        return wrangler.raiseEvent('wrangler', 'api_pds_add', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.PDSDelete = function(namespace, pdsKey, postFunction)
+    wrangler.PDSDelete = function(namespace, pdsKey, postFunction)
     {
         var eventAttributes = {
             "namespace": namespace,
             "pdsKey": pdsKey
         };
 
-        return nano_manager.raiseEvent('nano_manager', 'api_pds_delete', eventAttributes, {}, postFunction);
+        return wrangler.raiseEvent('wrangler', 'api_pds_delete', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.PDSUpdate = function()
+    wrangler.PDSUpdate = function()
     {
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.PDSList = function(namespace, getSuccess)
+    wrangler.PDSList = function(namespace, getSuccess)
     {
         var callParmeters = { "namespace": namespace };
-        return nano_manager.skyCloud("pds", "get_items", callParmeters, getSuccess);
+        return wrangler.skyCloud("pds", "get_items", callParmeters, getSuccess);
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.sendEmail = function(ename, email, subject, body, postFunction)
+    wrangler.sendEmail = function(ename, email, subject, body, postFunction)
     {
         var eventAttributes = {
             "ename": ename,
@@ -406,11 +406,11 @@
             "subject": subject,
             "body": body
         };
-        return nano_manager.raiseEvent('nano_manager', 'api_send_email', eventAttributes, {}, postFunction);
+        return wrangler.raiseEvent('wrangler', 'api_send_email', eventAttributes, {}, postFunction);
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.sendNotification = function(application, subject, body, priority, token, postFunction)
+    wrangler.sendNotification = function(application, subject, body, priority, token, postFunction)
     {
         var eventAttributes = {
             "application": application,
@@ -419,24 +419,24 @@
             "priority": priority,
             "token": token
         };
-        return nano_manager.raiseEvent('nano_manager', 'api_send_notification', eventAttributes, {}, postFunction);
+        return wrangler.raiseEvent('wrangler', 'api_send_notification', eventAttributes, {}, postFunction);
     };
 
 
     // ========================================================================
     // Login functions
     // ========================================================================
-    nano_manager.login = function(username, password, success, failure) {
+    wrangler.login = function(username, password, success, failure) {
 
 
        var parameters = {"email": username, "pass": password};
 
-       if (typeof nano_manager.anonECI === "undefined") {
-           console.error("nano_manager.anonECI undefined. Configure nano_manager.js in nano_manager-config.js; failing...");
+       if (typeof wrangler.anonECI === "undefined") {
+           console.error("wrangler.anonECI undefined. Configure wrangler.js in wrangler-config.js; failing...");
            return null;
        }
 
-       return nano_manager.skyCloud("nano_manager",
+       return wrangler.skyCloud("wrangler",
         "cloudAuth", 
         parameters, 
         function(res){
@@ -445,7 +445,7 @@
                        var tokens = {"access_token": "none",
                        "OAUTH_ECI": res.token
                    };
-                   nano_manager.saveSession(tokens); 
+                   wrangler.saveSession(tokens); 
                    if(typeof success == "function") {
                        success(tokens);
                    }
@@ -456,7 +456,7 @@
                    }
                }
            },
-           {eci: nano_manager.anonECI,
+           {eci: wrangler.anonECI,
                errorFunc: failure
            }
            );
@@ -471,43 +471,43 @@
     // ========================================================================
 
     // ------------------------------------------------------------------------
-    nano_manager.getOAuthURL = function(fragment)
+    wrangler.getOAuthURL = function(fragment)
     {
-        if (typeof nano_manager.login_server === "undefined") {
-            nano_manager.login_server = nano_manager.host;
+        if (typeof wrangler.login_server === "undefined") {
+            wrangler.login_server = wrangler.host;
         }
 
 
         var client_state = Math.floor(Math.random() * 9999999);
-        var current_client_state = window.localStorage.getItem("nano_manager_CLIENT_STATE");
+        var current_client_state = window.localStorage.getItem("wrangler_CLIENT_STATE");
         if (!current_client_state) {
-            window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
+            window.localStorage.setItem("wrangler_CLIENT_STATE", client_state.toString());
         }
-        var url = 'https://' + nano_manager.login_server +
+        var url = 'https://' + wrangler.login_server +
         '/oauth/authorize?response_type=code' +
-        '&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
-        '&client_id=' + nano_manager.appKey +
+        '&redirect_uri=' + encodeURIComponent(wrangler.callbackURL + (fragment || "")) +
+        '&client_id=' + wrangler.appKey +
         '&state=' + client_state;
 
         return (url)
     };
 
-    nano_manager.getOAuthNewAccountURL = function(fragment)
+    wrangler.getOAuthNewAccountURL = function(fragment)
     {
-        if (typeof nano_manager.login_server === "undefined") {
-            nano_manager.login_server = nano_manager.host;
+        if (typeof wrangler.login_server === "undefined") {
+            wrangler.login_server = wrangler.host;
         }
 
 
         var client_state = Math.floor(Math.random() * 9999999);
-        var current_client_state = window.localStorage.getItem("nano_manager_CLIENT_STATE");
+        var current_client_state = window.localStorage.getItem("wrangler_CLIENT_STATE");
         if (!current_client_state) {
-            window.localStorage.setItem("nano_manager_CLIENT_STATE", client_state.toString());
+            window.localStorage.setItem("wrangler_CLIENT_STATE", client_state.toString());
         }
-        var url = 'https://' + nano_manager.login_server +
+        var url = 'https://' + wrangler.login_server +
         '/oauth/authorize/newuser?response_type=code' +
-        '&redirect_uri=' + encodeURIComponent(nano_manager.callbackURL + (fragment || "")) +
-        '&client_id=' + nano_manager.appKey +
+        '&redirect_uri=' + encodeURIComponent(wrangler.callbackURL + (fragment || "")) +
+        '&client_id=' + wrangler.appKey +
         '&state=' + client_state;
 
         return (url)
@@ -517,22 +517,22 @@
 
 
     // ------------------------------------------------------------------------
-    nano_manager.getOAuthAccessToken = function(code, callback, error_func)
+    wrangler.getOAuthAccessToken = function(code, callback, error_func)
     {
         var returned_state = parseInt(getQueryVariable("state"));
-        var expected_state = parseInt(window.localStorage.getItem("nano_manager_CLIENT_STATE"));
+        var expected_state = parseInt(window.localStorage.getItem("wrangler_CLIENT_STATE"));
         if (returned_state !== expected_state) {
-            console.warn("OAuth Security Warning. Client states do not match. (Expected %d but got %d)", nano_manager.client_state, returned_state);
+            console.warn("OAuth Security Warning. Client states do not match. (Expected %d but got %d)", wrangler.client_state, returned_state);
         }
         console.log("getting access token with code: ", code);
         if (typeof (callback) !== 'function') {
             callback = function() { };
         }
-        var url = 'https://' + nano_manager.login_server + '/oauth/access_token';
+        var url = 'https://' + wrangler.login_server + '/oauth/access_token';
         var data = {
             "grant_type": "authorization_code",
-            "redirect_uri": nano_manager.callbackURL,
-            "client_id": nano_manager.appKey,
+            "redirect_uri": wrangler.callbackURL,
+            "client_id": wrangler.appKey,
             "code": code
         };
 
@@ -549,8 +549,8 @@
                     callback(json);
                     return;
                 };
-                nano_manager.saveSession(json);
-                window.localStorage.removeItem("nano_manager_CLIENT_STATE");
+                wrangler.saveSession(json);
+                window.localStorage.removeItem("wrangler_CLIENT_STATE");
                 callback(json);
             },
             error: function(json)
@@ -566,54 +566,54 @@
     // Session Management
 
     // ------------------------------------------------------------------------
-    nano_manager.retrieveSession = function()
+    wrangler.retrieveSession = function()
     {
         var SessionCookie = kookie_retrieve();
 
         console.log("Retrieving session ", SessionCookie);
         if (SessionCookie != "undefined") {
-            nano_manager.defaultECI = SessionCookie;
+            wrangler.defaultECI = SessionCookie;
         } else {
-            nano_manager.defaultECI = "none";
+            wrangler.defaultECI = "none";
         }
-        return nano_manager.defaultECI;
+        return wrangler.defaultECI;
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.saveSession = function(token_json)
+    wrangler.saveSession = function(token_json)
     {
        var Session_ECI = token_json.OAUTH_ECI;
        var access_token = token_json.access_token;
        console.log("Saving session for ", Session_ECI);
-       nano_manager.defaultECI = Session_ECI;
-       nano_manager.access_token = access_token;
+       wrangler.defaultECI = Session_ECI;
+       wrangler.access_token = access_token;
        kookie_create(Session_ECI);
    };
     // ------------------------------------------------------------------------
-    nano_manager.removeSession = function(hard_reset)
+    wrangler.removeSession = function(hard_reset)
     {
-        console.log("Removing session ", nano_manager.defaultECI);
+        console.log("Removing session ", wrangler.defaultECI);
         if (hard_reset) {
             var cache_breaker = Math.floor(Math.random() * 9999999);
-            var reset_url = 'https://' + nano_manager.login_server + "/login/logout?" + cache_breaker;
+            var reset_url = 'https://' + wrangler.login_server + "/login/logout?" + cache_breaker;
             $.ajax({
                 type: 'POST',
                 url: reset_url,
-                headers: { 'Kobj-Session': nano_manager.defaultECI },
+                headers: { 'Kobj-Session': wrangler.defaultECI },
                 success: function(json)
                 {
-                    console.log("Hard reset on " + nano_manager.login_server + " complete");
+                    console.log("Hard reset on " + wrangler.login_server + " complete");
                 }
             });
         }
-        nano_manager.defaultECI = "none";
+        wrangler.defaultECI = "none";
         kookie_delete();
     };
 
     // ------------------------------------------------------------------------
-    nano_manager.authenticatedSession = function()
+    wrangler.authenticatedSession = function()
     {
-        var authd = nano_manager.defaultECI != "none";
+        var authd = wrangler.defaultECI != "none";
         if (authd) {
             console.log("Authenicated session");
         } else {
@@ -624,7 +624,7 @@
 
     // exchange OAuth code for token
     // updated this to not need a query to be passed as it wasnt used in the first place.
-    nano_manager.retrieveOAuthCode = function()
+    wrangler.retrieveOAuthCode = function()
     {
         var code = getQueryVariable("code");
         return (code) ? code : "NO_OAUTH_CODE";
@@ -644,7 +644,7 @@
         return false;
     };
 
-    nano_manager.clean = function(obj) {
+    wrangler.clean = function(obj) {
        delete obj._type;
        delete obj._domain;
        delete obj._async;

@@ -17,11 +17,11 @@
 
 ruleset b507199x5 {
   meta {
-    name "nano_manager"
+    name "wrangler"
     description <<
-      Nano Manager ( ) Module
+      Wrangler ( ) Module
 
-      use module  b507199x5 alias nano_manager
+      use module  b507199x5 alias wrangler
 
       This Ruleset/Module provides a developer interface to the PICO (persistent computer object).
       When a PICO is created or authenticated this ruleset
@@ -223,7 +223,7 @@ ruleset b507199x5 {
 		a = pci:new_ruleset(newPico, prototypeDefinitions{"core"}); 
 		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{x});});
 		
-		event:send({"eci":newPico}, "nano_manager", "child_created")
+		event:send({"eci":newPico}, "wrangler", "child_created")
 			with attrs = {
 				"name" : name
 			}
@@ -320,7 +320,7 @@ ruleset b507199x5 {
 
     /*findVehicleByBackchannel = function (bc) {
        garbage = bc.klog(">>>> back channel <<<<<");
-       vehicle_ecis = nano_manager:subscriptionList(common:namespace(),"Vehicle");
+       vehicle_ecis = wrangler:subscriptionList(common:namespace(),"Vehicle");
         vehicle_ecis_by_backchannel = vehicle_ecis
                                         .collect(function(x){x{"backChannel"}})
                                      .map(function(k,v){v.head()})
@@ -346,7 +346,7 @@ ruleset b507199x5 {
   //-------------------- Rulesets --------------------
   
   rule installRulesets {
-    select when nano_manager install_rulesets_requested
+    select when wrangler install_rulesets_requested
     pre { 
       eci = meta:eci();
       rids = event:attr("rids").defaultsTo("",standardError(" "));
@@ -365,7 +365,7 @@ ruleset b507199x5 {
     }
   }
   rule uninstallRulesets { // should this handle multiple uninstalls ??? 
-    select when nano_manager uninstall_rulesets_requested
+    select when wrangler uninstall_rulesets_requested
     pre {
       eci = meta:eci();
       rids = event:attr("rids").defaultsTo("", ">>  >> ").klog(">> rids attribute <<");
@@ -386,7 +386,7 @@ ruleset b507199x5 {
  //-------------------- Channels --------------------
  // we should add a append / modifie channel attributes rule set. takes in new and modified values and puts them in.
   rule updateChannelAttributes {
-    select when nano_manager update_channel_attributes_requested
+    select when wrangler update_channel_attributes_requested
     pre {
       eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels")); // should we force the event to be raised to the eci being updated.
       attributes = event:attr("attributes").defaultsTo("error", standardError("undefined"));
@@ -407,7 +407,7 @@ ruleset b507199x5 {
   }
 
   rule updateChannelPolicy {
-    select when nano_manager update_channel_policy_requested // channel_policy_update_requested
+    select when wrangler update_channel_policy_requested // channel_policy_update_requested
     pre {
       eci = event:attr("eci").defaultsTo("", standardError("missing event attr channels")); // should we force... use meta:eci()
       policy_string = event:attr("policy").defaultsTo("error", standardError("undefined"));// policy needs to be a map, do we need to cast types?
@@ -427,7 +427,7 @@ ruleset b507199x5 {
   }
 
   rule deleteChannel {
-    select when nano_manager channel_deletion_requested
+    select when wrangler channel_deletion_requested
     pre {
       value = event:attr("eci").defaultsTo(event:attr("name").defaultsTo("", standardError("missing event attr eci or name")), standardError("looking for name instead of eci."));
     }
@@ -444,7 +444,7 @@ ruleset b507199x5 {
   }
   
   rule createChannel {
-    select when nano_manager channel_creation_requested
+    select when wrangler channel_creation_requested
     pre {
     /*  <eci options>
     name     : <string>        // default is "Generic ECI channel" 
@@ -464,7 +464,7 @@ ruleset b507199x5 {
         'policy' : {"policy" : policy}
       };
           }
-          // do we need to check the format of name? is it nano_manager's job?
+          // do we need to check the format of name? is it wrangler's job?
     if(channel_name.match(re/\w[\w-]*/)) then 
           { 
       createChannel(meta:eci(), options);
@@ -481,7 +481,7 @@ ruleset b507199x5 {
   
   //-------------------- Picos ----------------------
 	rule createChild {
-		select when nano_manager child_creation
+		select when wrangler child_creation
 		
 		pre {
 			myEci = meta:eci();
@@ -504,7 +504,7 @@ ruleset b507199x5 {
 	}
 	 
 	rule initializeChild {
-		select when nano_manager child_created
+		select when wrangler child_created
 		
 		pre {
 			name = event:attr("name");
@@ -524,7 +524,7 @@ ruleset b507199x5 {
 	}
 
 	rule setPicoAttributes {
-		select when nano_manager set_attributes_requested
+		select when wrangler set_attributes_requested
 		pre {
 			newAttrs = event:attr("attributes").decode().defaultsTo("", standardError("no attributes passed"));
 		}
@@ -541,7 +541,7 @@ ruleset b507199x5 {
 	}
 	
 	rule clearPicoAttributes {
-		select when nano_manager clear_attributes_requested
+		select when wrangler clear_attributes_requested
 		pre {
 		}
 		{
@@ -553,7 +553,7 @@ ruleset b507199x5 {
 	}
 	
 	rule deleteChild {
-		select when nano_manager child_deletion
+		select when wrangler child_deletion
 		pre {
 			eciDeleted = event:attr("deletionTarget").defaultsTo("", standardError("missing pico for deletion"));
 		}
@@ -566,7 +566,7 @@ ruleset b507199x5 {
 		}
 	}
 
-  //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+nano_manager+Service
+  //-------------------- Subscriptions ----------------------http://developer.kynetx.com/display/docs/Subscriptions+in+the+wrangler+Service
   /* 
    ========================================================================
    No Persistent Variables for subscriptions, subscriptions information is stored in the "backChannel" Channels attributes varible
@@ -590,7 +590,7 @@ ruleset b507199x5 {
 
    // creates back_channel and sends event for other pico to create back_channel.
   rule subscribe {// need to change varibles to snake case.
-    select when nano_manager subscription
+    select when wrangler subscription
    pre {
       // attributes for back_channel attrs
       name   = event:attr("name").defaultsTo("standard", standardError("channel_name"));
@@ -634,7 +634,7 @@ ruleset b507199x5 {
 
       createChannel(meta:eci(),options);// just use meta:eci()??
 
-      event:send(subscription_map, "nano_manager", "pending_subscription") // send request
+      event:send(subscription_map, "wrangler", "pending_subscription") // send request
         with attrs = {
           "name"  : name,
           "name_space"    : name_space,
@@ -648,7 +648,7 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success"));
       log(">> successful >>");
-      raise nano_manager event pending_subscription
+      raise wrangler event pending_subscription
         with status = pending_entry{'status'}
         and channel_name = unique_name;
       log(standardOut("failure")) if (unique_name eq "");
@@ -660,7 +660,7 @@ ruleset b507199x5 {
   // creates back channel if needed, then it adds pending subscription to list of subscriptions.
   // can we put all this in a map and pass it as a attr? the rules internal.
   rule addPendingSubscription { // depends on wether or not a channel_name is being passed as an attribute
-    select when nano_manager pending_subscription
+    select when wrangler pending_subscription
    pre {
         channel_name = event:attr("channel_name").defaultsTo("SUBSCRIPTION", standardError("channel_name")); // never will defaultto
         channel_type = event:attr("channel_type").defaultsTo("SUBSCRIPTION", standardError("type")); // never will defaultto
@@ -693,16 +693,16 @@ ruleset b507199x5 {
     }
     fired { 
       log(standardOut("successful pending incoming"));
-      raise nano_manager event inbound_pending_subscription_added; // event to nothing
+      raise wrangler event inbound_pending_subscription_added; // event to nothing
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
       log (standardOut("success pending outgoing >>"));
-      raise nano_manager event outbound_pending_subscription_added; // event to nothing
+      raise wrangler event outbound_pending_subscription_added; // event to nothing
     }
   }
   rule approvePendingSubscription { // used to notify both picos to add subscription request
-    select when nano_manager pending_subscription_approval
+    select when wrangler pending_subscription_approval
     pre{
       channel_name = event:attr("channel_name").defaultsTo( "no_channel_name", standardError("channel_name"));
       back_channel = channel(channel_name);
@@ -717,14 +717,14 @@ ruleset b507199x5 {
     }// this is a possible place to create a channel for subscription
     if (event_eci neq "no event_eci") then
     {
-      event:send(subscription_map, "nano_manager", "pending_subscription_approved") // pending_subscription_approved..
+      event:send(subscription_map, "wrangler", "pending_subscription_approved") // pending_subscription_approved..
        with attrs = {"event_eci" : back_channel_eci , 
                       "status" : "outbound"}
     }
     fired 
     {
       log (standardOut("success"));
-      raise nano_manager event 'pending_subscription_approved' // event to nothing  
+      raise wrangler event 'pending_subscription_approved' // event to nothing  
         with channel_name = channel_name
         and status = "inbound";
     } 
@@ -734,7 +734,7 @@ ruleset b507199x5 {
     }
   }
   rule addSubscription { // changes attribute status value to subscribed
-    select when nano_manager pending_subscription_approved
+    select when wrangler pending_subscription_approved
     pre{
       status = event:attr("status").defaultsTo("", standardError("status"));
       outGoing = function(event_eci){
@@ -765,7 +765,7 @@ ruleset b507199x5 {
     }
     fired {
       log (standardOut("success"));
-      raise nano_manager event 'subscription_added' // event to nothing
+      raise wrangler event 'subscription_added' // event to nothing
         with channel_name = event:attr("channel_name").defaultsTo( "no channel name", standardError("no channel name"));
       } 
     else {
@@ -774,9 +774,9 @@ ruleset b507199x5 {
   }
 
   rule cancelSubscription {
-    select when nano_manager subscription_cancellation
-            or  nano_manager inbound_subscription_rejection
-            or  nano_manager outbound_subscription_cancellation
+    select when wrangler subscription_cancellation
+            or  wrangler inbound_subscription_rejection
+            or  wrangler outbound_subscription_cancellation
     pre{
       status = event:name();
 
@@ -798,7 +798,7 @@ ruleset b507199x5 {
     }
     //if( eci neq "No event_eci") then // always try to notify other party
     {
-      event:send(subscription_map, "nano_manager", "subscription_removal")
+      event:send(subscription_map, "wrangler", "subscription_removal")
         with attrs = {
           // this will catch the problem with canceling outbound
           "eci"  : back_channel_eci, // tabo to pass this but other pico has no other way to know ...
@@ -807,7 +807,7 @@ ruleset b507199x5 {
     }
     fired {
       log (standardOut("success"));
-      raise nano_manager event subscription_removal 
+      raise wrangler event subscription_removal 
         with eci = eciFromName(channel_name) // this probly could be back_channel_eci to save on computations
         and status = "internal"; 
           } 
@@ -816,7 +816,7 @@ ruleset b507199x5 {
     }
   } 
   rule removeSubscription {
-    select when nano_manager subscription_removal
+    select when wrangler subscription_removal
     pre{
       status = event:attr("status").defaultsTo("", standardError("status"));
       passedEci= event:attr("eci").defaultsTo("", standardError("eci"));
@@ -852,7 +852,7 @@ ruleset b507199x5 {
     }
     always {
       log (standardOut("success, attemped to remove subscription"));
-      raise nano_manager event subscription_removed // event to nothing
+      raise wrangler event subscription_removed // event to nothing
         with removed_channel_name = channel_name;
     } 
   } 
@@ -864,7 +864,7 @@ ruleset b507199x5 {
 
   }
   rule update/modChannelAttributes {
-      select when nano_manager subscription_attribute_update
+      select when wrangler subscription_attribute_update
             pre{
    
             //get all attributes to be updated. passed in

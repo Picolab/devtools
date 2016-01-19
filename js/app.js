@@ -112,7 +112,7 @@
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
 				console.log("authChecked");
-				if (!nano_manager.authenticatedSession()){
+				if (!wrangler.authenticatedSession()){
 					var pageComponents = ui.toPage.split("#");
 					pageComponents[pageComponents.length-1] = "page-authorize";
 					ui.toPage = pageComponents.join("#");
@@ -141,7 +141,7 @@
 				Devtools.about(function(json){ 
 					$.mobile.loading("hide");
 					$("#about-account").html(snippets.about_account(json));
-				}, {"eci":nano_manager.defaultECI});
+				}, {"eci":wrangler.defaultECI});
 			},
 			
 			about: function(type, match, ui, page) {
@@ -149,32 +149,32 @@
 				
 				$("#upwards-navigation-options").hide();
 				
-				nano_manager.name({}, function(name_res) {
+				wrangler.name({}, function(name_res) {
 					$("#about-pico-name" ).empty();
 					$("#about-pico-name").html(name_res["picoName"]);
 				});
 				
 				$("#about-eci" ).empty();
-				$("#about-eci").html(PicoNavigator.currentPico || nano_manager.defaultECI);
+				$("#about-eci").html(PicoNavigator.currentPico || wrangler.defaultECI);
 				$.mobile.loading("show", {
 					text: "Loading about page...",
 					textVisible: true
 				});
 				
-				nano_manager.name({}, function(name_res) {
-					$("#Open-primary-button").text("Open Primary Pico : " + name_res["picoName"] + " (" + nano_manager.defaultECI + ")");
+				wrangler.name({}, function(name_res) {
+					$("#Open-primary-button").text("Open Primary Pico : " + name_res["picoName"] + " (" + wrangler.defaultECI + ")");
 					$("#Open-primary-button").off('tap').on('tap', function() {
-						PicoNavigator.navigateTo(nano_manager.defaultECI);
+						PicoNavigator.navigateTo(wrangler.defaultECI);
 						$.mobile.changePage("#about", {
 							transition: 'slide',
 							allowSamePageTransition : true
 						});
 					});
-				}, {"eci":nano_manager.defaultECI});
+				}, {"eci":wrangler.defaultECI});
 				
 				Devtools.parentPico(function(parent_result) {
 					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
-					nano_manager.name({}, function(name_res) {
+					wrangler.name({}, function(name_res) {
 						$("#Open-parent-button").text("Open Parent : " + name_res["picoName"] + " (" + parentECI + ")");
 						$("#Open-parent-button").off('tap');
 						if (parent_result.parent != "error") {
@@ -227,7 +227,7 @@
 					
 							$(".deletePicoButton").off('tap').on('tap', function() {
 								console.log("DELETE button pushed for " + this.id);
-								nano_manager.deleteChild({"deletionTarget":this.id}, function() {
+								wrangler.deleteChild({"deletionTarget":this.id}, function() {
 									$.mobile.changePage("#about", {
 										transition: 'slide',
 										allowSamePageTransition : true
@@ -238,7 +238,7 @@
 					}
 					
 					$.each(children_result["children"], function(id, child){
-						nano_manager.name({}, function(name_res){
+						wrangler.name({}, function(name_res){
 							console.log(name_res["picoName"]);
 							dynamicChildrenList += 
 								snippets.child_pico_template(
@@ -1523,17 +1523,17 @@
 	{
 		//Oauth through kynetx
 		console.log("plant authorize button");
-		var OAuth_kynetx_URL = nano_manager.getOAuthURL();
+		var OAuth_kynetx_URL = wrangler.getOAuthURL();
 		$('#authorize-link').attr('href', OAuth_kynetx_URL);
-		var OAuth_kynetx_newuser_URL = nano_manager.getOAuthNewAccountURL();
+		var OAuth_kynetx_newuser_URL = wrangler.getOAuthNewAccountURL();
 		$('#create-link').attr('href', OAuth_kynetx_newuser_URL);
 		
-		$('#account-link').attr('href', "https://" + nano_manager.login_server + "/login/profile");
-		$('#account-link-2').attr('href', "https://" + nano_manager.login_server + "/login/profile");
+		$('#account-link').attr('href', "https://" + wrangler.login_server + "/login/profile");
+		$('#account-link-2').attr('href', "https://" + wrangler.login_server + "/login/profile");
 		
 		$('#logout-link').off('tap').on('tap', function(event) {
-			window.open("https://" + nano_manager.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
-			nano_manager.removeSession(true); // true for hard reset (log out of login server too)
+			window.open("https://" + wrangler.login_server + "/login/logout?" + Math.floor(Math.random() * 9999999), "_blank");
+			wrangler.removeSession(true); // true for hard reset (log out of login server too)
 			$.mobile.changePage('#page-authorize', {
 				transition: 'slide'
 			}); // this will go to the authorization page.
@@ -1547,7 +1547,7 @@
 
 	function onPageLoad() {// Document.Ready
 		console.log("document ready");
-		nano_manager.retrieveSession();
+		wrangler.retrieveSession();
 		// only put static stuff here...
 		plant_authorize_button();
 
@@ -1578,7 +1578,7 @@
 		
 		
 		try {
-			var authd = nano_manager.authenticatedSession();
+			var authd = wrangler.authenticatedSession();
 			if(authd) {
 				console.log("Authorized");
 				Devtools.ensureBootstrap();

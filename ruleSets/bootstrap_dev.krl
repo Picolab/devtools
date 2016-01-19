@@ -29,7 +29,7 @@ ruleset DevTools_bootstrap {
             ],
       "unwanted": []
         };
-      // from nano...
+      // from wrangler...
       installedRulesets = function() {
         eci = meta:eci();
         results = pci:list_ruleset(eci).klog("results of pci list_ruleset");  
@@ -39,7 +39,7 @@ ruleset DevTools_bootstrap {
           'rids'     : rids
         };
       }
-      // from cloudOS.. needs to be updated(defaction) and placed into nano, was called rulesetAddChild.
+      // from cloudOS.. needs to be updated(defaction) and placed into wrangler, was called rulesetAddChild.
       InstallRulesets = function(rulesetID, eci) {
       // array of rids needed. 
       ridlist = rulesetID.typeof() eq "array" => rulesetID | rulesetID.split(re/;/);

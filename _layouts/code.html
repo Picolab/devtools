@@ -55,8 +55,8 @@
   <script src="js/handlebars-v1.3.0.js"></script>
   <!--getting access for devtools-api-->
   <script src="https://rawgit.com/kre/devtools/gh-pages/js/devtools-api.js"></script>
-  <script src="js/nano_manager.js"></script>
-  <script src="js/nano_manager-config.js"></script>
+  <script src="js/wrangler.js"></script>
+  <script src="js/wrangler-config.js"></script>
  <!-- <script src="js/devtools-api-config.js"></script> -->
 
 
@@ -65,7 +65,7 @@
 
   $("document").ready(function() {
 
-    nano_manager.getOAuthAccessToken(nano_manager.retrieveOAuthCode(), function(oauth_payload)
+    wrangler.getOAuthAccessToken(wrangler.retrieveOAuthCode(), function(oauth_payload)
     {
       if (!oauth_payload.OAUTH_ECI) {
         alert("Authentication failed. We apologize for this inconvenience. Please try again.");
@@ -83,7 +83,7 @@
           console.log("something went wrong with the OAuth authorization " + json);
           alert("Something went wrong with your authorization. Please try again. ");
           // not ideal, but...
-          window.location = "https://" + nano_manager.login_server + "/login";
+          window.location = "https://" + wrangler.login_server + "/login";
         }
         );
 });

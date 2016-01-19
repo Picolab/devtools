@@ -14,7 +14,7 @@ ruleset devtools {
         logging on
 
         use module a41x226 alias OAuthRegistry //(appManager)
-        use module b507199x5 alias NanoManager 
+        use module b507199x5 alias Wrangler 
         use module b507199x6 alias Account
         //use module a169x625 alias PicoInspector
 
@@ -37,11 +37,11 @@ ruleset devtools {
 
         //------------------------------- Rulesets -------------------
 	        showRulesets = function(){
-	            rulesets = registeredRulesets().klog(standardOut("NanoManager:Registered()"));
+	            rulesets = registeredRulesets().klog(standardOut("Wrangler:Registered()"));
 	            rulesets{'rulesets'};
 	        };
 	        showRuleset = function(rid){
-	            rulesets = registeredRulesets(rid).klog(standardOut("NanoManager:Registered()"));
+	            rulesets = registeredRulesets(rid).klog(standardOut("Wrangler:Registered()"));
 	            rulesets{'rulesets'};
 	        };
 			registeredRulesets = function(rid) { // move to devtools
@@ -62,9 +62,9 @@ ruleset devtools {
 		        };
 		    }
 	        showInstalledRulesets = function() {
-	            rulesets = NanoManager:installedRulesets().klog(standardOut("NanoManager:Installed()"));
+	            rulesets = Wrangler:installedRulesets().klog(standardOut("Wrangler:Installed()"));
 	            rids = rulesets{'rids'};
-	            description = NanoManager:describeRulesets(rids).klog(standardOut("NanoManager:DescribeRules()"));
+	            description = Wrangler:describeRulesets(rids).klog(standardOut("Wrangler:DescribeRules()"));
 	            description{'description'};
 	        }; 
         //------------------------------- <End oF>  Rulesets -------------------
@@ -72,11 +72,11 @@ ruleset devtools {
      
         //------------------------------- Authorize clients-------------------
 	        showClients = function() {
-	            clients = apps().klog(standardOut("NanoManager:clients()"));
+	            clients = apps().klog(standardOut("Wrangler:clients()"));
 	            clients{'apps'};
 	        };
 	        showClient = function(appECI){
-	            clients = apps(appECI).klog(standardOut("NanoManager:clients()"));
+	            clients = apps(appECI).klog(standardOut("Wrangler:clients()"));
 	            clients{'app'};
           	};
 
@@ -142,23 +142,23 @@ ruleset devtools {
 	        };
 			
 			parentPico = function() {
-				parent = NanoManager:parent();
+				parent = Wrangler:parent();
 				parent;
 			};
 			
 			childPicos = function() {
-				children = NanoManager:children();
+				children = Wrangler:children();
 				children;
 			};
         //------------------------------- <End of> Picos -------------------
 
         // -------------------- Scheduled ---------------------- 
 	        showScheduledEvents = function() {
-	          events = schedules().klog(standardOut("NanoManager:Schedules()"));
+	          events = schedules().klog(standardOut("Wrangler:Schedules()"));
 	          events{'schedules'};
 	        };
 	        showScheduleHistory = function(id) {
-	          events = scheduleHistory(id).klog(standardOut("NanoManager:History()"));
+	          events = scheduleHistory(id).klog(standardOut("Wrangler:History()"));
 	          events{'history'};
 	        };
 		    schedules = function() { 
@@ -207,7 +207,7 @@ ruleset devtools {
 	        }
 	        fired {
 	          log (standardOut("success"));
-	            raise nano_manager event "ruleset_relink_requested"
+	            raise wrangler event "ruleset_relink_requested"
 	              with rid = rulesetID
 	              and url = newURL;
 	        }
@@ -281,7 +281,7 @@ ruleset devtools {
 		}
 
 		rule relinkRuleset {
-		    select when nano_manager ruleset_relink_requested
+		    select when wrangler ruleset_relink_requested
 		    pre {
 		      rid = event:attr("rid").defaultsTo("", standardError("missing event attr rid"));
 		      new_url = event:attr("url").defaultsTo("", standardError("missing event attr url")); 
@@ -326,7 +326,7 @@ ruleset devtools {
 	        }
 	        fired {
 	            log( "success");
-	            raise nano_manager event "authorize_app_requested"
+	            raise wrangler event "authorize_app_requested"
 	              attributes event:attrs();
 	        }
 	        else {
@@ -344,7 +344,7 @@ ruleset devtools {
 	        }
 	        fired {
 	            log( "success");
-	            raise nano_manager event "remove_app_requested"
+	            raise wrangler event "remove_app_requested"
 	            attributes event:attrs();
 	        }
 	        else {
@@ -367,7 +367,7 @@ ruleset devtools {
 	        }
 	        fired {
 	            log("success");
-	            raise nano_manager event "update_app_requested"
+	            raise wrangler event "update_app_requested"
 	            attributes event:attrs();
 	        }
 	        else {
@@ -376,7 +376,7 @@ ruleset devtools {
 	    }
 	      //-------------------- Apps --------------------
 	      rule authorizeApp {
-	      	select when nano_manager authorize_app_requested
+	      	select when wrangler authorize_app_requested
 	      	pre {
 	      		info_page = event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page"));
 	      		bootstrap_rids = event:attr("bootstrap_rids").defaultsTo("", standardOut("missing event attr bootstrap_rids"));
@@ -412,7 +412,7 @@ ruleset devtools {
 	      }
 
 	      rule removeApp {
-	      	select when nano_manager remove_app_requested
+	      	select when wrangler remove_app_requested
 	      	pre {
 	      		identifier = event:attr("app_id").defaultsTo("", standardOut("missing event attr app_id"));
 	      	}
@@ -428,7 +428,7 @@ ruleset devtools {
 	      }
 
 	      rule updateApp {
-	      	select when nano_manager update_app_requested
+	      	select when wrangler update_app_requested
 	      	pre {
 	      		app_data_attrs={
 	      			"info_page": event:attr("info_page").defaultsTo("", standardOut("missing event attr info_page")),
@@ -466,7 +466,7 @@ ruleset devtools {
  	
  	// <!-- -------------------- Scheduled ---------------------- -->
       rule cancelScheduledEvent {
-	    select when nano_manager schedule_canceled
+	    select when wrangler schedule_canceled
 	    pre{
 	      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
 	    }
@@ -506,10 +506,10 @@ ruleset devtools {
 	      schedule do_main event eventype repeat timespec attributes attr ;
 	    }
 	  }  */
-	    //TESTING NEW CODE WHICH IS FROM NANO MANAGER
+	    //TESTING NEW CODE WHICH IS FROM Wrangler
 
 	    rule CreateScheduled {
-	      select when nano_manager schedule_created
+	      select when wrangler schedule_created
 	      pre {
 	      	//do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
 	      	event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr eventtype"));

@@ -41,9 +41,9 @@
     bootstrapped: function(cb,options){
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("bootstrapped?");
-        return nano_manager.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
+        return wrangler.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
             Devtools.log("Displaying testingReturns", json);
             cb(json);
         }, {"eci":eci});
@@ -52,12 +52,12 @@
 	ensureBootstrap: function(cb, options){
 		cb = cb || function(){};
 		options = options || {};
-		var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+		var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
 		Devtools.log("Ensuring Bootstrap for " + eci);
 		
-		//Check for nano_manager and devtools on pico.. could this be a rule in bootrap rulesets?
+		//Check for wrangler and devtools on pico.. could this be a rule in bootrap rulesets?
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
-            return nano_manager.bootstrapCheck(function(json) {
+            return wrangler.bootstrapCheck(function(json) {
 				console.log(json);
 				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
@@ -74,17 +74,17 @@
 		
 		//Add bootstrap ruleset, this will do nothing if primary is missing bootstrap.
 		addBootstrapRuleset = function(localCB) {
-			return nano_manager.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, function(json) {
+			return wrangler.raiseEvent("bootstrap", "bootstrap_rid_needed_on_child", {"target":eci}, function(json) {
 	            //console.log("Directive from installing bootstrap", json);
 				localCB();
-			}, {"eci":nano_manager.defaultECI});
+			}, {"eci":wrangler.defaultECI});
 		};
 		
 		//attempt bootstrap
 		bootstrapPico = function(localCB) {
-			nano_manager.raiseEvent("devtools", "bootstrap", {}, function(response) {
+			wrangler.raiseEvent("devtools", "bootstrap", {}, function(response) {
 				localCB();
-			}, {"eci":eci}); // where is this eci coming from? should you pass options and let nano default handle this?
+			}, {"eci":eci}); // where is this eci coming from? should you pass options and let wrangler default handle this?
 		};
 		
         var timeToWait = 0;
@@ -131,7 +131,7 @@
         attrs = attrs || {};
             Devtools.log("Initializing account for user with attributes ", attrs);
 
-            return nano_manager.raiseEvent("devtools", "bootstrap", {}, function(response)
+            return wrangler.raiseEvent("devtools", "bootstrap", {}, function(response)
             {
         // note that because the channel is create asynchronously, processing callback does
         // NOT mean the channel exists. 
@@ -146,9 +146,9 @@
     status: function(cb, options){ 
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the channels");
-        return nano_manager.installedRulesets({}, function(json) {
+        return wrangler.installedRulesets({}, function(json) {
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         }, {"eci":eci});   
@@ -160,9 +160,9 @@
         cb = cb || function(){};
         options = options || {};
         //var rid = "rulesets";
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the rulesets");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
+        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
             Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
@@ -173,7 +173,7 @@
         cb = cb || function(){};
     var json = {ruleset_url: url}; // json for attribute thats passed to the ruleset as eventattribute 
         Devtools.log("Registering rulesets");
-        return nano_manager.raiseEvent("devtools", "register_ruleset", json, function(json) {
+        return wrangler.raiseEvent("devtools", "register_ruleset", json, function(json) {
             Devtools.log("Directive from register ruleset", json);
             cb(json);
         }, options);
@@ -184,7 +184,7 @@
         cb = cb || function(){};
         var json = {rid: rid,url: url}; 
         Devtools.log("Updating the URL");
-        return nano_manager.raiseEvent("devtools", "update_url", json, function(json) {
+        return wrangler.raiseEvent("devtools", "update_url", json, function(json) {
             Devtools.log("Directive from updating URL", json);
             cb(json);
         }, options);
@@ -195,7 +195,7 @@
         cb = cb || function(){};
         var json = {rid: rid}; 
         Devtools.log("Flushing RID " + rid);
-        return nano_manager.raiseEvent("devtools", "flush_rid", json, function(json) {
+        return wrangler.raiseEvent("devtools", "flush_rid", json, function(json) {
             Devtools.log("Directive from Flushing Rid", json);
             cb(json);
         }, options);
@@ -206,7 +206,7 @@
         cb = cb || function(){};
         var json = {rid: rid}; 
         Devtools.log("Deleting RID " + rid);
-        return nano_manager.raiseEvent("devtools", "delete_rid", json, function(json) {
+        return wrangler.raiseEvent("devtools", "delete_rid", json, function(json) {
             Devtools.log("Directive from Deleting Rid", json);
             cb(json);
         }, options);
@@ -223,7 +223,7 @@
             Devtools.log("Displaying installed rulesets", json);
             cb(json);
         };
-        return nano_manager.installedRulesetsWithDiscription(parameters, post_function, options);
+        return wrangler.installedRulesetsWithDiscription(parameters, post_function, options);
     },
 
     installRulesets: function(ridlist, cb, options) 
@@ -237,7 +237,7 @@
             cb(json);
         };
 
-        return nano_manager.installRulesets(attributes,post_function,options);
+        return wrangler.installRulesets(attributes,post_function,options);
 
     },
 
@@ -252,20 +252,20 @@
             cb(json);
         };
 
-        return nano_manager.uninstallRuleset(attributes,post_function,options);
+        return wrangler.uninstallRuleset(attributes,post_function,options);
 
     },
 
 
 // ------------------------------------------------------------------------ Picos
-// we need to add Pico calls to nano_manager.js and call them from here.
+// we need to add Pico calls to wrangler.js and call them from here.
 
     about: function(cb, options) 
     {
         cb = cb || function(){};
         //var json = {rids: rid,url: url}; //not sure what this does// never passed or used, dead code
         Devtools.log("Getting info about pico ");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
+        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
             Devtools.log("This pico: ", json);
             cb(json);
         }, options);
@@ -275,7 +275,7 @@
     {
         cb = cb || function(){};
         Devtools.log("Creating pico");
-       return nano_manager.raiseEvent("nano_manager", "child_creation", data, function(json) {
+       return wrangler.raiseEvent("wrangler", "child_creation", data, function(json) {
            Devtools.log("Directive from createPico", json);
            cb(json);
        }, options);
@@ -285,7 +285,7 @@
 	{
 		cb = cb || function(){};
 		Devtools.log("Getting parent pico");
-		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
+		return wrangler.skyCloud(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
 			Devtools.log("Parent: ", json);
 			cb(json);
 		}, options);
@@ -296,7 +296,7 @@
 		cb = cb || function(){};
 		//var json = {rids: rid, url: url};
 		Devtools.log("Getting child picos ");
-		return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+		return wrangler.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
 			Devtools.log("Children: ", json);
 			cb(json);
 		}, options);	
@@ -313,7 +313,7 @@
             Devtools.log("Displaying installed channels", json);
             cb(json);
         };
-        return nano_manager.channels(parameters,post_function,options);
+        return wrangler.channels(parameters,post_function,options);
 
     },
     installChannel: function(attributes, cb, options) 
@@ -324,7 +324,7 @@
            Devtools.log("Directive from create channel", json);
            cb(json);
        };
-       return nano_manager.createChannel(attributes, post_function, options);
+       return wrangler.createChannel(attributes, post_function, options);
     },
     uninstallChannel: function(ECI, cb, options) 
     {
@@ -335,7 +335,7 @@
             Devtools.log("Directive from create channel", json);
            cb(json);
         };
-        return nano_manager.deleteChannel(attributes, post_function, options);
+        return wrangler.deleteChannel(attributes, post_function, options);
 
     },
 //---------------------------------(Apps) Authorize Client mannagement----------------
@@ -343,7 +343,7 @@
     {
         cb = cb || function(){};
         Devtools.log("authorizing clientlient ");
-       return nano_manager.raiseEvent("devtools", "authorize_client", app_Data, function(json) {
+       return wrangler.raiseEvent("devtools", "authorize_client", app_Data, function(json) {
            Devtools.log("Directive from AuthorizeClient", json);
            cb(json);
        }, options);
@@ -352,9 +352,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the showing clients");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
+        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
             Devtools.log("Displaying athorize clients", json);
             cb(json);
         }, {"eci":eci});
@@ -365,7 +365,7 @@
         var json = {"app_id":app_ECI}; 
         Devtools.log("remove client");
         console.log("attributes",json);
-        return nano_manager.raiseEvent("devtools", "remove_client", json, function(json) {
+        return wrangler.raiseEvent("devtools", "remove_client", json, function(json) {
            Devtools.log("Directive from remove client", json);
            cb(json);
         }, options);
@@ -375,7 +375,7 @@
         cb = cb || function(){};
         app_Data["app_id"]=app_ECI;
         Devtools.log("Updating client");
-        return nano_manager.raiseEvent("devtools", "update_client", app_Data, function(json) {
+        return wrangler.raiseEvent("devtools", "update_client", app_Data, function(json) {
             Devtools.log("Directive from updating Client", json);
             cb(json);
         }, options);
@@ -386,9 +386,9 @@
     {
         cb = cb || function(){};
         options = options || {};
-        var eci = options.eci || PicoNavigator.currentPico || nano_manager.defaultECI;
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("show scheduled events");
-        return nano_manager.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
+        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
             Devtools.log("Displaying scheduled events", json);
             cb(json);
         }, {"eci":eci});   
@@ -397,18 +397,18 @@
     {
         cb = cb || function(){};
         Devtools.log("scheduling event");
-       return nano_manager.raiseEvent("devtools", "event_scheduled", Data, function(json) {
+       return wrangler.raiseEvent("devtools", "event_scheduled", Data, function(json) {
            Devtools.log("Directive from ScheduleEvent", json);
            cb(json);
        }, options);
     },*/
-    //TESTING CODE WRITTEN IN NANO MANAGER
+    //TESTING CODE WRITTEN IN Wrangler
    scheduleEvent: function(data, cb, options) 
     {
         cb = cb || function(){};
         var parameters = {channelName:channel_name}; 
         Devtools.log("Scheduling event");
-       return nano_manager.raiseEvent("nano_manager", "schedule_created", data, function(json) {
+       return wrangler.raiseEvent("wrangler", "schedule_created", data, function(json) {
            Devtools.log("Creating a scheduled event", json);
            cb(json);
        }, options);
@@ -419,7 +419,7 @@
         //var parameters = {channelName:channel_name}; 
         Devtools.log("Canceling scheduled event",sid);
         var json = {sid: sid};
-       return nano_manager.raiseEvent("nano_manager", "schedule_canceled", json, function(json) {
+       return wrangler.raiseEvent("wrangler", "schedule_canceled", json, function(json) {
            Devtools.log("Canceling a scheduled event", json);
            cb(json);
        }, options);
@@ -434,7 +434,7 @@
             Devtools.log("Displaying showSubscriptions", json);
             cb(json);
         };
-        return nano_manager.subscriptions(parameters, post_function, options);  
+        return wrangler.subscriptions(parameters, post_function, options);  
     },
 
     SubscriptionAttributes: function(name,cb, options)
@@ -446,7 +446,7 @@
             Devtools.log("Displaying showSubscriptions", json);
             cb(json)
         };
-        return nano_manager.subscriptionAttributes(parameters, post_function, options);
+        return wrangler.subscriptionAttributes(parameters, post_function, options);
 
     },
    
@@ -458,7 +458,7 @@
            Devtools.log("Directive from ApproveSubscription", json);
            cb(json);
        };
-       return nano_manager.approvePendingSubscription(attributes , post_function , options);
+       return wrangler.approvePendingSubscription(attributes , post_function , options);
     },
     RequestSubscription: function(data, cb, options)
     {
@@ -469,7 +469,7 @@
            Devtools.log("Directive from RequestSubscription", json);
            cb(json);
        };
-       return nano_manager.requestSubscription(attributes, post_function, options);
+       return wrangler.requestSubscription(attributes, post_function, options);
     },
     RejectIncomingSubscription: function(data, cb, options)
     {
@@ -479,7 +479,7 @@
            Devtools.log("Directive from incoming_request_rejected", json);
            cb(json);
        };
-       return nano_manager.rejectInBoundSubscription( data, post_function , options);
+       return wrangler.rejectInBoundSubscription( data, post_function , options);
     },
     Unsubscribe: function(data, cb, options)
     {
@@ -490,7 +490,7 @@
            Devtools.log("Directive from init_unsubscribed", json);
            cb(json);
        };
-       return nano_manager.cancelSubscription( attributes, post_function, options);
+       return wrangler.cancelSubscription( attributes, post_function, options);
     },
    RejectOutgoingSubscription: function(data, cb, options)
     {
@@ -501,7 +501,7 @@
            Devtools.log("Directive from out_going_request_rejected_by_origin", json);
            cb(json);
        };
-       return nano_manager.cancelOutBoundSubscription( attributes, post_function, options);
+       return wrangler.cancelOutBoundSubscription( attributes, post_function, options);
     }
 //
 }; //closes the "window" inside the function DON'T DELETE

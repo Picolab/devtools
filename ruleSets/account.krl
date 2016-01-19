@@ -2,16 +2,16 @@
 
 ruleset b507199x6 { 
   meta {
-    name "nano_manager:account"
+    name "wrangler:account"
     description <<
-    nano_manager account mannagement.
+    wrangler account mannagement.
     >>
     author "BYUPICOLab"
     
     logging on
 
     use module b16x24 alias system_credentials
-    use module b507199x5 alias nano_manager
+    use module b507199x5 alias wrangler
 
     // errors raised to.... unknown
 
@@ -30,7 +30,7 @@ ruleset b507199x6 {
 	  
 	//-------------------- Acounts --------------------
   accountProfile = function() { // move to account mannagement rulesets
-    profile = pci:get_profile(nano_manager:currentSession()).defaultsTo("error",nano_manager:standardError("undefined"));
+    profile = pci:get_profile(wrangler:currentSession()).defaultsTo("error",wrangler:standardError("undefined"));
     {
      'status' : (profile neq "error"),
      'profile'  : profile
