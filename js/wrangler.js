@@ -526,7 +526,7 @@
         var url = 'https://' + wrangler.login_server +
         '/oauth/authorize?response_type=code' +
         '&redirect_uri=' + encodeURIComponent(wrangler.callbackURL + (fragment || "")) +
-        '&client_id=' + wrangler.appKey +
+        '&client_id=' + wrangler.clientKey +
         '&state=' + client_state;
 
         return (url)
@@ -547,7 +547,7 @@
         var url = 'https://' + wrangler.login_server +
         '/oauth/authorize/newuser?response_type=code' +
         '&redirect_uri=' + encodeURIComponent(wrangler.callbackURL + (fragment || "")) +
-        '&client_id=' + wrangler.appKey +
+        '&client_id=' + wrangler.clientKey +
         '&state=' + client_state;
 
         return (url)
@@ -572,7 +572,7 @@
         var data = {
             "grant_type": "authorization_code",
             "redirect_uri": wrangler.callbackURL,
-            "client_id": wrangler.appKey,
+            "client_id": wrangler.clientKey,
             "code": code
         };
 
