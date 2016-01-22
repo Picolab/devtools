@@ -314,6 +314,30 @@
 
 						console.log("refreshing manage-list listview.");
 
+						//----------------install button-----------------------------
+						$(".installButton").click( function() {
+						    rid = this.id;
+
+						    $.mobile.loading("show", {
+									text: "Installing ruleset...",
+									textVisible: true
+								});
+								console.log(">>>>>>>>> RID to install", rid);
+								if(typeof rid !== "undefined") {
+									Devtools.installRulesets(rid, function(directives) {
+										console.log("installed ", rid, directives);
+										if (directives.directives.length === 0) {
+											var n = noty({
+												type: 'warning',
+												text: rid + ' failed to install.'
+											});
+											$.noty.get(n);
+										}
+										$.mobile.loading("hide");
+									});
+								}
+						});
+
 						//----------------flush button-----------------------------
 						$(".flushButton").click( function() {
 						    console.log(this.id);
@@ -562,7 +586,7 @@
 										transition: 'slide'
 									});
 								}); 
-							} else {
+							} else { // never will get here....................
 									console.log("Invalid channel_name ", channel_name);
 									$.mobile.loading("hide");
 									$.mobile.changePage("#page-channel-management", {
@@ -987,7 +1011,7 @@
 	
 						if( typeof rid !== "undefined" && rid.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid RID
 						) {
-							alert_uniqueness(rid); // noty for possible duplicates. 
+							alert_uniqueness(rid); 
 							Devtools.installRulesets(rid, function(directives) {
 								console.log("installed ", rid, directives);
 								if (directives.directives.length === 0) {
