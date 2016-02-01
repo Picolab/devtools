@@ -166,7 +166,11 @@
             cb(json);
         };
         rids = wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
-        ridslist = 'rids':rids.rids.join(';');
+        var ridlist = new Array();
+        for (rid in rids) {
+            ridlist.push(rid.rid);
+        }
+        ridslist = {'rids':rids.rid.join(';')};
         return wrangler.describeRulesets(ridslist,post_function,options);
     },
 /*   getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
