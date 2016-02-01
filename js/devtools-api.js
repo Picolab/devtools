@@ -171,6 +171,7 @@
             ridlist.push(rid.rid);
         }
         ridslist = {'rids':rids.rid.join(';')};
+        console.log(ridslist);
         return wrangler.describeRulesets(ridslist,post_function,options);
     },
 /*   getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
