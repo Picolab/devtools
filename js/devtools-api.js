@@ -161,13 +161,26 @@
         options = options || {};
         //var rid = "rulesets";
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
+        post_function = function(json) {
+            Devtools.log("Displaying registered rulesets", json);
+            cb(json);
+        };
+        rids = wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
+        return wrangler.describeRulesets(rids,post_function,options);
+    },
+/*   getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
+    {
+        cb = cb || function(){};
+        options = options || {};
+        //var rid = "rulesets";
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the rulesets");
         return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
             Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
     },
-
+*/
     RegisterRuleset: function(url,cb,options)
     {
         cb = cb || function(){};

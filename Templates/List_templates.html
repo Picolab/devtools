@@ -3,10 +3,12 @@
 <div id="list-rulesets-template" style="display:none;">
    <div id="{{rid}}" data-role="collapsible" data-filtertext="{{rid}}{{uri}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
      <h4 style="font-size:1em;">
-     		{{rid}} <span><p style="font-weight:normal; font-size:12px;">{{uri}}</p></span>
+     		{{name}} ({{rid}}) <span> <p style="font-weight:normal; font-size:12px;">{{uri}}</p></span>
      </h4>
-     
+
     <div style = "padding-top: 10px; padding-bottom:20px;"> 
+         <p><b>Ruleset ID:</b> {{rid}}
+         <p>{{description}}</p>
          <p style="position:relative; top:-20px"><a style="float:right;" href="#updating-url?rid={{rid}}&url={{encoded}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit URL</a></p>
 
          <p style="position:relative; top:-20px"><a href="#" id="{{rid}}" style="float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton">Flush</a></p>
