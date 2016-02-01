@@ -306,6 +306,8 @@
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
 									"uri": rids["uri"],
+									"name": rids["name"],
+									"description": rids["description"],
 									"encoded": encodeURIComponent(rids["uri"])}
 									);
 						});
