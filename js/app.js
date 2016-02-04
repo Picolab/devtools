@@ -151,7 +151,7 @@
 				
 				wrangler.name({}, function(name_res) {
 					$("#about-pico-name" ).empty();
-					$("#about-pico-name").html(name_res["picoName"]);
+					$("#about-pico-name").html(name_res["picoName"] || "Primary Pico");
 				});
 				
 				$("#about-eci" ).empty();
@@ -162,7 +162,7 @@
 				});
 				
 				wrangler.name({}, function(name_res) {
-					$("#Open-primary-button").text("Open Primary Pico : " + name_res["picoName"] + " (" + wrangler.defaultECI + ")");
+					$("#Open-primary-button").text("Open Primary Pico : " + (name_res["picoName"] || "Primary Pico") + " (" + wrangler.defaultECI + ")");
 					$("#Open-primary-button").off('tap').on('tap', function() {
 						PicoNavigator.navigateTo(wrangler.defaultECI);
 						$.mobile.changePage("#about", {
@@ -175,7 +175,7 @@
 				Devtools.parentPico(function(parent_result) {
 					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
 					wrangler.name({}, function(name_res) {
-						$("#Open-parent-button").text("Open Parent : " + name_res["picoName"] + " (" + parentECI + ")");
+						$("#Open-parent-button").text("Open Parent : " + (name_res["picoName"] || "Primary Pico") + " (" + parentECI + ")");
 						$("#Open-parent-button").off('tap');
 						if (parent_result.parent != "error") {
 							$("#upwards-navigation-options").show();
