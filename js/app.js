@@ -174,20 +174,22 @@
 				
 				Devtools.parentPico(function(parent_result) {
 					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
-					wrangler.name({}, function(name_res) {
-						$("#Open-parent-button").text("Open Parent : " + (name_res["picoName"] || "Primary Pico") + " (" + parentECI + ")");
-						$("#Open-parent-button").off('tap');
-						if (parent_result.parent != "error") {
-							$("#upwards-navigation-options").show();
-							$("#Open-parent-button").on('tap', function() {
-								PicoNavigator.navigateTo(parentECI);
-								$.mobile.changePage("#about", {
-									transition: 'slide',
-									allowSamePageTransition : true
+					if (parentECI != "none") {
+						wrangler.name({}, function(name_res) {
+							$("#Open-parent-button").text("Open Parent : " + (name_res["picoName"] || "Primary Pico") + " (" + parentECI + ")");
+							$("#Open-parent-button").off('tap');
+							if (parent_result.parent != "error") {
+								$("#upwards-navigation-options").show();
+								$("#Open-parent-button").on('tap', function() {
+									PicoNavigator.navigateTo(parentECI);
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
 								});
-							});
-						}
-					}, {"eci":parentECI});
+							}
+						}, {"eci":parentECI});
+					}
 				});
 				
 				
