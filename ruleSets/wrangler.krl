@@ -212,16 +212,17 @@ ruleset b507199x5 {
 	
 	
 	prototypeDefinitions = {
-		"core": [
-        "b507199x5.dev"
-			//"a169x625"
-		]
+		"core": {"rulesets": [
+						"b507199x5.dev"
+						]
+				}
 	}
-	picoFactory = defaction(myEci, name, protos) {
+	picoFactory = defaction(myEci, name, protos, onTheFlyPrototypes) {
 		newPicoInfo = pci:new_pico(myEci);
 		newPico = newPicoInfo{"cid"};
-		a = pci:new_ruleset(newPico, prototypeDefinitions{"core"}); 
-		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{x});});
+		a = pci:new_ruleset(newPico, prototypeDefinitions{["core","rulesets"]}); 
+		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{[x,"rulesets"]});});
+		c = onTheFlyPrototypes.map(function(x) {pci:new_ruleset(newPico, x{"rulesets"});});
 		
 		event:send({"eci":newPico}, "wrangler", "child_created")
 			with attrs = {
@@ -491,7 +492,7 @@ ruleset b507199x5 {
 
 		if (name neq "") then
 		{
-			picoFactory(myEci, name, []);
+			picoFactory(myEci, name, [], []);
 		}
 		
 		fired {
