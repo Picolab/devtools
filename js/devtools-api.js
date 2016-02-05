@@ -169,7 +169,7 @@
         var ridlist = new Array();
         console.log(rids.responseJSON);
 
-        for (rid in rids) {
+        for (rid in rids.responseJSON) {
 
             console.log(rid);
 
