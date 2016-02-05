@@ -167,7 +167,12 @@
         };
         rids = wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
         var ridlist = new Array();
+        console.log(rids);
+
         for (rid in rids) {
+
+            console.log(rid);
+
             ridlist.push(rid.rid);
         }
         console.log(ridlist);
