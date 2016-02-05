@@ -170,7 +170,7 @@
         for (rid in rids) {
             ridlist.push(rid.rid);
         }
-        console.log(ridslist);
+        console.log(ridlist);
         ridslist = {'rids': ridlist.join(';')};
         console.log(ridslist);
         return wrangler.describeRulesets(ridslist,post_function,options);
