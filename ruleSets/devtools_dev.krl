@@ -467,19 +467,19 @@ ruleset devtools {
  	// <!-- -------------------- Scheduled ---------------------- -->
       rule cancelScheduledEvent {
 	    select when wrangler schedule_canceled
-	    pre{
-	      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
-	    }
-	    if (sid neq "") then
-	    {
-	    	delete_scheduled_event(sid);
-	    }
-	    fired {
-	      log (standardOut("success"));
-	          } 
-	    else {
-	      log(">> failure >>");
-	    }
+		    pre{
+		      sid = event:attr("sid").defaultsTo("", standardError("missing event attr sid"));
+		    }
+		    if (sid neq "") then
+		    {
+		    	delete_scheduled_event(sid);
+		    }
+		    fired {
+		      log (standardOut("success"));
+		          } 
+		    else {
+		      log(">> failure >>");
+		    }
 	  }  
 	  /*rule ScheduleEvent {
 	    select when devtools event_scheduled
@@ -532,6 +532,7 @@ ruleset devtools {
 	        schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
 	        //recurring
 	        schedule explicit event event_type repeat recurrment attributes attr;
+	        //put in a log to see what exactly this log is putting out
 
 
 	        //do_main is a label, it doesn't interpret it

@@ -1354,22 +1354,19 @@
 					 	{
 							var schedule_form_data = process_form(frm);
 							console.log(">>>>>>>>> event to schedule", schedule_form_data);
-							var d = new Date(schedule_form_data.date_time + "Z");
-							///////////facing issues with the time input is changed for time zone. 1 am becomes 6 pm the night before.
-							console.log(d);
 							var event_domain = schedule_form_data.event_domain;
 							var event_type 	 = schedule_form_data.event_type;
 							var	date_time 	 = schedule_form_data.date_time;
 							var recurrment   = schedule_form_data.recurrment;
 							var event_attributes	 = schedule_form_data.event_attributes;
-							console.log("timestamp? ", Date.parse(date_time)/1000);
-							console.log("tiiiime ", date_time);
+							var tz_date_time = moment(date_time);
+							console.log("time with moment:", tz_date_time.tz('America/Phoenix').format());
 							var sch_data ={
 								"event_type": event_type,
 								"time" : date_time,
 								"do_main": event_domain,
 								//"timespec": ,
-								"date_time" : date_time,
+								"date_time" : tz_date_time.tz('America/Phoenix').format(), //date_time,
 								"recurrment" : recurrment,
 								"attributes" : event_attributes
 							}
