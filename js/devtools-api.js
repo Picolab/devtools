@@ -167,20 +167,17 @@
         };
         rids = wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
         var ridlist = new Array();
-        console.log(rids.responseJSON);
-
-        for (rid in rids.responseJSON) {
-
-            console.log(rid);
-
-            ridlist.push(rid.rid);
+        for (var i = 0; i < rids.length; i++) {
+            ridlist.push(rids[i].rid);  
         }
+        ridlist;
         console.log(ridlist);
         ridslist = {'rids': ridlist.join(';')};
         console.log(ridslist);
         return wrangler.describeRulesets(ridslist,post_function,options);
     },
-/*   getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
+/*  ----------Old code---------- 
+    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
     {
         cb = cb || function(){};
         options = options || {};
