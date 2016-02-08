@@ -162,6 +162,7 @@
         //var rid = "rulesets";
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         // asynchronous request
+        var rids_with_discription;
         post_function = function(json) {
             Devtools.log("Displaying registered rulesets", json);
             rids = json;
