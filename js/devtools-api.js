@@ -155,7 +155,7 @@
     },
 
 // ------------------------------------------------------------------------ Rulesets 
-    getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
+    getRulesets: function(cb, options) 
     {
         cb = cb || function(){};
         options = options || {};
@@ -168,7 +168,7 @@
             rids = json;
             get_meta(rids)
             cb(json);
-            
+
         };
 
         get_meta = function(rids){
@@ -176,7 +176,6 @@
             for (var i = 0; i < rids.length; i++) {
                 ridlist.push(rids[i].rid);  
             }
-            ridlist;
             console.log(ridlist);
             ridslist = {'rids': ridlist.join(';')};
             console.log(ridslist);
