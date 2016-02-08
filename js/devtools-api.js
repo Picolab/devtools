@@ -179,11 +179,11 @@
             console.log(ridlist);
             ridslist = {'rids': ridlist.join(';')};
             console.log(ridslist);
-            rids_with_discription = wrangler.describeRulesets(ridslist,function(){},options);
+            rids_with_discription = wrangler.describeRulesets(ridslist,function(json){rids_with_discription = json;},options);
         }; 
 
         wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
-        return rids_with_discription;
+        return rids_with_discription.description;
         
         
     },
