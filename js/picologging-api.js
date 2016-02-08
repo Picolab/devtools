@@ -38,7 +38,7 @@
 	    options = options || {};
             console.log("Retrieving logging status");
 
-	    return wrangler.skyCloud(Pico.logging.get_rid("logging"), "loggingStatus", {}, function(res) {
+	    return wrangler.skyQuery(Pico.logging.get_rid("logging"), "loggingStatus", {}, function(res) {
 		console.log("Saw log status: ", res);
 		if(typeof cb !== "undefined"){
 		    cb(res);
@@ -53,7 +53,7 @@
 	    options = options || {};
             console.log("Retrieving logs");
 
-	    return wrangler.skyCloud(Pico.logging.get_rid("logging"), "getLogs", {}, function(res) {
+	    return wrangler.skyQuery(Pico.logging.get_rid("logging"), "getLogs", {}, function(res) {
 		console.log("Saw logs: ", res);
 		if(typeof cb !== "undefined"){
 		    cb(res);

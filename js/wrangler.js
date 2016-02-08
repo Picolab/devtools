@@ -117,7 +117,7 @@
        }
      };
 
-    wrangler.skyCloud = function(module, func_name, parameters, getSuccess, options)
+    wrangler.skyQuery = function(module, func_name, parameters, getSuccess, options)
     {
       //put options stuff here.
     	try {
@@ -149,7 +149,7 @@
 
         var process_error = function(res)
         {
-          console.error("skyCloud Server Error with esl ", esl, res);
+          console.error("skyQuery Server Error with esl ", esl, res);
           if (typeof options.errorFunc === "function") {
             options.errorFunc(res);
         }
@@ -158,11 +158,11 @@
     var process_result = function(res) // whats this for???
     {
       console.log("Seeing res ", res, " for ", esl);
-      var sky_cloud_error = typeof res === 'Object' && typeof res.skyCloudError !== 'undefined';
+      var sky_cloud_error = typeof res === 'Object' && typeof res.skyQueryError !== 'undefined';
       if (! sky_cloud_error ) {
         getSuccess(res);
     } else {
-        console.error("skyCloud Error (", res.skyCloudError, "): ", res.skyCloudErrorMsg);
+        console.error("skyQuery Error (", res.skyQueryError, "): ", res.skyQueryErrorMsg);
         if (!!res.httpStatus && 
          !!res.httpStatus.code && 
          (parseInt(res.httpStatus.code) === 400 || parseInt(res.httpStatus.code) === 500)) 
@@ -171,7 +171,7 @@
          var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
          options.repeats = repeat_num;
     			// I don't think this will support promises; not sure how to fix
-    			wrangler.skyCloud(module, func_name, parameters, getSuccess, options);
+    			wrangler.skyQuery(module, func_name, parameters, getSuccess, options);
             }
         }
     };
@@ -188,7 +188,7 @@
     		// error: process_error
         });
     } catch(error) {
-       console.error("[skyCloud]", error);
+       console.error("[skyQuery]", error);
        if (typeof options.errorFunc === "function") {
           options.errorFunc();
       } 
@@ -203,19 +203,19 @@
 
     wrangler.installedRulesets = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "rulesets", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "rulesets", parameters, postFunction , options); 
     };
 
     wrangler.describeRulesets = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "rulesetsInfo", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "rulesetsInfo", parameters, postFunction , options); 
     };
 
     wrangler.installedRulesetsWithDiscription = function(parameters, postFunction, options)
     {
       return wrangler.installedRulesets({},function(rids){
         console.log("rids.rids", rids.rids);
-         return wrangler.skyCloud(get_rid("rulesets"), "rulesetsInfo", {'rids':rids.rids.join(';')}, postFunction , options);
+         return wrangler.skyQuery(get_rid("rulesets"), "rulesetsInfo", {'rids':rids.rids.join(';')}, postFunction , options);
       }, options);
     };
 
@@ -235,23 +235,23 @@
     // ------------------------------------------------------------------------ Channels
         wrangler.channels = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channels", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channels", parameters, postFunction , options); 
     };
         wrangler.channel = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channel", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
         wrangler.channelAttributes = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channelAttributes", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channelAttributes", parameters, postFunction , options); 
     };
         wrangler.channelPolicy = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channelPolicy", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channelPolicy", parameters, postFunction , options); 
     };
         wrangler.channelType = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channelType", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channelType", parameters, postFunction , options); 
     };
 
     wrangler.updateChannelAttributes = function( eventAttributes,  postFunction, options)
@@ -274,19 +274,19 @@
     // ------------------------------------------------------------------------ pico
         wrangler.children = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "children", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "children", parameters, postFunction , options); 
     };
         wrangler.parent = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "parent", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "parent", parameters, postFunction , options); 
     };
         wrangler.name = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "name", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "name", parameters, postFunction , options); 
     };
         wrangler.attributes = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
     };
 
      wrangler.createChild = function( eventAttributes, postFunction, options)
@@ -313,23 +313,23 @@
 
     wrangler.subscriptions = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "subscriptions", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "subscriptions", parameters, postFunction , options); 
     };
         wrangler.channelByName = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
     };
         wrangler.channelByEci = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
     };
         wrangler.subscriptionsAttributesEci = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "subscriptionsAttributesEci", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "subscriptionsAttributesEci", parameters, postFunction , options); 
     };
         wrangler.subscriptionsAttributesName = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "subscriptionsAttributesName", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "subscriptionsAttributesName", parameters, postFunction , options); 
     };
          wrangler.requestSubscription = function( eventAttributes, postFunction, options)
     {
@@ -364,11 +364,11 @@
 
         wrangler.currentSession = function(parameters, postFunction, options)
     {
-        return wrangler.skyCloud(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
     };
 		wrangler.bootstrapCheck = function(postFunction, options)
 	{
-		return wrangler.skyCloud(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
+		return wrangler.skyQuery(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
 	};
 
 
@@ -379,7 +379,7 @@
 
     wrangler.getMyProfile = function(getSuccess)
     {
-        return wrangler.skyCloud("a169x676", "get_all_me", {}, function(res) {
+        return wrangler.skyQuery("a169x676", "get_all_me", {}, function(res) {
            clean(res);
            if(typeof getSuccess !== "undefined"){
               getSuccess(res);
@@ -396,7 +396,7 @@
     wrangler.getFriendProfile = function(friendToken, getSuccess)
     {
         var parameters = { "myToken": friendToken };
-        return wrangler.skyCloud("a169x727", "getFriendProfile", parameters, getSuccess);
+        return wrangler.skyQuery("a169x727", "getFriendProfile", parameters, getSuccess);
     };
 
     // ========================================================================
@@ -434,7 +434,7 @@
     wrangler.PDSList = function(namespace, getSuccess)
     {
         var callParmeters = { "namespace": namespace };
-        return wrangler.skyCloud("pds", "get_items", callParmeters, getSuccess);
+        return wrangler.skyQuery("pds", "get_items", callParmeters, getSuccess);
     };
 
     // ------------------------------------------------------------------------
@@ -476,7 +476,7 @@
            return null;
        }
 
-       return wrangler.skyCloud("wrangler",
+       return wrangler.skyQuery("wrangler",
         "cloudAuth", 
         parameters, 
         function(res){

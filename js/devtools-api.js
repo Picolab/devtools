@@ -43,7 +43,7 @@
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("bootstrapped?");
-        return wrangler.skyCloud(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
+        return wrangler.skyQuery(Devtools.get_rid("bootstrap"), "testingReturns", {}, function(json) {
             Devtools.log("Displaying testingReturns", json);
             cb(json);
         }, {"eci":eci});
@@ -182,7 +182,7 @@
             rids_with_discription = wrangler.describeRulesets(ridslist,function(json){rids_with_discription = json;},options);
         }; 
 
-        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
         
     },
 /*  ----------Old code---------- 
@@ -193,7 +193,7 @@
         //var rid = "rulesets";
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the rulesets");
-        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showRulesets", {}, function(json) {
             Devtools.log("Displaying rulesets", json);
             cb(json);
         }, {"eci":eci});
@@ -296,7 +296,7 @@
         cb = cb || function(){};
         //var json = {rids: rid,url: url}; //not sure what this does// never passed or used, dead code
         Devtools.log("Getting info about pico ");
-        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "aboutPico", {}, function(json) {
             Devtools.log("This pico: ", json);
             cb(json);
         }, options);
@@ -316,7 +316,7 @@
 	{
 		cb = cb || function(){};
 		Devtools.log("Getting parent pico");
-		return wrangler.skyCloud(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
+		return wrangler.skyQuery(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
 			Devtools.log("Parent: ", json);
 			cb(json);
 		}, options);
@@ -327,7 +327,7 @@
 		cb = cb || function(){};
 		//var json = {rids: rid, url: url};
 		Devtools.log("Getting child picos ");
-		return wrangler.skyCloud(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+		return wrangler.skyQuery(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
 			Devtools.log("Children: ", json);
 			cb(json);
 		}, options);	
@@ -385,7 +385,7 @@
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("Showing the showing clients");
-        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showClients", {}, function(json) {
             Devtools.log("Displaying athorize clients", json);
             cb(json);
         }, {"eci":eci});
@@ -419,7 +419,7 @@
         options = options || {};
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
         Devtools.log("show scheduled events");
-        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showScheduledEvents", {}, function(json) {
             Devtools.log("Displaying scheduled events", json);
             cb(json);
         }, {"eci":eci});   
