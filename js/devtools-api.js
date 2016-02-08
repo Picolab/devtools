@@ -168,6 +168,7 @@
             rids = json;
             get_meta(rids)
             cb(json);
+            
         };
 
         get_meta = function(rids){
@@ -182,9 +183,7 @@
             rids_with_discription = wrangler.describeRulesets(ridslist,function(json){rids_with_discription = json;},options);
         }; 
 
-        wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
-        return rids_with_discription.description;
-        
+        return wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
         
     },
 /*  ----------Old code---------- 
