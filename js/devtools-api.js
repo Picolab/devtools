@@ -166,6 +166,7 @@
             cb(json);
         };
         rids = wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
+        rids = rids.responseJSON;
         var ridlist = new Array();
         for (var i = 0; i < rids.length; i++) {
             ridlist.push(rids[i].rid);  
