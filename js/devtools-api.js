@@ -178,7 +178,7 @@
             console.log(ridlist);
             ridslist = {'rids': ridlist.join(';')};
             console.log(ridslist);
-            rids_with_discription = wrangler.describeRulesets(ridslist,post_function,options);
+            rids_with_discription = wrangler.describeRulesets(ridslist,function(){},options);
         }; 
 
         wrangler.skyCloud(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
