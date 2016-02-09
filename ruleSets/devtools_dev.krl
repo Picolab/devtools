@@ -51,7 +51,7 @@ ruleset devtools {
 		      	describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
 		      	resp = http:get(describe_url);
 		      	results = resp{"content"}.decode().defaultsTo("",standardError("content failed to return"));
-		      	sults = results{"description"};
+		      	sults = results{"description"}.klog("description: ");
 		      	result = rulesets{'rulesets'}.map ( function(obj) {
 		      		obj.put(["description"], sults{obj{'rid'}});
 		      		});
