@@ -300,7 +300,8 @@
 				function populate_registered_rulesets(){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
 						$("#manage-list" ).empty();
-						var sortedRids = rids_json['description'].sort(sortBy("rid"));
+						//var sortedRids = rids_json['description'].sort(sortBy("rid"));
+						var sortedRids = rids_json['description']);
 
 						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
