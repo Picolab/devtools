@@ -18,7 +18,7 @@ ruleset devtools {
         use module b507199x6 alias Account
         //use module a169x625 alias PicoInspector
 
-        provides showRulesets,showRuleset,  aboutPico, childPicos, parentPico,
+        provides showRulesets,showRuleset, registeredRulesetsInfo, aboutPico, childPicos, parentPico,
          showScheduledEvents,showScheduleHistory,schedules, scheduleHistory, showInstalledRulesets,// schedule
         showClients, showClient //apps
         sharing on
@@ -40,6 +40,22 @@ ruleset devtools {
 	            rulesets = registeredRulesets().klog(standardOut("Wrangler:Registered()"));
 	            rulesets{'rulesets'};
 	        };
+	            // pci method? 
+		    registeredRulesetsInfo = function() {
+		    	rulesets = registeredRulesets().klog(standardOut("Wrangler:Registered()"));
+		    	rids = rulesets{'rulesets'}.map( function(obj){
+		    		obj{'rid'};
+		    		});
+
+		      	rids_string = rids.join(";");
+		      	describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
+		      	resp = http:get(describe_url);
+		      	results = resp{"content"}.decode().defaultsTo("",standardError("content failed to return"));
+		      {
+		       'status'   : (resp{"status_code"} eq "200"),
+		       'description'     : results
+		      };
+		    }
 	        showRuleset = function(rid){
 	            rulesets = registeredRulesets(rid).klog(standardOut("Wrangler:Registered()"));
 	            rulesets{'rulesets'};

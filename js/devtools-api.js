@@ -159,31 +159,13 @@
     {
         cb = cb || function(){};
         options = options || {};
-        //var rid = "rulesets";
         var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
-        // asynchronous request
         var rids_with_discription;
         post_function = function(json) {
             Devtools.log("Displaying registered rulesets", json);
-            rids = json;
-            get_meta(rids)
             cb(json);
-
         };
-
-        get_meta = function(rids){
-            var ridlist = new Array();
-            for (var i = 0; i < rids.length; i++) {
-                ridlist.push(rids[i].rid);  
-            }
-            console.log(ridlist);
-            ridslist = {'rids': ridlist.join(';')};
-            console.log(ridslist);
-            return wrangler.describeRulesets(ridslist,function(json){rids_with_discription = json;},options);
-        }; 
-
-        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showRulesets", {}, post_function, options);
-        
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "registeredRulesetsInfo", {}, post_function, options);
     },
 /*  ----------Old code---------- 
     getRulesets: function(cb, options) //almost like getProfile in fuse-api.js
