@@ -300,8 +300,7 @@
 				function populate_registered_rulesets(){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
 						$("#manage-list" ).empty();
-						//var sortedRids = rids_json['description'].sort(sortBy("rid"));
-						var sortedRids = rids_json['description'];
+						var sortedRids = rids_json['description'].sort(sortBy("rid"));
 
 						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
@@ -309,8 +308,8 @@
 								snippets.list_rulesets_template(
 									{"rid": rids["rid"],
 									"uri": rids["uri"],
-									"name": rids["name"],
-									"description": rids["description"],
+									"name": rids["description"]["name"],
+									"description": rids["description"]["description"],
 									"encoded": encodeURIComponent(rids["uri"])}
 									);
 						});
