@@ -197,7 +197,7 @@
         cb = cb || function(){};
         var json = {rid: rid,url: url}; 
         Devtools.log("Updating the URL");
-        return wrangler.raiseEvent("devtools", "update_url", json, function(json) {
+        return wrangler.raiseEvent("wrangler", "ruleset_relink_requested", json, function(json) {
             Devtools.log("Directive from updating URL", json);
             cb(json);
         }, options);
