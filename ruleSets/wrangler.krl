@@ -255,7 +255,8 @@ ruleset b507199x5 {
   picoFactory = defaction(attributes, protos) { // protos is an array of rids 
     newPicoInfo = pci:new_pico(meta:eci());
     newPicoEci = newPicoInfo{"cid"};
-    prototypes = prototypeDefinitions.append(protos);
+    prototypesCore = prototypeDefinitions{"core"};
+    prototypes = prototypesCore.append(protos);
     b = prototypes.map( function(rid) {pci:new_ruleset(newPicoEci, rid);});
     
     event:send({"eci":newPicoEci}, "wrangler", "child_created")
