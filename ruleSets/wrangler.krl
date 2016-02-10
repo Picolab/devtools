@@ -212,23 +212,20 @@ ruleset b507199x5 {
 	
 	
 	prototypeDefinitions = {
-		"core": {"rulesets": [
-						"b507199x5.dev"
-						]
-				}
+		"core": [
+        "b507199x5.dev"
+			//"a169x625"
+		]
 	}
-	picoFactory = defaction(myEci, name, protos, onTheFlyPrototypes) {
-		newPicoInfo = pci:new_pico(myEci);
-		newPico = newPicoInfo{"cid"};
-		a = pci:new_ruleset(newPico, prototypeDefinitions{["core","rulesets"]}); 
-		b = protos.map(function(x) {pci:new_ruleset(newPico, prototypeDefinitions{[x,"rulesets"]});});
-		c = onTheFlyPrototypes.map(function(x) {pci:new_ruleset(newPico, x{"rulesets"});});
-		
-		event:send({"eci":newPico}, "wrangler", "child_created")
-			with attrs = {
-				"name" : name
-			}
-	}
+  picoFactory = defaction(attributes, protos) { // protos is an array of rids 
+    newPicoInfo = pci:new_pico(meta:eci());
+    newPicoEci = newPicoInfo{"cid"};
+    prototypes = prototypeDefinitions.append(protos);
+    b = prototypes.map( function(rid) {pci:new_ruleset(newPicoEci, rid);});
+    
+    event:send({"eci":newPicoEci}, "wrangler", "child_created")
+      with attrs = attributes
+  }
 
   //-------------------- Subscriptions ----------------------
     subscriptions = function() { // slow, whats a better way to prevent channel call, bigO(n^2)
@@ -485,14 +482,14 @@ ruleset b507199x5 {
 		select when wrangler child_creation
 		
 		pre {
-			myEci = meta:eci();
-			
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
+      protoTypeString = event:attr().defaultsTo([],standardError("no prototypes passed")); //string of rids joined by ';'
+      protoTypesArray = protoTypeString.split(re/;/); 
 		}
 
 		if (name neq "") then
 		{
-			picoFactory(myEci, name, [], []);
+			picoFactory( event:attrs(), protoTypesArray); // takes an array of rids as second parameter
 		}
 		
 		fired {
