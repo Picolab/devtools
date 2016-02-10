@@ -32,13 +32,14 @@ ruleset b507199x5 {
     logging off
 
     use module b16x24 alias system_credentials
+    use module b507199x8 alias sds
     // errors raised to.... unknown
 
     // Accounting keys
       //none
     provides skyQuery, rulesets, rulesetsInfo, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
-    children, parent, attributes, prototypes, name, //pico
+    children, parent, attributes, prototypes, name, profile, //pico
     subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
     standardError
     sharing on
@@ -214,6 +215,11 @@ ruleset b507199x5 {
 			'parent' : parent
 		}
 	}
+
+  profile = function(key) {
+    sds:profile(key);
+  }
+
 	name = function() {
 		{
 			'status' : true,
