@@ -1258,7 +1258,7 @@
 
 							noty({
 								layout: 'topCenter',
-								text: 'Are you sure you want to unsubscriptioNator with doom?',
+								text: 'Are you sure you want to unsubscribe?',
 								type: 'warning',
 
 								buttons: [
