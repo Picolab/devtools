@@ -284,11 +284,21 @@
         }, options);
     },
 	
+	picoName: function(cb, options)
+	{
+		cb = cb || function(){};
+		Devtools.log("Getting pico name");
+		return wrangler.name({}, function(json) {
+			Devtools.log("Children: ", json);
+			cb(json);
+		}, options);	
+	},
+	
     createPico: function(data, cb, options)
     {
         cb = cb || function(){};
         Devtools.log("Creating pico");
-       return wrangler.raiseEvent("wrangler", "child_creation", data, function(json) {
+       return wrangler.createChild(data, function(json) {
            Devtools.log("Directive from createPico", json);
            cb(json);
        }, options);
@@ -298,7 +308,7 @@
 	{
 		cb = cb || function(){};
 		Devtools.log("Getting parent pico");
-		return wrangler.skyQuery(Devtools.get_rid("rulesets"), "parentPico", {}, function(json) {
+		return wrangler.parent({}, function(json) {
 			Devtools.log("Parent: ", json);
 			cb(json);
 		}, options);
@@ -309,7 +319,7 @@
 		cb = cb || function(){};
 		//var json = {rids: rid, url: url};
 		Devtools.log("Getting child picos ");
-		return wrangler.skyQuery(Devtools.get_rid("rulesets"), "childPicos", {}, function(json) {
+		return wrangler.children({}, function(json) {
 			Devtools.log("Children: ", json);
 			cb(json);
 		}, options);	

@@ -149,7 +149,7 @@
 				
 				$("#upwards-navigation-options").hide();
 				
-				wrangler.name({}, function(name_res) {
+				Devtools.picoName(function(name_res) {
 					$("#about-pico-name" ).empty();
 					$("#about-pico-name").html(name_res["picoName"] || "Primary Pico");
 				});
@@ -161,7 +161,7 @@
 					textVisible: true
 				});
 				
-				wrangler.name({}, function(name_res) {
+				Devtools.picoName(function(name_res) {
 					$("#Open-primary-button").text("Open Primary Pico : " + (name_res["picoName"] || "Primary Pico") + " (" + wrangler.defaultECI + ")");
 					$("#Open-primary-button").off('tap').on('tap', function() {
 						PicoNavigator.navigateTo(wrangler.defaultECI);
@@ -175,7 +175,7 @@
 				Devtools.parentPico(function(parent_result) {
 					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
 					if (parentECI != "none") {
-						wrangler.name({}, function(name_res) {
+						Devtools.picoName(function(name_res) {
 							$("#Open-parent-button").text("Open Parent : " + (name_res["picoName"] || "Primary Pico") + " (" + parentECI + ")");
 							$("#Open-parent-button").off('tap');
 							if (parent_result.parent != "error") {
@@ -240,7 +240,7 @@
 					}
 					
 					$.each(children_result["children"], function(id, child){
-						wrangler.name({}, function(name_res){
+						Devtools.picoName(function(name_res){
 							console.log(name_res["picoName"]);
 							dynamicChildrenList += 
 								snippets.child_pico_template(

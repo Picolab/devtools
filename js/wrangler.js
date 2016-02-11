@@ -291,7 +291,7 @@
 
      wrangler.createChild = function( eventAttributes, postFunction, options)
     {
-        return wrangler.raiseEvent("wrangler", "child_creation_requested", eventAttributes, postFunction, options);
+        return wrangler.raiseEvent("wrangler", "child_creation", eventAttributes, postFunction, options);
     }; 
      wrangler.initializeChild = function( eventAttributes, postFunction, options)
     {
