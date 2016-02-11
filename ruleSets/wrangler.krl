@@ -221,11 +221,14 @@ ruleset b507199x5 {
   }
 
 	name = function() {
-		{
-			'status' : true,
-			'picoName' : ent:name
-		}
+    sdsProfile = sds:profile();
+    name = sdsProfile{["profile","name"]};
+        {
+      'status' : sdsProfile{"status"},
+      'name' : name
+    }
 	}
+
 	attributes = function() {
 		{
 			'status' : true,
