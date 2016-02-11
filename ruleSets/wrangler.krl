@@ -225,7 +225,7 @@ ruleset b507199x5 {
     name = sdsProfile{["profile","name"]};
         {
       'status' : sdsProfile{"status"},
-      'name' : name
+      'picoName' : name
     }
 	}
 
