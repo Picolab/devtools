@@ -222,8 +222,8 @@ ruleset b507199x5 {
 
 	name = function() {
     sdsProfile = sds:profile();
-    name = sdsProfile{["profile","name"]};
-        {
+    name = (sdsProfile.typeof() eq 'hash') => sdsProfile{["profile","name"]} | ent:name ;
+    {
       'status' : sdsProfile{"status"},
       'picoName' : name
     }
