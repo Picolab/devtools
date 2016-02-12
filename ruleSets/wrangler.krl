@@ -532,7 +532,7 @@ ruleset b507199x5 {
 		
 		pre {
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
-      protoTypeString = event:attr().defaultsTo([],standardError("no prototypes passed")); //string of rids joined by ';'
+      protoTypeString = event:attr().defaultsTo([],standardError("no rids passed")); //string of rids joined by ';'
       bootstrapridArray = protoTypeString.split(re/;/); 
       attribute = event:attrs();
       Attribute = (attribute{'prototype'}.isnull()) => attribute.put(["prototype"],"general") | attribute; 
@@ -562,7 +562,7 @@ ruleset b507199x5 {
 		}
 		
 		always {
-      raise sds event new_map_available // init general  
+      raise pds event new_sds_map_available // init general  
             attributes 
           { 
             "namespace": "developer",
@@ -584,7 +584,7 @@ ruleset b507199x5 {
     
     always {
 
-    raise sds event new_prototype_available // init prototype  
+    raise pds event new_sds_prototype_available // init prototype  // rule in pds needs to be created.
             attributes 
           { 
             "prototype": "hashPath", // this is for front end, so a website can build and display your prototype
