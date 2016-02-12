@@ -39,7 +39,7 @@ ruleset b507199x5 {
       //none
     provides skyQuery, rulesets, rulesetsInfo, //ruleset
     channels, channelAttributes, channelPolicy, channelType, //channel
-    children, parent, attributes, prototypes, name, profile, //pico
+    children, parent, attributes, prototypes, name, profile, pico, //pico
     subscriptions, channel, eciFromName, subscriptionsAttributes, //subscription
     standardError
     sharing on
