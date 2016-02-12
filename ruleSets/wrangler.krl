@@ -535,7 +535,7 @@ ruleset b507199x5 {
       protoTypeString = event:attr().defaultsTo([],standardError("no prototypes passed")); //string of rids joined by ';'
       bootstrapridArray = protoTypeString.split(re/;/); 
       attribute = event:attrs();
-      Attribute = attribute.put("prototype",event:attr("prototype").defaultsTo(standardOut("general","general Pico created "))); 
+      Attribute = (attribute{'prototype'}.isnull()) => attribute.put(["prototype"],"general") | attribute; 
 		}
 
 		if (name neq "") then
