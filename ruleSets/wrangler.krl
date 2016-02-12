@@ -219,6 +219,13 @@ ruleset b507199x5 {
   profile = function(key) {
     sds:profile(key);
   }
+  pico = function(namespace) {
+    {
+      "profile" : sds:profile(),
+      "settings" : sds:settings(),
+      "general" : sds:items(namespace)
+    }
+  }
 
 	name = function() {
     sdsProfiles = sds:profile();
@@ -526,12 +533,14 @@ ruleset b507199x5 {
 		pre {
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
       protoTypeString = event:attr().defaultsTo([],standardError("no prototypes passed")); //string of rids joined by ';'
-      protoTypesArray = protoTypeString.split(re/;/); 
+      bootstrapridArray = protoTypeString.split(re/;/); 
+      attribute = event:attrs();
+      Attribute = attribute.put("prototype",event:attr("prototype").defaultsTo(standardOut("general","general Pico created "))); 
 		}
 
 		if (name neq "") then
 		{
-			picoFactory( event:attrs(), protoTypesArray); // takes an array of rids as second parameter
+			picoFactory( Attribute, bootstrapridArray); // takes an array of rids as second parameter
 		}
 		
 		fired {
@@ -543,26 +552,47 @@ ruleset b507199x5 {
 		}
 	}
 	 
-	rule initializeChild {
-		select when wrangler child_created
+	rule initializeChildGeneral {// this rule should build pds data structure
+		select when wrangler child_created where prototype eq "general"
 		
-		pre {
-			name = event:attr("name");
-			//attrs = event:attr("attributes").decode();
-			//protos = event:attr("prototypes").decode();
-		}
+		pre {}
 		
 		{
 			noop();
 		}
 		
-		fired {
-			set ent:name name;
-			//set ent:attributes attrs;
-			//set ent:prototypes protos;
+		always {
+      raise sds event new_map_available // init general  
+            attributes 
+          { 
+            "namespace": "developer",
+              "mapvalues": { "name": "tedrub",
+                  "discription": "ted rub was a programer!" 
+                 }
+          }
 		}
 	}
 
+  rule initializeChildPrototyp {// this rule should build pds data structure
+    select when wrangler child_created where prototype eq "general"
+    
+    pre {}
+    
+    {
+      noop();
+    }
+    
+    always {
+
+    raise sds event new_prototype_available // init prototype  
+            attributes 
+          { 
+            "prototype": "hashPath", // this is for front end, so a website can build and display your prototype
+             "structure": { "skills": "KRL"
+                          }
+          }
+    }
+  }
 	rule setPicoAttributes {
 		select when wrangler set_attributes_requested
 		pre {
