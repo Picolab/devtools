@@ -1,0 +1,88 @@
+<div data-role="page" id="about">
+	
+	{% include header.html title="spime management " %}
+
+	<div data-role="main" class="ui-content">
+
+		<ul id="about-list" class="ruleset" data-role="listview" data-inset="true" >
+
+			<li data-role="list-divider">Pico</li>
+			<li>
+
+				<p>
+					<b>Name: </b> <span id="about-pico-name"></span>
+				</p>
+				
+				<p>
+					<b>ECI: </b> <span id="about-eci"></span>
+				</p>
+
+				<p  style="white-space : normal">
+					<b>Note: </b> the ECI is the path into your pico and should be treated as a shared secret between the pico and the application using the pico's Event-Query API. Do not disclose it or check it into a repository like Github.
+				</p>
+
+
+			</li>
+		</ul><!-- /listview -->
+
+		<br>
+		
+		<ul id="upwards-navigation-options" data-role="listview" data-inset="true">
+			<li data-role="list-divider">Primary</li>
+	        <li>
+	          <a id="Open-primary-button" href="" class="ui-btn ui-icon-arrow-r ui-btn-icon-right">Open Primary Pico : </a>
+	        </li>
+
+			<li data-role="list-divider">Parent</li>
+	        <li>
+	          <a id="Open-parent-button" href="" class="ui-btn ui-icon-arrow-r ui-btn-icon-right">Open Parent : </a>
+	        </li>
+		</ul>
+		
+		<br/>
+		
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Children</li>
+	        <li>
+	          <a id="Create-pico-button" href="#pico-creation" class="ui-btn ui-icon-edit ui-btn-icon-right">New Child Pico</a>
+	        </li>
+		</ul>
+		
+		<div data-role="collapsible-set" data-content-theme="a" data-filter="true" data-iconpos="right" id="child-picos">
+		</div>
+
+
+	</div>
+	
+	{% include footer.html %}
+
+</div>
+
+
+
+<div data-role="page" id="pico-creation" data-title="Create Child Pico">
+  {% include header.html title="Create a Pico" %}
+
+  <div data-role="main" class="ui-content">
+   <ul id="pico-information" data-role="listview" data-inset="true"> 
+    <li data-role="list-divider" >Create Pico</li>
+    <li>
+     <form id="form-new-pico">
+       <div data-role="fieldcontain">
+        <label for="Subscription_name">Name:</label>
+        <input type="text" name="Pico_name" id="Pico_name" value="" placeholder="" />
+        <!--label for="Subscription_attrs">Prototypes:</label>
+        <input type="text" name="Pico_prototypes" id="Pico_prototypes" value="" placeholder="" /-->
+      </div>
+    </form>
+    <div>
+    <a id="Create-pico-confirm-button" class="ui-btn ui-btn-b ui-btn-inline">Create</a>
+      <a href="#about" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+    </div>
+  </li>
+</ul>
+</div>
+
+  {% include footer.html %}
+
+</div>

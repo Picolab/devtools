@@ -97,6 +97,12 @@
 					events: "s", // do page before show
 					argsre: true
 			} },
+			// spime testing 
+			{"#spime-management": {handler: "spime_management",
+					events: "s", // do page before show
+					argsre: true
+			} },
+			// spime testing 
 			{"#page-subscription-management": {handler: "subscriptions",
 					events: "s", // do page before show
 					argsre: true
@@ -108,6 +114,125 @@
 		],
 
 		{
+			//// spime test page 
+			spime_management: function(type, match, ui, page) {
+				console.log("About Page Handler");
+				
+				$("#upwards-navigation-options").hide();
+				
+				Devtools.picoName(function(name_res) {
+					$("#about-pico-name" ).empty();
+					$("#about-pico-name").html(name_res["picoName"] || "Primary Pico");
+				});
+				
+				$("#about-eci" ).empty();
+				$("#about-eci").html(PicoNavigator.currentPico || wrangler.defaultECI);
+				$.mobile.loading("show", {
+					text: "Loading about page...",
+					textVisible: true
+				});
+				
+				Devtools.picoName(function(name_res) {
+					$("#Open-primary-button").text("Open Primary Pico : " + (name_res["picoName"] || "Primary Pico") + " (" + wrangler.defaultECI + ")");
+					$("#Open-primary-button").off('tap').on('tap', function() {
+						PicoNavigator.navigateTo(wrangler.defaultECI);
+						$.mobile.changePage("#about", {
+							transition: 'slide',
+							allowSamePageTransition : true
+						});
+					});
+				}, {"eci":wrangler.defaultECI});
+				
+				Devtools.parentPico(function(parent_result) {
+					parentECI = (parent_result.parent != "error") ? parent_result.parent[0] : "none";
+					if (parentECI != "none") {
+						Devtools.picoName(function(name_res) {
+							$("#Open-parent-button").text("Open Parent : " + (name_res["picoName"] || "Primary Pico") + " (" + parentECI + ")");
+							$("#Open-parent-button").off('tap');
+							if (parent_result.parent != "error") {
+								$("#upwards-navigation-options").show();
+								$("#Open-parent-button").on('tap', function() {
+									PicoNavigator.navigateTo(parentECI);
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
+								});
+							}
+						}, {"eci":parentECI});
+					}
+				});
+				
+				
+				Devtools.childPicos(function(children_result){
+					console.log("Children");
+					$("#child-picos").empty();
+					dynamicChildrenList = "";
+					$.mobile.loading("hide");
+					if (children_result["children"] == "error")
+						return;
+					
+					resLength = children_result["children"].length;
+					readyCount = 0;
+					
+					//quick barrier for the async name calls
+					upCount = function() {
+						readyCount++;
+						if (readyCount == resLength) {
+							$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+					
+							$(".openPicoButton").off('tap').on('tap', function() {
+							    console.log(this.id);
+							    picoToOpen = this.id;
+								$.mobile.loading("show", {
+									text: "Ensuring child pico is bootstrapped...",
+									textVisible: true
+								});
+								Devtools.ensureBootstrap(function() {
+									$.mobile.loading("hide");
+									PicoNavigator.navigateTo(picoToOpen);
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
+								}, {"eci":picoToOpen});
+							});
+					
+							$(".deletePicoButton").off('tap').on('tap', function() {
+								console.log("DELETE button pushed for " + this.id);
+								wrangler.deleteChild({"deletionTarget":this.id}, function() {
+									$.mobile.changePage("#about", {
+										transition: 'slide',
+										allowSamePageTransition : true
+									});
+								});
+							});
+						}
+					}
+					
+					$.each(children_result["children"], function(id, child){
+						Devtools.picoName(function(name_res){
+							console.log(name_res["picoName"]);
+							dynamicChildrenList += 
+								snippets.spime_template(
+									{
+										"eci": child[0],
+										"picoName": name_res["picoName"]
+									}
+								);
+							
+							upCount();
+						}, {"eci":child[0]});
+
+					});
+					
+				});
+			},
+
+
+
+
+			//// spime test page 
  
 			authCheck: function(type, match, ui, page, e) {
 				e.preventDefault();
@@ -1534,6 +1659,11 @@
 		confirm_channel_remove: Handlebars.compile($("#confirm-channel-remove-template").html() || ""),
 		about_account: Handlebars.compile($("#about-account-template").html() || ""),
 		child_pico_template: Handlebars.compile($("#child-pico-template").html() || ""),
+
+		// spime
+		spime_template: Handlebars.compile($("#Spime-template").html() || ""),
+		// spime 
+
 		authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
 		confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
 		scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || ""),
