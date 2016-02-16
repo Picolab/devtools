@@ -166,7 +166,7 @@
 				
 				Devtools.childPicos(function(children_result){
 					console.log("Children");
-					$("#child-picos").empty();
+					$("#child-spime").empty();
 					dynamicChildrenList = "";
 					$.mobile.loading("hide");
 					if (children_result["children"] == "error")
@@ -176,16 +176,16 @@
 					readyCount = 0;
 					
 					//quick barrier for the async name calls
-					upCount = function() {
+					spimeupCount = function() {
 						readyCount++;
 						if (readyCount == resLength) {
-							$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+							$("#child-spime").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 					
 							$(".openPicoButton").off('tap').on('tap', function() {
 							    console.log(this.id);
 							    picoToOpen = this.id;
 								$.mobile.loading("show", {
-									text: "Ensuring child pico is bootstrapped...",
+									text: "Ensuring child spime is bootstrapped...",
 									textVisible: true
 								});
 								Devtools.ensureBootstrap(function() {
@@ -221,7 +221,7 @@
 									}
 								);
 							
-							upCount();
+							spimeupCount();
 						}, {"eci":child[0]});
 
 					});
@@ -229,6 +229,40 @@
 				});
 			},
 
+			spime_creation: function(type, match, ui, page) {
+				console.log("creating a spime");
+				var frm = "#form-new-spime";
+				$(frm)[0].reset(); // clear the fields in the form
+					
+				createTheSpime = function(){
+					$.mobile.loading("show", {
+						text: "creating spime...",
+						textVisible: true
+					});
+					var create_pico_form_data = process_form(frm);
+					console.log(">>>>>>>>> Spime ", create_spime_form_data);
+					var pico_Data={
+						"name": create_pico_form_data.Pico_name,
+						//"prototypes": create_pico_form_data.Pico_prototypes
+					};
+					
+					Devtools.createPico(pico_Data, function(directives) {
+						console.log("create pico ", pico_Data, directives);
+						$.mobile.changePage("#about", {
+							transition: 'slide'
+						});
+					});
+				};
+					
+				$(frm).off('keypress').on('keypress', function(event) {
+					if (event.which == 13) {
+						event.preventDefault();
+						createTheSpime();
+					}
+				});
+					
+				$('#Create-spime-confirm-button').off('tap').on('tap', createThePico);
+			},
 
 
 
