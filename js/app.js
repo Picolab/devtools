@@ -114,6 +114,41 @@
 		],
 
 		{
+			
+			authCheck: function(type, match, ui, page, e) {
+				e.preventDefault();
+				console.log("authChecked");
+				if (!wrangler.authenticatedSession()){
+					var pageComponents = ui.toPage.split("#");
+					pageComponents[pageComponents.length-1] = "page-authorize";
+					ui.toPage = pageComponents.join("#");
+				}
+				ui.bCDeferred.resolve();
+			},
+			
+			pageAuthorize: function(type, match, ui, page) {
+				console.log("manage fuse: authorize page");
+				PicoNavigator.clear();
+				$.mobile.loading("hide");
+			}, 
+			
+			home: function(type, match, ui, page) {
+				console.log("home Handler");
+				$.mobile.loading("hide");
+			},
+
+			account: function(type, match, ui, page) {
+				$("#about-account" ).empty();
+				$.mobile.loading("show", {
+					text: "Loading account page...",
+					textVisible: true
+				});
+				
+				Devtools.about(function(json){ 
+					$.mobile.loading("hide");
+					$("#about-account").html(snippets.about_account(json));
+				}, {"eci":wrangler.defaultECI});
+			},
 			//// spime test page 
 			spime_management: function(type, match, ui, page) {
 				console.log("spime Page Handler");
@@ -268,41 +303,6 @@
 
 			//// spime test page 
  
-			authCheck: function(type, match, ui, page, e) {
-				e.preventDefault();
-				console.log("authChecked");
-				if (!wrangler.authenticatedSession()){
-					var pageComponents = ui.toPage.split("#");
-					pageComponents[pageComponents.length-1] = "page-authorize";
-					ui.toPage = pageComponents.join("#");
-				}
-				ui.bCDeferred.resolve();
-			},
-			
-			pageAuthorize: function(type, match, ui, page) {
-				console.log("manage fuse: authorize page");
-				PicoNavigator.clear();
-				$.mobile.loading("hide");
-			}, 
-			
-			home: function(type, match, ui, page) {
-				console.log("home Handler");
-				$.mobile.loading("hide");
-			},
-
-			account: function(type, match, ui, page) {
-				$("#about-account" ).empty();
-				$.mobile.loading("show", {
-					text: "Loading account page...",
-					textVisible: true
-				});
-				
-				Devtools.about(function(json){ 
-					$.mobile.loading("hide");
-					$("#about-account").html(snippets.about_account(json));
-				}, {"eci":wrangler.defaultECI});
-			},
-			
 			about: function(type, match, ui, page) {
 				console.log("About Page Handler");
 				
