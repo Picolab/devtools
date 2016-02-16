@@ -264,14 +264,31 @@ ruleset b507199x5 {
 			//"a169x625"
 		]
 	}
-  picoFactory = defaction(attributes, protos) { // protos is an array of rids 
+
+  defaultPrototype = {
+      "rids" : [],
+      "events" : [["wrangler","init_general"],["wrangler","init_profile"]] // array of arrays [[domain,type],..]
+  }
+
+  sendEvent = defaction(eci ,doomain, type, attributes){
+    event:send({"eci":eci}, doomain, type)
+      with attrs = attributes
+  }
+
+  picoFactory = defaction(attributes, prototypes){ // protos is an array of rids 
+    // create child 
     newPicoInfo = pci:new_pico(meta:eci());
-    newPicoEci = newPicoInfo{"cid"};
-    prototypesCore = prototypeDefinitions{"core"};
-    prototypes = prototypesCore.append(protos);
-    b = prototypes.map( function(rid) {pci:new_ruleset(newPicoEci, rid);});
+    newPicoEci = newPicoInfo{"cid"};// store child eci
+    // bootstrap child
+    a = pci:new_ruleset(newPicoEci, prototypeDefinitions{"core"}); // install core rids (bootstrap child) 
+    // create child structure from prototype
+    b = pci:new_ruleset(newPicoEci, prototypes{"rids"});// install protypes rules 
+    prototypeEvents = prototypes{"events"};
+    c = prototypeEvents.map( function(event){// raise needed events to new rules
+      sendEvent(newPicoEci,event[0],event[1], attributes);
+     });
     
-    event:send({"eci":newPicoEci}, "wrangler", "child_created")
+    event:send({"eci":newPicoEci}, "wrangler", "child_created") // event to nothing 
       with attrs = attributes
   }
 
@@ -531,7 +548,7 @@ ruleset b507199x5 {
 		
 		pre {
 			name = event:attr("name").defaultsTo("", standardError("no name passed"));
-      protoTypeString = event:attr().defaultsTo([],standardError("no rids passed")); //string of rids joined by ';'
+      protoTypeString = event:attr().defaultsTo({},standardError("no rids passed")); //string of rids joined by ';'
       bootstrapridArray = protoTypeString.split(re/;/); 
       attribute = event:attrs();
       Attribute = (attribute{'prototype'}.isnull()) => attribute.put(["prototype"],"general") | attribute; 
@@ -551,8 +568,8 @@ ruleset b507199x5 {
 		}
 	}
 	 
-	rule initializeChildGeneral {// this rule should build pds data structure
-		select when wrangler child_created where prototype eq "general"
+	rule initializeGeneral {// this rule should build pds data structure
+		select when wrangler init_general 
 		
 		pre {}
 		
@@ -572,8 +589,8 @@ ruleset b507199x5 {
 		}
 	}
 
-  rule initializeChildPrototyp {// this rule should build pds data structure
-    select when wrangler child_created where prototype eq "general"
+  rule initializeProfile {// this rule should build pds data structure
+    select when wrangler init_profile
     
     pre {}
     
@@ -583,15 +600,11 @@ ruleset b507199x5 {
     
     always {
 
-    raise pds event new_sds_prototype_available // init prototype  // rule in pds needs to be created.
-            attributes 
-          { 
-            "prototype": "hashPath", // this is for front end, so a website can build and display your prototype
-             "structure": { "skills": "KRL"
-                          }
-          }
+    raise pds event init_profile // init prototype  // rule in pds needs to be created.
+            attributes event:attrs()
     }
   }
+  
 	rule setPicoAttributes {
 		select when wrangler set_attributes_requested
 		pre {
