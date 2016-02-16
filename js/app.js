@@ -98,7 +98,7 @@
 					argsre: true
 			} },
 			// spime testing 
-			{"#spime-management": {handler: "spime_management",
+			{"#secret": {handler: "spime_management",
 					events: "s", // do page before show
 					argsre: true
 			} },
@@ -116,7 +116,7 @@
 		{
 			//// spime test page 
 			spime_management: function(type, match, ui, page) {
-				console.log("About Page Handler");
+				console.log("spime Page Handler");
 				
 				$("#upwards-navigation-options").hide();
 				
