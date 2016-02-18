@@ -134,7 +134,15 @@
 			
 			home: function(type, match, ui, page) {
 				console.log("home Handler");
-				$.mobile.loading("hide");
+				$("#RegisteredRulesetsButton").hide();
+				
+				Devtools.parentPico(function(parent_result) {
+					if (parent_result.parent == "error") {
+						$("#RegisteredRulesetsButton").show();
+					}
+					$.mobile.loading("hide");
+				});
+				
 			},
 
 			account: function(type, match, ui, page) {
