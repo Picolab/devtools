@@ -265,30 +265,28 @@ ruleset b507199x5 {
 		]
 	}
 
-  defaultPrototype = {
-      "rids" : [],
-      "events" : [["wrangler","init_general"],["wrangler","init_profile"]] // array of arrays [[domain,type],..]
-  }
+  //defaultPrototype = {
+      Prototype_rids = "";//"asdf;asdf;asdf"
+      Prototype_init_event_domain = "wrangler"; //  used to dynamicaly raise any desired events.
+      Prototype_init_event_type = "init_events"; //  used to dynamicaly raise any desired events.
+      Prototype_events = [["wrangler","init_general"],["wrangler","init_profile"],["wrangler","init_settings"]]; // array of arrays [[domain,type],....], used to create data structure in pds.
+  //}
 
-  sendEvent = defaction(eci ,doomain, type, attributes){
-    event:send({"eci":eci}, doomain, type)
-      with attrs = attributes
-  }
+  createChildFromPrototype = defaction(attributes){ 
+    init_event_domain = attributes{"init_event_domain"}; // array [domain,type]
+    init_event_type = attributes{"init_event_type"}; // array [domain,type]
+    prototype_rids = attributes{"Prototype_events"};
 
-  picoFactory = defaction(attributes, prototypes){ // protos is an array of rids 
+    rids = prototype_rids.split(re/;/); 
     // create child 
     newPicoInfo = pci:new_pico(meta:eci());
     newPicoEci = newPicoInfo{"cid"};// store child eci
     // bootstrap child
     a = pci:new_ruleset(newPicoEci, prototypeDefinitions{"core"}); // install core rids (bootstrap child) 
     // create child structure from prototype
-    b = pci:new_ruleset(newPicoEci, prototypes{"rids"});// install protypes rules 
-    prototypeEvents = prototypes{"events"};
-    c = prototypeEvents.map( function(event){// raise needed events to new rules
-      sendEvent(newPicoEci,event[0],event[1], attributes);
-     });
-    
-    event:send({"eci":newPicoEci}, "wrangler", "child_created") // event to nothing 
+    b = pci:new_ruleset(newPicoEci, rids);// install protypes rules 
+
+    event:send({"eci":newPicoEci}, init_event_domain, init_event_type) // event to child to handle prototype creation 
       with attrs = attributes
   }
 
@@ -543,42 +541,59 @@ ruleset b507199x5 {
   
   
   //-------------------- Picos ----------------------
-	rule createChild {
+	rule createChild { // must pass list of rids to install in child and domain / type for init event.
 		select when wrangler child_creation
-		
 		pre {
-			name = event:attr("name").defaultsTo("", standardError("no name passed"));
-      protoTypeString = event:attr().defaultsTo({},standardError("no rids passed")); //string of rids joined by ';'
-      bootstrapridArray = protoTypeString.split(re/;/); 
       attribute = event:attrs();
-      Attribute = (attribute{'prototype'}.isnull()) => attribute.put(["prototype"],"general") | attribute; 
+      name = event:attr("name");
+      Attribute = attribute // defaultsTo 
+                  .put(["Prototype_rids"],(event:attr("Prototype_rids") || Prototype_rids))
+                  .put(["Prototype_init_event_domain"],(event:attr("Prototype_init_event_domain") || Prototype_init_event_domain))
+                  .put(["Prototype_init_event_type"],(event:attr("Prototype_init_event_type") || Prototype_init_event_type))
+                  ;                  
 		}
 
-		if (name neq "") then
 		{
-			picoFactory( Attribute, bootstrapridArray); // takes an array of rids as second parameter
+			createChildFromPrototype( Attribute ); 
 		}
-		
-		fired {
+		always {
 			log(standardOut("pico created with name #{name}"));
-		}
-		else
-		{
-			log "no name passed for new child";
 		}
 	}
 	 
-	rule initializeGeneral {// this rule should build pds data structure
-		select when wrangler init_general 
-		
-		pre {}
-		
+	rule initializeEvents {// this rule should raise events to self that then raise events to pds
+		select when wrangler init_events 
+		  foreach Prototype_events setting (PT_event)
+		pre {
+      PTE_domain = PT_event[0];
+		  PTE_type = PT_event[1];
+    }
 		{
 			noop();
 		}
 		
 		always {
-      raise pds event new_sds_map_available // init general  
+      raise PTE_domain event PTE_type 
+            attributes event:attrs()
+		}
+	}
+
+
+
+
+    rule initializeGeneral {// this rule should raise events to self that then raise events to pds
+    select when wrangler init_general 
+      foreach Prototype_events setting (PT_event)
+    pre {
+      PTE_domain = PT_event[0];
+      PTE_type = PT_event[1];
+    }
+    {
+      noop();
+    }
+    
+    always {
+      raise PTE_domain event PTE_type // init general  
             attributes 
           { 
             "namespace": "developer",
@@ -586,9 +601,8 @@ ruleset b507199x5 {
                   "discription": "ted rub was a programer!" 
                  }
           }
-		}
-	}
-
+    }
+  }
   rule initializeProfile {// this rule should build pds data structure
     select when wrangler init_profile
     
@@ -604,7 +618,7 @@ ruleset b507199x5 {
             attributes event:attrs()
     }
   }
-  
+/*
 	rule setPicoAttributes {
 		select when wrangler set_attributes_requested
 		pre {
@@ -633,7 +647,8 @@ ruleset b507199x5 {
 			clear ent:attributes;
 		}
 	}
-	
+	*/
+
 	rule deleteChild {
 		select when wrangler child_deletion
 		pre {
