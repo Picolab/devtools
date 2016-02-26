@@ -531,7 +531,7 @@ ruleset devtools {
 	      select when wrangler schedule_created
 	      pre {
 	      	do_main = event:attr("do_main").defaultsTo("explicit", standardError("missing event attr type"));
-	      	event_type = event:attr("event_type").defaultsTo("fixed time", standardError("missing event attr eventtype"));
+	      	event_type = event:attr("event_type").defaultsTo("fixed_time", standardError("missing event attr eventtype"));
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
 	        date_time = event:attr("date_time").defaultsTo(time:add(time:now(),{"seconds":180}), standardError("missing event attr type"));
