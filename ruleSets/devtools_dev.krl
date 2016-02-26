@@ -547,7 +547,7 @@ ruleset devtools {
 	      }*/
 	      fired {
 	        
-	      	schedule explicit event "fixed time" at time:add(time:now(),{"seconds":500}) attributes attr;
+	      	schedule explicit event "fixed time" at time:add(time:now(),{"seconds":180}) attributes attr;
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
 	        
