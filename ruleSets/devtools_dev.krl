@@ -546,13 +546,15 @@ ruleset devtools {
 	        noop();
 	      }*/
 	      fired {
+	        
+	      	schedule explicit event "fixed time" at time:add(time:now(),{"seconds":500000000}) attributes attr;
 	        //log(">> single >>");
 	        //schedule do_main event eventype at date_time attributes attr ;
 	        schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
 	        //recurring
 	        schedule explicit event event_type repeat recurrment attributes attr;
 
-	        schedule explicit event "fixed time" at time:add(time:now(),{"seconds":500000000}) attributes attr;
+	        
 	        //put in a log to see what exactly this log is putting out
 
 
