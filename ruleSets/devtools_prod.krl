@@ -51,9 +51,12 @@ ruleset devtools {
 		      	describe_url = "https://#{meta:host()}/ruleset/describe/#{$rids_string}";
 		      	resp = http:get(describe_url);
 		      	results = resp{"content"}.decode().defaultsTo("",standardError("content failed to return"));
+		      	result = rulesets{'rulesets'}.map ( function(obj) {
+		      		obj.put(["description"], results{obj{'rid'}});
+		      		});
 		      {
 		       'status'   : (resp{"status_code"} eq "200"),
-		       'description'     : results
+		       'description'     : result
 		      };
 		    }
 	        showRuleset = function(rid){
@@ -527,28 +530,32 @@ ruleset devtools {
 	    rule CreateScheduled {
 	      select when wrangler schedule_created
 	      pre {
-	      	//do_main = event:attr("do_main").defaultsTo("wrong", standardError("missing event attr type"));
-	      	event_type = event:attr("event_type").defaultsTo("error", standardError("missing event attr eventtype"));
+	      	do_main = event:attr("do_main").defaultsTo("explicit", standardError("missing event attr type"));
+	      	event_type = event:attr("event_type").defaultsTo("fixed time", standardError("missing event attr eventtype"));
 	        //time = event:attr("time").defaultsTo("wrong", standardError("missing event attr type"));
 	        //timespec = event:attr("timespec").defaultsTo("{}", standardError("missing event attr timespec"));
-	        date_time = event:attr("date_time").defaultsTo("error", standardError("missing event attr type"));
-	        recurrment = event:attr("recurrment").defaultsTo("error", standardError("missing recurring event info"));
+	        date_time = event:attr("date_time").defaultsTo(time:add(time:now(),{"seconds":180}), standardError("missing event attr type"));
+	        recurrment = event:attr("recurrment").defaultsTo("single", standardError("missing recurring event info"));
 	        //date_time = time:add(time:now(),{"seconds":50000000});
 	        attributes = event:attrs("attributes").defaultsTo("{}", standardError("missing event attr type"));
-	        attr = attributes.decode();
+	        attr = attributes.decode();// Me thinks its a buggg!
 	      }
 	//      log("create schedule running");
-	      //if (type eq "single" && type neq "wrong" ) then
-	      /*{
+	      if (recurrment eq "single") then
+	     	{
 	        noop();
-	      }*/
+	      }
 	      fired {
-	        //log(">> single >>");
-	        //schedule do_main event eventype at date_time attributes attr ;
-	        schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
+	        
+	      	//schedule explicit event "fixed time" at time:add(time:now(),{"seconds":180}) attributes attr;
+	        log(">> single >>");
+	        schedule do_main event event_type at date_time attributes attr ;
+	        
+	        //schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
 	        //recurring
-	        schedule explicit event event_type repeat recurrment attributes attr;
-	        //put in a log to see what exactly this log is putting out
+	        //schedule explicit event event_type repeat recurrment attributes attr;
+
+	        
 
 
 	        //do_main is a label, it doesn't interpret it
@@ -556,12 +563,12 @@ ruleset devtools {
 
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
 	            } 
-	      /*else {
+	      else {
 	        log(">> multiple >>");
-	        //schedule do_main event eventype repeat timespec attributes attr ;
-	        schedule do_main event event_type at date_time attributes event:attrs();
+	        schedule do_main event event_type repeat recurrment attributes attr ;
+	        //schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
-	      }*/
+	      }
 	    }  
 
   //<!-- -------------------- <End oF> Scheduled ---------------------- -->
