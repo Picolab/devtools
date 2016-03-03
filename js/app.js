@@ -134,14 +134,7 @@
 			
 			home: function(type, match, ui, page) {
 				console.log("home Handler");
-				$("#RegisteredRulesetsButton").hide();
-				
-				Devtools.parentPico(function(parent_result) {
-					if (parent_result.parent == "error") {
-						$("#RegisteredRulesetsButton").show();
-					}
-					$.mobile.loading("hide");
-				});
+				$.mobile.loading("hide");
 				
 			},
 
