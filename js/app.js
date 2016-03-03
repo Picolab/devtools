@@ -563,7 +563,23 @@
 					});
 				}
 
-				populate_registered_rulesets();
+				Devtools.parentPico(function(parent_result) {
+					if (parent_result.parent != "error") { // if in child, not root
+						$.mobile.loading("hide");
+			 			$.noty.get(noty({
+							timeout: false,
+							text: 'Rulesets can only be registered in the Primary Pico.  You\'ve been routed to the about page in case you\'d like to change picos.',
+							type: 'warning'
+						}));
+						$.mobile.changePage("#about", {
+							transition: 'slide'
+						});		
+					}
+					else { // else in root
+						populate_registered_rulesets();
+					}
+				});
+				
 			},
 
 			registeringRuleset: function(type, match, ui, page) {
