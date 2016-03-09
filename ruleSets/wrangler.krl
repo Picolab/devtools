@@ -260,7 +260,7 @@ ruleset b507199x5 {
 	prototypeDefinitions = {
 		"core": [
         "b507199x5.dev",
-        "b507199x8.dev" // sds
+        "b507199x8.dev" // pds
 			//"a169x625"
 		]
 	}
