@@ -612,7 +612,7 @@ ruleset b507199x5 {
     
     always {
 
-    raise pds event init_profile // init prototype  // rule in pds needs to be created.
+    raise pds event updated_profile // init prototype  // rule in pds needs to be created.
             attributes event:attrs()
     }
   }
