@@ -582,19 +582,16 @@ ruleset b507199x5 {
 
 
 
-    rule initializeGeneral {// this rule should raise events to self that then raise events to pds
+    rule initializeGeneral {
     select when wrangler init_general 
-      foreach Prototype_events setting (PT_event)
     pre {
-      PTE_domain = PT_event[0];
-      PTE_type = PT_event[1];
+
     }
     {
       noop();
     }
-    
     always {
-      raise PTE_domain event PTE_type // init general  
+      raise pds event map_item // init general  
             attributes 
           { 
             "namespace": "developer",
