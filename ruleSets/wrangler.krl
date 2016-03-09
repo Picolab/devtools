@@ -287,7 +287,7 @@ ruleset b507199x5 {
     // create child structure from prototype
     b = pci:new_ruleset(newPicoEci, rids);// install protypes rules 
 
-    event:send({"eci":newPicoEci}, init_event_domain, init_event_type) // event to child to handle prototype creation 
+    event:send({"cid":newPicoEci}, init_event_domain, init_event_type) // event to child to handle prototype creation 
       with attrs = attributes
   }
 
@@ -570,13 +570,15 @@ ruleset b507199x5 {
 		  PTE_type = PT_event[1].klog("type : ");
     }
 		{
-			noop();
+      event:send({"cid":meta:eci()}, PTE_domain, PTE_type)  
+      with attrs = event:attrs();
 		}
 		
 		always {
+      log("init pds");
       //raise PTE_domain event PTE_type 
-      raise wrangler event PTE_type 
-            attributes event:attrs().klog("attributes : ")
+      //raise "wrangler" event PTE_type 
+      //      attributes event:attrs().klog("attributes : ")
 		}
 	}
 
