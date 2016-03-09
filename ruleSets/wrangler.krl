@@ -575,7 +575,7 @@ ruleset b507199x5 {
 		
 		always {
       raise PTE_domain event PTE_type 
-            attributes event:attrs()
+            attributes event:attrs().klog("attributes : ")
 		}
 	}
 
