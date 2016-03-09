@@ -273,9 +273,9 @@ ruleset b507199x5 {
   //}
 
   createChildFromPrototype = defaction(attributes){ 
-    init_event_domain = attributes{"init_event_domain"}; // array [domain,type]
-    init_event_type = attributes{"init_event_type"}; // array [domain,type]
-    prototype_rids = attributes{"Prototype_events"};
+    init_event_domain = attributes{"Prototype_init_event_domain"}; // array [domain,type]
+    init_event_type = attributes{"Prototype_init_event_type"}; // array [domain,type]
+    prototype_rids = attributes{"Prototype_rids"};
 
     rids = prototype_rids.split(re/;/); 
     // create child 
