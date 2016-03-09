@@ -273,6 +273,7 @@ ruleset b507199x5 {
   //}
 
   createChildFromPrototype = defaction(attributes){ 
+    a = attributes.klog("attributes: ");
     init_event_domain = attributes{"Prototype_init_event_domain"}; // array [domain,type]
     init_event_type = attributes{"Prototype_init_event_type"}; // array [domain,type]
     prototype_rids = attributes{"Prototype_rids"};
