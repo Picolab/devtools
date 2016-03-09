@@ -566,8 +566,8 @@ ruleset b507199x5 {
 		select when wrangler init_events 
 		  foreach Prototype_events setting (PT_event)
 		pre {
-      PTE_domain = PT_event[0];
-		  PTE_type = PT_event[1];
+      PTE_domain = PT_event[0].klog("domain : ");
+		  PTE_type = PT_event[1].klog("type : ");
     }
 		{
 			noop();
