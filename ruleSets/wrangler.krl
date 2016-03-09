@@ -574,7 +574,8 @@ ruleset b507199x5 {
 		}
 		
 		always {
-      raise PTE_domain event PTE_type 
+      //raise PTE_domain event PTE_type 
+      raise wrangler event PTE_type 
             attributes event:attrs().klog("attributes : ")
 		}
 	}
