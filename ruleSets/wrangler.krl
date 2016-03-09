@@ -564,7 +564,7 @@ ruleset b507199x5 {
 	 
 	rule initializeEvents {// this rule should raise events to self that then raise events to pds
 		select when wrangler init_events 
-		  foreach Prototype_events setting (PT_event)
+		  foreach Prototype_events.klog("Prototype_events : ") setting (PT_event)
 		pre {
       PTE_domain = PT_event[0].klog("domain : ");
 		  PTE_type = PT_event[1].klog("type : ");
