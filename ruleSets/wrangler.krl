@@ -32,7 +32,7 @@ ruleset b507199x5 {
     logging off
 
     use module b16x24 alias system_credentials
-    use module b507199x8 alias sds
+    use module b507199x8 alias pds
     // errors raised to.... unknown
 
     // Accounting keys
@@ -217,22 +217,22 @@ ruleset b507199x5 {
 	}
 
   profile = function(key) {
-    sds:profile(key);
+    pds:profile(key);
   }
   pico = function(namespace) {
     {
-      "profile" : sds:profile(),
-      "settings" : sds:settings(),
-      "general" : sds:items(namespace)
+      "profile" : pds:profile(),
+      "settings" : pds:settings(),
+      "general" : pds:items(namespace)
     }
   }
 
 	name = function() {
-    sdsProfiles = sds:profile();
-    sdsProfile = sdsProfiles{"profile"};
-    name = (sdsProfile.typeof() eq 'hash') => sdsProfile{"name"} | ent:name ;
+    pdsProfiles = pds:profile();
+    pdsProfile = pdsProfiles{"profile"};
+    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
     {
-      'status' : sdsProfiles{"status"},
+      'status' : pdsProfiles{"status"},
       'picoName' : name
     }
 	}
@@ -518,7 +518,6 @@ ruleset b507199x5 {
       attributes = event:attr("attributes").defaultsTo("", standardError("missing event attr attributes"));
       policy = event:attr("policy").defaultsTo("", standardError("missing event attr attributes"));
       // do we need to check if we need to decode ?? what would we check?
-      
       options = {
         'name' : channel_name,
         'eci_type' : type,
@@ -534,6 +533,8 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success created channels #{channel_name}"));
       log(">> successfully  >>");
+      raise wrangler event "channel_created" // event to nothing  
+            attributes event:attrs()
           } 
     else {
       log(">> could not create channels #{channel_name} >>");
