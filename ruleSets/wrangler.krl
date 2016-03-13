@@ -533,8 +533,8 @@ ruleset b507199x5 {
     fired {
       log (standardOut("success created channels #{channel_name}"));
       log(">> successfully  >>");
-      raise wrangler event "channel_created" // event to nothing  
-            attributes event:attrs()
+      raise wrangler event 'channel_created' // event to nothing  
+            attributes event:attrs();
           } 
     else {
       log(">> could not create channels #{channel_name} >>");
