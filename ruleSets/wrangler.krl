@@ -508,6 +508,7 @@ ruleset b507199x5 {
   rule createChannel {
     select when wrangler channel_creation_requested
     pre {
+      event_attributes = event:attrs();
     /*  <eci options>
     name     : <string>        // default is "Generic ECI channel" 
     eci_type : <string>        // default is "PCI"
@@ -534,7 +535,7 @@ ruleset b507199x5 {
       log (standardOut("success created channels #{channel_name}"));
       log(">> successfully  >>");
       raise wrangler event 'channel_created' // event to nothing  
-            attributes event:attrs();
+            attributes event_attributes;
           } 
     else {
       log(">> could not create channels #{channel_name} >>");
