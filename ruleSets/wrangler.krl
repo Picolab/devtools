@@ -228,26 +228,9 @@ ruleset b507199x5 {
   }
 
 	name = function() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    eci = meta:eci().klog("eci: ");
-    name = pci:get_username({"eci" : eci}).klog("pci name: ");
-    //pdsProfiles = pds:profile();
-    //pdsProfile = pdsProfiles{"profile"};
-    //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
-=======
-    pdsProfiles = pds:profile();
-    pdsProfile = pdsProfiles{"profile"};
-    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
->>>>>>> parent of e3c5359... new picos get a label and we use username, not sure what user name returns...
-=======
-    pdsProfiles = pds:profile();
-    pdsProfile = pdsProfiles{"profile"};
-    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
->>>>>>> parent of e3c5359... new picos get a label and we use username, not sure what user name returns...
     {
       'status' : pdsProfiles{"status"},
-      'picoName' : name
+      'picoName' : "name"
     }
 	}
 
