@@ -228,13 +228,19 @@ ruleset b507199x5 {
   }
 
 	name = function() {
+<<<<<<< HEAD
     eci = meta:eci().klog("eci: ");
     name = pci:get_username({"eci" : eci}).klog("pci name: ");
     //pdsProfiles = pds:profile();
     //pdsProfile = pdsProfiles{"profile"};
     //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
+=======
+    pdsProfiles = pds:profile();
+    pdsProfile = pdsProfiles{"profile"};
+    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
+>>>>>>> parent of e3c5359... new picos get a label and we use username, not sure what user name returns...
     {
-      'status' : name.isnull(),
+      'status' : pdsProfiles{"status"},
       'picoName' : name
     }
 	}
@@ -279,17 +285,10 @@ ruleset b507199x5 {
     init_event_domain = attributes{"Prototype_init_event_domain"}; // array [domain,type]
     init_event_type = attributes{"Prototype_init_event_type"}; // array [domain,type]
     prototype_rids = attributes{"Prototype_rids"};
-    name = event:attr("name");
-
 
     rids = prototype_rids.split(re/;/); 
     // create child 
-    map_for_child_creation = {
-    "eci" : meta:eci(),
-    "label" : name
-    };
-
-    newPicoInfo = pci:new_pico(map_for_child_creation);
+    newPicoInfo = pci:new_pico(meta:eci());
     newPicoEci = newPicoInfo{"cid"};// store child eci
     // bootstrap child
     a = pci:new_ruleset(newPicoEci, prototypeDefinitions{"core"}); // install core rids (bootstrap child) 
