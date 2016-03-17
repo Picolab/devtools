@@ -229,7 +229,7 @@ ruleset b507199x5 {
 
 	name = function() {
     eci = meta:eci().klog("eci: ");
-    name = pci:get_username({"eci" : eci});
+    name = pci:get_username({"eci" : eci}).klog("pci name: ");
     //pdsProfiles = pds:profile();
     //pdsProfile = pdsProfiles{"profile"};
     //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
