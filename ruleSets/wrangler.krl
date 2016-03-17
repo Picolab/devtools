@@ -260,7 +260,8 @@ ruleset b507199x5 {
 	prototypeDefinitions = {
 		"core": [
         "b507199x5.dev",
-        "b507199x8.dev" // pds
+        "b507199x8.dev", // pds
+        "b507199x1.dev"// quick fix and a ugly one! bootstrap rid
 			//"a169x625"
 		]
 	}
