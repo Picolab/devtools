@@ -227,12 +227,15 @@ ruleset b507199x5 {
     }
   }
 
-	name = function() {
+  name = function() {
+    pdsProfiles = pds:profile();
+    pdsProfile = pdsProfiles{"profile"};
+    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
     {
       'status' : pdsProfiles{"status"},
-      'picoName' : "name"
+      'picoName' : name
     }
-	}
+  }
 
 	attributes = function() {
 		{
