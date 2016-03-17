@@ -228,11 +228,13 @@ ruleset b507199x5 {
   }
 
 	name = function() {
-    pdsProfiles = pds:profile();
-    pdsProfile = pdsProfiles{"profile"};
-    name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
+    eci = meta:eci().klog("eci: ");
+    name = pci:get_username({"eci" : eci});
+    //pdsProfiles = pds:profile();
+    //pdsProfile = pdsProfiles{"profile"};
+    //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
     {
-      'status' : pdsProfiles{"status"},
+      'status' : name.isnull(),
       'picoName' : name
     }
 	}
@@ -277,10 +279,17 @@ ruleset b507199x5 {
     init_event_domain = attributes{"Prototype_init_event_domain"}; // array [domain,type]
     init_event_type = attributes{"Prototype_init_event_type"}; // array [domain,type]
     prototype_rids = attributes{"Prototype_rids"};
+    name = event:attr("name");
+
 
     rids = prototype_rids.split(re/;/); 
     // create child 
-    newPicoInfo = pci:new_pico(meta:eci());
+    map_for_child_creation = {
+    "eci" : meta:eci(),
+    "label" : name
+    };
+
+    newPicoInfo = pci:new_pico(map_for_child_creation);
     newPicoEci = newPicoInfo{"cid"};// store child eci
     // bootstrap child
     a = pci:new_ruleset(newPicoEci, prototypeDefinitions{"core"}); // install core rids (bootstrap child) 
