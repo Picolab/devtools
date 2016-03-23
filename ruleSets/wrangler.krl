@@ -794,7 +794,10 @@ ruleset b507199x5 {
     }
     fired { 
       log(standardOut("successful pending incoming"));
-      raise wrangler event inbound_pending_subscription_added; // event to nothing
+      raise wrangler event inbound_pending_subscription_added // event to nothing
+          with status = pending_subscriptions{'status'}
+            and name = pending_subscriptions{'subscription_name'}
+            and channel_name = unique_name;
       log(standardOut("failure >>")) if (channel_name eq "");
     } 
     else { 
