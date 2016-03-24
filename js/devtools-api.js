@@ -6,7 +6,7 @@
         //VERSION: 0.1,
 
         defaults: {
-            logging: false,  // false to turn off logging
+            logging: true,  // false to turn off logging
             production: false
         },
 
