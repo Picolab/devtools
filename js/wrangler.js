@@ -197,6 +197,15 @@
     };
 
 
+
+    // ------------------------------------------------------------------------ spime testing 
+    wrangler.createSpime = function( eventAttributes, postFunction, options)
+    {
+        return wrangler.raiseEvent("spime", "create_spime", eventAttributes, postFunction, options);
+    };
+
+
+
     // ------------------------------------------------------------------------ installed Rulests
     // function(eventDomain, eventType, eventAttributes, postFunction, options) // <--- raiseEvent paramiters 
 
