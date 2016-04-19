@@ -1047,6 +1047,7 @@
         var frm = "#form-update-client";
           $(frm)[0].reset(); // clear the fields in the form
 				var client = router.getParams(match[1])["client"];
+			frm.client_name.value = "client_name";
           $('#update-client-confirm-button').off('tap').on('tap', function(event)
         {
           $.mobile.loading("show", {
