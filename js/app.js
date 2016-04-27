@@ -356,8 +356,9 @@
 				Devtools.childPicos(function(children_result){
 					console.log("Children");
 					$("#child-picos").empty();
+					childrenArray = [];
 					dynamicChildrenList = "";
-					$.mobile.loading("hide");
+					
 					if (children_result["children"] == "error")
 						return;
 					
@@ -368,6 +369,18 @@
 					upCount = function() {
 						readyCount++;
 						if (readyCount == resLength) {
+							$.mobile.loading("hide");
+							
+							childrenArray.sort(function(a, b) {
+								if (a.picoName.toLowerCase() > b.picoName.toLowerCase()) return 1;
+								else return -1;
+							})
+							for (i = 0; i < childrenArray.length; i++)
+							{
+								dynamicChildrenList += 
+									snippets.child_pico_template(childrenArray[i]);
+							}
+							
 							$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 					
 							$(".openPicoButton").off('tap').on('tap', function() {
@@ -402,13 +415,18 @@
 					$.each(children_result["children"], function(id, child){
 						Devtools.picoName(function(name_res){
 							console.log(name_res["picoName"]);
-							dynamicChildrenList += 
+							childrenArray.push({
+										"eci": child[0],
+										"picoName": name_res["picoName"]
+									});
+							/*dynamicChildrenList += 
 								snippets.child_pico_template(
 									{
 										"eci": child[0],
 										"picoName": name_res["picoName"]
 									}
 								);
+							*/
 							
 							upCount();
 						}, {"eci":child[0]});
