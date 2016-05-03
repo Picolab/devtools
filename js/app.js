@@ -360,7 +360,10 @@
 					dynamicChildrenList = "";
 					
 					if (children_result["children"] == "error")
+					{
+						$.mobile.loading("hide");
 						return;
+					}
 					
 					resLength = children_result["children"].length;
 					readyCount = 0;
