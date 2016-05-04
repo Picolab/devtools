@@ -135,7 +135,6 @@
 			home: function(type, match, ui, page) {
 				console.log("home Handler");
 				$.mobile.loading("hide");
-				
 			},
 
 			account: function(type, match, ui, page) {

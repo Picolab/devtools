@@ -289,7 +289,7 @@
 		cb = cb || function(){};
 		Devtools.log("Getting pico name");
 		return wrangler.name({}, function(json) {
-			Devtools.log("Children: ", json);
+			//Devtools.log("Children: ", json);
 			cb(json);
 		}, options);	
 	},
@@ -532,18 +532,29 @@
 
 	window['PicoNavigator'] = {
 		currentPico : sessionStorage.getItem("currentPico"),
+		currentPicoName : "",
+		
+		setName : function() {
+			Devtools.picoName(function(name_res){
+				PicoNavigator.currentPicoName = name_res["picoName"] || "Primary Pico";
+			});
+			currentPicoName = ""; // don't want old name showing up while retrieving new name
+		},
 		
 		navigateTo : function(newLocation) {
 			this.currentPico = newLocation;
 			sessionStorage.setItem("currentPico", newLocation);
+			this.setName();
 		},
 		
 		clear : function() {
 			this.currentPico = null;
 			sessionStorage.removeItem("currentPico");
+			this.currentPicoName = "";
 		}
 	};
 
+	PicoNavigator.setName();
 
 //----------------------------------
 
