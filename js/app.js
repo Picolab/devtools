@@ -374,7 +374,9 @@
 							$.mobile.loading("hide");
 							
 							childrenArray.sort(function(a, b) {
-								if (a.picoName.toLowerCase() > b.picoName.toLowerCase()) return 1;
+								if (a.picoName == 0) return -1;
+								else if (b.picoName == 0) return 1;
+								else if (a.picoName.toLowerCase() > b.picoName.toLowerCase()) return 1;
 								else return -1;
 							})
 							for (i = 0; i < childrenArray.length; i++)
