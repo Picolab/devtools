@@ -741,8 +741,9 @@
 				$("#logstatus").unbind("change").change(function(){
 					var newstatus = $("#logstatus").val();
 					if(newstatus === "on") {
-						Pico.logging.reset(eci, {});
-						populate_logpage();
+						Pico.logging.reset(eci, {}, function() {
+							populate_logpage();
+						});
 					} else {
 						Pico.logging.inactive(eci, {});
 						$("#loglist" ).empty();
