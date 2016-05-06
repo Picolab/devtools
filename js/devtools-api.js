@@ -537,8 +537,10 @@
 		setName : function() {
 			Devtools.picoName(function(name_res){
 				PicoNavigator.currentPicoName = name_res["picoName"] || "Primary Pico";
+                $(".picoNameBar").html("Viewing: " + PicoNavigator.currentPicoName);
 			});
 			currentPicoName = ""; // don't want old name showing up while retrieving new name
+            $(".picoNameBar").html("");
 		},
 		
 		navigateTo : function(newLocation) {
@@ -554,7 +556,10 @@
 		}
 	};
 
-	PicoNavigator.setName();
+    setTimeout(function() {
+        PicoNavigator.setName();
+    }, 5000);
+	
 
 //----------------------------------
 
