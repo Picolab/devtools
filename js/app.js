@@ -1000,6 +1000,7 @@
             $("#authorized-clients" ).empty();
 
             $.each(client_list, function(index, client) {
+            	if (client !== null) {
             	if (typeof client["app_info"] !== 'undefined') {
 	              $("#authorized-clients" ).append(
 	               snippets.authorized_clients_template(
@@ -1034,6 +1035,7 @@
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
 	            }
+	        }
             });
 
             $.mobile.loading("hide");
