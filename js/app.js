@@ -1003,13 +1003,13 @@
             	if (typeof client["app_info"] !== 'undefined') {
 	              $("#authorized-clients" ).append(
 	               snippets.authorized_clients_template(
-	                {"appClientName": client["app_info"]["name"],
+	                {"appClientName": client["app_info"]["name"].replace(new RegExp('[/]', 'g'), "%2F"),
 	                "appECI": index,
-	                "appDescription": client["app_info"]["description"],
-	                "appImageURL":client["app_info"]["icon"],
-	          		"appCallbackURL": client["callbacks"],
-	        		"appDeclinedURL": client["app_info"]["declined_url"],
-	    			"appInfoPageURL": client["app_info"]["info_url"],
+	                "appDescription": client["app_info"]["description"].replace(new RegExp('[/]', 'g'), "%2F"),
+	                "appImgURL":client["app_info"]["icon"].replace(new RegExp('[/]', 'g'), "%2F"),
+	          		"appCallbackURL": client["callbacks"],//.replace(new RegExp('[/]', 'g'), "%2F"),
+	        		"appDeclinedURL": client["app_info"]["declined_url"].replace(new RegExp('[/]', 'g'), "%2F"),
+	    			"appInfoPageURL": client["app_info"]["info_url"].replace(new RegExp('[/]', 'g'), "%2F"),
 	    			"appBootstrapRids": client["bootstrap"]}
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
@@ -1074,7 +1074,7 @@
         var frm = "#form-update-client";
           $(frm)[0].reset(); // clear the fields in the form
 				var client = router.getParams(match[1])["client"];
-			//frm.client_name.value = "client_name";
+			//$(frm)[0].update_client_name.value = "client_name";
 
 			// --- Fill fields with existing client data ---
 
@@ -1126,7 +1126,7 @@
           };
             Devtools.updateClient(client,appData, function(directives) {
               console.log("update ", client_name, directives);
-              $.mobile.changePage("#oAuth-client-registration", {
+              $.mobile.changePage("#page-client-authorize", {
                 transition: 'slide'
               });
             }); 
