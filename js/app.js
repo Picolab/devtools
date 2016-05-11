@@ -997,16 +997,20 @@
 
         function populate_Authorized_clients() {
           Devtools.showAuthorizedClients(function(client_list){
-          	console.log("apps: ", client_list);
             $("#authorized-clients" ).empty();
 
             $.each(client_list, function(index, client) {
             	if (typeof client["app_info"] !== 'undefined') {
 	              $("#authorized-clients" ).append(
 	               snippets.authorized_clients_template(
-	                {"appName": client["app_info"]["name"],
+	                {"appClientName": client["app_info"]["name"],
 	                "appECI": index,
-	                "appImageURL":client["app_info"]["icon"]}
+	                "appDescription": client["app_info"]["description"],
+	                "appImageURL":client["app_info"]["icon"],
+	          		"appCallbackURL": client["callbacks"],
+	        		"appDeclinedURL": client["app_info"]["declined_url"],
+	    			"appInfoPageURL": client["app_info"]["info_url"],
+	    			"appBootstrapRids": client["bootstrap"]}
 	                )
 	               ).collapsibleset().collapsibleset( "refresh" );
 	              //$("#installed-rulesets").listview("refresh");
@@ -1070,7 +1074,28 @@
         var frm = "#form-update-client";
           $(frm)[0].reset(); // clear the fields in the form
 				var client = router.getParams(match[1])["client"];
-			frm.client_name.value = "client_name";
+			//frm.client_name.value = "client_name";
+
+			// --- Fill fields with existing client data ---
+
+				var urlClientName = router.getParams(match[1])["appName"];
+				var urlClientDesc = router.getParams(match[1])["appDesc"];
+				var iurlClientImage = router.getParams(match[1])["appImg"];
+				var urlClientCallback = router.getParams(match[1])["appCb"];
+				var urlClientDeclined = router.getParams(match[1])["appDec"];
+				var urlClientInfo = router.getParams(match[1])["appInfo"];
+				var urlClientRids = router.getParams(match[1])["appRids"];
+
+				console.log("Name of client to update: ", urlClientName);
+				
+				$("#update_client_name").val(urlClientName);
+				$("#update_client_Description").val(urlClientDesc);
+				$("#update_client_image_url").val(iurlClientImage);
+				$("#update_client_callback_url").val(urlClientCallback);
+				$("#update_client_declined_url").val(urlClientDeclined);
+				$("#update_client_info_page_url").val(urlClientInfo);
+				$("#update_client_bootstrapRids").val(urlClientRids);
+
           $('#update-client-confirm-button').off('tap').on('tap', function(event)
         {
           $.mobile.loading("show", {
@@ -1079,13 +1104,13 @@
           });
           var athorize_form_data = process_form(frm);
           console.log(">>>>>>>>> client to update", athorize_form_data);
-          var client_name = athorize_form_data.client_name;
-          var client_Description = athorize_form_data.client_Description;
-          var client_image_url = athorize_form_data.client_image_url;
-          var client_callback_url = athorize_form_data.client_callback_url;
-          var client_declined_url = athorize_form_data.client_declined_url;
-          var client_info_page_url = athorize_form_data.client_info_page_url;
-          var client_bootstrapRids = athorize_form_data.client_bootstrapRids;
+          var client_name = athorize_form_data.update_client_name;
+          var client_Description = athorize_form_data.update_client_Description;
+          var client_image_url = athorize_form_data.update_client_image_url;
+          var client_callback_url = athorize_form_data.update_client_callback_url;
+          var client_declined_url = athorize_form_data.update_client_declined_url;
+          var client_info_page_url = athorize_form_data.update_client_info_page_url;
+          var client_bootstrapRids = athorize_form_data.update_client_bootstrapRids;
           if( true //typeof channel_name !== "undefined"
             //&& channel_name.match(/^[A-Za-z][\w\d]+\.[\w\d]+$/) // valid eci
           ) {
