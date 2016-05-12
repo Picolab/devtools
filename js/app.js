@@ -901,7 +901,7 @@
 										//"channelDivs": dynamicChannelItems2}
 									);
 					  		$("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
-					  		$("#"+key+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
+					  		$("#"+key.replace(new RegExp('[ ]', 'g'), "\\ ")+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
 
 							});
 						
