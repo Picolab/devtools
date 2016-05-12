@@ -11,13 +11,13 @@
          <p>{{description}}</p>
          <p>Actions to take:</p>
 
-         <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" href="#updating-url?rid={{rid}}&url={{encoded}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right">Edit URL</a></p>
+         <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" href="#updating-url?rid={{rid}}&url={{encoded}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right editURLButton listRulesetsButton">Edit URL</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton">Flush</a></p>
+         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton listRulesetsButton">Flush</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton">Delete</a></p>
+         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-arrow-d ui-btn-icon-right installButton">Install</a></p>
+         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-arrow-d ui-btn-icon-right installButton listRulesetsButton">Install</a></p>
 
      </div>
    </div>
@@ -147,8 +147,8 @@
      <div style = "padding-top: 10px; padding-bottom:50px;"> 
 		 <p><b>Name: </b>{{picoName}}</p>
 		 <p><b>ECI: </b>{{eci}}</p>
-		 <p style="position:relative; top:20px"><a id="{{eci}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-arrow-r ui-btn-icon-right openPicoButton">Open This Pico</a></p>
-		 <p style="position:relative; top:20px"><a id="{{eci}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-delete ui-btn-icon-right deletePicoButton">Delete</a></p>
+		 <p style="position:relative; top:20px"><a id="{{eci}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-arrow-r ui-btn-icon-right openPicoButton childPicoButton">Open This Pico</a></p>
+		 <p style="position:relative; top:20px"><a id="{{eci}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-delete ui-btn-icon-right deletePicoButton childPicoButton">Delete</a></p>
       </div>
    </div>
 </div>

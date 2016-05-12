@@ -242,6 +242,12 @@
 									});
 								});
 							});
+
+							if (window.innerWidth <= 400) {
+								$(".childPicoButton").css('font-size', '10px');
+							} else if (window.innerWidth <= 600) {
+								$(".childPicoButton").css('font-size', '12px');
+							}
 						}
 					}
 					
@@ -413,6 +419,16 @@
 									});
 								});
 							});
+
+							if (window.innerWidth <= 400) {
+								$(".childPicoButton").css('font-size', '10px');
+								//$(".childPicoButton").addClass('ui-nodisc-icon');
+								//$(".childPicoButton").addClass('ui-alt-icon');
+							} else if (window.innerWidth <= 600) {
+								$(".childPicoButton").css('font-size', '12px');
+								//$(".childPicoButton").addClass('ui-nodisc-icon');
+								//$(".childPicoButton").addClass('ui-alt-icon');
+							}
 						}
 					}
 					
@@ -582,6 +598,15 @@
 							});
 							
 						});
+						if (window.innerWidth <= 400) {
+							$(".listRulesetsButton").css('font-size', '10px');
+							//$(".listRulesetsButton").addClass('ui-nodisc-icon');
+							//$(".listRulesetsButton").addClass('ui-alt-icon');
+						} else if (window.innerWidth <= 600) {
+							$(".listRulesetsButton").css('font-size', '12px');
+							//$(".listRulesetsButton").addClass('ui-nodisc-icon');
+							//$(".listRulesetsButton").addClass('ui-alt-icon');
+						}
 					});
 				}
 
