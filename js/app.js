@@ -1030,7 +1030,7 @@
 	                "appECI": index,
 	                "appDescription": client["app_info"]["description"].replace(new RegExp('[/]', 'g'), "%2F"),
 	                "appImgURL":client["app_info"]["icon"].replace(new RegExp('[/]', 'g'), "%2F"),
-	          		"appCallbackURL": client["callbacks"],//.replace(new RegExp('[/]', 'g'), "%2F"),
+	          		"appCallbackURL": client["callbacks"].toString().replace(new RegExp('[/]', 'g'), "%2F"),
 	        		"appDeclinedURL": client["app_info"]["declined_url"].replace(new RegExp('[/]', 'g'), "%2F"),
 	    			"appInfoPageURL": client["app_info"]["info_url"].replace(new RegExp('[/]', 'g'), "%2F"),
 	    			"appBootstrapRids": client["bootstrap"]}
