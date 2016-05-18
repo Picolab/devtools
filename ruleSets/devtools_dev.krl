@@ -460,7 +460,7 @@ ruleset devtools {
 	      		};
 	      		identifier = event:attr("app_id").klog(">>>>>> token >>>>>>>");
 	      		old_apps = pci:list_apps(meta:eci());
-	      		old_app = old_apps{app_identifier}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> old_app >>>>>>>");
+	      		old_app = old_apps{identifier}.defaultsTo("error", standardOut("oldApp not found")).klog(">>>>>> old_app >>>>>>>");
 	      		app_data = (app_data_attrs)// keep app secrets for update// need to see what the real varibles are named........
 	      		.put(["appSecret"], old_app{"appSecret"}.defaultsTo("error", standardOut("no secret found")))
 	      		.put(["appECI"], old_app{"appECI"}) //------------------------------------------------/ whats this used for????????????
