@@ -142,13 +142,13 @@ ruleset devtools {
 		      remove_appinfo = pci:remove_appinfo(app_eci);
 		      remove_defact = removePCIbootstraps(app_eci);
 		      // add new 
-		      add_callback = pci:add_callback(app_eci, app_data{"appCallbackURL"}); 
+		      add_callback = pci:add_callback(app_eci, app_data{"app_callback_url"}); 
 		      add_info = pci:add_appinfo(app_eci,{
-		        "icon": app_data{"appImageURL"},
-		        "name": app_data{"appName"},
-		        "description": app_data{"appDescription"},
+		        "icon": app_data{"app_image_url"},
+		        "name": app_data{"app_name"},
+		        "description": app_data{"app_description"},
 		        "info_url": app_data{"info_page"},
-		        "declined_url": app_data{"appDeclinedURL"}
+		        "declined_url": app_data{"app_declined_url"}
 		      });
 		      addPCIbootstraps(app_eci,bootstrap_rids);
 		    };
@@ -455,7 +455,7 @@ ruleset devtools {
 	      			"app_name": event:attr("app_name").defaultsTo("", standardOut("missing event attr app_name")),
 	      			"app_description": event:attr("app_description").defaultsTo("", standardOut("missing event attr app_description")),
 	      			"app_image_url": event:attr("app_image_url").defaultsTo("", standardOut("missing event attr app_image_url")),
-	      			"app_call_back_url": event:attr("app_call_back_url").defaultsTo("", standardOut("missing event attr app_call_back_url")),
+	      			"app_callback_url": event:attr("app_callback_url").defaultsTo("", standardOut("missing event attr app_call_back_url")),
 	      			"app_declined_url": event:attr("app_declined_url").defaultsTo("", standardOut("missing event attr app_declined_url"))
 	      		};
 	      		identifier = event:attr("app_id").klog(">>>>>> token >>>>>>>");
@@ -471,7 +471,7 @@ ruleset devtools {
 	      		old_app neq "error" &&
 	      		app_data{"app_name"} neq "error" &&
 	      		app_data{"appSecret"} neq "error" &&
-	      		app_data{"app_call_back_url"} neq "error" 
+	      		app_data{"app_callback_url"} neq "error" 
 	      		) then{
 	      		update_app(identifier,app_data,bootstrap_rids);
 	      	}
