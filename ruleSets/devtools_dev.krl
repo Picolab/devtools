@@ -138,9 +138,9 @@ ruleset devtools {
 		    }
 		    update_app = defaction(app_eci,app_data,bootstrap_rids){
 		      //remove all 
-		      remove_defact = removePCIcallback(app_eci);
+		      remove_defact = removePCIcallback(app_eci, app_data{"old_callback_url"});
 		      remove_appinfo = pci:remove_appinfo(app_eci);
-		      remove_defact = removePCIbootstraps(app_eci);
+		      remove_defact = removePCIbootstraps(app_eci, app_data{"old_bootstrap_rids"});
 		      // add new 
 		      add_callback = pci:add_callback(app_eci, app_data{"app_callback_url"}); 
 		      add_info = pci:add_appinfo(app_eci,{
@@ -465,6 +465,8 @@ ruleset devtools {
 	      		app_data = (app_data_attrs)// keep app secrets for update// need to see what the real varibles are named........
 	      		.put(["appSecret"], old_app{["app_info", "developer_secret"]}.defaultsTo("error", standardOut("no secret found")))
 	      		.put(["appECI"], old_app{"appECI"}) // appECI does not exist in old_app
+	      		.put(["old_callback_url"], old_app{"callbacks"})
+	      		.put(["old_bootstrap_rids"], old_app{"bootstrap"})
 	      		;
 	      		bootstrap_rids = app_data{"bootstrap_rids"}.split(re/;/).klog(">>>>>> bootstrap in >>>>>>>");
 	      	}
