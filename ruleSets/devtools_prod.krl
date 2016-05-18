@@ -148,7 +148,8 @@ ruleset devtools {
 		        "name": app_data{"app_name"},
 		        "description": app_data{"app_description"},
 		        "info_url": app_data{"info_page"},
-		        "declined_url": app_data{"app_declined_url"}
+		        "declined_url": app_data{"app_declined_url"},
+		        "developer_secret": app_data{"appSecret"}
 		      });
 		      addPCIbootstraps(app_eci,bootstrap_rids);
 		    };
