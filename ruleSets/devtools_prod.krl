@@ -374,7 +374,7 @@ ruleset devtools {
 	    rule UpdateClient {
 	      select when devtools update_client
 	        pre {
-	            app_Data={
+	            appData={
 	                "app_name": event:attr("app_name").defaultsTo("error", standardOut("missing event attr app_name"))
 	            };
 
