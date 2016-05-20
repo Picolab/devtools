@@ -125,12 +125,12 @@ ruleset devtools {
 		      send_directive("pci bootstraps updated.")
 		        with rulesets = list_bootstrap(appECI); // is this working?
 		    }
-		    removePCIbootstraps = defaction(appECI,bootstrapRids){
+		    removePCIbootstraps = defaction(appECI){//,bootstrapRids){
 		      boot = pci:list_bootstrap().map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
 		      send_directive("pci bootstraps removed.")
 		        with rulesets = pci:list_bootstrap(appECI); 
 		    }
-		    removePCIcallback = defaction(appECI,PCIcallbacks){
+		    removePCIcallback = defaction(appECI){//,PCIcallbacks){
 		      //PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
 		      boot = pci:list_callback().map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
 		      send_directive("pci callback removed.")
