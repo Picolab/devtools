@@ -121,20 +121,26 @@ ruleset devtools {
 		      pci:list_callback(appECI);
 		    }
 		    addPCIbootstraps = defaction(appECI,bootstrapRids){
-		      boot = bootstrapRids.map(function(rid) { pci:add_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap add result >>>>>>>");
+		      boot = bootstrapRids.map(function(rid) { 
+		      	pci:add_bootstrap(appECI, rid); 
+		      }).klog(">>>>>> bootstrap add result >>>>>>>");
 		      send_directive("pci bootstraps updated.")
 		        with rulesets = list_bootstrap(appECI); // is this working?
 		    }
-		    removePCIbootstraps = defaction(appEC,IbootstrapRids){
-		      boot = bootstrapRids.map(function(rid) { pci:remove_bootstrap(appECI, rid); }).klog(">>>>>> bootstrap removed result >>>>>>>");
+		    removePCIbootstraps = defaction(appECI){//,bootstrapRids){
+		      boot = list_bootstrap().map(function(rid) { 
+		      	pci:remove_bootstrap(appECI, rid); 
+		      }).klog(">>>>>> bootstrap removed result >>>>>>>");
 		      send_directive("pci bootstraps removed.")
 		        with rulesets = list_bootstrap(appECI); 
 		    }
-		    removePCIcallback = defaction(appECI,PCIcallbacks){
-		      PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
-		      boot = PCIcallbacks.map(function(url) { pci:remove_callback(appECI, url); }).klog(">>>>>> callback remove result >>>>>>>");
+		    removePCIcallback = defaction(appECI){//,PCIcallbacks){
+		      //PCIcallbacks =( PCIcallbacks || []).append(PCIcallbacks);
+		      boot = list_callback().map(function(url) { 
+		      	pci:remove_callback(appECI, url); 
+		      }).klog(">>>>>> callback remove result >>>>>>>");
 		      send_directive("pci callback removed.")
-		        with rulesets = pci:list_callback(appECI);
+		        with rulesets = list_callback(appECI);
 		    }
 		    update_app = defaction(app_eci,app_data,bootstrap_rids){
 		      //remove all 
