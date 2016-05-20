@@ -456,7 +456,7 @@ ruleset devtools {
 	      			"app_name": event:attr("app_name").defaultsTo("", standardOut("missing event attr app_name")),
 	      			"app_description": event:attr("app_description").defaultsTo("", standardOut("missing event attr app_description")),
 	      			"app_image_url": event:attr("app_image_url").defaultsTo("", standardOut("missing event attr app_image_url")),
-	      			"app_callback_url": event:attr("app_callback_url").defaultsTo("", standardOut("missing event attr app_call_back_url")),
+	      			"app_callback_url": event:attr("app_callback_url").split(re/;/).defaultsTo("", standardOut("missing event attr app_call_back_url")),
 	      			"app_declined_url": event:attr("app_declined_url").defaultsTo("", standardOut("missing event attr app_declined_url"))
 	      		};
 	      		identifier = event:attr("app_id").klog(">>>>>> token >>>>>>>");
