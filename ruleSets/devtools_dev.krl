@@ -547,7 +547,7 @@ ruleset devtools {
 	        date_time = event:attr("date_time").defaultsTo(time:add(time:now(),{"seconds":180}), standardError("missing event attr type"));
 	        recurrment = event:attr("recurrment").defaultsTo("single", standardError("missing recurring event info"));
 	        //date_time = time:add(time:now(),{"seconds":50000000});
-	        attributes = event:attrs("attributes").defaultsTo("{}", standardError("missing event attr type"));
+	        attributes = event:attr("attributes").defaultsTo("{}", standardError("missing event attr type"));
 	        attr = attributes.decode();// Me thinks its a buggg!
 	      }
 	//      log("create schedule running");
