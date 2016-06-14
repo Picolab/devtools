@@ -1693,7 +1693,7 @@
 
 					Devtools.showScheduledEvents(function(events_list){
 
-						$("#scheduled-events").empty();
+						$("#scheduled-events-list").empty();
 					 	
 					 	dynamicScheduledEvents = "";
 					 	$.each(events_list, function(k, scheduled_event) {
@@ -1709,7 +1709,7 @@
 							//console.log(scheduled_event[4]);
 					 	});
 
-					 	$("#scheduled-events").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
+					 	$("#scheduled-events-list").append(dynamicScheduledEvents).collapsibleset().collapsibleset( "refresh" );
 					 	$.mobile.loading("hide");
 					 	
 					
@@ -1756,7 +1756,40 @@
 					});
 				}
 
+				function populate_schedule_history() {
+
+					Devtools.showScheduledEvents(function(events_list){
+						$("#schedule-history-list").empty();
+					 	
+					 	dynamicScheduleHistory = "";
+					 	$.each(events_list, function(k, scheduled_event) {
+					 		var event_data = {
+					 			id: scheduled_event[0]
+					 		};
+
+					 		Devtools.showScheduleHistory(event_data, function(event_history){
+					 			var last_fire = event_history["fired"];
+					 			if(last_fire == "1970-01-01T00:00:00+00:00") {
+					 				last_fire = "Has Not Fired";
+					 			}
+
+								dynamicScheduleHistory = snippets.schedule_history_template({
+									"sid": scheduled_event[0],
+									"name": scheduled_event[1],
+									"next": event_history["next"] || "Already Fired",
+									"fired": last_fire || "N/A",
+									"keep": event_history["keep_until"] || "N/A"
+								});
+					 			$("#schedule-history-list").append(dynamicScheduleHistory).collapsibleset().collapsibleset( "refresh" );
+					 		
+					 		});
+					 	});
+					 	$.mobile.loading("hide");
+					});
+				}
+
 				populate_scheduled_events();
+				populate_schedule_history();
 			},
 		},
 	// <!-- -------------------- <End oF> Scheduled ---------------------- -->
@@ -1791,6 +1824,7 @@
 		authorized_clients_template: Handlebars.compile($("#authorized-clients-template").html() || ""),
 		confirm_client_remove_template: Handlebars.compile($("#confirm-client-remove-template").html() || ""),
 		scheduled_events_template: Handlebars.compile($("#scheduled-events-template").html() || ""),
+		schedule_history_template: Handlebars.compile($("#schedule-history-template").html() || ""),
 		//subscriptions
 		subscription_tab_template: Handlebars.compile($("#subscription-tab-template").html() || ""),
 		subscription_incoming_template: Handlebars.compile($("#subscription-incoming-template").html() || ""),

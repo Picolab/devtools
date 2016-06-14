@@ -183,6 +183,20 @@
    </div>
 </div>
 
+<div id="schedule-history-template" style="display:none;">
+   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
+     <h4>{{name}}</h4>
+     <div>
+       <p><b>SchedEv id:</b> {{sid}}
+       <p><b>Domain/Event name:</b> {{name}}
+       <p><b>Show History Until:</b> {{keep}}
+       <p><b>Last Fired:</b> {{fired}}
+       <p><b>Next Scheduled Fire:</b> {{next}}</p>
+
+     </div>
+   </div>
+</div>
+
   <!-- -------------------- <End oF> Scheduled Templates---------------------- -->
   <!-- -------------------- subscriptions Templates---------------------- -->
 <div id="subscription-tab-template" style="display:none;">

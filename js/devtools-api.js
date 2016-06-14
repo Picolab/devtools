@@ -416,6 +416,17 @@
             cb(json);
         }, {"eci":eci});   
     },
+    showScheduleHistory: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        options = options || {};
+        var eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI;
+        Devtools.log("show schedule history");
+        return wrangler.skyQuery(Devtools.get_rid("rulesets"), "showScheduleHistory", data, function(json) {
+            Devtools.log("Displaying schedule history", json);
+            cb(json);
+        }, {"eci":eci});   
+    },
     /*scheduleEvent: function(Data, cb, options)
     {
         cb = cb || function(){};
