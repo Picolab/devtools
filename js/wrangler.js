@@ -326,11 +326,11 @@
     };
         wrangler.channelByName = function(parameters, postFunction, options)
     {
-        return wrangler.skyQuery(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
         wrangler.channelByEci = function(parameters, postFunction, options)
     {
-        return wrangler.skyQuery(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
         wrangler.subscriptionsAttributesEci = function(parameters, postFunction, options)
     {
