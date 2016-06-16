@@ -277,7 +277,8 @@ ruleset b507803x0 {
     //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
     name =  ent:name;
     {
-      'status' : pdsProfiles{"status"},
+     // 'status' : pdsProfiles{"status"},
+      'status' : "",
       'picoName' : name
     }
   }
