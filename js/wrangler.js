@@ -291,11 +291,7 @@
     };
         wrangler.name = function(parameters, postFunction, options)
     {
-        results = wrangler.skyQuery(get_rid("rulesets"), "name", parameters, postFunction , options); 
-        if (results.picoName === undefined) {
-          results.picoName ='unknown';
-        }
-        return results;
+        return wrangler.skyQuery(get_rid("rulesets"), "name", parameters, postFunction , options); 
     };
         wrangler.attributes = function(parameters, postFunction, options)
     {

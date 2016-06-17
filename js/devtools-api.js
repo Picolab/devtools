@@ -289,7 +289,10 @@
 		cb = cb || function(){};
 		Devtools.log("Getting pico name");
 		return wrangler.name({}, function(json) {
-			//Devtools.log("Children: ", json);
+            //Devtools.log("Children: ", json);
+            if (json.picoName === undefined) {
+                json.picoName ='unknown name, wrangler not installed.';
+            }
 			cb(json);
 		}, options);	
 	},
