@@ -275,7 +275,7 @@ ruleset b507803x0 {
     //pdsProfiles = pds:profile();
     //pdsProfile = pdsProfiles{"profile"};
     //name = (pdsProfile.typeof() eq 'hash') => pdsProfile{"name"} | ent:name ;
-    name =  ent:name;
+    name =  ent:name.defaultsTo("unknownName",standardError("pci parent retrieval failed"));
     {
      // 'status' : pdsProfiles{"status"},
       'status' : "",
