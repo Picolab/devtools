@@ -1,12 +1,12 @@
 // operators are camel case, variables are snake case.
     
-ruleset b507803x0 {
+ruleset b507199x5 {
   meta {
     name "wrangler"
     description <<
       Wrangler ( ) Module
 
-      use module  b507798x0 alias wrangler
+      use module  b507199x5 alias wrangler
 
       This Ruleset/Module provides a developer interface to the PICO (persistent computer object).
       When a PICO is created or authenticated this ruleset
@@ -300,9 +300,9 @@ ruleset b507803x0 {
                 "discription": "Wrangler base prototype"
                 },
                 //array of maps for meta data of rids .. [{rid : id},..}  
-      "rids": [ //"b507199x5.dev",
-                "b507199x8.dev", // pds
-                "b507805x0.dev"
+      "rids": [ "b507199x5.dev",
+                "b507199x8.dev" // pds
+                //"b507805x0.dev" developmet wrangler
                  //"a169x625"
               ],
       "channels" : [{
