@@ -293,7 +293,7 @@
     {
         results = wrangler.skyQuery(get_rid("rulesets"), "name", parameters, postFunction , options); 
         if (results.picoName === undefined) {
-          results.set('picoName','unknown');
+          results.picoName ='unknown';
         }
         return results;
     };
