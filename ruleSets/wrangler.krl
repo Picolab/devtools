@@ -24,7 +24,7 @@ ruleset b507199x5 {
       //none
     provides skyQuery, rulesets, rulesetsInfo, //ruleset
     channel, channelAttributes, channelPolicy, channelType, //channel
-    children, parent, attributes, prototypes, name, profile, pico, //pico
+    children, parent, attributes, prototypes, name, profile, pico,checkPicoName, //pico
     subscriptions, eciFromName, subscriptionAttributes,checkSubscriptionName, //subscription
     standardError
     sharing on
@@ -566,7 +566,20 @@ ruleset b507199x5 {
           names = chs.none(function(channel){channel{"name"} eq name});
           (names);
 
-    }    
+    }
+    checkPicoName = function(name){
+          return = children();
+          picos = return{"children"};
+          
+          names = picos.none(function(child){
+            eci = child[0]; 
+            name_return = skyQuery(eci,meta:host(),"b507199x5.dev","name",noParam);
+            pico_name = name_return{"picoName"};
+            pico_name eq name
+            });
+          (names);
+
+    }      
     checkSubscriptionName = function(name){
           sub = subscriptions(name);
           subs = sub{"subscriptions"};
