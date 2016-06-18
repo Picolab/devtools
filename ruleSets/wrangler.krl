@@ -567,6 +567,21 @@ ruleset b507199x5 {
           (names);
 
     }
+
+    randomPicoName = function(){
+        n = 5;
+        array = (0).range(n).map(function(n){
+          (random:word());
+          });
+        names= array.collect(function(name){
+          (checkPicoName( name )) => "unique" | "taken";
+        });
+        name = names{"unique"} || [];
+
+        unique_name =  name.head().defaultsTo("",standardError("unique name failed"));
+        (unique_name).klog("results : ");
+    }
+
     checkPicoName = function(name){
           return = children();
           picos = return{"children"};
@@ -575,18 +590,18 @@ ruleset b507199x5 {
             eci = child[0]; 
             name_return = skyQuery(eci,meta:host(),"b507199x5.dev","name",noParam);
             pico_name = name_return{"picoName"};
-            pico_name eq name
+            (pico_name eq name)
             });
-          (names);
+          (names).klog("results : ");
 
     }      
     checkSubscriptionName = function(name){
           sub = subscriptions(name);
           subs = sub{"subscriptions"};
-          encoded_sub = subs.encode();
+          encoded_sub = subs.encode().klog("encode subs :");
           return = encoded_sub.match(re/{}/);
           //(subs eq {});
-          return;
+          return.klog("results : ");
 
     }
     randomSubscriptionName = function(){
