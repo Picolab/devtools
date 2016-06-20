@@ -894,15 +894,18 @@ ruleset b507199x5 {
     select when wrangler child_creation
     pre {
       attribute = event:attrs();
-      name = event:attr("name").defaultsTo(random:word(),standardError("missing event attr name, random word used instead."));
+      name = event:attr("name").defaultsTo(randomPicoName(),standardError("missing event attr name, random word used instead."));
       prototype = event:attr("prototype").defaultsTo("devtools", standardError("missing event attr prototype"));           
     }
 
-    {
+    if(checkPicoName(name)) then {
       createChild(name,prototype); //with protype_name = prototype; 
     }
-    always {
+    fired {
       log(standardOut("pico created with name #{name}"));
+    }
+    else{
+      error warn "douplicate Pico name, failed to create pico named "+name;
     }
   }
    
@@ -1278,7 +1281,7 @@ ruleset b507199x5 {
     {
       noop();
     }
-    fired{
+    always{
       raise wrangler event 'checked_name_subscription'
        attributes attrs
     }
