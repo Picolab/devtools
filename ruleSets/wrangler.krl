@@ -905,7 +905,7 @@ ruleset b507199x5 {
       log(standardOut("pico created with name #{name}"));
     }
     else{
-      error warn "douplicate Pico name, failed to create pico named "+name;
+      error warn " douplicate Pico name, failed to create pico named "+name;
     }
   }
    
@@ -1277,7 +1277,7 @@ ruleset b507199x5 {
       attr = event:attrs();
       attrs = attr.put({"name":name});
     }
-    if(checkSubscriptionName(name)) then
+    //if(checkSubscriptionName(name)) then
     {
       noop();
     }
@@ -1285,10 +1285,10 @@ ruleset b507199x5 {
       raise wrangler event 'checked_name_subscription'
        attributes attrs
     }
-    else{
-      error warn "douplicate subscription name, failed to send request "+name;
-      log(">> could not send request #{name} >>");
-    }
+    //else{
+    //  error warn "douplicate subscription name, failed to send request "+name;
+    //  log(">> could not send request #{name} >>");
+   // }
   }
 
   rule subscribe {// need to change varibles to snake case.
