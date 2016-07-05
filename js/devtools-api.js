@@ -296,6 +296,46 @@
 			cb(json);
 		}, options);	
 	},
+
+    prototypes: function(cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("Getting prototypes");
+        return wrangler.prototypes({}, function(json) {
+            Devtools.log("prototypes: ", json);
+            cb(json);
+        }, options);
+    },
+
+    addPrototype: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("Adding Prototype");
+       return wrangler.addPrototype(data, function(json) {
+           Devtools.log("Directive from addPrototype", json);
+           cb(json);
+       }, options);
+    },
+
+    updatePrototype: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("Updating Prototype");
+       return wrangler.updatePrototype(data, function(json) {
+           Devtools.log("Directive from updatePrototype", json);
+           cb(json);
+       }, options);
+    },
+
+    removePrototype: function(data, cb, options)
+    {
+        cb = cb || function(){};
+        Devtools.log("Removing Prototype");
+       return wrangler.removePrototype(data, function(json) {
+           Devtools.log("Directive from removePrototype", json);
+           cb(json);
+       }, options);
+    },
 	
     createPico: function(data, cb, options)
     {

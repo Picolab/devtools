@@ -1,0 +1,95 @@
+<!-- -------------------------- -/page-prototypes.html ---------------------------- -->
+
+<div data-role="page" id="page-prototypes">
+  
+    {% include header.html title="Manage Prototypes" %}
+    {% include pico-name-header.html %}
+
+    <div data-role="main" class="ui-content">
+    
+          <ul id="prototype-list" class="ruleset" data-role="listview" data-inset="true" > 
+            <li data-role="list-divider" >Prototype List</li>
+            <li>
+              <a href="#add-prototype" class="ui-btn ui-btn-inline ui-btn-icon-right ui-icon-carat-r  devtools-btn">New Prototype</a>
+            </li>  
+          </ul><!-- /listview -->
+
+          <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="manage-prototype-list">
+        </div>
+
+  </div>
+  
+  {% include footer.html %}
+  
+</div>
+
+
+
+<!-- -------------------------- -/add-prototype.html ---------------------------- -->
+
+<div data-role="page" id="add-prototype">
+  {% include header.html title="Add Prototype" %}
+  {% include pico-name-header.html %}
+
+	<div data-role="main" class="ui-content">
+	<div id="add-prototype-dev">
+        <p>
+          Here you can add new prototypes to be used by child Picos.
+        </p>
+        <form id="formAddPrototype" class="form-horizontal form-mycloud">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="appURL">Source URL</label>
+              <div class="controls">
+                <textarea class="input-xlarge" name="appURL" title="The name of your Prototype" placeholder="The name of your Prototype" required=""></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+            	<a id= "add-prototype-confirm-button" class="save" href="#" data-icon="check" data-role="button" data-inline="true" data-theme="b">Add Prototype</a>
+              <a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+              <!--<button type="submit" class="btn btn-primary">Register Ruleset</button>-->
+            </div>
+          </fieldset>
+        </form>
+      </div>
+	</div>
+	{% include footer.html %}
+</div>
+
+
+
+<!-- -------------------------- -/update-prototype.html ---------------------------- -->
+
+<div data-role="page" id="update-prototype">
+	
+	{% include header.html title="Update Prototype" %}
+  {% include pico-name-header.html %}
+
+	<div data-role="main" class="ui-content">
+		
+		<ul id="update-prototype" data-role="listview" data-inset="true"> 
+			<li data-role="list-divider" >Update Prototype</li>
+			<li>
+				<form id="form-update-prototype">
+						<!--insert rid here-->
+						<!--url is here-->
+						<label for="url" id="prototypeLabel">Prototype: </label>
+						<input type="text" name="url" id="prototype_info" value="" placeholder="Prototype Info" />
+				</form>
+				<div>
+					<a id="update-prototype-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Update</a>
+					<a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+				</div>
+			</li>
+		</ul>
+
+	</div>
+
+	{% include footer.html %}
+
+</div>
+
+
+
+
+

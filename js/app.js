@@ -48,6 +48,18 @@
 					events: "s", // do when we show the page
 					argsre: true
 			} },
+			{"#page-prototypes": {handler: "prototype_listing",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#add-prototype": {handler: "addPrototype",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
+			{"#update-prototype": {handler: "updatePrototype",
+					events: "s", // do when we show the page
+					argsre: true
+			} },
 			{"#install-ruleset": {handler: "install_ruleset",
 					events: "s", // do page before show
 					argsre: true
@@ -297,6 +309,20 @@
 				console.log("creating a Pico");
 				var frm = "#form-new-pico";
 				$(frm)[0].reset(); // clear the fields in the form
+
+				//Fill the Prototypes select/menu
+				$("#prototypeMenu").empty();
+				Devtools.prototypes(function(pros) {
+					if (pros["status"]) {
+						var prototypes = pros["prototypes"];
+
+						$("#prototypeMenu").append("<option value='None'>None</option>");
+						$("#prototypeMenu").trigger("change");
+						for (p in prototypes) {
+							$("#prototypeMenu").append("<option value='" + p + "'>" + p + "</option>");
+						}
+					}
+				});
 					
 				createThePico = function(){
 					$.mobile.loading("show", {
@@ -305,10 +331,16 @@
 					});
 					var create_pico_form_data = process_form(frm);
 					console.log(">>>>>>>>> Pico ", create_pico_form_data);
+
+					var selProto = $("#prototypeMenu").val();
+					if (selProto == "None")
+						selProto = "";
 					var pico_Data={
 						"name": create_pico_form_data.Pico_name,
-						//"prototypes": create_pico_form_data.Pico_prototypes
+						//"prototypes": create_pico_form_data.Pico_prototypes,
+						"prototype": selProto
 					};
+					console.log("Selected Prototype:", $("#prototypeMenu").val());
 					
 					Devtools.createPico(pico_Data, function(directives) {
 						console.log("create pico ", pico_Data, directives);
@@ -472,7 +504,7 @@
 				console.log("registering Ruleset Handler");
 				var frm = "#formRegisterNewRuleset";
 					$(frm)[0].reset(); // clear the fields in the form
-				$('#regester-ruleset-confirm-button').off('tap').on('tap', function(event)
+				$('#register-ruleset-confirm-button').off('tap').on('tap', function(event)
 				 {
 					
 					var registering_form_data = process_form(frm);
@@ -516,8 +548,6 @@
 				//-------------------Update URL-------------------------------
 				$('#update-url-confirm-button').off('tap').on('tap', function(event)
 				{
-					
-					
 					var update_form_data = process_form(url_frm);
 					console.log(">>>>>>>>> RIDs to register", update_form_data);
 					var url = update_form_data.url;
@@ -537,6 +567,158 @@
 							});
 					}
 				});
+			},
+
+			prototype_listing: function(type, match, ui, page) {
+				console.log("Prototype Listing Handler");
+				loadSpinner("#manage-prototype-list", "Prototypes");
+
+				function populate_prototypes(){	
+					Devtools.prototypes(function(proto_info){ //the callback/function is where we need to have all of our code
+						$("#manage-prototype-list" ).empty();
+						dynamicPrototypes = "";
+
+						$.each(proto_info["prototypes"], function(id, info) {
+							var dynamicProtoChannels = [];
+							$.each(info["channels"], function(id, info) {
+								dynamicProtoChannels.push("<br/>" 
+									+ info["name"] + " " 
+									+ info["type"] + " (" 
+									+ info["attributes"] + ")");
+							});
+
+							var dynamicProtoSubscriptions = [];
+							$.each(info["subscriptions_request"], function(id, info) {
+								dynamicProtoSubscriptions.push("<br/>" 
+									+ info["name"] + " (" 
+									+ info["name_space"] + ": " 
+									+ info["my_role"] + "-" 
+									+ info["subscriber_role"] + ")");
+							});
+
+							var dynamicProtoEvents = [];
+							$.each(info["Prototype_events"], function(id, info) {
+								dynamicProtoEvents.push("<br/>" 
+									+ info["domain"] + "/" 
+									+ info["type"]);
+							});
+							
+							dynamicPrototypes += 
+								snippets.list_prototypes_template( {
+									"title": id,
+									"meta": info["meta"]["discription"],
+									"rids": info["rids"],
+									"channels": dynamicProtoChannels,
+									"subs": dynamicProtoSubscriptions,
+									"events": dynamicProtoEvents
+									//"pds": info["PDS"]["profile"] + ": " + info["PDS"]["general"]
+								});
+						});
+						$("#manage-prototype-list").append(dynamicPrototypes).collapsibleset().collapsibleset("refresh");
+						$.mobile.loading("hide");
+
+						console.log("refreshing manage-list listview.");
+
+						//---------------delete button----------------------
+						$('.deleteButton').off('tap').on('tap', function(event)
+						{	
+							delProto = this.id;
+							console.log("Deleting this prototype: " + delProto);
+							noty({
+								layout: 'topCenter',
+								text: 'Are you sure you want to delete this prototype?',
+								type: 'warning',
+
+								buttons: [
+									{addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+											$noty.close();
+											if(typeof delProto !== "undefined") {
+												$.mobile.loading("show", {
+													text: "Deleting prototype...",
+													textVisible: true
+												});
+												Devtools.removePrototype(delProto, function(directives){
+													console.log("Deleting the rid", rid, directives);
+													$.mobile.loading("hide");
+													//refreshes the page because refreshPage() takes us to the homepage
+													$("#manage-prototype-list" ).empty();
+													populate_prototypes();
+												});
+											}
+										}
+									},
+									{addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+											noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}
+								]
+							});
+							
+						});
+					});
+				}
+
+				populate_prototypes();
+			},
+
+			addPrototype: function(type, match, ui, page) {
+				console.log("Add Prototype Handler");
+				
+				/*
+				var frm = "#formRegisterNewRuleset";
+					$(frm)[0].reset(); // clear the fields in the form
+				$('#add-prototype-confirm-button').off('tap').on('tap', function(event)
+				 {
+					
+					var registering_form_data = process_form(frm);
+					console.log(">>>>>>>>> RID to register", registering_form_data);
+					var url = registering_form_data.appURL;
+
+					var url_check = check_html(url);
+
+					if(typeof url !== "undefined" && url_check === true) {
+						$.mobile.loading("show", {
+							text: "Registering ruleset...",
+							textVisible: true
+						});
+						Devtools.RegisterRuleset(url, function(directives) {
+							console.log("registered ", url, directives);
+							$.mobile.changePage("#listing", {
+							 transition: 'slide'
+						 });
+						}); 
+					}
+				}); 
+				*/
+			},
+
+			updatePrototype: function(type, match, ui, page) {
+				console.log("Update Prototype Handler");
+
+				/*
+				$('#update-prototype-confirm-button').off('tap').on('tap', function(event)
+				{
+					var update_form_data = process_form(url_frm);
+					console.log(">>>>>>>>> RIDs to register", update_form_data);
+					var url = update_form_data.url;
+
+					var url_check = check_html(url);
+
+					if(typeof url !== "undefined" && url_check === true) {
+							$.mobile.loading("show", {
+								text: "Updating URL...",
+								textVisible: true
+							});
+							Devtools.updateUrl(rid, url, function(directives){
+								console.log("updating the function", rid, directives);
+								$.mobile.changePage("#listing", {
+									transition: 'slide'
+								 });
+							});
+					}
+				});
+				*/
 			},
 
 			picologging: function(type, match, ui, page) {
@@ -675,7 +857,6 @@
 			installed_channels: function(type, match, ui, page) {
 				console.log("channel installation page");
 				loadSpinner("#installed-channels", "installed channels");
-
 
 				function populate_installed_channels() {
 					Devtools.showInstalledChannels(function(channel_list){
@@ -1539,10 +1720,14 @@
 					 	dynamicScheduledEvents = "";
 					 	$.each(events_list, function(k, scheduled_event) {
 					 		var d = new Date(scheduled_event[4] * 1000);
+					 		var cron = scheduled_event[5] || "";
+					 		if (cron)
+					 			cron = ": " + cron;
 							dynamicScheduledEvents += snippets.scheduled_events_template({
 								"sid": scheduled_event[0],
+								"title": scheduled_event[1] + cron,
 								"name": scheduled_event[1],
-								"type": scheduled_event[2],
+								"type": scheduled_event[2] + cron,
 								"rid": scheduled_event[3],
 								"epoch_time": d
 							});
@@ -1613,9 +1798,13 @@
 					 			if(last_fire == "1970-01-01T00:00:00+00:00") {
 					 				last_fire = "Has Not Fired";
 					 			}
+					 			var cron = scheduled_event[5] || "";
+					 				if (cron)
+					 			cron = ": " + cron;
 
 								dynamicScheduleHistory = snippets.schedule_history_template({
 									"sid": scheduled_event[0],
+									"title": scheduled_event[1] + cron,
 									"name": scheduled_event[1],
 									"next": event_history["next"] || "Already Fired",
 									"fired": last_fire || "N/A",
@@ -1649,6 +1838,7 @@
 	//confirm_channel_remove
 	window['snippets'] = {
 		list_rulesets_template: Handlebars.compile($("#list-rulesets-template").html() || ""),
+		list_prototypes_template: Handlebars.compile($("#list-prototypes-template").html() || ""),
 		logitem_template: Handlebars.compile($("#logitem-template").html() || ""),
 		installed_channels_template: Handlebars.compile($("#installed-channels-template").html() || ""),
 		installed_channels_template2: Handlebars.compile($("#installed-channels-template2").html() || ""),

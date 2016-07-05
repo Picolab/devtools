@@ -70,7 +70,38 @@
   <h1>Do NOT delete channels unless you know what you're doing.<br> Deletion of key channels could make your pico inoperable.</h1>
   </li>
 </div>
+
+<!-- ---------- Prototypes Template ---------- -->
+
+<div id="list-prototypes-template" style="display:none;">
+   <div id="{{title}}" data-role="collapsible" data-filtertext="{{title}}{{meta}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
+     <h4 style="font-size:1em;">
+        {{title}} ({{meta}}) 
+     </h4>
+
+    <div style = "padding-top: 10px; padding-bottom:40px;"> 
+
+        <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
+
+        <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" href="#update-prototype?prototype={{title}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right editURLButton listRulesetsButton">Edit</a></p>
+        
+        <p><b>Name: </b> {{title}} </p>
+        <p><b>Description: </b> {{meta}} </p>
+        <p><b>RIDs: </b>{{rids}}</p>
+        <p><b>Channels: </b> {{{channels}}}</p>
+        <p><b>Subscription Requests: </b> {{{subs}}}</p>
+        <p><b>Prototype Events: </b> {{{events}}}</p>
+        <!-- <p><b>PDS: </b> {{pds}}</p> -->
+    </div>
+  </div>
+</div>
+
+
+
+
+
 <!--      Authorize clients      appimageURL is not being used--> 
+
 <div id="authorized-clients-template" style="display:none;">
    <div id="{{appECI}}" data-role="collapsible" data-filtertext="{{appClientName}} ({{appECI}})" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u">
      <h4>{{appClientName}} ({{appECI}})</h4>
@@ -156,8 +187,8 @@
   <!-- -------------------- Scheduled Templates---------------------- -->
 
 <div id="scheduled-events-template" style="display:none;">
-   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
-     <h4>{{name}}</h4>
+   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{title}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
+     <h4>{{title}}</h4>
      <div>
       <p style="position:relative; top:-20px"><a id="{{sid}}"style="float:right" href="#" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete cancelEventButton">Cancel Scheduled Event</a></p>
        <p><b>SchedEv id:</b> {{sid}}
@@ -171,8 +202,8 @@
 </div>
 
 <div id="schedule-history-template" style="display:none;">
-   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{name}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
-     <h4>{{name}}</h4>
+   <div id="{{sid}}" data-role="collapsible" data-filtertext="{{title}}" data-theme="a" data-content-theme="a" data-collapsed-icon= "carat-d" data-expanded-icon="carat-u" >
+     <h4>{{title}}</h4>
      <div>
        <p><b>SchedEv id:</b> {{sid}}
        <p><b>Domain/Event name:</b> {{name}}
