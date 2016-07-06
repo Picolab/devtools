@@ -309,13 +309,13 @@ ruleset b507199x5 {
                       "name"       : "testPrototypChannel",
                       "type"       : "ProtoType",
                       "attributes" : "prototypes test attrs",
-                      "policy"     : "not implamented"
+                      "policy"     : "not implemented"
                     },
                     {
                       "name"       : "test2PrototypChannel",
                       "type"       : "ProtoType",
                       "attributes" : "prototypes test attrs",
-                      "policy"     : "not implamented"
+                      "policy"     : "not implemented"
                     }
                     ], // could be [["","","",""]], // array of arrrays [[name,type,attributes,policy]]
                     // belongs in relationManager 
@@ -374,13 +374,13 @@ ruleset b507199x5 {
                       "name"       : "testDevtoolsPrototypChannel",
                       "type"       : "ProtoType",
                       "attributes" : "devtool prototypes test attrs",
-                      "policy"     : "not implamented"
+                      "policy"     : "not implemented"
                     },
                     {
                       "name"       : "testDevtools2PrototypChannel",
                       "type"       : "ProtoType",
                       "attributes" : "devtool prototypes test attrs",
-                      "policy"     : "not implamented"
+                      "policy"     : "not implemented"
                     }
                     ], // could be [["","","",""]], // array of arrrays [[name,type,attributes,policy]]
       "subscriptions_request": [],
@@ -433,7 +433,7 @@ ruleset b507199x5 {
 // create child from protype will take the name with a option of a prototype with a default to base.
   createChild = defaction(name,protype_name){ 
     //configure using protype_name = "devtools"; // base must be installed by default for prototypeing to work 
-    results = prototype(); // get prototype from ent varible and default to base if not found.
+    results = prototypes(); // get prototype from ent varible and default to base if not found.
     prototypes = results{"prototypes"};
     prototype = prototypes{protype_name}.defaultsTo(devtoolsPrototype,"prototype not found");
     rids = prototype{"rids"};
