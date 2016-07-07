@@ -508,7 +508,7 @@
     showSubscriptions: function(cb, options)
     {
         cb = cb || function(){};
-        var parameters = {};
+        var parameters = {collection :'status'};
         Devtools.log("show Subscriptions");
         post_function = function(json) {
             Devtools.log("Displaying showSubscriptions", json);

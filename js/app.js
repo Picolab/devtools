@@ -1321,11 +1321,9 @@
 
 
 				function populate_subscriptions() {
-
 					Devtools.showSubscriptions(function(subscriptions){
 						subscriptions = subscriptions.subscriptions;
 						$("#Subscriptions" ).empty();
-
 						if('inbound' in subscriptions){
 								incoming = subscriptions.inbound;
 								dynamic_subscriptions_items = "";
@@ -1370,8 +1368,9 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"t_cid": object["subscriber_eci"],
-											"c_name": key2,
-											"attributes": object["attributes"]
+											"c_name": object["subscriber_eci"],
+											//"c_name": key2,
+											"attributes": object["channel_name"]
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
