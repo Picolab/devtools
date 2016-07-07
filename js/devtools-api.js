@@ -379,7 +379,7 @@
             Devtools.log("Displaying installed channels", json);
             cb(json);
         };
-        return wrangler.channels(parameters,post_function,options);
+        return wrangler.channel(parameters,post_function,options);
 
     },
     installChannel: function(attributes, cb, options) 
