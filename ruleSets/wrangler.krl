@@ -244,7 +244,7 @@ ruleset b507199x5 {
   //-------------------- Picos --------------------
    /// should children and parent functions return a map instead of an array??
   children = function() {
-    self = meta:eci();
+    self = meta:eci().klog("meta eci for list_children:  ");
     children = pci:list_children(self).defaultsTo("error", standardError("pci children list failed"));
     {
       'status' : (children neq "error"),
