@@ -243,11 +243,7 @@
     };
 
     // ------------------------------------------------------------------------ Channels
-        wrangler.channels = function(parameters, postFunction, options)
-    {
-        return wrangler.skyQuery(get_rid("rulesets"), "channels", parameters, postFunction , options); 
-    };
-        wrangler.channel = function(parameters, postFunction, options)
+         wrangler.channel = function(parameters, postFunction, options)
     {
         return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
