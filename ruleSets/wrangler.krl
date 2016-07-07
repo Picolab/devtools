@@ -898,7 +898,8 @@ ruleset b507199x5 {
       prototype = event:attr("prototype").defaultsTo("devtools", standardError("missing event attr prototype"));           
     }
 
-    if(checkPicoName(name)) then {
+   // if(checkPicoName(name)) then 
+    {
       createChild(name,prototype); //with protype_name = prototype; 
     }
     fired {
