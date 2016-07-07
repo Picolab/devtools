@@ -290,8 +290,11 @@
 		Devtools.log("Getting pico name");
 		return wrangler.name({}, function(json) {
             //Devtools.log("Children: ", json);
-            if (json.picoName === undefined) {
+            if (json.picoName === undefined ) {
                 json.picoName ='unknown name, wrangler not installed.';
+            }
+            if (/^(\d)/.test(json.picoName)) {
+                json.picoName = 'a_' + json.picoName;
             }
 			cb(json);
 		}, options);	
