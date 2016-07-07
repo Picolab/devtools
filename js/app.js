@@ -109,12 +109,6 @@
 					events: "s", // do page before show
 					argsre: true
 			} },
-			// spime testing 
-			{"#secret": {handler: "spime_management",
-					events: "s", // do page before show
-					argsre: true
-			} },
-			// spime testing 
 			{"#page-subscription-management": {handler: "subscriptions",
 					events: "s", // do page before show
 					argsre: true
@@ -1344,7 +1338,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"e_cid": object["event_eci"],
+											"e_cid": object["outbound_eci"],
 											"c_name": key2,
 											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
@@ -1375,7 +1369,7 @@
 											{"name": object["subscription_name"],
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
-											"t_cid": object["target_eci"],
+											"t_cid": object["subscriber_eci"],
 											"c_name": key2,
 											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
@@ -1579,10 +1573,10 @@
 							var subscription_Data={
 								"name": subscribe_form_data.Subscription_name,
 								"name_space": subscribe_form_data.Subscription_name_space,
-								"target_eci": subscribe_form_data.Subscription_target.trim(),
+								"subscriber_eci": subscribe_form_data.Subscription_target.trim(),
 								"channel_type": subscribe_form_data.Subscription_type,
 								"my_role" : subscribe_form_data.Subscription_my_role,
-								"your_role" : subscribe_form_data.Subscription_your_role,
+								"subscriber_role" : subscribe_form_data.Subscription_your_role,
 								"attrs": subscribe_form_data.Subscription_attrs
 							};
 							if( true 	) {
