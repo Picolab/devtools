@@ -242,6 +242,10 @@
     };
 
     // ------------------------------------------------------------------------ Channels
+         wrangler.channels = function(parameters, postFunction, options) // need this till production site is updated.
+    {
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
+    };
          wrangler.channel = function(parameters, postFunction, options)
     {
         return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
