@@ -38,12 +38,11 @@
        return res;
    };
 
-   var mkEsl = function(parts,host) {
-    if (wrangler.host === "none") { // I dont think this will ever be true.....
+   var mkEsl = function(parts) {
+    if (wrangler.host === "none") {
         throw "No wrangler host defined";
     }
-    var Host = ;
-    parts.unshift(host); // adds host to beginning of array
+    parts.unshift(wrangler.host); // adds host to beginning of array
     var res = 'https://'+ parts.join("/"); // returns a url structure string
     return res;
     };
@@ -89,16 +88,16 @@
        callback = callback || function(){};
 
        var eci = check_eci(options.eci);
-           var eid = Math.floor(Math.random() * 9999999); 
+           var eid = Math.floor(Math.random() * 9999999); // whats the event id used for and do we need it?
            //url constructor
            var esl = mkEsl(
             //['sky/event',
-            [  options._path || wrangler.eventPath ,
+            [ wrangler.eventPath ,
             eci,
             eid,
             eventDomain,
             eventType
-            ],options._host || wrangler.host);
+            ]);
 
          console.log("wrangler.raise ESL: ", esl);
          console.log("event attributes: ", eventAttributes);
@@ -108,9 +107,9 @@
           url: esl,
           data: $.param(eventAttributes),
           dataType: 'json',
-          headers: { 'Kobj-Session': eci }, // not sure needed since eci in URL
-          success: callback,
-          error: options.errorFunc || function(res) { console.error(res) }
+      		headers: { 'Kobj-Session': eci }, // not sure needed since eci in URL
+      		success: callback,
+      		error: options.errorFunc || function(res) { console.error(res) }
         });
        } catch(error) {
          console.error("[raise]", error);
@@ -121,7 +120,7 @@
     wrangler.skyQuery = function(module, func_name, parameters, getSuccess, options)
     {
       //put options stuff here.
-      try {
+    	try {
           options = options || {};
           options.eci = options.eci || PicoNavigator.currentPico || wrangler.defaultECI; //<-- is this vallid?
           var retries = 2;
@@ -137,15 +136,15 @@
         //url constructor
         var esl = mkEsl(
           //['sky/cloud',
-          [ options._path || wrangler.functionPath ,
+          [ wrangler.functionPath ,
             module,
             func_name
-            ], options._host || wrangler.host);
+            ]);
 
         $.extend(parameters, { "_eci": eci });
 
         console.log("Attaching event parameters ", parameters);
-        // should this go in mkEsl ? no, then you could not use it in raiseEvent
+        // should this go in mkEsl ?
         esl = esl + "?" + $.param(parameters);
 
         var process_error = function(res)
@@ -171,8 +170,8 @@
          console.error("The request failed due to an ECI error. Going to repeat the request.");
          var repeat_num = (typeof options.repeats !== "undefined") ? ++options.repeats : 0;
          options.repeats = repeat_num;
-          // I don't think this will support promises; not sure how to fix
-          wrangler.skyQuery(module, func_name, parameters, getSuccess, options);
+    			// I don't think this will support promises; not sure how to fix
+    			wrangler.skyQuery(module, func_name, parameters, getSuccess, options);
             }
         }
     };
@@ -183,10 +182,10 @@
       type: 'GET',
       url: esl,
       dataType: 'json',
-        // try this as an explicit argument
-        //    headers: {'Kobj-Session' : eci},
-        success: process_result
-        // error: process_error
+    		// try this as an explicit argument
+    		//		headers: {'Kobj-Session' : eci},
+    		success: process_result
+    		// error: process_error
         });
     } catch(error) {
        console.error("[skyQuery]", error);
@@ -294,6 +293,22 @@
     {
         return wrangler.skyQuery(get_rid("rulesets"), "attributes", parameters, postFunction , options); 
     };
+        wrangler.prototypes = function(parameters, postFunction, options)
+    {
+        return wrangler.skyQuery(get_rid("rulesets"), "prototypes", parameters, postFunction , options); 
+    };
+        wrangler.addPrototype = function(parameters, postFunction, options)
+    {
+        return wrangler.raiseEvent("wrangler", "add_prototype", eventAttributes, postFunction, options);
+    };
+        wrangler.updatePrototype = function(parameters, postFunction, options)
+    {
+        return wrangler.raiseEvent("wrangler", "update_prototype", eventAttributes, postFunction, options);
+    };
+        wrangler.removePrototype = function(parameters, postFunction, options)
+    {
+        return wrangler.raiseEvent("wrangler", "remove_prototype", eventAttributes, postFunction, options);
+    };
 
      wrangler.createChild = function( eventAttributes, postFunction, options)
     {
@@ -323,11 +338,11 @@
     };
         wrangler.channelByName = function(parameters, postFunction, options)
     {
-        return wrangler.skyQuery(get_rid("rulesets"), "channelByName", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
         wrangler.channelByEci = function(parameters, postFunction, options)
     {
-        return wrangler.skyQuery(get_rid("rulesets"), "channelByEci", parameters, postFunction , options); 
+        return wrangler.skyQuery(get_rid("rulesets"), "channel", parameters, postFunction , options); 
     };
         wrangler.subscriptionsAttributesEci = function(parameters, postFunction, options)
     {
@@ -372,10 +387,10 @@
     {
         return wrangler.skyQuery(get_rid("rulesets"), "currentSession", parameters, postFunction , options); 
     };
-    wrangler.bootstrapCheck = function(postFunction, options)
-  {
-    return wrangler.skyQuery(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
-  };
+		wrangler.bootstrapCheck = function(postFunction, options)
+	{
+		return wrangler.skyQuery(get_rid("bootstrap"), "installedRulesets", {}, postFunction, options);
+	};
 
 
 
@@ -486,8 +501,8 @@
         "cloudAuth", 
         parameters, 
         function(res){
-            // patch this up since it's not OAUTH
-            if(res.status) {
+				    // patch this up since it's not OAUTH
+				    if(res.status) {
                        var tokens = {"access_token": "none",
                        "OAUTH_ECI": res.token
                    };
