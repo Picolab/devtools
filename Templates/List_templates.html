@@ -232,7 +232,7 @@
         <p><b>Name:</b> {{name}}</p>
         <p><b>Name Space:</b> {{name_space}}</p> 
         <p><b>Relationship:</b> {{relationship}}</p>
-        <p><b>Event Channel:</b> {{e_cid}}</p>
+        <p><b>Outbound:</b> {{e_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
          <p style="position:relative; top:-20px"><a id="reject-button" style="float:right;" href="#" data-channelname="{{c_name}}" data-eventeci="{{e_cid}}" data-role="button" data-icon="reject" class="ui-btn ui-icon-delete rejectButton">Reject</a></p>
          <p style="position:relative; top:-20px"><a id="approve-button" style="float:right;" href="#"  data-channelname="{{c_name}}" data-eventeci="{{e_cid}}" data-role="button" data-icon="approve" class="ui-btn ui-icon-delete approveButton ">Approve</a></p>
@@ -247,7 +247,7 @@
         <p><b>Name:</b> {{name}}</p>
         <p><b>Name Space:</b> {{name_space}}</p> 
         <p><b>Relationship:</b> {{relationship}}</p>
-        <p><b>Event Channel:</b> {{t_cid}}</p>
+        <p><b>Subscriber:</b> {{t_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
          <p style="position:relative; top:-12px"><a style="float:right; margin: 0px;" href="#" data-channelname="{{c_name}}" data-role="button" data-icon="cancel" class="ui-btn ui-icon-delete CancelSubscriptionButton ">Cancel</a></p>
          <br>
@@ -256,14 +256,14 @@
 </div>
 
 <div id="subscription-template" style="display:none;">
-   <div id="{{c_name}}" data-role="collapsible" data-filtertext="{{name}} ({{e_cid}})" data-theme="a" data-content-theme="a">
-     <h4>{{name}} ({{e_cid}})</h4>
+   <div id="{{c_name}}" data-role="collapsible" data-filtertext="{{name}} ({{outbound_cid}})" data-theme="a" data-content-theme="a">
+     <h4>{{name}} ({{outbound_cid}})</h4>
     <div style = "padding-top: 18px; padding-bottom:44px;"> 
         <p><b>Name:</b> {{name}}</p>
         <p><b>Name Space:</b> {{name_space}}</p> 
         <p><b>Relationship:</b> {{relationship}}</p>
-        <p><b>Outbound:</b> {{e_cid}}</p>
-        <p><b>Inbound:</b> {{b_cid}}</p>
+        <p><b>Outbound:</b> {{outbound_cid}}</p>
+        <p><b>Inbound:</b> {{inbound_cid}}</p>
         <p><b>Attributes:</b> {{attributes}}</p>
          <p style="position:relative; top:12px"><a style="margin-top:-25px;float:right;" href="#" data-channelname="{{c_name}}"
          data-role="button" data-icon="un-subscribe" class="ui-btn ui-icon-delete UnSubscribeButton ">UnSubscribe</a></p>

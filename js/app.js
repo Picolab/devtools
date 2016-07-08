@@ -1337,7 +1337,7 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"e_cid": object["outbound_eci"],
-											"c_name": key2,
+											"c_name": object["channel_name"],
 											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
 										}
@@ -1368,9 +1368,10 @@
 											"name_space": object["name_space"],
 											"relationship": object["relationship"],
 											"t_cid": object["subscriber_eci"],
-											"c_name": object["subscriber_eci"],
+											"e_cid": object["subscriber_eci"],
+											"c_name": object["channel_name"],
 											//"c_name": key2,
-											"attributes": object["channel_name"]
+											"attributes": object["attributes"]
 											//"attributes":JSON.stringify(object["attrs"])
 										}
 											);
@@ -1399,8 +1400,8 @@
 										{"name": object["subscription_name"],
 										"name_space": object["name_space"],
 										"relationship": object["relationship"],
-										"e_cid": object["event_eci"],
-										"b_cid": object["back_channel"],
+										"outbound_cid": object["outbound_eci"],
+										"inbound_cid": object["inbound_eci"],
 										"c_name": key2,
 										"attributes": object["attributes"]
 										//"attributes":JSON.stringify(object["attrs"])
