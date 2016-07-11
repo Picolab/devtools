@@ -22,12 +22,12 @@ ruleset b507199x5 {
 
     // Accounting keys
       //none
+    sharing on
     provides skyQuery, rulesets, rulesetsInfo, //ruleset
     channel, channelAttributes, channelPolicy, channelType, //channel
     children, parent, attributes, prototypes, name, profile, pico,checkPicoName, //pico
     subscriptions, eciFromName, subscriptionAttributes,checkSubscriptionName, //subscription
     standardError
-    sharing on
 
   }
 
