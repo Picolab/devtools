@@ -327,7 +327,7 @@ skyQuery = function(eci, mod, func, params) {
   
   basePrototype = {
       "meta" : {
-                "discription": "Wrangler base prototype"
+                "description": "Wrangler base prototype"
                 },
                 //array of maps for meta data of rids .. [{rid : id},..}  
       "rids": [ "b507199x5.dev",
@@ -394,7 +394,7 @@ skyQuery = function(eci, mod, func, params) {
   };
   devtoolsPrototype = {
       "meta" : {
-                "discription": "devtools prototype"
+                "description": "devtools prototype"
                 },
       "rids": [ 
                 "b507199x1.dev"// quick fix and a ugly one! bootstrap rid
@@ -1290,7 +1290,7 @@ skyQuery = function(eci, mod, func, params) {
            "subscriber_eci": <string>, // this is only stored in the origanal requestie
            "outbound_eci" : <string>,
            "attributes" : <string>, // this will be a object(mostlikely an array) that has been encoded as a string. 
-           "status": <string> // discribes subscription status, incouming, outgoing, subscribed
+           "status": <string> // describes subscription status, incouming, outgoing, subscribed
         }
     }
     ========================================================================

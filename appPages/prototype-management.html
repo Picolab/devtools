@@ -1,21 +1,21 @@
 <!-- -------------------------- -/page-prototypes.html ---------------------------- -->
 
 <div data-role="page" id="page-prototypes">
-  
-    {% include header.html title="Manage Prototypes" %}
-    {% include pico-name-header.html %}
 
-    <div data-role="main" class="ui-content">
-    
-          <ul id="prototype-list" class="ruleset" data-role="listview" data-inset="true" > 
-            <li data-role="list-divider" >Prototype List</li>
-            <li>
-              <a href="#add-prototype" class="ui-btn ui-btn-inline ui-btn-icon-right ui-icon-carat-r  devtools-btn">New Prototype</a>
-            </li>  
-          </ul><!-- /listview -->
+  {% include header.html title="Manage Prototypes" %}
+  {% include pico-name-header.html %}
 
-          <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="manage-prototype-list">
-        </div>
+  <div data-role="main" class="ui-content">
+
+    <ul id="prototype-list" class="ruleset" data-role="listview" data-inset="true" > 
+      <li data-role="list-divider" >Prototype List</li>
+      <li>
+        <a href="#add-prototype" class="ui-btn ui-btn-inline ui-btn-icon-right ui-icon-carat-r  devtools-btn">New Prototype</a>
+      </li>  
+    </ul><!-- /listview -->
+
+    <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="manage-prototype-list">
+    </div>
 
   </div>
   
@@ -31,29 +31,96 @@
   {% include header.html title="Add Prototype" %}
   {% include pico-name-header.html %}
 
-	<div data-role="main" class="ui-content">
-	<div id="add-prototype-dev">
-        <p>
-          Here you can add new prototypes to be used by child Picos.
-        </p>
-        <form id="formAddPrototype" class="form-horizontal form-mycloud">
-          <fieldset>
-            <div class="control-group">
-              <label class="control-label" for="appURL">Source URL</label>
-              <div class="controls">
-                <textarea class="input-xlarge" name="appURL" title="The name of your Prototype" placeholder="The name of your Prototype" required=""></textarea>
-              </div>
-            </div>
-            <div class="form-actions">
-            	<a id= "add-prototype-confirm-button" class="save" href="#" data-icon="check" data-role="button" data-inline="true" data-theme="b">Add Prototype</a>
-              <a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
-              <!--<button type="submit" class="btn btn-primary">Register Ruleset</button>-->
-            </div>
-          </fieldset>
-        </form>
-      </div>
-	</div>
-	{% include footer.html %}
+  <div data-role="main" class="ui-content">
+   <ul id="add-prototype-list" data-role="listview" data-inset="true"> 
+    <li data-role="list-divider" >Add Prototype</li>
+    <li>
+      <form id="form-add-prototype-meta">
+        <div data-role="fieldcontain">
+          <label for="prototype_name">Name:</label>
+          <input type="text" name="prototype_name" id="a_prototype_name" class="proto-field" value="" placeholder="Name" />
+          <label for="prototype_description">Description:</label>
+          <input type="text" name="prototype_description" id="a_prototype_description" class="proto-field" value="" placeholder="Description" />
+          <label for="prototype_rids">RIDs:</label>
+          <input type="text" name="prototype_rids" id="a_prototype_rids" class="proto-field" value="" placeholder="Place your RIDs here" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider" class="ui-field-contain">
+    <span><h3>Prototype Channels <a class="ui-btn ui-btn-d ui-btn-inline inline add-channel" style="font-size:12px;right:0px;height:15px;">Add Channel</a></h3></span>
+    </li>
+    <li id="li-add-prototype-channels0">
+      <form id="form-add-prototype-channels0">
+        <div data-role="fieldcontain">
+          <label for="prototype_channel_name">Name:</label>
+          <input type="text" name="prototype_channel_name" id="a_prototype_channel_name0" class="proto-field" value="" placeholder="Channel Name" />
+          <label for="prototype_channel_type">Type:</label>
+          <input type="text" name="prototype_channel_type" id="a_prototype_channel_type0" class="proto-field" value="" placeholder="Channel Type" />
+          <label for="prototype_channel_attributes">Attributes:</label>
+          <input type="text" name="prototype_channel_attributes" id="a_prototype_channel_attributes0" class="proto-field" value="" placeholder="Channel Attributes" />
+          <label for="prototype_channel_policy">Policy:</label>
+          <input type="text" name="prototype_channel_policy" id="a_prototype_channel_policy0" class="proto-field" value="" placeholder="Channel Policy" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">
+      <span><h3>Subscriptions Request Info <a class="ui-btn ui-btn-d ui-btn-inline inline add-subscription" style="font-size:12px;right:0px;height:15px;">Add Subscription</a></h3></span>
+    </li>
+    <li id="li-add-prototype-subs0">
+      <form id="form-add-prototype-subs0">
+        <div data-role="fieldcontain">
+          <label for="prototype_sub_name">Name:</label>
+          <input type="text" name="prototype_sub_name" id="a_prototype_sub_name0" class="proto-field" value="" placeholder="Subscription Name" />
+          <label for="prototype_sub_namespace">Namespace:</label>
+          <input type="text" name="prototype_sub_namespace" id="a_prototype_sub_namespace0" class="proto-field" value="" placeholder="ex: school_picos" />
+          <label for="prototype_sub_type">Channel Type:</label>
+          <input type="text" name="prototype_sub_type" id="a_prototype_sub_type0" class="proto-field" value="" placeholder="Type" />
+          <label for="prototype_sub_myRole">My Role:</label>
+          <input type="text" name="prototype_sub_myRole" id="a_prototype_sub_myRole0" class="proto-field" value="" placeholder="ex: Teacher" />
+          <label for="prototype_sub_subRole">Subscriber Role:</label>
+          <input type="text" name="prototype_sub_subRole" id="a_prototype_sub_subRole0" class="proto-field" value="" placeholder="ex: Student" />
+          <label for="prototype_sub_eci">Target:</label>
+          <input type="text" name="prototype_sub_eci" id="a_prototype_sub_eci0" class="proto-field" value="" placeholder="Target Pico ECI (ex: 01234567-89AB-CDEF-0123-456789ABCDEF" />
+          <label for="prototype_sub_attributes">Attributes:</label>
+          <input type="text" name="prototype_sub_attributes" id="a_prototype_sub_attributes0" class="proto-field" value="" placeholder="Subscription Attributes" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">
+    <span><h3>Prototype Events <a class="ui-btn ui-btn-d ui-btn-inline inline add-event" style="font-size:12px;right:0px;height:15px;">Add Event</a></h3></span>
+    </li>
+    <li id="li-add-prototype-events0">
+      <form id="form-add-prototype-events0">
+        <div data-role="fieldcontain">
+          <label for="prototype_event_domain">Event Domain:</label>
+          <input type="text" name="prototype_event_domain" id="a_prototype_event_domain0" class="proto-field" value="" placeholder="explicit" />
+          <label for="prototype_event_type">Event Type:</label>
+          <input type="text" name="prototype_event_type" id="a_prototype_event_type0" class="proto-field" value="" placeholder="status" />
+          <label for="prototype_event_attributes">Event Attributes:</label>
+          <input type="text" name="prototype_event_attributes" id="a_prototype_event_attributes0" class="proto-field" value="" placeholder="{'wrangler': rocks, ...}" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">PDS</li>
+    <li>
+      <form id="form-add-prototype-pds">
+        <div data-role="fieldcontain">
+          <label for="prototype_pds_profile">Profile:</label>
+          <input type="text" name="prototype_pds_profile" id="a_prototype_pds_profile" class="proto-field" value="" placeholder="" />
+          <label for="prototype_pds_general">General:</label>
+          <input type="text" name="prototype_pds_general" id="a_prototype_pds_general" class="proto-field" value="" placeholder="" />
+          <label for="prototype_pds_settings">Settings:</label>
+          <input type="text" name="prototype_pds_settings" id="a_prototype_pds_settings" class="proto-field" value="" placeholder="" />
+        </div>
+      </form>
+    </li>
+    <div>
+      <a id="add-prototype-confirm-button" href="" class="ui-btn ui-btn-b ui-btn-inline">Add Prototype</a>
+      <a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+    </div>
+  </ul>
+</div>
+{% include footer.html %}
 </div>
 
 
@@ -65,27 +132,99 @@
 	{% include header.html title="Update Prototype" %}
   {% include pico-name-header.html %}
 
-	<div data-role="main" class="ui-content">
-		
-		<ul id="update-prototype" data-role="listview" data-inset="true"> 
-			<li data-role="list-divider" >Update Prototype</li>
-			<li>
-				<form id="form-update-prototype">
-						<!--insert rid here-->
-						<!--url is here-->
-						<label for="url" id="prototypeLabel">Prototype: </label>
-						<input type="text" name="url" id="prototype_info" value="" placeholder="Prototype Info" />
-				</form>
-				<div>
-					<a id="update-prototype-confirm-button" href="#" class="ui-btn ui-btn-b ui-btn-inline">Update</a>
-					<a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
-				</div>
-			</li>
-		</ul>
+  <div data-role="main" class="ui-content">
 
-	</div>
+    <ul id="update-prototype" data-role="listview" data-inset="true"> 
+     <li data-role="list-divider" >Update Prototype</li>
+     <li>
+      <form id="form-update-prototype-meta">
+        <div data-role="fieldcontain">
+          <label for="prototype_name">Name:</label>
+          <input type="text" name="prototype_name" id="u_prototype_name" class="proto-field" value="" placeholder="Name" />
+          <label for="prototype_description">Description:</label>
+          <input type="text" name="prototype_description" id="u_prototype_description" class="proto-field" value="" placeholder="Description" />
+          <label for="prototype_rids">RIDs:</label>
+          <input type="text" name="prototype_rids" id="u_prototype_rids" class="proto-field" value="" placeholder="Place your RIDs here" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider" class="ui-field-contain">
+    <span><h3>Prototype Channels <a class="ui-btn ui-btn-d ui-btn-inline inline add-channel" style="font-size:12px;right:0px;height:15px;">Add Channel</a></h3></span>
+    </li>
+    <li id="li-update-prototype-channels0">
+      <form id="form-update-prototype-channels0">
+        <div data-role="fieldcontain">
+          <label for="prototype_channel_name">Name:</label>
+          <input type="text" name="prototype_channel_name" id="u_prototype_channel_name0" class="proto-field" value="" placeholder="Channel Name" />
+          <label for="prototype_channel_type">Type:</label>
+          <input type="text" name="prototype_channel_type" id="u_prototype_channel_type0" class="proto-field" value="" placeholder="Channel Type" />
+          <label for="prototype_channel_attributes">Attributes:</label>
+          <input type="text" name="prototype_channel_attributes" id="u_prototype_channel_attributes0" class="proto-field" value="" placeholder="Channel Attributes" />
+          <label for="prototype_channel_policy">Policy:</label>
+          <input type="text" name="prototype_channel_policy" id="u_prototype_channel_policy0" class="proto-field" value="" placeholder="Channel Policy" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">
+      <span><h3>Subscriptions Request Info <a class="ui-btn ui-btn-d ui-btn-inline inline add-subscription" style="font-size:12px;right:0px;height:15px;">Add Subscription</a></h3></span>
+    </li>
+    <li id="li-update-prototype-subs0">
+      <form id="form-update-prototype-subs0">
+        <div data-role="fieldcontain">
+          <label for="prototype_sub_name">Name:</label>
+          <input type="text" name="prototype_sub_name" id="u_prototype_sub_name0" class="proto-field" value="" placeholder="Subscription Name" />
+          <label for="prototype_sub_namespace">Namespace:</label>
+          <input type="text" name="prototype_sub_namespace" id="u_prototype_sub_namespace0" class="proto-field" value="" placeholder="ex: school_picos" />
+          <label for="prototype_sub_type">Channel Type:</label>
+          <input type="text" name="prototype_sub_type" id="u_prototype_sub_type0" class="proto-field" value="" placeholder="Type" />
+          <label for="prototype_sub_myRole">My Role:</label>
+          <input type="text" name="prototype_sub_myRole" id="u_prototype_sub_myRole0" class="proto-field" value="" placeholder="ex: Teacher" />
+          <label for="prototype_sub_subRole">Subscriber Role:</label>
+          <input type="text" name="prototype_sub_subRole" id="u_prototype_sub_subRole0" class="proto-field" value="" placeholder="ex: Student" />
+          <label for="prototype_sub_eci">Target:</label>
+          <input type="text" name="prototype_sub_eci" id="u_prototype_sub_eci0" class="proto-field" value="" placeholder="Target Pico ECI (ex: 01234567-89AB-CDEF-0123-456789ABCDEF" />
+          <label for="prototype_sub_attributes">Attributes:</label>
+          <input type="text" name="prototype_sub_attributes" id="u_prototype_sub_attributes0" class="proto-field" value="" placeholder="Subscription Attributes" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">
+    <span><h3>Prototype Events <a class="ui-btn ui-btn-d ui-btn-inline inline add-event" style="font-size:12px;right:0px;height:15px;">Add Event</a></h3></span>
+    </li>
+    <li id="li-update-prototype-events0">
+      <form id="form-update-prototype-events0">
+        <div data-role="fieldcontain">
+          <label for="prototype_event_domain">Event Domain:</label>
+          <input type="text" name="prototype_event_domain" id="u_prototype_event_domain0" class="proto-field" value="" placeholder="explicit" />
+          <label for="prototype_event_type">Event Type:</label>
+          <input type="text" name="prototype_event_type" id="u_prototype_event_type0" class="proto-field" value="" placeholder="status" />
+          <label for="prototype_event_attributes">Event Attributes:</label>
+          <input type="text" name="prototype_event_attributes" id="u_prototype_event_attributes0" class="proto-field" value="" placeholder="{'wrangler': rocks, ...}" />
+        </div>
+      </form>
+    </li>
+    <li data-role="list-divider">PDS</li>
+    <li>
+      <form id="form-update-prototype-pds">
+        <div data-role="fieldcontain">
+          <label for="prototype_pds_profile">Profile:</label>
+          <input type="text" name="prototype_pds_profile" id="u_prototype_pds_profile" class="proto-field" value="" placeholder="" />
+          <label for="prototype_pds_general">General:</label>
+          <input type="text" name="prototype_pds_general" id="u_prototype_pds_general" class="proto-field" value="" placeholder="" />
+          <label for="prototype_pds_settings">Settings:</label>
+          <input type="text" name="prototype_pds_settings" id="u_prototype_pds_settings" class="proto-field" value="" placeholder="" />
+        </div>
+      </form>
+    </li>
+    <div>
+      <a id="update-prototype-confirm-button" href="" class="ui-btn ui-btn-b ui-btn-inline">Update Prototype</a>
+      <a href="#page-prototypes" class="ui-btn ui-btn-inline" data-transition="slide">Cancel</a>
+    </div>
+  </ul>
 
-	{% include footer.html %}
+</div>
+
+{% include footer.html %}
 
 </div>
 
