@@ -923,8 +923,8 @@ skyQuery = function(eci, mod, func, params) {
   rule createChild { 
     select when wrangler child_creation
     pre {
-      attribute = event:attrs();
-      name = event:attr("name").defaultsTo(randomPicoName(),standardError("missing event attr name, random word used instead."));
+//      attribute = event:attrs();
+      name = event:attr("name").klog("Seeing name: ").defaultsTo(randomPicoName(),standardError("missing event attr name, random word used instead."));
       prototype = event:attr("prototype").defaultsTo("devtools", standardError("missing event attr prototype"));           
     }
 
