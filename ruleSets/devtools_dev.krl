@@ -559,7 +559,7 @@ ruleset devtools {
 	        
 	      	//schedule explicit event "fixed time" at time:add(time:now(),{"seconds":180}) attributes attr;
 	        log(">> single >>");
-	        schedule do_main event event_type at date_time attributes attr ;
+	        schedule explicit event event_type at date_time attributes attr ;
 	        
 	        //schedule explicit event event_type at date_time attributes attr; //attributes event:attrs();
 	        //recurring
@@ -575,7 +575,7 @@ ruleset devtools {
 	            } 
 	      else {
 	        log(">> multiple >>");
-	        schedule do_main event event_type repeat recurrment attributes attr ;
+	        schedule explicit event event_type repeat recurrment attributes attr ;
 	        //schedule do_main event event_type at date_time attributes event:attrs();
 	        //schedule notification event status at time:add(time:now(),{"seconds":120}) attributes event:attrs();
 	      }
