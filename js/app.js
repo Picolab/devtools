@@ -722,16 +722,18 @@
 					var arr_events = [];
 
 					for (i = 0; i < chNum; i++) {
-						arr_channels.push({
+						i_channel = {
 							name: channelForms[i]["prototype_channel_name"],
 							type: channelForms[i]["prototype_channel_type"],
 							attributes: channelForms[i]["prototype_channel_attributes"],
 							policy: channelForms[i]["prototype_channel_policy"]
-						});
+						};
+						if (i_channel["name"] || i_channel["type"] || i_channel["attributes"] || i_channel["policy"])
+							arr_channels.push(i_channel);
 					}
 
 					for (i = 0; i < subNum; i++) {
-						arr_subscriptions.push({
+						i_subscription = {
 							name: subscriptionForms[i]["prototype_sub_name"],
 							name_space: subscriptionForms[i]["prototype_sub_namespace"],
 							my_role: subscriptionForms[i]["prototype_sub_myRole"],
@@ -739,16 +741,26 @@
 							subscriber_eci: subscriptionForms[i]["prototype_sub_eci"],
 							channel_type: subscriptionForms[i]["prototype_sub_type"],
 							attrs: subscriptionForms[i]["prototype_sub_attributes"]
-						});
+						};
+						if (i_subscription["name"] || i_subscription["name_space"] || i_subscription["my_role"] || i_subscription["subscriber_role"] || i_subscription["subscriber_eci"] || i_subscription["channel_type"] || i_subscription["attrs"])
+							arr_subscriptions.push(i_subscription);
 					}
 
 					for (i = 0; i < evNum; i++) {
-						arr_events.push({
+						i_event = {
 							domain: eventForms[i]["prototype_event_domain"],
 							type: eventForms[i]["prototype_event_type"],
 							attrs: eventForms[i]["prototype_event_attributes"],
-						});
+						};
+						if (i_event["domain"] || i_event["type"] || i_event["attrs"])
+							arr_events.push(i_event);
 					}
+
+					var proto_rids = [];
+					var arr_rids = metaForm["prototype_rids"].split(";");
+					for (var i in arr_rids)
+						if (arr_rids[i] != "")
+							proto_rids.push(arr_rids[i]);
 
 					createdPrototype = {
 						meta: {
@@ -756,7 +768,7 @@
 							description: metaForm["prototype_description"]
 						},
 
-						rids: metaForm["prototype_rids"].split(";"),
+						rids: proto_rids,
 
 						channels: arr_channels,
 						subscriptions_request: arr_subscriptions,
@@ -844,7 +856,7 @@
 
 						$("#u_prototype_name").val(prototypeName || "");
 						$("#u_prototype_description").val(prototypeInfo["meta"]["description"] || "");
-						$("#u_prototype_rids").val(prototypeInfo["rids"] || "");
+						$("#u_prototype_rids").val(prototypeInfo["rids"].toString().replace(/,/g, ";") || "");
 
 						while (prototypeInfo["channels"].length > chNum)
 							addChannel(null);
@@ -911,16 +923,18 @@
 					var arr_events = [];
 
 					for (i = 0; i < chNum; i++) {
-						arr_channels.push({
+						i_channel = {
 							name: channelForms[i]["prototype_channel_name"],
 							type: channelForms[i]["prototype_channel_type"],
 							attributes: channelForms[i]["prototype_channel_attributes"],
 							policy: channelForms[i]["prototype_channel_policy"]
-						});
+						};
+						if (i_channel["name"] || i_channel["type"] || i_channel["attributes"] || i_channel["policy"])
+							arr_channels.push(i_channel);
 					}
 
 					for (i = 0; i < subNum; i++) {
-						arr_subscriptions.push({
+						i_subscription = {
 							name: subscriptionForms[i]["prototype_sub_name"],
 							name_space: subscriptionForms[i]["prototype_sub_namespace"],
 							my_role: subscriptionForms[i]["prototype_sub_myRole"],
@@ -928,16 +942,26 @@
 							subscriber_eci: subscriptionForms[i]["prototype_sub_eci"],
 							channel_type: subscriptionForms[i]["prototype_sub_type"],
 							attrs: subscriptionForms[i]["prototype_sub_attributes"]
-						});
+						};
+						if (i_subscription["name"] || i_subscription["name_space"] || i_subscription["my_role"] || i_subscription["subscriber_role"] || i_subscription["subscriber_eci"] || i_subscription["channel_type"] || i_subscription["attrs"])
+							arr_subscriptions.push(i_subscription);
 					}
 
 					for (i = 0; i < evNum; i++) {
-						arr_events.push({
+						i_event = {
 							domain: eventForms[i]["prototype_event_domain"],
 							type: eventForms[i]["prototype_event_type"],
 							attrs: eventForms[i]["prototype_event_attributes"],
-						});
+						};
+						if (i_event["domain"] || i_event["type"] || i_event["attrs"])
+							arr_events.push(i_event);
 					}
+
+					var proto_rids = [];
+					var arr_rids = metaForm["prototype_rids"].split(";");
+					for (var i in arr_rids)
+						if (arr_rids[i] != "")
+							proto_rids.push(arr_rids[i]);
 
 					createdPrototype = {
 						meta: {
@@ -945,7 +969,7 @@
 							description: metaForm["prototype_description"]
 						},
 
-						rids: metaForm["prototype_rids"].split(";"),
+						rids: proto_rids,
 
 						channels: arr_channels,
 						subscriptions_request: arr_subscriptions,
@@ -1609,10 +1633,11 @@ subscriptions: function(type, match, ui, page) {
 					});
 				});
 								  //outter div
-								  Type = "Inbound";
+								  Type = "Pending-Inbound";
 								  dynamic_subscriptions_items += 
 								  snippets.subscription_tab_template(
-											{"Type": Type}//,
+											{"Type": Type,
+											"Type-Name": "Pending Inbound"}
 											);
 								  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 								  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
@@ -1642,10 +1667,11 @@ subscriptions: function(type, match, ui, page) {
 										});
 									});
 								  //outter div
-								  Type = "Outbound";
+								  Type = "Pending-Outbound";
 								  dynamic_subscriptions_items += 
 								  snippets.subscription_tab_template(
-											{"Type": Type }//,
+											{"Type": Type,
+											"Type-Name": "Pending Outbound"}
 											);
 								  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 								  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
@@ -1677,8 +1703,9 @@ subscriptions: function(type, match, ui, page) {
 							  Type = "subscriptions";
 							  dynamic_subscriptions_items += 
 							  snippets.subscription_tab_template(
-										{"Type": Type}//,
-										);
+											{"Type": Type,
+											"Type-Name": "Subscriptions"}
+											);
 							  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							}
