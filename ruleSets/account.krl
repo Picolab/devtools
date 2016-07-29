@@ -11,7 +11,7 @@ ruleset b507199x6 {
     logging on
 
     use module b16x24 alias system_credentials
-    use module v1_wrangler alias wrangler
+    use module b507199x5 alias wrangler
 
     // errors raised to.... unknown
 
