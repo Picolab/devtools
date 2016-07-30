@@ -51,7 +51,7 @@
         
         var rids = {
             "rulesets": {"prod": "v1_wrangler.prod", 
-                          "dev": "b507199x5"
+                          "dev": "v1_wrangler.dev"
             },
             "bootstrap":{"prod": "b507199x1.prod", 
                           "dev": "b507199x1.dev"

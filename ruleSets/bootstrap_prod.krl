@@ -21,7 +21,7 @@ ruleset DevTools_bootstrap {
         rulesets = {
             "core": [
                    "a169x625.prod",  // CloudOS Service
-                   "b507199x5",  // next gen CloudOS
+                   "v1_wrangler.dev",  // next gen CloudOS
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
                    "b507199x0.dev", //DevTools
@@ -74,7 +74,7 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(v){v eq "b507199x0.dev" || v eq "b507199x5"})
+                         .filter(function(v){v eq "b507199x0.dev" || v eq "v1_wrangler.dev"})
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
@@ -83,7 +83,7 @@ ruleset DevTools_bootstrap {
       }
       if (bootstrapped > 1 ) then
       {
-        send_directive("found_b507199x0.dev_and_b507199x5_for_developer") 
+        send_directive("found_b507199x0.dev_and_v1_wrangler.dev_for_developer") 
            with eci = eci;
       }
       fired {

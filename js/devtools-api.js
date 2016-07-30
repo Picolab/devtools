@@ -59,7 +59,7 @@
 		checkForBootstrapped = function(justNeedsBootstrap, needsBootstrapRuleset) {
             return wrangler.bootstrapCheck(function(json) {
 				console.log(json);
-				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('b507199x5', json.rids) > -1) {
+				if ($.inArray('b507199x0.dev', json.rids) > -1 && $.inArray('v1_wrangler.dev', json.rids) > -1) {
 					console.log("Pico is bootstrapped");
 					cb();
 				}
