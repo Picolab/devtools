@@ -210,35 +210,47 @@
 							$("#child-picos").empty();
 							childrenArray = [];
 							dynamicChildrenList = "";
-
-							if (children_result["children"] == "error")
+							if (!children_result["status"])
 							{
 								$.mobile.loading("hide");
 								return;
 							}
+							else
+							{
+								var sortedChildren = children_result["children"].sort(sortBy("name"));
 
-							resLength = children_result["children"].length;
-							readyCount = 0;
+								$.each(sortedChildren, function (index, child) {
+									dynamicChildrenList += 
+									snippets.child_pico_template(child);
+								});
+								$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+								$.mobile.loading("hide");
+
+							}
+
+				//			resLength = children_result["children"].length;
+				//			readyCount = 0;
+
 
 					//quick barrier for the async name calls
-					upCount = function() {
-						readyCount++;
-						if (readyCount == resLength) {
-							$.mobile.loading("hide");
+				//	upCount = function() {
+				//		readyCount++;
+				//		if (readyCount == resLength) {
+				//			$.mobile.loading("hide");
 							
-							childrenArray.sort(function(a, b) {
-								if (a.picoName == 0) return -1;
-								else if (b.picoName == 0) return 1;
-								else if (a.picoName.toLowerCase() > b.picoName.toLowerCase()) return 1;
-								else return -1;
-							})
-							for (i = 0; i < childrenArray.length; i++)
-							{
-								dynamicChildrenList += 
-								snippets.child_pico_template(childrenArray[i]);
-							}
+				//			childrenArray.sort(function(a, b) {
+				//				if (a.picoName == 0) return -1;
+				//				else if (b.picoName == 0) return 1;
+				//				else if (a.picoName.toLowerCase() > b.picoName.toLowerCase()) return 1;
+				//				else return -1;
+				//			})
+				//			for (i = 0; i < childrenArray.length; i++)
+				//			{
+				//				dynamicChildrenList += 
+				//				snippets.child_pico_template(childrenArray[i]);
+				//			}
 							
-							$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
+				//			$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 
 							$(".openPicoButton").off('tap').on('tap', function() {
 								console.log(this.id);
@@ -259,7 +271,7 @@
 
 							$(".deletePicoButton").off('tap').on('tap', function() {
 								console.log("DELETE button pushed for " + this.id);
-								wrangler.deleteChild({"deletionTarget":this.id}, function() {
+								wrangler.deleteChild({"pico_name":this.id}, function() {
 									$.mobile.changePage("#about", {
 										transition: 'slide',
 										allowSamePageTransition : true
@@ -272,11 +284,14 @@
 								//$(".childPicoButton").addClass('ui-nodisc-icon');
 								//$(".childPicoButton").addClass('ui-alt-icon');
 							}
-						}
-					}
+				//		}
+				//	}
+				//		console.log("children name: ", children_result["children"]);
 					
-					$.each(children_result["children"], function(id, child){
-						Devtools.picoName(function(name_res){
+				//	$.each(children_result["children"], function(index,child){
+				//		console.log("children name: ",child["name"]);
+				//		console.log("children name: ",child["eci"]);
+					/*	Devtools.picoName(function(name_res){
 							console.log(name_res["picoName"]);
 							childrenArray.push({
 								"eci": child[0],
@@ -291,10 +306,9 @@
 								);
 								*/
 
-								upCount();
-							}, {"eci":child[0]});
-
-					});
+						//		upCount();
+						//	}, {"eci":child[0]});
+				//	});
 					
 				});
 					},
