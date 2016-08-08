@@ -20,8 +20,6 @@ ruleset DevTools_bootstrap {
 
         rulesets = {
             "core": [
-                   "a169x625.prod",  // CloudOS Service
-                   "v1_wrangler.dev",  // next gen CloudOS
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
                    "b507199x0.dev", //DevTools
