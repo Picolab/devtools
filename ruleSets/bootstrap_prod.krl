@@ -72,7 +72,7 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(v){v eq "b507199x0.dev" || v eq "v1_wrangler.dev"})
+                         .filter(function(v){v eq "b507199x0.dev"})
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
@@ -81,7 +81,7 @@ ruleset DevTools_bootstrap {
       }
       if (bootstrapped > 1 ) then
       {
-        send_directive("found_b507199x0.dev_and_v1_wrangler.dev_for_developer") 
+        send_directive("found_b507199x0.dev_for_developer") 
            with eci = eci;
       }
       fired {
