@@ -812,7 +812,7 @@
 						});
 						
 						Devtools.addPrototype(protoAttrs, function(protoJSON) {
-							console.log("Added Prototype: ", protoAttrs, directives);
+							console.log("Added Prototype: ", protoAttrs);
 							$.mobile.changePage("#page-prototypes", {
 								transition: 'slide'
 							});
