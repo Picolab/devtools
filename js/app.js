@@ -1227,7 +1227,7 @@
 								dynamicChannelItems2 +=
 								snippets.installed_channels_template2(
 									{"channel_name": channel["name"],
-									"cid": channel["cid"],
+									"cid": channel["eci"],
 									"type": type,
 									"time": time,
 									"attributes":JSON.stringify(channel["attributes"]).replace(/"|{|}/g,"")}
