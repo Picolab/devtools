@@ -797,22 +797,28 @@
 
 					console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
 
-					/*
-					if(typeof url !== "undefined" && url_check === true) {
+					var protoJSON = JSON.stringify(createdPrototype);
+					protoAttrs = {
+						prototypeName: metaForm["prototype_name"],
+						prototype: protoJSON
+					}
+
+					console.log(">>>>>>>>> JSON'D PROTOTYPE", protoAttrs);
+
+					if(typeof protoAttrs !== "undefined") {
 						$.mobile.loading("show", {
 							text: "Adding Prototype...",
 							textVisible: true
 						});
 						
-						Devtools.RegisterRuleset(url, function(directives) {
-							console.log("registered ", url, directives);
-							$.mobile.changePage("#listing", {
+						Devtools.addPrototype(protoAttrs, function(protoJSON) {
+							console.log("Added Prototype: ", protoAttrs, directives);
+							$.mobile.changePage("#page-prototypes", {
 								transition: 'slide'
 							});
 						}); 
 						
 					}
-					*/
 				}); 
 			},
 
@@ -1007,7 +1013,7 @@
 						
 						Devtools.RegisterRuleset(url, function(directives) {
 							console.log("registered ", url, directives);
-							$.mobile.changePage("#listing", {
+							$.mobile.changePage("#page-prototypes", {
 								transition: 'slide'
 							});
 						}); 
