@@ -799,7 +799,7 @@
 
 					var protoJSON = JSON.stringify(createdPrototype);
 					protoAttrs = {
-						prototypeName: metaForm["prototype_name"],
+						prototype_name: metaForm["prototype_name"],
 						prototype: protoJSON
 					}
 
