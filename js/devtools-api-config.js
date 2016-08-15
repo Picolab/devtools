@@ -1,1 +1,1 @@
-Devtools.defaults.production = true;
+Devtools.defaults.production = false;
