@@ -1015,12 +1015,12 @@
 
 					if(typeof protoAttrs !== "undefined") {
 						$.mobile.loading("show", {
-							text: "Adding Prototype...",
+							text: "Updating Prototype...",
 							textVisible: true
 						});
 						
 						Devtools.addPrototype(protoAttrs, function(protoJSON) {
-							console.log("Added Prototype: ", protoAttrs);
+							console.log("Updated Prototype: ", protoAttrs);
 							$.mobile.changePage("#page-prototypes", {
 								transition: 'slide'
 							});
