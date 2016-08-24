@@ -23,6 +23,7 @@ ruleset DevTools_bootstrap {
                    "a169x676.prod",  // PDS
                    "a16x129.prod",    // SendGrid module
                    "b507199x14.prod", //DevTools
+                   "v1_wrangler.prod", //wrangler
                    "b16x29.prod"     // logging
             ],
       "unwanted": []
@@ -72,16 +73,16 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(v){v eq "b507199x14.prod"})
+                         .filter(function(v){v eq "b507199x14.prod"|| v eq "v1_wrangler.prod" })
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
                          ;// check if installed_rids includes b507199x14.prod --- use a filter and check if length is > 0.
       
       }
-      if (bootstrapped > 1 ) then
+      if (bootstrapped >= 2 ) then// we have both devtools and wrangler
       {
-        send_directive("found_b507199x14.prod_for_developer") 
+        send_directive("found_b507199x14.prod_&_v1_wrangler.prod_for_developer") 
            with eci = eci;
       }
       fired {
@@ -93,7 +94,7 @@ ruleset DevTools_bootstrap {
         log ">>>> pico installed_rids, saw : " + rids_string;
         log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x14.prod}), saw : " + installed_rids.filter(function(k,v){v eq "b507199x14.prod"}).encode();
         log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x14.prod}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b507199x14.prod"}).length();
-        raise explicit event devtools_bootstrap_needed ;  // don't bootstrap everything
+        raise explicit event devtools_bootstrap_needed ;  // don't bootstrap everything? // we can bootstrap everythinb because you cant install the same ruleset twice.
         
       }
     }
