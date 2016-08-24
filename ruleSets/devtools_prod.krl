@@ -1,5 +1,5 @@
-//b507199x0
-//Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b507199x0.prod;b507199x0.dev
+//b507199x14
+//Flush the ruleset webpage: http://cs.kobj.net/ruleset/flush/b507199x14.prod;b507199x14.dev
 ruleset devtools {
   meta {
     name "DevTools"
@@ -8,7 +8,7 @@ ruleset devtools {
     >>
         author "KRL-DevTools Developer"
 
-        use module b16x24 alias system_credentials
+        use module b16x42 alias system_credentials
 
 
         logging on

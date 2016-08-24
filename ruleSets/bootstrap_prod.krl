@@ -1,4 +1,4 @@
-//for flushing: http://cs.kobj.net/ruleset/flush/b507199x1.prod;b507199x1.dev
+//for flushing: http://cs.kobj.net/ruleset/flush/b507199x13.prod;b507199x13.dev
 ruleset DevTools_bootstrap {
     meta {
         name "DevTools Bootstrap"
@@ -7,7 +7,7 @@ ruleset DevTools_bootstrap {
         >>
 
        // use module a169x625 alias CloudOS
-        use module b16x24 alias system_credentials
+        use module b16x42 alias system_credentials
 
         logging on
         
@@ -22,7 +22,7 @@ ruleset DevTools_bootstrap {
             "core": [
                    "a169x676.prod",  // PDS
                    "a16x129.dev",    // SendGrid module
-                   "b507199x0.dev", //DevTools
+                   "b507199x14.dev", //DevTools
                    "b16x29.prod"     // logging
             ],
       "unwanted": []
@@ -72,16 +72,16 @@ ruleset DevTools_bootstrap {
 
         bootstrapped = installed_rids{"rids"}
                          .klog(">>>> pico installed_rids before filter >>>> ")
-                         .filter(function(v){v eq "b507199x0.dev"})
+                         .filter(function(v){v eq "b507199x14.dev"})
                          .klog(">>>> pico installed_rids after filter >>>> ")
                          .length()
                          .klog(">>>> pico installed_rids length >>>> ")
-                         ;// check if installed_rids includes b507199x0.prod --- use a filter and check if length is > 0.
+                         ;// check if installed_rids includes b507199x14.prod --- use a filter and check if length is > 0.
       
       }
       if (bootstrapped > 1 ) then
       {
-        send_directive("found_b507199x0.dev_for_developer") 
+        send_directive("found_b507199x14.dev_for_developer") 
            with eci = eci;
       }
       fired {
@@ -91,8 +91,8 @@ ruleset DevTools_bootstrap {
         log ">>>> pico needs a bootstrap >>>> ";
         log ">>>> pico installed_rids, saw : " + rids.encode();
         log ">>>> pico installed_rids, saw : " + rids_string;
-        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.dev}), saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.dev"}).encode();
-        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x0.dev}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b507199x0.dev"}).length();
+        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x14.dev}), saw : " + installed_rids.filter(function(k,v){v eq "b507199x14.dev"}).encode();
+        log ">>>> pico installed_rids.filter(function(k,v){v eq b507199x14.dev}).length();, saw : " + installed_rids.filter(function(k,v){v eq "b507199x14.dev"}).length();
         raise explicit event devtools_bootstrap_needed ;  // don't bootstrap everything
         
       }
@@ -120,7 +120,7 @@ ruleset DevTools_bootstrap {
     select when bootstrap bootstrap_rid_needed_on_child
     pre {
       target_pico = event:attr("target");
-      installed = InstallRulesets(["b507199x1.dev"], target_pico)
+      installed = InstallRulesets(["b507199x13.dev"], target_pico)
                 .defaultsTo("error","installing bootstrap");
     }
     {
