@@ -1,4 +1,4 @@
-//for flushing: http://cs.kobj.net/ruleset/flush/b507199x13.prod;b507199x13.dev
+//for flushing: http://cs.kobj.net/ruleset/flush/v1_devtools_bootstrap.prod;v1_devtools_bootstrap.dev
 ruleset DevTools_bootstrap {
     meta {
         name "DevTools Bootstrap"
@@ -121,7 +121,7 @@ ruleset DevTools_bootstrap {
     select when bootstrap bootstrap_rid_needed_on_child
     pre {
       target_pico = event:attr("target");
-      installed = InstallRulesets(["b507199x13.prod"], target_pico)
+      installed = InstallRulesets(["v1_devtools_bootstrap.prod"], target_pico)
                 .defaultsTo("error","installing bootstrap");
     }
     {
