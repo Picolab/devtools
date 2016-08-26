@@ -1,4 +1,5 @@
-wrangler.clientKey = "58E26CE2-C218-11E4-A971-4464D61CF0AC"; // "0F03372E-1078-11E5-BCFA-5FDDE71C24E1";
+// This is the client key for devtools (in pjw account)
+wrangler.clientKey = "63D2ED70-A81D-11E5-AE52-D18AE71C24E1"; // "58E26CE2-C218-11E4-A971-4464D61CF0AC"; 
 wrangler.anonECI = "85255500-0b65-0130-243c-00163ebcdddd";
 wrangler.callbackURL = "http://devtools.picolabs.io/code.html";
 wrangler.host = "kibdev.kobj.net"; // change to cs.kobj.net when in production
