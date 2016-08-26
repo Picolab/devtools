@@ -269,6 +269,40 @@
 								}, {"eci":picoToOpen});
 							});
 
+							$('.deletePicoButton').off('tap').on('tap', function(event)
+							{	
+								deleteThis = this.id;
+								console.log("DELETE button pushed for " + deleteThis);
+								noty( {
+									layout: 'topCenter',
+									text: 'Are you sure you want to delete this pico?',
+									type: 'warning',
+
+									buttons: [ {
+										addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+											$noty.close();
+											$.mobile.loading("show", {
+												text: "Deleting pico...",
+												textVisible: true
+											});
+											wrangler.deleteChild({"pico_name":deleteThis}, function() {
+												$.mobile.changePage("#about", {
+													transition: 'slide',
+													allowSamePageTransition : true
+												});
+											});
+										}
+									},
+									{
+										addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+											noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}]
+								});
+							});
+
+							/*
 							$(".deletePicoButton").off('tap').on('tap', function() {
 								console.log("DELETE button pushed for " + this.id);
 								wrangler.deleteChild({"pico_name":this.id}, function() {
@@ -278,6 +312,7 @@
 									});
 								});
 							});
+							*/
 
 							if (window.innerWidth <= 600) {
 								$(".childPicoButton").css('font-size', '12px');
@@ -630,8 +665,9 @@
 						//---------------delete button----------------------
 						$('.deleteButton').off('tap').on('tap', function(event)
 						{	
-							delProto = this.id;
-							console.log("Deleting this prototype: " + delProto);
+							delProto = {
+								prototype_name: this.name
+							}
 							noty({
 								layout: 'topCenter',
 								text: 'Are you sure you want to delete this prototype?',
@@ -646,7 +682,7 @@
 											textVisible: true
 										});
 										Devtools.removePrototype(delProto, function(directives){
-											console.log("Deleting the rid", rid, directives);
+											console.log("Deleting the prototype", delProto, directives);
 											$.mobile.loading("hide");
 													//refreshes the page because refreshPage() takes us to the homepage
 													$("#manage-prototype-list" ).empty();
@@ -1004,22 +1040,28 @@
 
 					console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
 
-					/*
-					if(typeof url !== "undefined" && url_check === true) {
+					var protoJSON = JSON.stringify(createdPrototype);
+					protoAttrs = {
+						prototype_name: metaForm["prototype_name"],
+						prototype: protoJSON
+					}
+
+					console.log(">>>>>>>>> JSON'D PROTOTYPE", protoAttrs);
+
+					if(typeof protoAttrs !== "undefined") {
 						$.mobile.loading("show", {
-							text: "Adding Prototype...",
+							text: "Updating Prototype...",
 							textVisible: true
 						});
 						
-						Devtools.RegisterRuleset(url, function(directives) {
-							console.log("registered ", url, directives);
+						Devtools.addPrototype(protoAttrs, function(protoJSON) {
+							console.log("Updated Prototype: ", protoAttrs);
 							$.mobile.changePage("#page-prototypes", {
 								transition: 'slide'
 							});
 						}); 
 						
 					}
-					*/
 				});
 			},
 
