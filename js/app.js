@@ -269,6 +269,40 @@
 								}, {"eci":picoToOpen});
 							});
 
+							$('.deletePicoButton').off('tap').on('tap', function(event)
+							{	
+								deleteThis = this.id;
+								console.log("DELETE button pushed for " + deleteThis);
+								noty( {
+									layout: 'topCenter',
+									text: 'Are you sure you want to delete this pico?',
+									type: 'warning',
+
+									buttons: [ {
+										addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+											$noty.close();
+											$.mobile.loading("show", {
+												text: "Deleting pico...",
+												textVisible: true
+											});
+											wrangler.deleteChild({"pico_name":deleteThis}, function() {
+												$.mobile.changePage("#about", {
+													transition: 'slide',
+													allowSamePageTransition : true
+												});
+											});
+										}
+									},
+									{
+										addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+											$noty.close();
+											noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+										}
+									}]
+								});
+							});
+
+							/*
 							$(".deletePicoButton").off('tap').on('tap', function() {
 								console.log("DELETE button pushed for " + this.id);
 								wrangler.deleteChild({"pico_name":this.id}, function() {
@@ -278,6 +312,7 @@
 									});
 								});
 							});
+							*/
 
 							if (window.innerWidth <= 600) {
 								$(".childPicoButton").css('font-size', '12px');
