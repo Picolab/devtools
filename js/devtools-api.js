@@ -17,8 +17,8 @@
             "rulesets": {"prod": "b507199x14.prod", 
                           "dev": "b507199x14.prod"
             },
-            "bootstrap":{"prod": "b507199x13.prod", 
-                          "dev": "b507199x13.prod"
+            "bootstrap":{"prod": "v1_devtools_bootstrap.prod", 
+                          "dev": "v1_devtools_bootstrap.prod"
             }
         };
 
@@ -63,7 +63,7 @@
 					console.log("Pico is bootstrapped");
 					cb();
 				}
-				else if ($.inArray('b507199x13.prod', json.rids) > -1) { // will never make it here ...
+				else if ($.inArray('v1_devtools_bootstrap.prod', json.rids) > -1) { // will never make it here ...
 					justNeedsBootstrap();
 				}
 				else {
