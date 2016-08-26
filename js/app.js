@@ -407,10 +407,67 @@
 				console.log("listing Handler");
 				loadSpinner("#manage-list", "registered rulesets");
 
-				function populate_registered_rulesets(){	
+				$("#listing-rulesets-sortby-name").addClass("ui-btn-active");
+
+				//---------------- sort buttons -----------------------------
+				$("#listing-rulesets-sortby-name").click( function() {
+					console.log("SORT BY NAME");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Name...",
+						textVisible: true
+					});
+					populate_registered_rulesets("name");
+				});
+
+				$("#listing-rulesets-sortby-rid").click( function() {
+					console.log("SORT BY RID");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Ruleset ID...",
+						textVisible: true
+					});
+					populate_registered_rulesets("rid");
+				});
+
+				$("#listing-rulesets-sortby-cache").click( function() {
+					console.log("SORT BY CACHE");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Cache...",
+						textVisible: true
+					});
+					populate_registered_rulesets("cache");
+				});
+
+				function populate_registered_rulesets(sortType){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
 						$("#manage-list" ).empty();
-						var sortedRids = rids_json['description'].sort(sortBy("rid"));
+						console.log(">>> Rulesets: ", rids_json['description']);
+						var sortedRids = rids_json['description'];
+
+						if (sortType == "rid")
+							sortedRids = sortedRids.sort(sortBy("rid"));
+						else if (sortType == "cache") {
+							sortedRids = sortedRids.sort(function(a,b){
+								aCache = a['description']['ruleset_cached'];
+								bCache = b['description']['ruleset_cached'];
+
+								if (aCache > bCache)
+									return -1;
+								if (aCache < bCache)
+									return 1;
+								return 0;
+							});
+						} else {
+							sortedRids = sortedRids.sort(function(a,b){
+								aName = a['description']['name'].toUpperCase();
+								bName = b['description']['name'].toUpperCase();
+
+								if (aName < bName)
+									return -1;
+								if (aName > bName)
+									return 1;
+								return 0;
+							});
+						}
 
 						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
@@ -496,7 +553,7 @@
 											$.mobile.loading("hide");
 													//refreshes the page because refreshPage() takes us to the homepage
 													$("#manage-list" ).empty();
-													populate_registered_rulesets();
+													populate_registered_rulesets("name");
 												});
 									}
 								}
@@ -536,7 +593,7 @@
 						});		
 					}
 					else { // else in root
-						populate_registered_rulesets();
+						populate_registered_rulesets("name");
 					}
 				});
 				
