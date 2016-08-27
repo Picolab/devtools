@@ -52,12 +52,14 @@
         <p><b>Last Active:</b> {{time}}</p>
         <p><b>Type:</b> {{type}}</p> 
         <p><b>Attributes:</b> {{attributes}}</p>
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}&name={{channel_name}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" data-role="button" data-icon="delete" id="{{cid}}" class="ui-btn ui-icon-delete channel-delete">Delete</a></p>
+         <!-- href="#confirm-uninstall-channel?channel={{cid}}&name={{channel_name}}"  -->
        <p><b>Channel ID:</b> {{cid}}</p>
      </div>
    </div>
 </div>
 
+<!--
 <div id="confirm-channel-remove-template" style="display:none;">
   <li data-role="list-divider" >Delete Channel</li>
   <li>
@@ -70,6 +72,7 @@
   <h1>Do NOT delete channels unless you know what you're doing.<br> Deletion of key channels could make your pico inoperable.</h1>
   </li>
 </div>
+-->
 
 <!-- ---------- Prototypes Template ---------- -->
 

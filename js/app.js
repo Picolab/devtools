@@ -302,18 +302,6 @@
 								});
 							});
 
-							/*
-							$(".deletePicoButton").off('tap').on('tap', function() {
-								console.log("DELETE button pushed for " + this.id);
-								wrangler.deleteChild({"pico_name":this.id}, function() {
-									$.mobile.changePage("#about", {
-										transition: 'slide',
-										allowSamePageTransition : true
-									});
-								});
-							});
-							*/
-
 							if (window.innerWidth <= 600) {
 								$(".childPicoButton").css('font-size', '12px');
 								//$(".childPicoButton").addClass('ui-nodisc-icon');
@@ -1310,10 +1298,10 @@
 							dynamicChannelItems2 = "";
 							dynamicChannelItems = "";
 							//Sort
-							chAray.sort(function(a, b){
+							chAray.sort(function(a, b) {
 								return ((a.last_active>b.last_active) ?-1:1);
 							//return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
-						});
+							});
 							//inner div
 							type = "";
 							$.each(chAray,function(index,channel){
@@ -1339,23 +1327,59 @@
 									);
 									key = generateKey(channel);//hack of how to get key, assigned every iteration(bad)
 								});
-						  //outter div
-						  dynamicChannelItems += 
-						  snippets.installed_channels_template(
+						  	//outter div
+						  	dynamicChannelItems += 
+						  	snippets.installed_channels_template(
 									{"Type": key}//,
 										//"channelDivs": dynamicChannelItems2}
 										);
-						  $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
-						  $("#"+key.replace(new RegExp('[ ]', 'g'), "\\ ")+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
+						  	$("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+						  	$("#"+key.replace(new RegExp('[ ]', 'g'), "\\ ")+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
 
+						  	$('.channel-delete').off('tap').on('tap', function(event) {	
+						  		deleteChannel = this.id;
+						  		console.log("DELETE button pushed for " + deleteChannel);
+						  		noty( {
+						  			layout: 'topCenter',
+						  			text: '- Are you sure you want to delete this channel? - Do NOT delete channels unless you know what you\'re doing. Deletion of key channels could make your pico inoperable.',
+						  			type: 'warning',
+
+						  			buttons: [ {
+						  				addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+						  					$noty.close();
+						  					$.mobile.loading("show", {
+						  						text: "Uninstalling channel...",
+						  						textVisible: true
+						  					});
+						  					console.log("Uninstalling channel ", deleteChannel);
+						  					if(typeof deleteChannel !== "undefined") {
+						  						Devtools.uninstallChannel(deleteChannel, function(directives) {
+						  							console.log("uninstalled ", deleteChannel, directives);
+						  							$.mobile.changePage("#page-channel-management", {
+						  								transition: 'slide',
+						  								allowSamePageTransition: true
+						  							});
+						  						}); 
+						  					}
+						  				}
+						  			},
+						  			{
+						  				addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+						  					$noty.close();
+						  					noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+						  				}
+						  			}]
+						  		});
+						  	});
 						});
-						
-					 // $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
-					 $.mobile.loading("hide");
+
+					 	// $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+					 	$.mobile.loading("hide");
 					});
-					}
-					populate_installed_channels();
-				},
+				}
+
+				populate_installed_channels();
+			},
 
 				uninstall_channel: function(type, match, ui, page) {
 					console.log("Showing uninstall channel page");
