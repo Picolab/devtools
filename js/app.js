@@ -395,7 +395,7 @@
 				console.log("listing Handler");
 				loadSpinner("#manage-list", "registered rulesets");
 
-				$("#listing-rulesets-sortby-name").addClass("ui-btn-active");
+				$("#listing-rulesets-sortby-rid").addClass("ui-btn-active");
 
 				//---------------- sort buttons -----------------------------
 				$("#listing-rulesets-sortby-name").click( function() {
@@ -428,8 +428,8 @@
 				function populate_registered_rulesets(sortType){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
 						$("#manage-list" ).empty();
-						console.log(">>> Rulesets: ", rids_json['description']);
 						var sortedRids = rids_json['description'];
+						console.log("Sorting rulesets by: ", sortType);
 
 						if (sortType == "rid")
 							sortedRids = sortedRids.sort(sortBy("rid"));
@@ -444,7 +444,7 @@
 									return 1;
 								return 0;
 							});
-						} else {
+						} else if (sortType == "name") {
 							sortedRids = sortedRids.sort(function(a,b){
 								aName = a['description']['name'].toUpperCase();
 								bName = b['description']['name'].toUpperCase();
@@ -581,7 +581,7 @@
 						});		
 					}
 					else { // else in root
-						populate_registered_rulesets("name");
+						populate_registered_rulesets("rid");
 					}
 				});
 				
@@ -1617,9 +1617,37 @@
       	console.log("ruleset installation page");
       	loadSpinner("#installed-rulesets", "installed rulesets");
 
-      	function populate_installed_rulesets() {
+      	$("#installed-rulesets-sortby-name").addClass("ui-btn-active");
 
+		//---------------- sort buttons -----------------------------
+		$("#installed-rulesets-sortby-name").click( function() {
+			console.log("SORT BY NAME");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Name...",
+				textVisible: true
+			});
+			populate_installed_rulesets("name");
+		});
 
+		$("#installed-rulesets-sortby-rid").click( function() {
+			console.log("SORT BY RID");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Ruleset ID...",
+				textVisible: true
+			});
+			populate_installed_rulesets("rid");
+		});
+
+		$("#installed-rulesets-sortby-cache").click( function() {
+			console.log("SORT BY CACHE");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Cache...",
+				textVisible: true
+			});
+			populate_installed_rulesets("cache");
+		});
+
+      	function populate_installed_rulesets(sortType) {
       		Devtools.showInstalledRulesets(function(ruleset_list){
       			if (ruleset_list.error == 102) {
       				$.noty.get(noty({
@@ -1629,23 +1657,60 @@
       				}));
       				return;
       			}
-      			$("#installed-rulesets" ).empty();
-      			console.log("Retrieved installed rulesets");
+
+      			$("#installed-rulesets").empty();
+      			
+      			var sortedRids = $.map(ruleset_list['description'], function(value, index) { 
+      				value["rid"] = index;
+    				return value;
+				});
+				
+				var sortedRids = [];
+      			for (var x in ruleset_list['description']) {
+      				ruleset_list['description'][x]['ruleset_id'] = x;
+      				sortedRids.push(ruleset_list['description'][x]);
+
+      			}
+
+      			if (sortType == "rid")
+      				sortedRids = sortedRids.sort(sortBy("ruleset_id"));
+      			else if (sortType == "cache") {
+      				sortedRids = sortedRids.sort(function(a,b){
+      					aCache = a['ruleset_cached'];
+      					bCache = b['ruleset_cached'];
+
+      					if (aCache > bCache)
+      						return -1;
+      					if (aCache < bCache)
+      						return 1;
+      					return 0;
+      				});
+      			} else {
+      				sortedRids = sortedRids.sort(function(a,b){
+      					aName = a['name'].toUpperCase();
+      					bName = b['name'].toUpperCase();
+
+      					if (aName < bName)
+      						return -1;
+      					if (aName > bName)
+      						return 1;
+      					return 0;
+      				});
+      			}
 
       			dynamicInsRulesets = "";
-      			$.each(ruleset_list.description, function(k, ruleset) {
-      				ruleset["rid"] = k;
+      			$.each(sortedRids, function(k, ruleset) {
+      				ruleset["rid"] = ruleset.ruleset_id;
       				ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
-				 		 	dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
-				 		 });
+				 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
+				 	dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
+				});
       			$("#installed-rulesets" ).append(dynamicInsRulesets).collapsibleset().collapsibleset( "refresh" );
       			$.mobile.loading("hide");
-
       		});
       	}
 
-      	populate_installed_rulesets();
+      	populate_installed_rulesets("name");
       },
 
       uninstall_ruleset: function(type, match, ui, page) {

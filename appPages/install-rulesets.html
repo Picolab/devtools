@@ -2,20 +2,31 @@
   {% include header.html title="Installed Rulesets" %}
   {% include pico-name-header.html %}
 
-   <div data-role="content">
-     <ul id="installed-rulesets-control" data-role="listview" data-inset="true"> 
-       <li data-role="list-divider" >Installed Rulesets</li>
-       <li>
-         <a id="install-ruleset-button" href="#install-ruleset" class="ui-btn ui-icon-edit ui-btn-icon-right">New Ruleset</a>
-       </li>
-     </ul>
+  <div data-role="content">
+    <ul id="installed-rulesets-control" data-role="listview" data-inset="true"> 
+      <li data-role="list-divider" >Installed Rulesets</li>
+      <li>
+        <a id="install-ruleset-button" href="#install-ruleset" class="ui-btn ui-icon-edit ui-btn-icon-right">New Ruleset</a>
+      </li>
+    </ul>
 
-     <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="installed-rulesets">
-     </div>
+    <div data-role="tabs" id="tabs">
+      <div data-role="navbar">
+        <ul>
+          <li><a id="installed-rulesets-sortby" style="background-color:black;color:white;pointer-events:none" data-ajax="false">Sort by:</a></li>
+          <li><a id="installed-rulesets-sortby-name" class="ui-btn-active" data-ajax="false" selected>Name</a></li>
+          <li><a id="installed-rulesets-sortby-rid" data-ajax="false">RID</a></li>
+          <li><a id="installed-rulesets-sortby-cache" data-ajax="false">Last Cached</a></li>
+        </ul>
+      </div>
+    </div>
 
-   </div><!-- /content -->
+    <div data-role="collapsible-set" data-filter="true" data-content-theme="a" data-iconpos="right" id="installed-rulesets">
+    </div>
 
-   {% include footer.html %}
+  </div><!-- /content -->
+
+  {% include footer.html %}
 </div><!-- /page -->
 
 <div data-role="page" id="install-ruleset" data-title="Install Ruleset">
