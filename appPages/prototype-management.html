@@ -33,6 +33,17 @@
 
   <div data-role="main" class="ui-content">
    <ul id="add-prototype-list" data-role="listview" data-inset="true"> 
+   <li data-role="list-divider" >(OPTIONAL) Import Prototype</li>
+    <li>
+      <form id="form-add-prototype-import">
+        <div data-role="fieldcontain">
+          <label for="prototype_import">Prototype URL:</label>
+          <input type="text" name="prototype_import" id="a_prototype_import" class="proto-field" value="" placeholder="https://raw.githubusercontent.com/?????.json" />
+          <label for="prototype_import"></label>
+          <a style="font-size:15px;right:0px;height:40px;" name="prototype_import" href="#" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right importButton">Import</a>
+        </div>
+      </form>
+    </li>
     <li data-role="list-divider" >Add Prototype</li>
     <li>
       <form id="form-add-prototype-meta">
