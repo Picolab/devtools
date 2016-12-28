@@ -719,12 +719,30 @@ registeringRuleset: function(type, match, ui, page) {
 
 						console.log("refreshing manage-list listview.");
 
+						//---------------export button----------------------
+						$('.exportButton').off('tap').on('tap', function(event)
+						{
+							toExport = this.name;
+							Devtools.prototypes(function(protos) {
+								thisProto = protos["prototypes"];
+								console.log(">>> Prototype Exported: ", thisProto[toExport]);
+
+								var a = window.document.createElement('a');
+								a.href = window.URL.createObjectURL(new Blob([JSON.stringify(thisProto[toExport])], {type: 'text/json'}));
+								a.download = toExport + '.json';
+								document.body.appendChild(a);
+								a.click();
+								document.body.removeChild(a);
+							});
+						});
+
 						//---------------delete button----------------------
 						$('.deleteButton').off('tap').on('tap', function(event)
 						{	
 							delProto = {
 								prototype_name: this.name
 							}
+							console.log(">>> Prototype to Delete: ", delProto);
 							noty({
 								layout: 'topCenter',
 								text: 'Are you sure you want to delete this prototype?',
@@ -806,7 +824,66 @@ registeringRuleset: function(type, match, ui, page) {
 				var evNum = 1;
 				$('.add-event').off('tap').on('tap', addEvent);
 
+				function populate_prototype_info(jsonObject) {
+					var prototypeInfo = jsonObject;
+					console.log(">>>>>>>>>>>> PROTOTYPE INFORMATION: ", prototypeInfo);
 
+					$("#a_prototype_name").val(prototypeInfo["meta"]["name"] || "");
+					$("#a_prototype_description").val(prototypeInfo["meta"]["description"] || "");
+					$("#a_prototype_rids").val(prototypeInfo["rids"].toString().replace(/,/g, ";") || "");
+
+					while (prototypeInfo["channels"].length > chNum)
+						addChannel(null);
+					for (i = 0; i < chNum; i++) {
+						if (prototypeInfo["channels"][i] != undefined) {
+							$("#a_prototype_channel_name" + i).val(prototypeInfo["channels"][i]["name"] || "");
+							$("#a_prototype_channel_type" + i).val(prototypeInfo["channels"][i]["type"] || "");
+							$("#a_prototype_channel_attributes" + i).val(prototypeInfo["channels"][i]["attributes"] || "");
+							$("#a_prototype_channel_policy" + i).val(prototypeInfo["channels"][i]["name"] || "");
+						}
+					}
+
+					while (prototypeInfo["subscriptions_request"].length > subNum)
+						addSubscription(null);
+					for (i = 0; i < subNum; i++) {
+						if (prototypeInfo["subscriptions_request"][i] != undefined) {
+							$("#a_prototype_sub_name" + i).val(prototypeInfo["subscriptions_request"][i]["name"] || "");
+							$("#a_prototype_sub_namespace" + i).val(prototypeInfo["subscriptions_request"][i]["name_space"] || "");
+							$("#a_prototype_sub_myRole" + i).val(prototypeInfo["subscriptions_request"][i]["my_role"] || "");
+							$("#a_prototype_sub_subRole" + i).val(prototypeInfo["subscriptions_request"][i]["subscriber_role"] || "");
+							$("#a_prototype_sub_eci" + i).val(prototypeInfo["subscriptions_request"][i]["subscriber_eci"] || "");
+							$("#a_prototype_sub_type" + i).val(prototypeInfo["subscriptions_request"][i]["channel_type"] || "");
+							$("#a_prototype_sub_attributes" + i).val(prototypeInfo["subscriptions_request"][i]["attrs"] || "");
+						}
+					}
+
+					while (prototypeInfo["Prototype_events"].length > evNum)
+						addEvent(null);
+					for (i = 0; i < evNum; i++) {
+						if (prototypeInfo["Prototype_events"][i] != undefined) {
+							$("#a_prototype_event_domain" + i).val(prototypeInfo["Prototype_events"][i]["domain"] || "");
+							$("#a_prototype_event_type" + i).val(prototypeInfo["Prototype_events"][i]["type"] || "");
+							$("#a_prototype_event_attributes" + i).val(JSON.stringify(prototypeInfo["Prototype_events"][i]["attrs"] || ""));
+						}
+					}
+
+					$("#a_prototype_pds_profile").val(JSON.stringify(prototypeInfo["PDS"]["profile"] || ""));
+					$("#a_prototype_pds_general").val(JSON.stringify(prototypeInfo["PDS"]["general"] || ""));
+					$("#a_prototype_pds_settings").val(JSON.stringify(prototypeInfo["PDS"]["settings"] || ""));
+				}
+
+				// IMPORT PROTOTYPE
+				$('.importButton').off('tap').on('tap', function(event)
+				{
+					var toImport = $("#a_prototype_import").val();
+					console.log(">>> Prototype to Import: ", toImport);
+					$.getJSON(toImport, function(data) {
+						console.log(">>> Retrieved JSON: ", data);
+						populate_prototype_info(data);
+					});
+				});
+
+				// ADD PROTOTYPE
 				$('#add-prototype-confirm-button').off('tap').on('tap', function(event)
 				{
 					var metaForm = process_form("#form-add-prototype-meta");
