@@ -13,11 +13,11 @@
 
          <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" href="#updating-url?rid={{rid}}&url={{encoded}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right editURLButton listRulesetsButton">Edit URL</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton listRulesetsButton">Flush</a></p>
+         <p style="position:relative; top:10px"><a id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-btn ui-icon-refresh ui-btn-icon-right flushButton listRulesetsButton">Flush</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
+         <p style="position:relative; top:10px"><a id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
 
-         <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-arrow-d ui-btn-icon-right installButton listRulesetsButton">Install</a></p>
+         <p style="position:relative; top:10px"><a id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-arrow-d ui-btn-icon-right installButton listRulesetsButton">Install</a></p>
 
      </div>
    </div>
@@ -52,12 +52,14 @@
         <p><b>Last Active:</b> {{time}}</p>
         <p><b>Type:</b> {{type}}</p> 
         <p><b>Attributes:</b> {{attributes}}</p>
-         <p style="position:relative; top:-20px"><a style="float:right;" href="#confirm-uninstall-channel?channel={{cid}}&name={{channel_name}}" data-role="button" data-icon="delete" class="ui-btn ui-icon-delete ">Delete</a></p>
+         <p style="position:relative; top:-20px"><a style="float:right;" data-role="button" data-icon="delete" id="{{cid}}" class="ui-btn ui-icon-delete channel-delete">Delete</a></p>
+         <!-- href="#confirm-uninstall-channel?channel={{cid}}&name={{channel_name}}"  -->
        <p><b>Channel ID:</b> {{cid}}</p>
      </div>
    </div>
 </div>
 
+<!--
 <div id="confirm-channel-remove-template" style="display:none;">
   <li data-role="list-divider" >Delete Channel</li>
   <li>
@@ -70,6 +72,7 @@
   <h1>Do NOT delete channels unless you know what you're doing.<br> Deletion of key channels could make your pico inoperable.</h1>
   </li>
 </div>
+-->
 
 <!-- ---------- Prototypes Template ---------- -->
 
@@ -81,9 +84,13 @@
 
     <div style = "padding-top: 10px; padding-bottom:40px;"> 
 
-        <p style="position:relative; top:10px"><a href="#" id="{{rid}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
+        <p style="position:relative; top:10px"><a href="#" name="{{title}}" style="margin-top:-25px;float:right;" class="ui-link ui-btn ui-icon-delete ui-btn-icon-right deleteButton listRulesetsButton">Delete</a></p>
+
+        <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" name="{{title}}" href="#" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right exportButton">Export</a></p>
 
         <p style="position:relative; top:10px"><a style="margin-top:-25px;float:right;" href="#update-prototype?prototype={{title}}" data-role="button" data-icon="edit" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right editURLButton listRulesetsButton">Edit</a></p>
+
+
         
         <p><b>Name: </b> {{title}} </p>
         <p><b>Description: </b> {{meta}} </p>

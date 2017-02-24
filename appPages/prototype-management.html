@@ -33,6 +33,17 @@
 
   <div data-role="main" class="ui-content">
    <ul id="add-prototype-list" data-role="listview" data-inset="true"> 
+   <li data-role="list-divider" >(OPTIONAL) Import Prototype</li>
+    <li>
+      <form id="form-add-prototype-import">
+        <div data-role="fieldcontain">
+          <label for="prototype_import">Prototype URL:</label>
+          <input type="text" name="prototype_import" id="a_prototype_import" class="proto-field" value="" placeholder="https://raw.githubusercontent.com/?????.json" />
+          <label for="prototype_import"></label>
+          <a style="font-size:15px;right:0px;height:40px;" name="prototype_import" href="#" class="ui-link ui-btn ui-icon-edit ui-btn-icon-right importButton">Import</a>
+        </div>
+      </form>
+    </li>
     <li data-role="list-divider" >Add Prototype</li>
     <li>
       <form id="form-add-prototype-meta">
@@ -75,7 +86,7 @@
           <input type="text" name="prototype_sub_namespace" id="a_prototype_sub_namespace0" class="proto-field" value="" placeholder="ex: school_picos" />
           <label for="prototype_sub_type">Channel Type:</label>
           <input type="text" name="prototype_sub_type" id="a_prototype_sub_type0" class="proto-field" value="" placeholder="Type" />
-          <label for="prototype_sub_myRole">My Role:</label>
+          <label for="prototype_sub_myRole">Child Role:</label>
           <input type="text" name="prototype_sub_myRole" id="a_prototype_sub_myRole0" class="proto-field" value="" placeholder="ex: Teacher" />
           <label for="prototype_sub_subRole">Subscriber Role:</label>
           <input type="text" name="prototype_sub_subRole" id="a_prototype_sub_subRole0" class="proto-field" value="" placeholder="ex: Student" />
@@ -140,7 +151,7 @@
       <form id="form-update-prototype-meta">
         <div data-role="fieldcontain">
           <label for="prototype_name">Name:</label>
-          <input type="text" name="prototype_name" id="u_prototype_name" class="proto-field" value="" placeholder="Name" />
+          <input type="text" name="prototype_name" id="u_prototype_name" class="proto-field" value="" placeholder="Name" readonly="readonly"/>
           <label for="prototype_description">Description:</label>
           <input type="text" name="prototype_description" id="u_prototype_description" class="proto-field" value="" placeholder="Description" />
           <label for="prototype_rids">RIDs:</label>
@@ -177,7 +188,7 @@
           <input type="text" name="prototype_sub_namespace" id="u_prototype_sub_namespace0" class="proto-field" value="" placeholder="ex: school_picos" />
           <label for="prototype_sub_type">Channel Type:</label>
           <input type="text" name="prototype_sub_type" id="u_prototype_sub_type0" class="proto-field" value="" placeholder="Type" />
-          <label for="prototype_sub_myRole">My Role:</label>
+          <label for="prototype_sub_myRole">Child Role:</label>
           <input type="text" name="prototype_sub_myRole" id="u_prototype_sub_myRole0" class="proto-field" value="" placeholder="ex: Teacher" />
           <label for="prototype_sub_subRole">Subscriber Role:</label>
           <input type="text" name="prototype_sub_subRole" id="u_prototype_sub_subRole0" class="proto-field" value="" placeholder="ex: Student" />

@@ -237,7 +237,7 @@
 				//		readyCount++;
 				//		if (readyCount == resLength) {
 				//			$.mobile.loading("hide");
-							
+
 				//			childrenArray.sort(function(a, b) {
 				//				if (a.picoName == 0) return -1;
 				//				else if (b.picoName == 0) return 1;
@@ -249,45 +249,68 @@
 				//				dynamicChildrenList += 
 				//				snippets.child_pico_template(childrenArray[i]);
 				//			}
-							
+
 				//			$("#child-picos").append(dynamicChildrenList).collapsibleset().collapsibleset("refresh");
 
-							$(".openPicoButton").off('tap').on('tap', function() {
-								console.log(this.id);
-								picoToOpen = this.id;
+				$(".openPicoButton").off('tap').on('tap', function() {
+					console.log(this.id);
+					picoToOpen = this.id;
+					$.mobile.loading("show", {
+						text: "Ensuring child pico is bootstrapped...",
+						textVisible: true
+					});
+					Devtools.ensureBootstrap(function() {
+						$.mobile.loading("hide");
+						PicoNavigator.navigateTo(picoToOpen);
+						$.mobile.changePage("#about", {
+							transition: 'slide',
+							allowSamePageTransition : true
+						});
+					}, {"eci":picoToOpen});
+				});
+
+				$('.deletePicoButton').off('tap').on('tap', function(event)
+				{	
+					deleteThis = this.id;
+					console.log("DELETE button pushed for " + deleteThis);
+					noty( {
+						layout: 'topCenter',
+						text: 'Are you sure you want to delete this pico?',
+						type: 'warning',
+
+						buttons: [ {
+							addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+								$noty.close();
 								$.mobile.loading("show", {
-									text: "Ensuring child pico is bootstrapped...",
+									text: "Deleting pico...",
 									textVisible: true
 								});
-								Devtools.ensureBootstrap(function() {
-									$.mobile.loading("hide");
-									PicoNavigator.navigateTo(picoToOpen);
-									$.mobile.changePage("#about", {
-										transition: 'slide',
-										allowSamePageTransition : true
-									});
-								}, {"eci":picoToOpen});
-							});
-
-							$(".deletePicoButton").off('tap').on('tap', function() {
-								console.log("DELETE button pushed for " + this.id);
-								wrangler.deleteChild({"pico_name":this.id}, function() {
+								wrangler.deleteChild({"pico_name":deleteThis}, function() {
 									$.mobile.changePage("#about", {
 										transition: 'slide',
 										allowSamePageTransition : true
 									});
 								});
-							});
+							}
+						},
+						{
+							addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+								$noty.close();
+								noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+							}
+						}]
+					});
+				});
 
-							if (window.innerWidth <= 600) {
-								$(".childPicoButton").css('font-size', '12px');
+				if (window.innerWidth <= 600) {
+					$(".childPicoButton").css('font-size', '12px');
 								//$(".childPicoButton").addClass('ui-nodisc-icon');
 								//$(".childPicoButton").addClass('ui-alt-icon');
 							}
 				//		}
 				//	}
 				//		console.log("children name: ", children_result["children"]);
-					
+
 				//	$.each(children_result["children"], function(index,child){
 				//		console.log("children name: ",child["name"]);
 				//		console.log("children name: ",child["eci"]);
@@ -309,8 +332,8 @@
 						//		upCount();
 						//	}, {"eci":child[0]});
 				//	});
-					
-				});
+
+			});
 					},
 
 					pico_creation: function(type, match, ui, page) {
@@ -372,10 +395,79 @@
 				console.log("listing Handler");
 				loadSpinner("#manage-list", "registered rulesets");
 
-				function populate_registered_rulesets(){	
+				$("#listing-rulesets-sortby-rid").addClass("ui-btn-active");
+
+				//---------------- sort buttons -----------------------------
+				$("#listing-rulesets-sortby-name").click( function() {
+					console.log("SORT BY NAME");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Name...",
+						textVisible: true
+					});
+					populate_registered_rulesets("name");
+				});
+
+				$("#listing-rulesets-sortby-rid").click( function() {
+					console.log("SORT BY RID");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Ruleset ID...",
+						textVisible: true
+					});
+					populate_registered_rulesets("rid");
+				});
+
+				$("#listing-rulesets-sortby-cache").click( function() {
+					console.log("SORT BY CACHE");
+					$.mobile.loading("show", {
+						text: "Sorting Rulesets by Cache...",
+						textVisible: true
+					});
+					populate_registered_rulesets("cache");
+				});
+
+				function populate_registered_rulesets(sortType){	
 					Devtools.getRulesets(function(rids_json){ //the callback/function is where we need to have all of our code
 						$("#manage-list" ).empty();
-						var sortedRids = rids_json['description'].sort(sortBy("rid"));
+						var sortedRids = rids_json['description'];
+						console.log("Sorting rulesets by: ", sortType);
+
+						if (sortType == "rid")
+							sortedRids = sortedRids.sort(sortBy("rid"));
+						else if (sortType == "cache") {
+							sortedRids = sortedRids.sort(function(a,b){
+								aCache = a['description']['ruleset_cached'];
+								bCache = b['description']['ruleset_cached'];
+								aRid = a['rid']
+								bRid = b['rid']
+
+								if (aCache > bCache)
+									return -1;
+								if (aCache < bCache)
+									return 1;
+								if (aRid < bRid)
+									return 1;
+								if (bRid > aRid)
+									return -1;
+								return 0;
+							});
+						} else if (sortType == "name") {
+							sortedRids = sortedRids.sort(function(a,b){
+								aName = a['description']['name'].toUpperCase();
+								bName = b['description']['name'].toUpperCase();
+								aRid = a['rid']
+								bRid = b['rid']
+
+								if (aName < bName)
+									return -1;
+								if (aName > bName)
+									return 1;
+								if (aRid < bRid)
+									return 1;
+								if (bRid > aRid)
+									return -1;
+								return 0;
+							});
+						}
 
 						dynamicRegRulesets="";
 						$.each(sortedRids, function (id, rids) {
@@ -461,7 +553,7 @@
 											$.mobile.loading("hide");
 													//refreshes the page because refreshPage() takes us to the homepage
 													$("#manage-list" ).empty();
-													populate_registered_rulesets();
+													populate_registered_rulesets("name");
 												});
 									}
 								}
@@ -486,9 +578,9 @@
 							//$(".listRulesetsButton").addClass('ui-alt-icon');
 						}
 					});
-				}
+}
 
-				Devtools.parentPico(function(parent_result) {
+Devtools.parentPico(function(parent_result) {
 					if (parent_result.parent != "error") { // if in child, not root
 						$.mobile.loading("hide");
 						$.noty.get(noty({
@@ -501,16 +593,16 @@
 						});		
 					}
 					else { // else in root
-						populate_registered_rulesets();
+						populate_registered_rulesets("rid");
 					}
 				});
-				
-			},
 
-			registeringRuleset: function(type, match, ui, page) {
+},
 
-				console.log("registering Ruleset Handler");
-				var frm = "#formRegisterNewRuleset";
+registeringRuleset: function(type, match, ui, page) {
+
+	console.log("registering Ruleset Handler");
+	var frm = "#formRegisterNewRuleset";
 					$(frm)[0].reset(); // clear the fields in the form
 					$('#register-ruleset-confirm-button').off('tap').on('tap', function(event)
 					{
@@ -627,11 +719,30 @@
 
 						console.log("refreshing manage-list listview.");
 
+						//---------------export button----------------------
+						$('.exportButton').off('tap').on('tap', function(event)
+						{
+							toExport = this.name;
+							Devtools.prototypes(function(protos) {
+								thisProto = protos["prototypes"];
+								console.log(">>> Prototype Exported: ", thisProto[toExport]);
+
+								var a = window.document.createElement('a');
+								a.href = window.URL.createObjectURL(new Blob([JSON.stringify(thisProto[toExport])], {type: 'text/json'}));
+								a.download = toExport + '.json';
+								document.body.appendChild(a);
+								a.click();
+								document.body.removeChild(a);
+							});
+						});
+
 						//---------------delete button----------------------
 						$('.deleteButton').off('tap').on('tap', function(event)
 						{	
-							delProto = this.id;
-							console.log("Deleting this prototype: " + delProto);
+							delProto = {
+								prototype_name: this.name
+							}
+							console.log(">>> Prototype to Delete: ", delProto);
 							noty({
 								layout: 'topCenter',
 								text: 'Are you sure you want to delete this prototype?',
@@ -646,7 +757,7 @@
 											textVisible: true
 										});
 										Devtools.removePrototype(delProto, function(directives){
-											console.log("Deleting the rid", rid, directives);
+											console.log("Deleting the prototype", delProto, directives);
 											$.mobile.loading("hide");
 													//refreshes the page because refreshPage() takes us to the homepage
 													$("#manage-prototype-list" ).empty();
@@ -713,7 +824,66 @@
 				var evNum = 1;
 				$('.add-event').off('tap').on('tap', addEvent);
 
+				function populate_prototype_info(jsonObject) {
+					var prototypeInfo = jsonObject;
+					console.log(">>>>>>>>>>>> PROTOTYPE INFORMATION: ", prototypeInfo);
 
+					$("#a_prototype_name").val(prototypeInfo["meta"]["name"] || "");
+					$("#a_prototype_description").val(prototypeInfo["meta"]["description"] || "");
+					$("#a_prototype_rids").val(prototypeInfo["rids"].toString().replace(/,/g, ";") || "");
+
+					while (prototypeInfo["channels"].length > chNum)
+						addChannel(null);
+					for (i = 0; i < chNum; i++) {
+						if (prototypeInfo["channels"][i] != undefined) {
+							$("#a_prototype_channel_name" + i).val(prototypeInfo["channels"][i]["name"] || "");
+							$("#a_prototype_channel_type" + i).val(prototypeInfo["channels"][i]["type"] || "");
+							$("#a_prototype_channel_attributes" + i).val(prototypeInfo["channels"][i]["attributes"] || "");
+							$("#a_prototype_channel_policy" + i).val(prototypeInfo["channels"][i]["name"] || "");
+						}
+					}
+
+					while (prototypeInfo["subscriptions_request"].length > subNum)
+						addSubscription(null);
+					for (i = 0; i < subNum; i++) {
+						if (prototypeInfo["subscriptions_request"][i] != undefined) {
+							$("#a_prototype_sub_name" + i).val(prototypeInfo["subscriptions_request"][i]["name"] || "");
+							$("#a_prototype_sub_namespace" + i).val(prototypeInfo["subscriptions_request"][i]["name_space"] || "");
+							$("#a_prototype_sub_myRole" + i).val(prototypeInfo["subscriptions_request"][i]["my_role"] || "");
+							$("#a_prototype_sub_subRole" + i).val(prototypeInfo["subscriptions_request"][i]["subscriber_role"] || "");
+							$("#a_prototype_sub_eci" + i).val(prototypeInfo["subscriptions_request"][i]["subscriber_eci"] || "");
+							$("#a_prototype_sub_type" + i).val(prototypeInfo["subscriptions_request"][i]["channel_type"] || "");
+							$("#a_prototype_sub_attributes" + i).val(prototypeInfo["subscriptions_request"][i]["attrs"] || "");
+						}
+					}
+
+					while (prototypeInfo["Prototype_events"].length > evNum)
+						addEvent(null);
+					for (i = 0; i < evNum; i++) {
+						if (prototypeInfo["Prototype_events"][i] != undefined) {
+							$("#a_prototype_event_domain" + i).val(prototypeInfo["Prototype_events"][i]["domain"] || "");
+							$("#a_prototype_event_type" + i).val(prototypeInfo["Prototype_events"][i]["type"] || "");
+							$("#a_prototype_event_attributes" + i).val(JSON.stringify(prototypeInfo["Prototype_events"][i]["attrs"] || ""));
+						}
+					}
+
+					$("#a_prototype_pds_profile").val(JSON.stringify(prototypeInfo["PDS"]["profile"] || ""));
+					$("#a_prototype_pds_general").val(JSON.stringify(prototypeInfo["PDS"]["general"] || ""));
+					$("#a_prototype_pds_settings").val(JSON.stringify(prototypeInfo["PDS"]["settings"] || ""));
+				}
+
+				// IMPORT PROTOTYPE
+				$('.importButton').off('tap').on('tap', function(event)
+				{
+					var toImport = $("#a_prototype_import").val();
+					console.log(">>> Prototype to Import: ", toImport);
+					$.getJSON(toImport, function(data) {
+						console.log(">>> Retrieved JSON: ", data);
+						populate_prototype_info(data);
+					});
+				});
+
+				// ADD PROTOTYPE
 				$('#add-prototype-confirm-button').off('tap').on('tap', function(event)
 				{
 					var metaForm = process_form("#form-add-prototype-meta");
@@ -776,50 +946,50 @@
 						if (arr_rids[i] != "")
 							proto_rids.push(arr_rids[i]);
 
-					createdPrototype = {
-						meta: {
-							name: metaForm["prototype_name"],
-							description: metaForm["prototype_description"]
-						},
+						createdPrototype = {
+							meta: {
+								name: metaForm["prototype_name"],
+								description: metaForm["prototype_description"]
+							},
 
-						rids: proto_rids,
+							rids: proto_rids,
 
-						channels: arr_channels,
-						subscriptions_request: arr_subscriptions,
-						Prototype_events: arr_events,
+							channels: arr_channels,
+							subscriptions_request: arr_subscriptions,
+							Prototype_events: arr_events,
 
-						PDS: {
-							profile: pdsForm["prototype_pds_profile"],
-							general: pdsForm["prototype_pds_general"],
-							settings: pdsForm["prototype_pds_settings"],
+							PDS: {
+								profile: pdsForm["prototype_pds_profile"],
+								general: pdsForm["prototype_pds_general"],
+								settings: pdsForm["prototype_pds_settings"],
+							}
+						};
+
+						console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
+
+						var protoJSON = JSON.stringify(createdPrototype);
+						protoAttrs = {
+							prototype_name: metaForm["prototype_name"],
+							prototype: protoJSON
 						}
-					};
 
-					console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
+						console.log(">>>>>>>>> JSON'D PROTOTYPE", protoAttrs);
 
-					var protoJSON = JSON.stringify(createdPrototype);
-					protoAttrs = {
-						prototype_name: metaForm["prototype_name"],
-						prototype: protoJSON
-					}
-
-					console.log(">>>>>>>>> JSON'D PROTOTYPE", protoAttrs);
-
-					if(typeof protoAttrs !== "undefined") {
-						$.mobile.loading("show", {
-							text: "Adding Prototype...",
-							textVisible: true
-						});
-						
-						Devtools.addPrototype(protoAttrs, function(protoJSON) {
-							console.log("Added Prototype: ", protoAttrs);
-							$.mobile.changePage("#page-prototypes", {
-								transition: 'slide'
+						if(typeof protoAttrs !== "undefined") {
+							$.mobile.loading("show", {
+								text: "Adding Prototype...",
+								textVisible: true
 							});
-						}); 
-						
-					}
-				}); 
+
+							Devtools.addPrototype(protoAttrs, function(protoJSON) {
+								console.log("Added Prototype: ", protoAttrs);
+								$.mobile.changePage("#page-prototypes", {
+									transition: 'slide'
+								});
+							}); 
+
+						}
+					}); 
 			},
 
 			updatePrototype: function(type, match, ui, page) {
@@ -983,44 +1153,50 @@
 						if (arr_rids[i] != "")
 							proto_rids.push(arr_rids[i]);
 
-					createdPrototype = {
-						meta: {
-							name: metaForm["prototype_name"],
-							description: metaForm["prototype_description"]
-						},
+						createdPrototype = {
+							meta: {
+								name: metaForm["prototype_name"],
+								description: metaForm["prototype_description"]
+							},
 
-						rids: proto_rids,
+							rids: proto_rids,
 
-						channels: arr_channels,
-						subscriptions_request: arr_subscriptions,
-						Prototype_events: arr_events,
+							channels: arr_channels,
+							subscriptions_request: arr_subscriptions,
+							Prototype_events: arr_events,
 
-						PDS: {
-							profile: pdsForm["prototype_pds_profile"],
-							general: pdsForm["prototype_pds_general"],
-							settings: pdsForm["prototype_pds_settings"],
+							PDS: {
+								profile: pdsForm["prototype_pds_profile"],
+								general: pdsForm["prototype_pds_general"],
+								settings: pdsForm["prototype_pds_settings"],
+							}
+						};
+
+						console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
+
+						var protoJSON = JSON.stringify(createdPrototype);
+						protoAttrs = {
+							prototype_name: metaForm["prototype_name"],
+							prototype: protoJSON
 						}
-					};
 
-					console.log(">>>>>>>>> CREATED PROTOTYPE", createdPrototype);
+						console.log(">>>>>>>>> JSON'D PROTOTYPE", protoAttrs);
 
-					/*
-					if(typeof url !== "undefined" && url_check === true) {
-						$.mobile.loading("show", {
-							text: "Adding Prototype...",
-							textVisible: true
-						});
-						
-						Devtools.RegisterRuleset(url, function(directives) {
-							console.log("registered ", url, directives);
-							$.mobile.changePage("#page-prototypes", {
-								transition: 'slide'
+						if(typeof protoAttrs !== "undefined") {
+							$.mobile.loading("show", {
+								text: "Updating Prototype...",
+								textVisible: true
 							});
-						}); 
-						
-					}
-					*/
-				});
+
+							Devtools.addPrototype(protoAttrs, function(protoJSON) {
+								console.log("Updated Prototype: ", protoAttrs);
+								$.mobile.changePage("#page-prototypes", {
+									transition: 'slide'
+								});
+							}); 
+
+						}
+					});
 			},
 
 			picologging: function(type, match, ui, page) {
@@ -1211,7 +1387,7 @@
 							dynamicChannelItems2 = "";
 							dynamicChannelItems = "";
 							//Sort
-							chAray.sort(function(a, b){
+							chAray.sort(function(a, b) {
 								return ((a.last_active>b.last_active) ?-1:1);
 							//return ((a.name.toLowerCase()<b.name.toLowerCase()) ?-1:1);
 						});
@@ -1240,50 +1416,86 @@
 									);
 									key = generateKey(channel);//hack of how to get key, assigned every iteration(bad)
 								});
-						  //outter div
-						  dynamicChannelItems += 
-						  snippets.installed_channels_template(
+						  	//outter div
+						  	dynamicChannelItems += 
+						  	snippets.installed_channels_template(
 									{"Type": key}//,
 										//"channelDivs": dynamicChannelItems2}
 										);
-						  $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
-						  $("#"+key.replace(new RegExp('[ ]', 'g'), "\\ ")+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
+						  	$("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+						  	$("#"+key.replace(new RegExp('[ ]', 'g'), "\\ ")+"2").append(dynamicChannelItems2).collapsibleset().collapsibleset( "refresh" );
 
-						});
-						
-					 // $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
-					 $.mobile.loading("hide");
-					});
-					}
-					populate_installed_channels();
-				},
+						  	$('.channel-delete').off('tap').on('tap', function(event) {	
+						  		deleteChannel = this.id;
+						  		console.log("DELETE button pushed for " + deleteChannel);
+						  		noty( {
+						  			layout: 'topCenter',
+						  			text: '- Are you sure you want to delete this channel? - Do NOT delete channels unless you know what you\'re doing. Deletion of key channels could make your pico inoperable.',
+						  			type: 'warning',
 
-				uninstall_channel: function(type, match, ui, page) {
-					console.log("Showing uninstall channel page");
-					$.mobile.loading("hide");
-					var channel = router.getParams(match[1])["channel"];
-					var name = router.getParams(match[1])["name"];
-					console.log("channel to uninstall: ", channel);
-					$("#remove-channel" ).empty();
-					$("#remove-channel").append(snippets.confirm_channel_remove({"channel": channel,"name":name}));
-					$("#remove-channel").listview().listview("refresh");
-					$('#remove-channel-button').off('tap').on('tap', function(event)
-					{
-						$.mobile.loading("show", {
-							text: "Uninstalling channel...",
-							textVisible: true
-						});
-						console.log("Uninstalling channel ", channel);
-						if(typeof channel !== "undefined") {
-							Devtools.uninstallChannel(channel, function(directives) {
-								console.log("uninstalled ", channel, directives);
-								$.mobile.changePage("#page-channel-management", {
-									transition: 'slide'
-								});
-							}); 
-						}
-					});
-				},
+						  			buttons: [ {
+						  				addClass: 'btn btn-primary', text: 'Delete', onClick: function($noty) {
+						  					$noty.close();
+						  					$.mobile.loading("show", {
+						  						text: "Uninstalling channel...",
+						  						textVisible: true
+						  					});
+						  					console.log("Uninstalling channel ", deleteChannel);
+						  					if(typeof deleteChannel !== "undefined") {
+						  						Devtools.uninstallChannel(deleteChannel, function(directives) {
+						  							console.log("uninstalled ", deleteChannel, directives);
+						  							$.mobile.changePage("#page-channel-management", {
+						  								transition: 'slide',
+						  								allowSamePageTransition: true
+						  							});
+						  						}); 
+						  					}
+						  				}
+						  			},
+						  			{
+						  				addClass: 'btn btn-danger', text: 'Cancel', onClick: function($noty) {
+						  					$noty.close();
+						  					noty({layout: 'topCenter', text: 'You clicked "Cancel" button', type: 'error'});
+						  				}
+						  			}]
+						  		});
+						  	});
+						  });
+
+					 	// $("#installed-channels").append(dynamicChannelItems).collapsibleset().collapsibleset( "refresh" );
+					 	$.mobile.loading("hide");
+					 });
+}
+
+populate_installed_channels();
+},
+
+uninstall_channel: function(type, match, ui, page) {
+	console.log("Showing uninstall channel page");
+	$.mobile.loading("hide");
+	var channel = router.getParams(match[1])["channel"];
+	var name = router.getParams(match[1])["name"];
+	console.log("channel to uninstall: ", channel);
+	$("#remove-channel" ).empty();
+	$("#remove-channel").append(snippets.confirm_channel_remove({"channel": channel,"name":name}));
+	$("#remove-channel").listview().listview("refresh");
+	$('#remove-channel-button').off('tap').on('tap', function(event)
+	{
+		$.mobile.loading("show", {
+			text: "Uninstalling channel...",
+			textVisible: true
+		});
+		console.log("Uninstalling channel ", channel);
+		if(typeof channel !== "undefined") {
+			Devtools.uninstallChannel(channel, function(directives) {
+				console.log("uninstalled ", channel, directives);
+				$.mobile.changePage("#page-channel-management", {
+					transition: 'slide'
+				});
+			}); 
+		}
+	});
+},
       //------------------------------- Authorize Clients --------------------
       authorize_client: function(type, match, ui, page) {
       	console.log("Showing authorize client page");
@@ -1494,68 +1706,145 @@
       	console.log("ruleset installation page");
       	loadSpinner("#installed-rulesets", "installed rulesets");
 
-      	function populate_installed_rulesets() {
+      	$("#installed-rulesets-sortby-name").addClass("ui-btn-active");
 
+		//---------------- sort buttons -----------------------------
+		$("#installed-rulesets-sortby-name").click( function() {
+			console.log("SORT BY NAME");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Name...",
+				textVisible: true
+			});
+			populate_installed_rulesets("name");
+		});
 
-      		Devtools.showInstalledRulesets(function(ruleset_list){
-      			if (ruleset_list.error == 102) {
-      				$.noty.get(noty({
-      					timeout: false,
-      					text: "You just broke your account, please reload this app to fix it.",
-      					type: "error"
-      				}));
-      				return;
-      			}
-      			$("#installed-rulesets" ).empty();
-      			console.log("Retrieved installed rulesets");
+		$("#installed-rulesets-sortby-rid").click( function() {
+			console.log("SORT BY RID");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Ruleset ID...",
+				textVisible: true
+			});
+			populate_installed_rulesets("rid");
+		});
 
-      			dynamicInsRulesets = "";
-      			$.each(ruleset_list.description, function(k, ruleset) {
-      				ruleset["rid"] = k;
-      				ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
-				 		 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
-				 		 	dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
-				 		 });
-      			$("#installed-rulesets" ).append(dynamicInsRulesets).collapsibleset().collapsibleset( "refresh" );
-      			$.mobile.loading("hide");
+		$("#installed-rulesets-sortby-cache").click( function() {
+			console.log("SORT BY CACHE");
+			$.mobile.loading("show", {
+				text: "Sorting Rulesets by Cache...",
+				textVisible: true
+			});
+			populate_installed_rulesets("cache");
+		});
 
-      		});
-      	}
+		function populate_installed_rulesets(sortType) {
+			Devtools.showInstalledRulesets(function(ruleset_list){
+				if (ruleset_list.error == 102) {
+					$.noty.get(noty({
+						timeout: false,
+						text: "You just broke your account, please reload this app to fix it.",
+						type: "error"
+					}));
+					return;
+				}
 
-      	populate_installed_rulesets();
-      },
+				$("#installed-rulesets").empty();
 
-      uninstall_ruleset: function(type, match, ui, page) {
-      	console.log("Showing uninstall ruleset page");
-      	$.mobile.loading("hide");
-      	var rid = router.getParams(match[1])["rid"];
-      	console.log("RID to uninstall: ", rid);
-      	$("#remove-ruleset" ).empty();
-      	$("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
-      	$("#remove-ruleset").listview().listview("refresh");
-      	$('#remove-ruleset-button').off('tap').on('tap', function(event)
-      	{
-      		$.mobile.loading("show", {
-      			text: "Uninstalling ruleset...",
-      			textVisible: true
-      		});
-      		console.log("Uninstalling RID ", rid);
-      		if(typeof rid !== "undefined") {
-      			Devtools.uninstallRulesets(rid, function(directives) {
-      				console.log("uninstalled ", rid, directives);
-      				$.mobile.changePage("#page-installed-rulesets", {
-      					transition: 'slide'
+				var sortedRids = $.map(ruleset_list['description'], function(value, index) { 
+					value["rid"] = index;
+					return value;
+				});
+				
+				var sortedRids = [];
+				for (var x in ruleset_list['description']) {
+					ruleset_list['description'][x]['ruleset_id'] = x;
+					sortedRids.push(ruleset_list['description'][x]);
 
-      				});
-      			});	
-      		}
-      	});
-      },
+				}
 
-      install_ruleset: function(type, match, ui, page) {
-      	console.log("Showing install ruleset page");
-      	$.mobile.loading("hide");
-      	var frm = "#form-install-ruleset";
+				if (sortType == "rid")
+					sortedRids = sortedRids.sort(sortBy("ruleset_id"));
+				else if (sortType == "cache") {
+					sortedRids = sortedRids.sort(function(a,b){
+						aCache = a['ruleset_cached'];
+						bCache = b['ruleset_cached'];
+						aRid = a['rid']
+						bRid = b['rid']
+
+						if (aCache > bCache)
+							return -1;
+						if (aCache < bCache)
+							return 1;
+						if (aRid < bRid)
+							return 1;
+						if (bRid > aRid)
+							return -1;
+						return 0;
+					});
+				} else {
+					sortedRids = sortedRids.sort(function(a,b){
+						aName = a['name'].toUpperCase();
+						bName = b['name'].toUpperCase();
+						aRid = a['rid']
+						bRid = b['rid']
+
+						if (aName < bName)
+							return -1;
+						if (aName > bName)
+							return 1;
+						if (aRid < bRid)
+							return 1;
+						if (bRid > aRid)
+							return -1;
+						return 0;
+					});
+				}
+
+				dynamicInsRulesets = "";
+				$.each(sortedRids, function(k, ruleset) {
+					ruleset["rid"] = ruleset.ruleset_id;
+					ruleset["provides_string"] = ruleset.provides.map(function(x){return x.function_name;}).sort().join("; ");
+				 	ruleset["OK"] = k !== "a169x625.prod"; // don't allow deletion of CloudOS; this could be more robust 	
+				 	dynamicInsRulesets+=snippets.installed_ruleset_template(ruleset);
+				 });
+				$("#installed-rulesets" ).append(dynamicInsRulesets).collapsibleset().collapsibleset( "refresh" );
+				$.mobile.loading("hide");
+			});
+		}
+
+		populate_installed_rulesets("name");
+	},
+
+	uninstall_ruleset: function(type, match, ui, page) {
+		console.log("Showing uninstall ruleset page");
+		$.mobile.loading("hide");
+		var rid = router.getParams(match[1])["rid"];
+		console.log("RID to uninstall: ", rid);
+		$("#remove-ruleset" ).empty();
+		$("#remove-ruleset").append(snippets.confirm_ruleset_remove({"rid": rid}));
+		$("#remove-ruleset").listview().listview("refresh");
+		$('#remove-ruleset-button').off('tap').on('tap', function(event)
+		{
+			$.mobile.loading("show", {
+				text: "Uninstalling ruleset...",
+				textVisible: true
+			});
+			console.log("Uninstalling RID ", rid);
+			if(typeof rid !== "undefined") {
+				Devtools.uninstallRulesets(rid, function(directives) {
+					console.log("uninstalled ", rid, directives);
+					$.mobile.changePage("#page-installed-rulesets", {
+						transition: 'slide'
+
+					});
+				});	
+			}
+		});
+	},
+
+	install_ruleset: function(type, match, ui, page) {
+		console.log("Showing install ruleset page");
+		$.mobile.loading("hide");
+		var frm = "#form-install-ruleset";
 				$(frm)[0].reset(); // clear the fields in the form
 				alert_uniqueness = function(rid){
 					var ridroot = rid.split(".");
@@ -1656,9 +1945,9 @@ subscriptions: function(type, match, ui, page) {
 								  Type = "Pending-Inbound";
 								  dynamic_subscriptions_items += 
 								  snippets.subscription_tab_template(
-											{"Type": Type,
-											"Type-Name": "Pending Inbound"}
-											);
+								  	{"Type": Type,
+								  	"Type-Name": "Pending Inbound"}
+								  	);
 								  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 								  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 								}
@@ -1690,9 +1979,9 @@ subscriptions: function(type, match, ui, page) {
 								  Type = "Pending-Outbound";
 								  dynamic_subscriptions_items += 
 								  snippets.subscription_tab_template(
-											{"Type": Type,
-											"Type-Name": "Pending Outbound"}
-											);
+								  	{"Type": Type,
+								  	"Type-Name": "Pending Outbound"}
+								  	);
 								  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 								  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 								};
@@ -1723,9 +2012,9 @@ subscriptions: function(type, match, ui, page) {
 							  Type = "subscriptions";
 							  dynamic_subscriptions_items += 
 							  snippets.subscription_tab_template(
-											{"Type": Type,
-											"Type-Name": "Subscriptions"}
-											);
+							  	{"Type": Type,
+							  	"Type-Name": "Subscriptions"}
+							  	);
 							  $("#Subscriptions").append(dynamic_subscriptions_items).collapsibleset().collapsibleset( "refresh" );
 							  $("#"+Type+"2").append(dynamic_subscriptions_items2).collapsibleset().collapsibleset( "refresh" );
 							}
