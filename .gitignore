@@ -3,6 +3,6 @@ secretstuff.txt
 bin
 bin/sync_repo
 .DS_Store
-util/wrangler-release.yml
+util/devtools-release.yml
 ruleSets/v1
 ruleSets/v1*
